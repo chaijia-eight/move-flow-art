@@ -481,7 +481,10 @@ export default function Study() {
                         });
                       }
                     }}
-                    onStay={() => setFeedback(null)}
+                    onStay={() => {
+                      setFeedback(null);
+                      handleUndo();
+                    }}
                     onRetry={() => setFeedback(null)}
                   />
                 )}
