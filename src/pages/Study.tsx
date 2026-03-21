@@ -39,6 +39,7 @@ export default function Study() {
   } | null>(null);
   const [moveCount, setMoveCount] = useState(0);
   const [isComputerTurn, setIsComputerTurn] = useState(false);
+  const [currentVariation, setCurrentVariation] = useState<{ name: string; description: string } | null>(null);
 
   // Build move hints from current nodes
   const moveHints = useMemo(() => {
