@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect } from "react";
+import React, { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Chess } from "chess.js";
 import { motion, AnimatePresence } from "framer-motion";
@@ -7,12 +7,20 @@ import FeedbackBanner from "@/components/FeedbackBanner";
 import MoveHistory from "@/components/MoveHistory";
 import { useTheme } from "@/contexts/ThemeContext";
 import { openings, type OpeningNode, type MoveCategory } from "@/data/openings";
-import { ArrowLeft, RotateCcw } from "lucide-react";
+import { ArrowLeft, RotateCcw, Undo2, Redo2 } from "lucide-react";
 
 interface MoveRecord {
   san: string;
   moveNumber: number;
   isWhite: boolean;
+}
+
+interface HistorySnapshot {
+  fen: string;
+  currentNodes: OpeningNode[];
+  moveHistory: MoveRecord[];
+  moveCount: number;
+  currentVariation: { name: string; description: string } | null;
 }
 
 export default function Study() {
@@ -26,7 +34,10 @@ export default function Study() {
     if (opening) setTheme(opening.themeId);
   }, [opening, setTheme]);
 
-  const [chess] = useState(() => new Chess());
+  // Player color: default to opening's primary side
+  const [playerColor, setPlayerColor] = useState<"w" | "b">(opening?.primarySide || "w");
+
+  const chessRef = useRef(new Chess());
   const [fen, setFen] = useState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
   const [currentNodes, setCurrentNodes] = useState<OpeningNode[]>(opening?.tree || []);
   const [moveHistory, setMoveHistory] = useState<MoveRecord[]>([]);
@@ -41,16 +52,86 @@ export default function Study() {
   const [isComputerTurn, setIsComputerTurn] = useState(false);
   const [currentVariation, setCurrentVariation] = useState<{ name: string; description: string } | null>(null);
 
-  // Build move hints from current nodes
+  // Undo/Redo stacks
+  const [undoStack, setUndoStack] = useState<HistorySnapshot[]>([]);
+  const [redoStack, setRedoStack] = useState<HistorySnapshot[]>([]);
+
+  const chess = chessRef.current;
+
+  const saveSnapshot = (): HistorySnapshot => ({
+    fen,
+    currentNodes,
+    moveHistory: [...moveHistory],
+    moveCount,
+    currentVariation,
+  });
+
+  const restoreSnapshot = (snap: HistorySnapshot) => {
+    chess.load(snap.fen);
+    setFen(snap.fen);
+    setCurrentNodes(snap.currentNodes);
+    setMoveHistory(snap.moveHistory);
+    setMoveCount(snap.moveCount);
+    setCurrentVariation(snap.currentVariation);
+    setFeedback(null);
+    setIsComputerTurn(false);
+  };
+
+  const handleUndo = () => {
+    if (undoStack.length === 0) return;
+    const current = saveSnapshot();
+    setRedoStack((prev) => [current, ...prev]);
+    const prev = undoStack[undoStack.length - 1];
+    setUndoStack((s) => s.slice(0, -1));
+    restoreSnapshot(prev);
+  };
+
+  const handleRedo = () => {
+    if (redoStack.length === 0) return;
+    const current = saveSnapshot();
+    setUndoStack((prev) => [...prev, current]);
+    const next = redoStack[0];
+    setRedoStack((s) => s.slice(1));
+    restoreSnapshot(next);
+  };
+
+  // Auto-play computer's first move if computer goes first
+  const initialAutoPlayed = useRef(false);
+  useEffect(() => {
+    if (initialAutoPlayed.current) return;
+    if (!opening) return;
+    // If it's the computer's turn at start (playerColor doesn't match first mover)
+    const firstMover = "w"; // chess always starts with white
+    if (playerColor !== firstMover && opening.tree.length > 0) {
+      initialAutoPlayed.current = true;
+      const mainNode = opening.tree.find((n) => n.category === "main_line") || opening.tree[0];
+      setIsComputerTurn(true);
+      setTimeout(() => {
+        try {
+          chess.move(mainNode.move);
+          const newFen = chess.fen();
+          setFen(newFen);
+          setMoveHistory([{ san: mainNode.move, moveNumber: 1, isWhite: true }]);
+          setCurrentNodes(mainNode.children);
+          setUndoStack([{
+            fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+            currentNodes: opening.tree,
+            moveHistory: [],
+            moveCount: 0,
+            currentVariation: null,
+          }]);
+        } catch {}
+        setIsComputerTurn(false);
+      }, 600);
+    }
+  }, [opening, playerColor, chess]);
+
+  // Build move hints
   const moveHints = useMemo(() => {
     const hints = new Map<string, { category: MoveCategory; targets: Map<string, MoveCategory> }>();
-
     if (!currentNodes.length) return hints;
-
-    // For each possible node move, try to find the source square
     const tempChess = new Chess(fen);
     const legalMoves = tempChess.moves({ verbose: true });
-
     currentNodes.forEach((node) => {
       const matching = legalMoves.find((m) => m.san === node.move);
       if (matching) {
@@ -61,18 +142,58 @@ export default function Study() {
         hints.get(matching.from)!.targets.set(matching.san, node.category);
       }
     });
-
     return hints;
   }, [currentNodes, fen]);
+
+  const autoPlayComputerMove = useCallback((children: OpeningNode[]) => {
+    if (children.length === 0) return;
+    const mainResponse = children.find((c) => c.category === "main_line");
+    if (!mainResponse) return;
+
+    setIsComputerTurn(true);
+    setTimeout(() => {
+      const snapBefore = {
+        fen: chess.fen(),
+        currentNodes: children,
+        moveHistory: [...moveHistory],
+        moveCount,
+        currentVariation,
+      };
+
+      try {
+        const result = chess.move(mainResponse.move);
+        if (result) {
+          const newFen = chess.fen();
+          setFen(newFen);
+          const isW = chess.turn() === "b";
+          const mn = Math.ceil(chess.moveNumber());
+          setMoveHistory((prev) => {
+            const updated = [...prev, { san: mainResponse.move, moveNumber: isW ? mn : mn - 1, isWhite: isW }];
+            return updated;
+          });
+          setCurrentNodes(mainResponse.children);
+          if (mainResponse.variationName) {
+            setCurrentVariation({
+              name: mainResponse.variationName,
+              description: `You're studying the ${mainResponse.variationName}.`,
+            });
+          }
+          setUndoStack((prev) => [...prev, snapBefore]);
+          setRedoStack([]);
+        }
+      } catch {}
+      setIsComputerTurn(false);
+      setFeedback(null);
+    }, 800);
+  }, [chess, moveHistory, moveCount, currentVariation]);
 
   const handleMove = useCallback(
     (from: string, to: string, san: string) => {
       if (isComputerTurn) return;
 
-      // Find which node matches this move
+      const snapshot = saveSnapshot();
       const matchedNode = currentNodes.find((node) => node.move === san);
 
-      // Make the move
       try {
         chess.move({ from, to });
       } catch {
@@ -82,13 +203,15 @@ export default function Study() {
       const newFen = chess.fen();
       setFen(newFen);
 
-      const isWhite = chess.turn() === "b"; // just moved was white
+      const isWhite = chess.turn() === "b";
       const moveNum = Math.ceil(chess.moveNumber());
-      setMoveHistory((prev) => [...prev, { san, moveNumber: isWhite ? moveNum : moveNum - 1, isWhite }]);
+      const newHistory = [...moveHistory, { san, moveNumber: isWhite ? moveNum : moveNum - 1, isWhite }];
+      setMoveHistory(newHistory);
       setMoveCount((c) => c + 1);
+      setUndoStack((prev) => [...prev, snapshot]);
+      setRedoStack([]);
 
       if (!matchedNode) {
-        // Unknown move - treat as okay but no feedback from our tree
         setFeedback({
           type: "main_line",
           message: "Interesting move. We don't have this in our study lines yet.",
@@ -108,37 +231,11 @@ export default function Study() {
           if (matchedNode.variationName) {
             setCurrentVariation({
               name: matchedNode.variationName,
-              description: `You're studying the ${matchedNode.variationName} — a main line of the Italian Game.`,
+              description: `You're studying the ${matchedNode.variationName}.`,
             });
           }
           setCurrentNodes(matchedNode.children);
-
-          // Auto-play computer response after a delay
-          if (matchedNode.children.length > 0) {
-            const mainResponse = matchedNode.children.find((c) => c.category === "main_line");
-            if (mainResponse) {
-              setIsComputerTurn(true);
-              setTimeout(() => {
-                try {
-                  const result = chess.move(mainResponse.move);
-                  if (result) {
-                    setFen(chess.fen());
-                    const isW = chess.turn() === "b";
-                    const mn = Math.ceil(chess.moveNumber());
-                    setMoveHistory((prev) => [
-                      ...prev,
-                      { san: mainResponse.move, moveNumber: isW ? mn : mn - 1, isWhite: isW },
-                    ]);
-                    setCurrentNodes(mainResponse.children);
-                  }
-                } catch {
-                  // Move failed
-                }
-                setIsComputerTurn(false);
-                setFeedback(null);
-              }, 800);
-            }
-          }
+          autoPlayComputerMove(matchedNode.children);
           break;
 
         case "legit_alternative":
@@ -151,15 +248,15 @@ export default function Study() {
           setCurrentNodes(matchedNode.children);
           setCurrentVariation({
             name: matchedNode.variationName || "Alternative Line",
-            description: `You're now exploring the ${matchedNode.variationName || "Alternative Line"} — a legitimate deviation from the main Italian Game.`,
+            description: `You're now exploring the ${matchedNode.variationName || "Alternative Line"}.`,
           });
           break;
 
         case "mistake":
-          // Undo the move
           chess.undo();
           setFen(chess.fen());
           setMoveHistory((prev) => prev.slice(0, -1));
+          setUndoStack((prev) => prev.slice(0, -1)); // remove snapshot we just pushed
           setFeedback({
             type: "mistake",
             message: matchedNode.explanation || "That's not the best move here.",
@@ -168,10 +265,11 @@ export default function Study() {
           break;
       }
     },
-    [chess, currentNodes, isComputerTurn]
+    [chess, currentNodes, isComputerTurn, moveHistory, autoPlayComputerMove]
   );
 
   const handleReset = () => {
+    initialAutoPlayed.current = false;
     chess.reset();
     setFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     setCurrentNodes(opening?.tree || []);
@@ -180,6 +278,40 @@ export default function Study() {
     setMoveCount(0);
     setIsComputerTurn(false);
     setCurrentVariation(null);
+    setUndoStack([]);
+    setRedoStack([]);
+  };
+
+  const handleColorSwitch = (color: "w" | "b") => {
+    if (color === playerColor) return;
+    setPlayerColor(color);
+    initialAutoPlayed.current = false;
+    chess.reset();
+    setFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    setCurrentNodes(opening?.tree || []);
+    setMoveHistory([]);
+    setFeedback(null);
+    setMoveCount(0);
+    setIsComputerTurn(false);
+    setCurrentVariation(null);
+    setUndoStack([]);
+    setRedoStack([]);
+
+    // Auto-play if computer goes first
+    if (color !== "w" && opening && opening.tree.length > 0) {
+      const mainNode = opening.tree.find((n) => n.category === "main_line") || opening.tree[0];
+      initialAutoPlayed.current = true;
+      setIsComputerTurn(true);
+      setTimeout(() => {
+        try {
+          chess.move(mainNode.move);
+          setFen(chess.fen());
+          setMoveHistory([{ san: mainNode.move, moveNumber: 1, isWhite: true }]);
+          setCurrentNodes(mainNode.children);
+        } catch {}
+        setIsComputerTurn(false);
+      }, 600);
+    }
   };
 
   if (!opening) {
@@ -189,6 +321,10 @@ export default function Study() {
       </div>
     );
   }
+
+  const sideLabel = playerColor === opening.primarySide
+    ? `Play as ${playerColor === "w" ? "White" : "Black"}`
+    : `Play against (as ${playerColor === "w" ? "White" : "Black"})`;
 
   return (
     <div className="min-h-screen bg-background">
@@ -214,20 +350,68 @@ export default function Study() {
           <div>
             <h1 className="font-serif text-2xl font-semibold text-foreground">{opening.name}</h1>
             <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider">
-              {opening.family} Family · Exploration Mode
+              {sideLabel}
             </p>
           </div>
         </div>
 
-        <motion.button
-          whileHover={{ scale: 1.05, rotate: -20 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={handleReset}
-          className="p-2.5 rounded-lg hover:bg-accent transition-colors"
-          title="Reset board"
-        >
-          <RotateCcw className="w-5 h-5 text-foreground/70" />
-        </motion.button>
+        <div className="flex items-center gap-2">
+          {/* Color toggle */}
+          <div className="flex rounded-lg overflow-hidden border border-border/50 mr-2">
+            <button
+              onClick={() => handleColorSwitch("w")}
+              className="px-3 py-1.5 text-xs font-medium transition-all duration-300"
+              style={{
+                background: playerColor === "w" ? currentTheme.accentColor : "transparent",
+                color: playerColor === "w" ? "hsl(var(--background))" : "hsl(var(--muted-foreground))",
+              }}
+            >
+              White
+            </button>
+            <button
+              onClick={() => handleColorSwitch("b")}
+              className="px-3 py-1.5 text-xs font-medium transition-all duration-300"
+              style={{
+                background: playerColor === "b" ? currentTheme.accentColor : "transparent",
+                color: playerColor === "b" ? "hsl(var(--background))" : "hsl(var(--muted-foreground))",
+              }}
+            >
+              Black
+            </button>
+          </div>
+
+          {/* Undo / Redo */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleUndo}
+            disabled={undoStack.length === 0 || isComputerTurn}
+            className="p-2 rounded-lg hover:bg-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            title="Undo"
+          >
+            <Undo2 className="w-5 h-5 text-foreground/70" />
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleRedo}
+            disabled={redoStack.length === 0 || isComputerTurn}
+            className="p-2 rounded-lg hover:bg-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            title="Redo"
+          >
+            <Redo2 className="w-5 h-5 text-foreground/70" />
+          </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.05, rotate: -20 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleReset}
+            className="p-2.5 rounded-lg hover:bg-accent transition-colors"
+            title="Reset board"
+          >
+            <RotateCcw className="w-5 h-5 text-foreground/70" />
+          </motion.button>
+        </div>
       </header>
 
       {/* Main content */}
@@ -240,6 +424,7 @@ export default function Study() {
               onMove={handleMove}
               moveHints={moveHints}
               disabled={isComputerTurn}
+              flipped={playerColor === "b"}
             />
 
             {/* Feedback area */}
@@ -271,12 +456,13 @@ export default function Study() {
             <MoveHistory moves={moveHistory} />
 
             {/* Opening info card */}
-            <motion.div 
+            <motion.div
               key={currentVariation?.name || "base"}
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="rounded-xl p-4" style={{ background: "hsl(var(--card))" }}
+              className="rounded-xl p-4"
+              style={{ background: "hsl(var(--card))" }}
             >
               <h4 className="text-xs uppercase tracking-wider text-muted-foreground mb-2 font-medium">
                 {currentVariation ? currentVariation.name : "About This Opening"}
@@ -286,7 +472,7 @@ export default function Study() {
               </p>
             </motion.div>
 
-            {/* Current position hint */}
+            {/* Available lines */}
             {currentNodes.length > 0 && (
               <motion.div
                 initial={{ opacity: 0 }}

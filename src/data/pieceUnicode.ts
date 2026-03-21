@@ -1,3 +1,12 @@
+// Map from FEN piece char to SVG image path
+export const PIECE_IMAGES: Record<string, string> = {
+  K: "/pieces/wK.svg", Q: "/pieces/wQ.svg", R: "/pieces/wR.svg",
+  B: "/pieces/wB.svg", N: "/pieces/wN.svg", P: "/pieces/wP.svg",
+  k: "/pieces/bK.svg", q: "/pieces/bQ.svg", r: "/pieces/bR.svg",
+  b: "/pieces/bB.svg", n: "/pieces/bN.svg", p: "/pieces/bP.svg",
+};
+
+// Keep legacy PIECES for any remaining usage
 export const PIECES: Record<string, string> = {
   K: "♔", Q: "♕", R: "♖", B: "♗", N: "♘", P: "♙",
   k: "♚", q: "♛", r: "♜", b: "♝", n: "♞", p: "♟",
