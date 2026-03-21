@@ -493,7 +493,7 @@ export default function Study() {
                           style={{
                             background:
                               node.category === "main_line"
-                                ? currentTheme.accentColor
+                                ? "hsl(42, 90%, 55%)"
                                 : "hsl(180, 40%, 55%)",
                           }}
                         />
