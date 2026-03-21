@@ -105,6 +105,12 @@ export default function Study() {
               ? `Good. This is the ${matchedNode.variationName}.`
               : "Good. Let's continue.",
           });
+          if (matchedNode.variationName) {
+            setCurrentVariation({
+              name: matchedNode.variationName,
+              description: `You're studying the ${matchedNode.variationName} — a main line of the Italian Game.`,
+            });
+          }
           setCurrentNodes(matchedNode.children);
 
           // Auto-play computer response after a delay
