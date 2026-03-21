@@ -213,7 +213,11 @@ export default function Chessboard({ fen, onMove, moveHints, disabled }: Chessbo
                         className="relative z-20 select-none"
                         style={{
                           fontSize: "clamp(1.5rem, 5vw, 2.8rem)",
-                          filter: `drop-shadow(0 2px 4px rgba(0,0,0,0.3))`,
+                          color: piece === piece.toUpperCase() ? "#FFFFFF" : "#1a1a1a",
+                          filter: piece === piece.toUpperCase()
+                            ? "drop-shadow(0 1px 2px rgba(0,0,0,0.5)) drop-shadow(0 0 1px rgba(0,0,0,0.3))"
+                            : "drop-shadow(0 1px 2px rgba(0,0,0,0.3)) drop-shadow(0 0 4px rgba(255,255,255,0.15))",
+                          WebkitTextStroke: piece === piece.toUpperCase() ? "0.5px rgba(0,0,0,0.2)" : "0.5px rgba(255,255,255,0.15)",
                           cursor: disabled ? "default" : "pointer",
                           lineHeight: 1,
                         }}
