@@ -162,10 +162,11 @@ export default function Chessboard({ fen, onMove, moveHints, disabled }: Chessbo
                         >
                           {targetCategory === "main_line" && (
                             <div 
-                              className="w-4 h-4 rounded-full animate-pulse-glow"
+                              className="w-5 h-5 rounded-full"
                               style={{ 
-                                background: `radial-gradient(circle, ${currentTheme.accentColor}, ${currentTheme.accentColor}80)`,
-                                boxShadow: `0 0 12px ${currentTheme.accentColor}60`,
+                                background: `radial-gradient(circle, hsl(42, 90%, 65%), hsl(42, 85%, 50%))`,
+                                boxShadow: `0 0 14px hsl(42, 90%, 60%), 0 0 6px hsl(42, 90%, 70%)`,
+                                border: "1.5px solid hsl(42, 90%, 75%)",
                               }}
                             />
                           )}
@@ -174,7 +175,8 @@ export default function Chessboard({ fen, onMove, moveHints, disabled }: Chessbo
                               className="w-5 h-5"
                               style={{
                                 clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
-                                background: "hsl(180, 40%, 55%)",
+                                background: "hsl(180, 50%, 60%)",
+                                boxShadow: "0 0 10px hsl(180, 50%, 60%)",
                                 opacity: 0.7,
                               }}
                             />
