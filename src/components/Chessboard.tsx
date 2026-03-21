@@ -183,11 +183,11 @@ export default function Chessboard({ fen, onMove, moveHints, disabled }: Chessbo
                           )}
                           {targetCategory === "mistake" && (
                             <div 
-                              className="w-4 h-4 rounded-full"
+                              className="w-5 h-5 rounded-full"
                               style={{
-                                background: "radial-gradient(circle, hsl(0, 72%, 50%), transparent)",
-                                opacity: 0.6,
-                                border: "1px dashed hsl(0, 72%, 50%)",
+                                background: "radial-gradient(circle, hsl(0, 72%, 55%), hsl(0, 60%, 40%))",
+                                boxShadow: "0 0 12px hsl(0, 72%, 50%), 0 0 5px hsl(0, 72%, 60%)",
+                                border: "1.5px solid hsl(0, 72%, 65%)",
                               }}
                             />
                           )}
