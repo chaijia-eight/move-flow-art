@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, useEffect, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Chess } from "chess.js";
 import { motion, AnimatePresence } from "framer-motion";
 import Chessboard from "@/components/Chessboard";
