@@ -78,7 +78,7 @@ export default function FeedbackBanner({
         {type === "legit_alternative" && onSwitch && onStay && (
           <div className="flex gap-2 mt-3 ml-8">
             <motion.button
-              whileHover={{ scale: 1.02, brightness: 1.1 }}
+              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={onSwitch}
               className="px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-300"
