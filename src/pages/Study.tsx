@@ -127,6 +127,25 @@ export default function Study() {
     }
   }, [opening, playerColor, chess]);
 
+  // Search other openings' trees for a matching move sequence
+  const findInOtherOpenings = useCallback((moveList: string[]): { id: string; name: string; nodes: OpeningNode[] } | null => {
+    for (const op of openings) {
+      if (op.id === openingId) continue;
+      // Walk the tree matching moves in order
+      let nodes = op.tree;
+      let matched = true;
+      for (const san of moveList) {
+        const found = nodes.find((n) => n.move === san);
+        if (!found) { matched = false; break; }
+        nodes = found.children;
+      }
+      if (matched && moveList.length > 0) {
+        return { id: op.id, name: op.name, nodes };
+      }
+    }
+    return null;
+  }, [openingId]);
+
   // Build move hints
   const moveHints = useMemo(() => {
     const hints = new Map<string, { category: MoveCategory; targets: Map<string, MoveCategory> }>();
