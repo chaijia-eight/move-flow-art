@@ -6,7 +6,8 @@ import Chessboard from "@/components/Chessboard";
 import FeedbackBanner from "@/components/FeedbackBanner";
 import MoveHistory from "@/components/MoveHistory";
 import { useTheme } from "@/contexts/ThemeContext";
-import { openings, type OpeningNode, type MoveCategory } from "@/data/openings";
+import { type OpeningNode, type MoveCategory } from "@/data/openings";
+import { openings } from "@/data/openingTrees";
 import { ArrowLeft, RotateCcw, Undo2, Redo2 } from "lucide-react";
 
 interface MoveRecord {
