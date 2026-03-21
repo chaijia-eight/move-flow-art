@@ -39,6 +39,7 @@ export default function Study() {
   } | null>(null);
   const [moveCount, setMoveCount] = useState(0);
   const [isComputerTurn, setIsComputerTurn] = useState(false);
+  const [currentVariation, setCurrentVariation] = useState<{ name: string; description: string } | null>(null);
 
   // Build move hints from current nodes
   const moveHints = useMemo(() => {
@@ -104,6 +105,12 @@ export default function Study() {
               ? `Good. This is the ${matchedNode.variationName}.`
               : "Good. Let's continue.",
           });
+          if (matchedNode.variationName) {
+            setCurrentVariation({
+              name: matchedNode.variationName,
+              description: `You're studying the ${matchedNode.variationName} — a main line of the Italian Game.`,
+            });
+          }
           setCurrentNodes(matchedNode.children);
 
           // Auto-play computer response after a delay
@@ -142,6 +149,10 @@ export default function Study() {
             alternativeNode: matchedNode,
           });
           setCurrentNodes(matchedNode.children);
+          setCurrentVariation({
+            name: matchedNode.variationName || "Alternative Line",
+            description: `You're now exploring the ${matchedNode.variationName || "Alternative Line"} — a legitimate deviation from the main Italian Game.`,
+          });
           break;
 
         case "mistake":
@@ -168,6 +179,7 @@ export default function Study() {
     setFeedback(null);
     setMoveCount(0);
     setIsComputerTurn(false);
+    setCurrentVariation(null);
   };
 
   if (!opening) {
@@ -259,12 +271,20 @@ export default function Study() {
             <MoveHistory moves={moveHistory} />
 
             {/* Opening info card */}
-            <div className="rounded-xl p-4" style={{ background: "hsl(var(--card))" }}>
+            <motion.div 
+              key={currentVariation?.name || "base"}
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="rounded-xl p-4" style={{ background: "hsl(var(--card))" }}
+            >
               <h4 className="text-xs uppercase tracking-wider text-muted-foreground mb-2 font-medium">
-                About This Opening
+                {currentVariation ? currentVariation.name : "About This Opening"}
               </h4>
-              <p className="text-sm text-foreground/70 leading-relaxed">{opening.description}</p>
-            </div>
+              <p className="text-sm text-foreground/70 leading-relaxed">
+                {currentVariation ? currentVariation.description : opening.description}
+              </p>
+            </motion.div>
 
             {/* Current position hint */}
             {currentNodes.length > 0 && (

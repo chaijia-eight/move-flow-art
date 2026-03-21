@@ -162,10 +162,11 @@ export default function Chessboard({ fen, onMove, moveHints, disabled }: Chessbo
                         >
                           {targetCategory === "main_line" && (
                             <div 
-                              className="w-4 h-4 rounded-full animate-pulse-glow"
+                              className="w-5 h-5 rounded-full"
                               style={{ 
-                                background: `radial-gradient(circle, ${currentTheme.accentColor}, ${currentTheme.accentColor}80)`,
-                                boxShadow: `0 0 12px ${currentTheme.accentColor}60`,
+                                background: `radial-gradient(circle, hsl(42, 90%, 65%), hsl(42, 85%, 50%))`,
+                                boxShadow: `0 0 14px hsl(42, 90%, 60%), 0 0 6px hsl(42, 90%, 70%)`,
+                                border: "1.5px solid hsl(42, 90%, 75%)",
                               }}
                             />
                           )}
@@ -174,18 +175,19 @@ export default function Chessboard({ fen, onMove, moveHints, disabled }: Chessbo
                               className="w-5 h-5"
                               style={{
                                 clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
-                                background: "hsl(180, 40%, 55%)",
+                                background: "hsl(180, 50%, 60%)",
+                                boxShadow: "0 0 10px hsl(180, 50%, 60%)",
                                 opacity: 0.7,
                               }}
                             />
                           )}
                           {targetCategory === "mistake" && (
                             <div 
-                              className="w-4 h-4 rounded-full"
+                              className="w-5 h-5 rounded-full"
                               style={{
-                                background: "radial-gradient(circle, hsl(0, 72%, 50%), transparent)",
-                                opacity: 0.6,
-                                border: "1px dashed hsl(0, 72%, 50%)",
+                                background: "radial-gradient(circle, hsl(0, 72%, 55%), hsl(0, 60%, 40%))",
+                                boxShadow: "0 0 12px hsl(0, 72%, 50%), 0 0 5px hsl(0, 72%, 60%)",
+                                border: "1.5px solid hsl(0, 72%, 65%)",
                               }}
                             />
                           )}
@@ -213,7 +215,11 @@ export default function Chessboard({ fen, onMove, moveHints, disabled }: Chessbo
                         className="relative z-20 select-none"
                         style={{
                           fontSize: "clamp(1.5rem, 5vw, 2.8rem)",
-                          filter: `drop-shadow(0 2px 4px rgba(0,0,0,0.3))`,
+                          color: piece === piece.toUpperCase() ? "#FFFFFF" : "#1a1a1a",
+                          filter: piece === piece.toUpperCase()
+                            ? "drop-shadow(0 1px 2px rgba(0,0,0,0.5)) drop-shadow(0 0 1px rgba(0,0,0,0.3))"
+                            : "drop-shadow(0 1px 2px rgba(0,0,0,0.3)) drop-shadow(0 0 4px rgba(255,255,255,0.15))",
+                          WebkitTextStroke: piece === piece.toUpperCase() ? "0.5px rgba(0,0,0,0.2)" : "0.5px rgba(255,255,255,0.15)",
                           cursor: disabled ? "default" : "pointer",
                           lineHeight: 1,
                         }}
