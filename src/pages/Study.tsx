@@ -143,6 +143,10 @@ export default function Study() {
             alternativeNode: matchedNode,
           });
           setCurrentNodes(matchedNode.children);
+          setCurrentVariation({
+            name: matchedNode.variationName || "Alternative Line",
+            description: `You're now exploring the ${matchedNode.variationName || "Alternative Line"} — a legitimate deviation from the main Italian Game.`,
+          });
           break;
 
         case "mistake":
