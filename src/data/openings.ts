@@ -40,8 +40,8 @@ export interface Opening {
 export const themes: Record<string, OpeningTheme> = {
   italian: {
     id: "italian",
-    boardLight: "hsl(35, 25%, 82%)",
-    boardDark: "hsl(30, 10%, 55%)",
+  boardLight: "hsl(40, 30%, 88%)",
+    boardDark: "hsl(25, 18%, 48%)",
     pieceLight: "hsl(38, 50%, 65%)",
     pieceDark: "hsl(30, 15%, 25%)",
     primaryColor: "hsl(345, 45%, 35%)",
