@@ -173,6 +173,7 @@ export default function Study() {
     setFeedback(null);
     setMoveCount(0);
     setIsComputerTurn(false);
+    setCurrentVariation(null);
   };
 
   if (!opening) {
