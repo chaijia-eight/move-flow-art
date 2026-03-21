@@ -1,12 +1,13 @@
 import React, { useState, useCallback, useMemo, useEffect, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Chess } from "chess.js";
 import { motion, AnimatePresence } from "framer-motion";
 import Chessboard from "@/components/Chessboard";
 import FeedbackBanner from "@/components/FeedbackBanner";
 import MoveHistory from "@/components/MoveHistory";
 import { useTheme } from "@/contexts/ThemeContext";
-import { openings, type OpeningNode, type MoveCategory } from "@/data/openings";
+import { type OpeningNode, type MoveCategory } from "@/data/openings";
+import { openings } from "@/data/openingTrees";
 import { ArrowLeft, RotateCcw, Undo2, Redo2 } from "lucide-react";
 
 interface MoveRecord {
@@ -25,17 +26,19 @@ interface HistorySnapshot {
 
 export default function Study() {
   const { openingId } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { setTheme, currentTheme } = useTheme();
 
   const opening = openings.find((o) => o.id === openingId);
+  const colorParam = searchParams.get("color") as "w" | "b" | null;
 
   useEffect(() => {
     if (opening) setTheme(opening.themeId);
   }, [opening, setTheme]);
 
-  // Player color: default to opening's primary side
-  const [playerColor, setPlayerColor] = useState<"w" | "b">(opening?.primarySide || "w");
+  // Player color: from URL param, fallback to opening's primary side
+  const [playerColor, setPlayerColor] = useState<"w" | "b">(colorParam || opening?.primarySide || "w");
 
   const chessRef = useRef(new Chess());
   const [fen, setFen] = useState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
