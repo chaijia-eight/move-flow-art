@@ -11,7 +11,7 @@ interface OpeningCardProps {
 
 export default function OpeningCard({ opening, progress, onClick, index }: OpeningCardProps) {
   const theme = themes[opening.themeId];
-  const isAvailable = opening.tree.length > 0;
+  const isAvailable = true;
 
   return (
     <motion.div
