@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import OpeningCard from "@/components/OpeningCard";
-import { openings } from "@/data/openings";
+import { openings } from "@/data/openingTrees";
 
 export default function Index() {
   const navigate = useNavigate();
@@ -57,58 +57,6 @@ export default function Index() {
             />
           ))}
         </div>
-
-        {/* Discovery section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="mt-16"
-        >
-          <div className="flex items-center gap-3 mb-6">
-            <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
-              Featured
-            </h2>
-            <div className="flex-1 h-px bg-border/50" />
-          </div>
-
-          <div
-            className="rounded-2xl p-8 relative overflow-hidden"
-            style={{
-              background: "linear-gradient(135deg, hsl(345 45% 35% / 0.15), hsl(38 70% 55% / 0.08))",
-              border: "1px solid hsl(38 70% 55% / 0.15)",
-            }}
-          >
-            <div className="relative z-10">
-              <h3 className="font-serif text-3xl font-semibold text-foreground mb-2">
-                The Italian Game
-              </h3>
-              <p className="text-muted-foreground max-w-lg leading-relaxed">
-                Begin your journey with one of chess's oldest and most elegant openings.
-                Develop your bishop to c4, target the f7 square, and discover the rich
-                world of the Giuoco Piano and Two Knights Defense.
-              </p>
-              <motion.button
-                whileHover={{ scale: 1.02, y: -1 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => navigate("/study/italian-game")}
-                className="mt-5 px-6 py-2.5 rounded-lg font-medium text-sm transition-all duration-300"
-                style={{
-                  background: "linear-gradient(135deg, hsl(345 45% 35%), hsl(345 40% 45%))",
-                  color: "hsl(35 20% 90%)",
-                  boxShadow: "0 4px 15px hsl(345 45% 35% / 0.3)",
-                }}
-              >
-                Start Exploring
-              </motion.button>
-            </div>
-
-            {/* Decorative chess piece */}
-            <div className="absolute right-8 top-1/2 -translate-y-1/2 text-[8rem] opacity-[0.06] font-serif pointer-events-none select-none">
-              ♗
-            </div>
-          </div>
-        </motion.div>
       </main>
     </div>
   );
