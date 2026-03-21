@@ -47,6 +47,7 @@ export default function Study() {
     variationName?: string;
     suggestedMove?: string;
     alternativeNode?: OpeningNode;
+    detectedOpening?: { id: string; name: string; nodes: OpeningNode[] };
   } | null>(null);
   const [moveCount, setMoveCount] = useState(0);
   const [isComputerTurn, setIsComputerTurn] = useState(false);
@@ -125,6 +126,25 @@ export default function Study() {
       }, 600);
     }
   }, [opening, playerColor, chess]);
+
+  // Search other openings' trees for a matching move sequence
+  const findInOtherOpenings = useCallback((moveList: string[]): { id: string; name: string; nodes: OpeningNode[] } | null => {
+    for (const op of openings) {
+      if (op.id === openingId) continue;
+      // Walk the tree matching moves in order
+      let nodes = op.tree;
+      let matched = true;
+      for (const san of moveList) {
+        const found = nodes.find((n) => n.move === san);
+        if (!found) { matched = false; break; }
+        nodes = found.children;
+      }
+      if (matched && moveList.length > 0) {
+        return { id: op.id, name: op.name, nodes };
+      }
+    }
+    return null;
+  }, [openingId]);
 
   // Build move hints
   const moveHints = useMemo(() => {
@@ -212,11 +232,24 @@ export default function Study() {
       setRedoStack([]);
 
       if (!matchedNode) {
-        setFeedback({
-          type: "main_line",
-          message: "Interesting move. We don't have this in our study lines yet.",
-        });
-        setCurrentNodes([]);
+        // Check if this move matches another opening's tree
+        const allSans = newHistory.map((m) => m.san);
+        const detected = findInOtherOpenings(allSans);
+        if (detected) {
+          setFeedback({
+            type: "legit_alternative",
+            message: `That's the ${detected.name}! Want to switch to studying that opening?`,
+            variationName: detected.name,
+            detectedOpening: detected,
+          });
+          setCurrentNodes(detected.nodes);
+        } else {
+          setFeedback({
+            type: "main_line",
+            message: "Interesting move. We don't have this in our study lines yet.",
+          });
+          setCurrentNodes([]);
+        }
         return;
       }
 
@@ -438,10 +471,15 @@ export default function Study() {
                     variationName={feedback.variationName}
                     suggestedMove={feedback.suggestedMove}
                     onSwitch={() => {
-                      setFeedback({
-                        type: "main_line",
-                        message: `Switched to the ${feedback.variationName}. Let's explore this line.`,
-                      });
+                      if (feedback.detectedOpening) {
+                        // Navigate to the detected opening
+                        navigate(`/study/${feedback.detectedOpening.id}`);
+                      } else {
+                        setFeedback({
+                          type: "main_line",
+                          message: `Switched to the ${feedback.variationName}. Let's explore this line.`,
+                        });
+                      }
                     }}
                     onStay={() => setFeedback(null)}
                     onRetry={() => setFeedback(null)}
