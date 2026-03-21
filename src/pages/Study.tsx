@@ -471,10 +471,15 @@ export default function Study() {
                     variationName={feedback.variationName}
                     suggestedMove={feedback.suggestedMove}
                     onSwitch={() => {
-                      setFeedback({
-                        type: "main_line",
-                        message: `Switched to the ${feedback.variationName}. Let's explore this line.`,
-                      });
+                      if (feedback.detectedOpening) {
+                        // Navigate to the detected opening
+                        navigate(`/study/${feedback.detectedOpening.id}`);
+                      } else {
+                        setFeedback({
+                          type: "main_line",
+                          message: `Switched to the ${feedback.variationName}. Let's explore this line.`,
+                        });
+                      }
                     }}
                     onStay={() => setFeedback(null)}
                     onRetry={() => setFeedback(null)}
