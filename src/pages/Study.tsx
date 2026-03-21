@@ -26,17 +26,19 @@ interface HistorySnapshot {
 
 export default function Study() {
   const { openingId } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { setTheme, currentTheme } = useTheme();
 
   const opening = openings.find((o) => o.id === openingId);
+  const colorParam = searchParams.get("color") as "w" | "b" | null;
 
   useEffect(() => {
     if (opening) setTheme(opening.themeId);
   }, [opening, setTheme]);
 
-  // Player color: default to opening's primary side
-  const [playerColor, setPlayerColor] = useState<"w" | "b">(opening?.primarySide || "w");
+  // Player color: from URL param, fallback to opening's primary side
+  const [playerColor, setPlayerColor] = useState<"w" | "b">(colorParam || opening?.primarySide || "w");
 
   const chessRef = useRef(new Chess());
   const [fen, setFen] = useState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
