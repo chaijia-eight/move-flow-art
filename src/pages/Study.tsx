@@ -232,11 +232,24 @@ export default function Study() {
       setRedoStack([]);
 
       if (!matchedNode) {
-        setFeedback({
-          type: "main_line",
-          message: "Interesting move. We don't have this in our study lines yet.",
-        });
-        setCurrentNodes([]);
+        // Check if this move matches another opening's tree
+        const allSans = newHistory.map((m) => m.san);
+        const detected = findInOtherOpenings(allSans);
+        if (detected) {
+          setFeedback({
+            type: "legit_alternative",
+            message: `That's the ${detected.name}! Want to switch to studying that opening?`,
+            variationName: detected.name,
+            detectedOpening: detected,
+          });
+          setCurrentNodes(detected.nodes);
+        } else {
+          setFeedback({
+            type: "main_line",
+            message: "Interesting move. We don't have this in our study lines yet.",
+          });
+          setCurrentNodes([]);
+        }
         return;
       }
 
