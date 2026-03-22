@@ -360,7 +360,7 @@ export default function Study() {
           if (matchedNode.variationName) {
             setCurrentVariation({
               name: matchedNode.variationName,
-              description: `You're studying the ${matchedNode.variationName}.`,
+              description: tf<(n: string) => string>("studyingThe")(matchedNode.variationName),
             });
           }
           setCurrentNodes(matchedNode.children);
