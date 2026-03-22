@@ -238,3 +238,19 @@ export function tn(key: TranslationKey, subKey: string): string {
   if (!entry || !entry[subKey]) return subKey;
   return entry[subKey][lang] || entry[subKey].en || subKey;
 }
+
+// Translate opening description
+export function tDesc(openingId: string, fallback: string): string {
+  const lang = getLanguage();
+  const entry = openingDescriptions[openingId];
+  if (!entry) return fallback;
+  return entry[lang] || entry.en || fallback;
+}
+
+// Translate variation field (name, description, plan)
+export function tVar(variationId: string, field: "name" | "description" | "plan", fallback: string): string {
+  const lang = getLanguage();
+  const entry = variationTranslations[variationId];
+  if (!entry || !entry[field]) return fallback;
+  return entry[field][lang] || entry[field].en || fallback;
+}
