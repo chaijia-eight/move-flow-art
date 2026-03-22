@@ -390,6 +390,7 @@ export default function Study() {
     setHadMistake(false);
     setLineCompleted(false);
     setShowMasteryPrompt(false);
+    setResetCounter((c) => c + 1);
   };
 
   const handleColorSwitch = (color: "w" | "b") => {
