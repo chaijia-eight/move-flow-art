@@ -205,7 +205,23 @@ const sicilianMainTree: OpeningNode[] = [
                                 children: [{
                                   fen: "rn1qkb1r/1p3ppp/p2ppn2/8/3NP1b1/2N5/PPP1BPPP/R1BQ1RK1 w kq - 2 8",
                                   move: "Be7", category: "main_line",
-                                  children: []
+                                  children: [{
+                                    fen: "rnbqk2r/1p2bppp/p2ppn2/8/3NPP2/2N5/PPP1B1PP/R1BQ1RK1 b kq - 0 8",
+                                    move: "f4", category: "main_line",
+                                    children: [{
+                                      fen: "rnbq1rk1/1p2bppp/p2ppn2/8/3NPP2/2N5/PPP1B1PP/R1BQ1RK1 w - - 1 9",
+                                      move: "O-O", category: "main_line",
+                                      children: [{
+                                        fen: "rnbq1rk1/1p2bppp/p2ppn2/8/3NPP2/2N1B3/PPP1B1PP/R2Q1RK1 b - - 2 9",
+                                        move: "Be3", category: "main_line",
+                                        children: [{
+                                          fen: "rn1q1rk1/1p2bppp/p2ppn2/8/3NPP2/2N1B3/PPPbB1PP/R2Q1RK1 w - - 3 10",
+                                          move: "Qc7", category: "main_line",
+                                          children: []
+                                        }]
+                                      }]
+                                    }]
+                                  }]
                                 }]
                               }]
                             }]
