@@ -745,7 +745,7 @@ export default function Study() {
                           color: "hsl(var(--background))",
                         }}
                       >
-                        Yes, I've mastered it!
+                        {t("yesMastered")}
                       </motion.button>
                     </div>
                   </motion.div>
