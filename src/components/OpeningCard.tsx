@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { themes, type Opening } from "@/data/openings";
 import { extractAllLines } from "@/lib/lineExtractor";
 import { getOpeningProgress } from "@/lib/progressStore";
-import { t, tn } from "@/lib/i18n";
+import { t, tn, tDesc } from "@/lib/i18n";
 
 interface OpeningCardProps {
   opening: Opening;
