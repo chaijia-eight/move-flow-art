@@ -172,7 +172,7 @@ export const variationTranslations: Record<string, { name: { en: string; zh: str
   "classical-ck": {
     name: { en: "Classical Caro-Kann", zh: "古典卡罗-卡恩" },
     description: { en: "Bf5 develops naturally and solidly.", zh: "Bf5自然而坚实地发展。" },
-    plan: { en: "Develop the bishop to f5 before playing e6, avoiding the 'French bishop' problem. Build a solid structure and aim for a safe, slightly inferior but very playable middlegame. Excellent for grinding down opponents.", zh: "在走e6之前将象发展到f5，避免"法兰西坏象"问题。建立坚固阵型，追求安全的、略逊但非常可下的中局。非常适合磨练对手。" },
+    plan: { en: "Develop the bishop to f5 before playing e6, avoiding the 'French bishop' problem. Build a solid structure and aim for a safe, slightly inferior but very playable middlegame. Excellent for grinding down opponents.", zh: "在走e6之前将象发展到f5，避免'法兰西坏象'问题。建立坚固阵型，追求安全的、略逊但非常可下的中局。非常适合磨练对手。" },
   },
   "advance-ck": {
     name: { en: "Advance Caro-Kann", zh: "推进卡罗-卡恩" },
