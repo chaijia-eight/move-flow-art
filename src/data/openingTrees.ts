@@ -2383,8 +2383,8 @@ export const openings: Opening[] = [
     themeId: "scandinavian", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: scandinavianTree, totalVariations: 3,
     variations: [
-      { id: "qxd5-scandi", name: "Qxd5 Scandinavian", description: "Recapture with the queen — the classic approach.", startingMoves: "1.e4 d5 2.exd5 Qxd5", tree: scandinavianTree, depth: 8 },
-      { id: "modern-scandi", name: "Modern Scandinavian", description: "Nf6 — recapture with the knight instead.", startingMoves: "1.e4 d5 2.exd5 Nf6", tree: scandinavianTree, depth: 6 },
+      { id: "qxd5-scandi", name: "Qxd5 Scandinavian", description: "Recapture with the queen — the classic approach.", plan: "As Black, recapture with the queen and develop quickly after Qa5 or Qd6. White gains a tempo with Nc3 but Black gets rapid development. Aim for a solid, easy-to-play position with clear piece activity.", startingMoves: "1.e4 d5 2.exd5 Qxd5", tree: scandinavianTree, depth: 8 },
+      { id: "modern-scandi", name: "Modern Scandinavian", description: "Nf6 — recapture with the knight instead.", plan: "Recapture with the knight, keeping the queen safe. Play g6 and Bg7 for a King's Indian-like setup, or c6 and e6 for a solid structure. Less common but avoids the queen being harassed early.", startingMoves: "1.e4 d5 2.exd5 Nf6", tree: scandinavianTree, depth: 6 },
     ]
   },
   {
