@@ -12,6 +12,9 @@ import { Button } from "@/components/ui/button";
 import { t } from "@/lib/i18n";
 import { getLineProgress, recordAttempt, markMastered, MASTERY_PROMPT_THRESHOLD } from "@/lib/progressStore";
 import type { MoveCategory } from "@/data/openings";
+import { openings } from "@/data/openingTrees";
+import { themes } from "@/data/openings";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface MoveRecord {
   san: string;
@@ -20,9 +23,16 @@ interface MoveRecord {
 }
 
 export default function GardenPractice() {
-  const { lineId } = useParams<{ lineId: string }>();
+  const { lineId, openingId } = useParams<{ lineId: string; openingId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { setTheme, currentTheme } = useTheme();
+
+  const opening = openings.find((o) => o.id === openingId);
+
+  React.useEffect(() => {
+    if (opening) setTheme(opening.themeId);
+  }, [opening, setTheme]);
 
   const { data: customLine, isLoading } = useQuery({
     queryKey: ["custom-line", lineId],
@@ -50,7 +60,6 @@ export default function GardenPractice() {
   const progressLineId = `garden-${lineId}`;
   const progress = getLineProgress(progressLineId);
 
-  // Determine whose turn is whose
   const lineMoves = (customLine as any)?.moves ?? [];
   const lineSide = ((customLine as any)?.side ?? "w") as "w" | "b";
 
@@ -58,7 +67,6 @@ export default function GardenPractice() {
     return game.turn() === lineSide;
   }, [game, lineSide]);
 
-  // Computer plays the opponent's moves automatically
   const playComputerMove = useCallback(() => {
     if (moveIndex >= lineMoves.length) return;
     const nextSan = lineMoves[moveIndex];
@@ -79,11 +87,9 @@ export default function GardenPractice() {
     }
   }, [game, moveIndex, lineMoves]);
 
-  // After mount or state change, play computer move if needed
   React.useEffect(() => {
     if (!customLine || completed) return;
     if (moveIndex >= lineMoves.length) {
-      // Line complete
       handleLineComplete(!hadMistakes);
       return;
     }
@@ -112,7 +118,6 @@ export default function GardenPractice() {
         setFen(game.fen());
         setMistakeFeedback(null);
       } else {
-        // Wrong move — undo
         game.undo();
         setFen(game.fen());
         setHadMistakes(true);
@@ -146,7 +151,6 @@ export default function GardenPractice() {
     setShowMasteryPrompt(false);
   };
 
-  // Build move hints for current expected move
   const moveHints = useMemo(() => {
     const hints = new Map<string, { category: MoveCategory; targets: Map<string, MoveCategory> }>();
     if (completed || moveIndex >= lineMoves.length || !isPlayerTurn()) return hints;
@@ -181,12 +185,22 @@ export default function GardenPractice() {
     );
   }
 
+  const theme = opening ? themes[opening.themeId] : null;
+
   return (
     <div className="min-h-screen bg-background">
-      <header className="px-6 pt-6 pb-4 max-w-5xl mx-auto">
+      {theme && (
+        <div
+          className="fixed inset-0 pointer-events-none"
+          style={{
+            background: `radial-gradient(ellipse at 50% 0%, ${theme.primaryColor}15, transparent 60%), radial-gradient(ellipse at 80% 100%, ${theme.accentColor}08, transparent 50%)`,
+          }}
+        />
+      )}
+      <header className="relative z-10 px-6 pt-6 pb-4 max-w-5xl mx-auto">
         <div className="flex items-center justify-between">
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate(openingId ? `/study/${openingId}` : "/")}
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -204,7 +218,7 @@ export default function GardenPractice() {
         </div>
       </header>
 
-      <main className="px-6 pb-16 max-w-5xl mx-auto">
+      <main className="relative z-10 px-6 pb-16 max-w-5xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
           <div className="flex flex-col items-center gap-4">
             <div className="w-full max-w-[500px]">
@@ -218,7 +232,6 @@ export default function GardenPractice() {
               />
             </div>
 
-            {/* Mistake feedback */}
             {mistakeFeedback && (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -231,7 +244,6 @@ export default function GardenPractice() {
           </div>
 
           <div className="space-y-4">
-            {/* Progress */}
             <div className="rounded-xl border border-border bg-card p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs text-muted-foreground">{t("lineProgress")}</span>
@@ -247,10 +259,8 @@ export default function GardenPractice() {
               </div>
             </div>
 
-            {/* Move history */}
             <MoveHistory moves={moveHistory} />
 
-            {/* Completion */}
             {completed && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -283,8 +293,8 @@ export default function GardenPractice() {
                   <Button onClick={handleReset} variant="default">
                     {t("practiceAgain")}
                   </Button>
-                  <Button onClick={() => navigate("/")} variant="outline">
-                    {t("back")}
+                  <Button onClick={() => navigate(openingId ? `/study/${openingId}` : "/")} variant="outline">
+                    {t("backToHub")}
                   </Button>
                 </div>
               </motion.div>
