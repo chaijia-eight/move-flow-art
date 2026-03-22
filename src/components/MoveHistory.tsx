@@ -1,15 +1,12 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { useTheme } from "@/contexts/ThemeContext";
+import { t } from "@/lib/i18n";
 
 interface MoveHistoryProps {
   moves: { san: string; moveNumber: number; isWhite: boolean }[];
 }
 
 export default function MoveHistory({ moves }: MoveHistoryProps) {
-  const { currentTheme } = useTheme();
-
-  // Group moves into pairs
   const pairs: { number: number; white?: string; black?: string }[] = [];
   moves.forEach((m) => {
     if (m.isWhite) {
@@ -26,11 +23,11 @@ export default function MoveHistory({ moves }: MoveHistoryProps) {
   return (
     <div className="rounded-xl p-4" style={{ background: "hsl(var(--card))" }}>
       <h4 className="text-xs uppercase tracking-wider text-muted-foreground mb-3 font-medium">
-        Move History
+        {t("moveHistory")}
       </h4>
       <div className="space-y-1 max-h-48 overflow-y-auto">
         {pairs.length === 0 && (
-          <p className="text-sm text-muted-foreground/50 italic">Play your first move...</p>
+          <p className="text-sm text-muted-foreground/50 italic">{t("playFirstMove")}</p>
         )}
         {pairs.map((pair, i) => (
           <motion.div

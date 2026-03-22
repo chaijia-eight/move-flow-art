@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Volume2, VolumeX, Sun, Moon, Palette, Trash2, LogIn, LogOut, UserPlus, Mail } from "lucide-react";
+import { ArrowLeft, Volume2, VolumeX, Sun, Moon, Trash2, LogIn, LogOut, UserPlus, Mail, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { loadSettings, saveSettings, type AppSettings } from "@/lib/settingsStore";
+import { t } from "@/lib/i18n";
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -29,8 +30,8 @@ export default function Settings() {
     if (key === "darkMode") {
       setDarkMode(value as boolean);
     }
-    if (key === "boardThemeFollowOpening") {
-      // Reload to apply theme change across all pages
+    if (key === "language") {
+      // Force re-render to apply language change
       window.location.reload();
     }
   };
@@ -59,7 +60,7 @@ export default function Settings() {
     if (error) {
       setAuthError(error.message);
     } else if (authMode === "signup") {
-      setAuthSuccess("Check your email to confirm your account.");
+      setAuthSuccess(t("checkEmail"));
       setEmail("");
       setPassword("");
     } else {
@@ -85,32 +86,69 @@ export default function Settings() {
             className="text-muted-foreground hover:text-foreground text-sm mb-4 flex items-center gap-1 transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            Back
+            {t("back")}
           </button>
-          <h1 className="font-serif text-4xl font-bold text-foreground tracking-tight">Settings</h1>
+          <h1 className="font-serif text-4xl font-bold text-foreground tracking-tight">{t("settings")}</h1>
         </motion.div>
       </header>
 
       <main className="relative z-10 px-6 pb-16 max-w-2xl mx-auto space-y-6">
+        {/* Language */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Globe className="w-4 h-4" />
+                {t("language")}
+              </CardTitle>
+              <CardDescription>{t("selectLanguage")}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => updateSetting("language", "en")}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border ${
+                    settings.language === "en"
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-background text-foreground border-border hover:bg-secondary"
+                  }`}
+                >
+                  {t("english")}
+                </button>
+                <button
+                  onClick={() => updateSetting("language", "zh")}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border ${
+                    settings.language === "zh"
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-background text-foreground border-border hover:bg-secondary"
+                  }`}
+                >
+                  {t("chinese")}
+                </button>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
         {/* Account */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
                 <Mail className="w-4 h-4" />
-                Account
+                {t("account")}
               </CardTitle>
               <CardDescription>
-                {user ? `Signed in as ${user.email}` : "Sign in to sync your progress across devices."}
+                {user ? t("signedInAs").replace("$email", "") : ""}{user ? user.email : t("signInToSync")}
               </CardDescription>
             </CardHeader>
             <CardContent>
               {loading ? (
-                <p className="text-sm text-muted-foreground">Loading...</p>
+                <p className="text-sm text-muted-foreground">{t("loading")}</p>
               ) : user ? (
                 <Button variant="outline" onClick={signOut} className="gap-2">
                   <LogOut className="w-4 h-4" />
-                  Sign Out
+                  {t("signOut")}
                 </Button>
               ) : (
                 <form onSubmit={handleAuth} className="space-y-3">
@@ -120,19 +158,19 @@ export default function Settings() {
                       onClick={() => { setAuthMode("signin"); setAuthError(null); setAuthSuccess(null); }}
                       className={`text-sm px-3 py-1 rounded-md transition-colors ${authMode === "signin" ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-foreground"}`}
                     >
-                      Sign In
+                      {t("signIn")}
                     </button>
                     <button
                       type="button"
                       onClick={() => { setAuthMode("signup"); setAuthError(null); setAuthSuccess(null); }}
                       className={`text-sm px-3 py-1 rounded-md transition-colors ${authMode === "signup" ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-foreground"}`}
                     >
-                      Create Account
+                      {t("createAccount")}
                     </button>
                   </div>
                   <input
                     type="email"
-                    placeholder="Email"
+                    placeholder={t("email")}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -140,7 +178,7 @@ export default function Settings() {
                   />
                   <input
                     type="password"
-                    placeholder="Password"
+                    placeholder={t("password")}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -151,7 +189,7 @@ export default function Settings() {
                   {authSuccess && <p className="text-sm text-primary">{authSuccess}</p>}
                   <Button type="submit" disabled={authLoading} className="gap-2">
                     {authMode === "signup" ? <UserPlus className="w-4 h-4" /> : <LogIn className="w-4 h-4" />}
-                    {authLoading ? "Loading..." : authMode === "signup" ? "Create Account" : "Sign In"}
+                    {authLoading ? t("loading") : authMode === "signup" ? t("createAccount") : t("signIn")}
                   </Button>
                 </form>
               )}
@@ -165,13 +203,13 @@ export default function Settings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
                 {settings.soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-                Sound Effects
+                {t("soundEffects")}
               </CardTitle>
-              <CardDescription>Toggle move and capture sounds.</CardDescription>
+              <CardDescription>{t("toggleSounds")}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-foreground">Enable sounds</span>
+                <span className="text-sm text-foreground">{t("enableSounds")}</span>
                 <Switch
                   checked={settings.soundEnabled}
                   onCheckedChange={(v) => updateSetting("soundEnabled", v)}
@@ -181,20 +219,19 @@ export default function Settings() {
           </Card>
         </motion.div>
 
-
         {/* Dark/Light Mode */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
                 {settings.darkMode ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-                Appearance
+                {t("appearance")}
               </CardTitle>
-              <CardDescription>Toggle between dark and light mode.</CardDescription>
+              <CardDescription>{t("toggleDarkLight")}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-foreground">Dark mode</span>
+                <span className="text-sm text-foreground">{t("darkMode")}</span>
                 <Switch
                   checked={settings.darkMode}
                   onCheckedChange={(v) => updateSetting("darkMode", v)}
@@ -210,9 +247,9 @@ export default function Settings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg text-destructive">
                 <Trash2 className="w-4 h-4" />
-                Reset Progress
+                {t("resetProgress")}
               </CardTitle>
-              <CardDescription>Clear all mastery and attempt data. This cannot be undone.</CardDescription>
+              <CardDescription>{t("clearAllData")}</CardDescription>
             </CardHeader>
             <CardContent>
               <Button
@@ -221,7 +258,7 @@ export default function Settings() {
                 className="gap-2"
               >
                 <Trash2 className="w-4 h-4" />
-                {confirmReset ? "Confirm Reset — Are you sure?" : "Reset All Progress"}
+                {confirmReset ? t("confirmResetMsg") : t("resetAllProgress")}
               </Button>
               {confirmReset && (
                 <Button
@@ -229,7 +266,7 @@ export default function Settings() {
                   onClick={() => setConfirmReset(false)}
                   className="ml-2 text-sm"
                 >
-                  Cancel
+                  {t("cancel")}
                 </Button>
               )}
             </CardContent>
