@@ -311,6 +311,7 @@ export function playMasterySound() {
 }
 
 export function playLineCompleteSound() {
+  if (!isSoundEnabled()) return;
   const ctx = getAudioContext();
   const now = ctx.currentTime;
 
