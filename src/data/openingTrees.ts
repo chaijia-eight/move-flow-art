@@ -2362,9 +2362,9 @@ export const openings: Opening[] = [
     themeId: "dutch", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: dutchDefenseTree, totalVariations: 3,
     variations: [
-      { id: "classical-dutch", name: "Classical Dutch", description: "e6 + Be7 — solid and traditional.", startingMoves: "1.d4 f5 2.g3 Nf6 3.Bg2 e6", tree: dutchDefenseTree, depth: 10 },
-      { id: "leningrad-dutch", name: "Leningrad Dutch", description: "g6 + Bg7 — a KID-like structure.", startingMoves: "1.d4 f5 2.g3 Nf6 3.Bg2 g6", tree: dutchDefenseTree, depth: 8 },
-      { id: "stonewall-dutch", name: "Stonewall Dutch", description: "d5 creates a wall — ultra-solid.", startingMoves: "1.d4 f5 2.g3 Nf6 3.Bg2 d5", tree: dutchDefenseTree, depth: 6 },
+      { id: "classical-dutch", name: "Classical Dutch", description: "e6 + Be7 — solid and traditional.", plan: "As Black, control e4 with f5 and develop solidly with e6, Be7, O-O. Aim for a kingside attack with pieces behind the f-pawn. White has more central space but Black has clear attacking chances.", startingMoves: "1.d4 f5 2.g3 Nf6 3.Bg2 e6", tree: dutchDefenseTree, depth: 10 },
+      { id: "leningrad-dutch", name: "Leningrad Dutch", description: "g6 + Bg7 — a KID-like structure.", plan: "Fianchetto the bishop and combine it with the f5 pawn for a powerful kingside presence. Play e5 when the time is right to seize space. A dynamic, fighting setup with real attacking potential.", startingMoves: "1.d4 f5 2.g3 Nf6 3.Bg2 g6", tree: dutchDefenseTree, depth: 8 },
+      { id: "stonewall-dutch", name: "Stonewall Dutch", description: "d5 creates a wall — ultra-solid.", plan: "Set up pawns on d5, e6, f5, c6 to form an unbreakable wall. Develop pieces behind the wall and aim for a kingside attack with Qf3, Bd6, and Ne4. Solid but with real attacking chances.", startingMoves: "1.d4 f5 2.g3 Nf6 3.Bg2 d5", tree: dutchDefenseTree, depth: 6 },
     ]
   },
   {
