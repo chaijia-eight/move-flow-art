@@ -119,6 +119,21 @@ export default function Study() {
   const [evaluatingEngine, setEvaluatingEngine] = useState(false);
   const [customLineSaved, setCustomLineSaved] = useState(false);
 
+  // Eval & progress tracking
+  const [currentEval, setCurrentEval] = useState<number | null>(null);
+  const [moveResults, setMoveResults] = useState<("correct" | "alternative" | "mistake" | "pending")[]>([]);
+
+  // Switch confirmation modal state
+  const [showSwitchConfirm, setShowSwitchConfirm] = useState(false);
+  const [pendingSwitchData, setPendingSwitchData] = useState<{
+    playerMoveScore: number | null;
+    masterMoveScore: number | null;
+    playerMoveSan: string;
+    masterMoveSan: string;
+    onAdopt: () => void;
+    onStay: () => void;
+  } | null>(null);
+
   const chess = chessRef.current;
 
   const saveSnapshot = (): HistorySnapshot => ({
