@@ -31,7 +31,7 @@ class StockfishEngine {
   async init(): Promise<void> {
     if (this.initPromise) return this.initPromise;
     
-    this.initPromise = new Promise((resolve, reject) => {
+    this.initPromise = new Promise<void>((resolve, reject) => {
       try {
         // Use single-thread build so engine works in environments without SharedArrayBuffer.
         this.worker = new Worker("/stockfish/stockfish-single.js");
