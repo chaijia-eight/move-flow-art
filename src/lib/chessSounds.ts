@@ -146,6 +146,7 @@ export function playMoveSound() {
 }
 
 export function playCaptureSound() {
+  if (!isSoundEnabled()) return;
   const ctx = getAudioContext();
   const now = ctx.currentTime;
 
