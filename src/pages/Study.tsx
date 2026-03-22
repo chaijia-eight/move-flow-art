@@ -360,7 +360,7 @@ export default function Study() {
 
     // Auto-play if computer goes first
     if (color !== "w" && opening && opening.tree.length > 0) {
-      const mainNode = opening.tree.find((n) => n.category === "main_line") || opening.tree[0];
+      const mainNode = pickComputerNode(opening.tree, 0) || opening.tree[0];
       initialAutoPlayed.current = true;
       setIsComputerTurn(true);
       setTimeout(() => {
