@@ -670,12 +670,12 @@ export default function Study() {
                   >
                     <Trophy className="w-8 h-8 mx-auto mb-2" style={{ color: currentTheme.accentColor }} />
                     <p className="font-serif text-lg font-semibold text-foreground mb-1">
-                      {hadMistake ? "Line Completed" : "Perfect Run!"}
+                      {hadMistake ? t("lineCompleted") : t("perfectRun")}
                     </p>
                     <p className="text-sm text-muted-foreground mb-4">
                       {hadMistake
-                        ? "You made it through, but had some mistakes. Try again for a perfect run!"
-                        : `Great job! ${lineProgress ? `${lineProgress.correctAttempts + 1} correct attempt${lineProgress.correctAttempts > 0 ? "s" : ""}.` : ""}`}
+                        ? t("hadMistakesMsg")
+                        : tf<(c: number) => string>("greatJob")(lineProgress ? lineProgress.correctAttempts + 1 : 1)}
                     </p>
                     <div className="flex gap-2 justify-center">
                       <motion.button
