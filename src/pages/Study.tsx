@@ -829,7 +829,7 @@ export default function Study() {
                           </span>
                         )}
                       </div>
-                    ))}
+                    );})}
                   </div>
                 </motion.div>
               );
