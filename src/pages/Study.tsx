@@ -802,7 +802,7 @@ export default function Study() {
                       }}
                     >
                       <p className="text-xs uppercase tracking-wider font-medium mb-1.5" style={{ color: currentTheme.accentColor }}>
-                        Your Plan
+                        {t("yourPlan")}
                       </p>
                       <p className="text-sm text-foreground/70 leading-relaxed">
                         {variation.plan}
