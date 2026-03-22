@@ -519,6 +519,7 @@ export default function Study() {
         }
 
         case "legit_alternative": {
+          setMoveResults(prev => [...prev, "alternative"]);
           let detectedVar: { variationId: string; lineIndex: number } | undefined;
           if (opening && matchedNode.variationName) {
             const altName = matchedNode.variationName.toLowerCase().replace(/\s+/g, '-');
