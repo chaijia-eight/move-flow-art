@@ -27,6 +27,13 @@ export default function Settings() {
     const updated = { ...settings, [key]: value };
     setSettings(updated);
     saveSettings(updated);
+    if (key === "darkMode") {
+      setDarkMode(value as boolean);
+    }
+    if (key === "boardThemeFollowOpening") {
+      // Reload to apply theme change across all pages
+      window.location.reload();
+    }
   };
 
   const handleResetProgress = () => {
