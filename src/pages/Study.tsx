@@ -220,7 +220,9 @@ export default function Study() {
   const moveHints = useMemo(() => {
     const hints = new Map<string, { category: MoveCategory; targets: Map<string, MoveCategory> }>();
     if (!currentNodes.length) return hints;
+    // Only show hints when it's the player's turn
     const tempChess = new Chess(fen);
+    if (tempChess.turn() !== playerColor) return hints;
     const legalMoves = tempChess.moves({ verbose: true });
     currentNodes.forEach((node) => {
       const matching = legalMoves.find((m) => m.san === node.move);
@@ -233,7 +235,7 @@ export default function Study() {
       }
     });
     return hints;
-  }, [currentNodes, fen]);
+  }, [currentNodes, fen, playerColor]);
 
   const autoPlayComputerMove = useCallback((children: OpeningNode[], moveIndex: number) => {
     const chosen = pickComputerNode(children, moveIndex);
