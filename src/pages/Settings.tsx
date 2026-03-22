@@ -179,6 +179,7 @@ export default function Settings() {
               </div>
             </CardContent>
           </Card>
+        </motion.div>
 
 
         {/* Dark/Light Mode */}
