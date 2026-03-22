@@ -2287,9 +2287,9 @@ export const openings: Opening[] = [
     themeId: "queensgambit", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "w", tree: queensGambitTree, totalVariations: 4,
     variations: [
-      { id: "qgd", name: "Queen's Gambit Declined", description: "Black declines with e6, maintaining solid structure.", startingMoves: "1.d4 d5 2.c4 e6", tree: queensGambitTree, depth: 10 },
-      { id: "qga", name: "Queen's Gambit Accepted", description: "Black takes the pawn, aiming to equalize.", startingMoves: "1.d4 d5 2.c4 dxc4", tree: queensGambitTree, depth: 7 },
-      { id: "slav", name: "Slav Defense", description: "Black supports d5 with c6 — solid and flexible.", startingMoves: "1.d4 d5 2.c4 c6", tree: queensGambitTree, depth: 8 },
+      { id: "qgd", name: "Queen's Gambit Declined", description: "Black declines with e6, maintaining solid structure.", plan: "As White, build a strong center and develop pieces to active squares. Aim for a minority attack on the queenside (b4-b5) or a central breakthrough with e4. White maintains a lasting positional edge.", startingMoves: "1.d4 d5 2.c4 e6", tree: queensGambitTree, depth: 10 },
+      { id: "qga", name: "Queen's Gambit Accepted", description: "Black takes the pawn, aiming to equalize.", plan: "As White, reclaim the pawn and exploit your development advantage. Push e4 to dominate the center. As Black, hold onto the pawn temporarily while developing. The position often simplifies with a slight White edge.", startingMoves: "1.d4 d5 2.c4 dxc4", tree: queensGambitTree, depth: 7 },
+      { id: "slav", name: "Slav Defense", description: "Black supports d5 with c6 — solid and flexible.", plan: "As Black, maintain the d5 pawn with c6 and develop the bishop to f5 or g4 before playing e6. A rock-solid structure that avoids the bad bishop problem of the QGD. Aim for equality with chances.", startingMoves: "1.d4 d5 2.c4 c6", tree: queensGambitTree, depth: 8 },
     ]
   },
   {
