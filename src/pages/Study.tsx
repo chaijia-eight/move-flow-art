@@ -88,6 +88,7 @@ export default function Study() {
     suggestedMove?: string;
     alternativeNode?: OpeningNode;
     detectedOpening?: { id: string; name: string; nodes: OpeningNode[] };
+    detectedVariation?: { variationId: string; lineIndex: number };
   } | null>(null);
   const [moveCount, setMoveCount] = useState(0);
   const [isComputerTurn, setIsComputerTurn] = useState(false);
