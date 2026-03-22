@@ -1415,7 +1415,27 @@ const englishOpeningTree: OpeningNode[] = [
                   children: [{
                     fen: "rnbq1rk1/pppp1ppp/5n2/2b1p3/2P5/2N3P1/PP1PPPBP/R1BQK1NR w KQ - 3 5",
                     move: "O-O", category: "main_line",
-                    children: []
+                    children: [{
+                      fen: "rnbq1rk1/pppp1ppp/5n2/2b1p3/2P5/2N3P1/PP1PPPBP/R1BQK1NR w KQ - 3 5",
+                      move: "Nf3", category: "main_line",
+                      children: [{
+                        fen: "rnbq1rk1/ppp2ppp/3p1n2/2b1p3/2P5/2N2NP1/PP1PPPBP/R1BQK2R b KQ - 0 5",
+                        move: "d6", category: "main_line",
+                        children: [{
+                          fen: "rnbq1rk1/ppp2ppp/3p1n2/2b1p3/2P5/2N2NP1/PP1PPPBP/R1BQ1RK1 b - - 1 6",
+                          move: "O-O", category: "main_line",
+                          children: [{
+                            fen: "r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2P5/2N2NP1/PP1PPPBP/R1BQ1RK1 w - - 2 7",
+                            move: "Nc6", category: "main_line",
+                            children: [{
+                              fen: "r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2P1P3/2N2NP1/PP1P1PBP/R1BQ1RK1 b - - 0 7",
+                              move: "e3", category: "main_line",
+                              children: []
+                            }]
+                          }]
+                        }]
+                      }]
+                    }]
                   }]
                 }]
               }]
