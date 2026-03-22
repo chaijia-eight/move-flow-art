@@ -542,13 +542,51 @@ export default function Study() {
         <div className="flex flex-col lg:flex-row gap-6 items-start">
           {/* Board section */}
           <div className="flex-1 w-full max-w-lg mx-auto lg:mx-0">
-            <Chessboard
-              fen={fen}
-              onMove={handleMove}
-              moveHints={moveHints}
-              disabled={isComputerTurn || lineCompleted}
-              flipped={playerColor === "b"}
-            />
+            {/* Challenge mode banner */}
+            <AnimatePresence>
+              {isChallengeMode && !lineCompleted && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                  className="mb-4 rounded-xl p-4 text-center relative overflow-hidden"
+                  style={{
+                    background: `linear-gradient(135deg, hsl(45, 100%, 50%, 0.12), hsl(30, 100%, 45%, 0.08), hsl(0, 80%, 50%, 0.06))`,
+                    border: `1px solid hsl(45, 100%, 50%, 0.3)`,
+                    boxShadow: `0 0 30px hsl(45, 100%, 50%, 0.1), inset 0 0 30px hsl(45, 100%, 50%, 0.05)`,
+                  }}
+                >
+                  <div className="absolute inset-0 pointer-events-none" style={{
+                    background: `radial-gradient(ellipse at 50% 50%, hsl(45, 100%, 60%, 0.08), transparent 70%)`,
+                  }} />
+                  <div className="relative flex items-center justify-center gap-2">
+                    <Zap className="w-5 h-5" style={{ color: "hsl(45, 100%, 55%)" }} />
+                    <span className="font-serif text-sm font-semibold" style={{ color: "hsl(45, 100%, 65%)" }}>
+                      Challenge Mode
+                    </span>
+                    <Zap className="w-5 h-5" style={{ color: "hsl(45, 100%, 55%)" }} />
+                  </div>
+                  <p className="relative text-xs text-muted-foreground mt-1">
+                    No hints this time. Play the line from memory!
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <div
+              className="transition-all duration-500"
+              style={isChallengeMode ? {
+                filter: `drop-shadow(0 0 20px hsl(45, 100%, 50%, 0.15))`,
+              } : {}}
+            >
+              <Chessboard
+                fen={fen}
+                onMove={handleMove}
+                moveHints={isChallengeMode ? new Map() : moveHints}
+                disabled={isComputerTurn || lineCompleted}
+                flipped={playerColor === "b"}
+              />
+            </div>
 
             {/* Feedback area */}
             <div className="mt-4 min-h-[80px]">
