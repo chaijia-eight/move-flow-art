@@ -128,6 +128,23 @@ const translations = {
   aboutThisOpening: { en: "About This Opening", zh: "关于此开局" },
   yourOptions: { en: "Your Options", zh: "你的选择" },
   yourPlan: { en: "Your Plan", zh: "你的计划" },
+  moves: { en: "moves", zh: "步" },
+  customLines: { en: "Custom Lines", zh: "自定义变化" },
+  customBranch: { en: "CUSTOM", zh: "自定义" },
+  customBranchDesc: { en: "You're off-book. The engine evaluates each move.", zh: "你已偏离棋谱。引擎将评估每一步。" },
+  customBranchStarted: { en: "Exploring your own line. The engine will guide you.", zh: "正在探索你自己的变化。引擎会指导你。" },
+  evaluatingMove: { en: "Evaluating move...", zh: "评估走法中..." },
+  moveIsValidAlt: {
+    en: (san: string) => `${san} is a valid alternative. Want to explore this line?`,
+    zh: (san: string) => `${san}是一个可行的替代走法。想探索这条变化吗？`,
+  },
+  lineRecorded: { en: "Line Recorded!", zh: "变化已记录！" },
+  saveCustomLine: { en: "Save Custom Line", zh: "保存自定义变化" },
+  saveCustomLineDesc: { en: "Save this line to practice it later and master it.", zh: "保存这条变化以便日后练习并掌握。" },
+  lineSaved: { en: "Line Saved!", zh: "变化已保存！" },
+  lineSavedDesc: { en: "Your custom line is now available in the opening's study hub.", zh: "你的自定义变化现在可以在开局学习中心找到。" },
+  discard: { en: "Discard", zh: "放弃" },
+  yourCustomLines: { en: "Your Custom Lines", zh: "你的自定义变化" },
 
   // ==================== Feedback ====================
   goodContinue: { en: "Good. Let's continue.", zh: "好的，继续。" },

@@ -2,21 +2,51 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { openings } from "@/data/openingTrees";
 import { themes } from "@/data/openings";
 import { extractLinesForVariation, extractAllLines, type Line } from "@/lib/lineExtractor";
 import { getLineProgress, isLineUnlocked, getOpeningProgress } from "@/lib/progressStore";
-import { ArrowLeft, ChevronRight, Crown, Shield, ChevronDown, Lock, Check, BookOpen, RotateCcw } from "lucide-react";
+import { ArrowLeft, ChevronRight, Crown, Shield, ChevronDown, Lock, Check, BookOpen, RotateCcw, Play, Trash2, Sprout } from "lucide-react";
 import { t, tn, tDesc, tVar } from "@/lib/i18n";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function StudyHub() {
   const { openingId } = useParams();
   const navigate = useNavigate();
   const { setTheme, currentTheme } = useTheme();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [showAgainstVariations, setShowAgainstVariations] = useState(false);
   const [expandedVariation, setExpandedVariation] = useState<string | null>(null);
 
   const opening = openings.find((o) => o.id === openingId);
+
+  // Fetch custom lines for this opening
+  const { data: customLines = [] } = useQuery({
+    queryKey: ["custom-lines", user?.id, openingId],
+    queryFn: async () => {
+      if (!user || !openingId) return [];
+      const { data, error } = await supabase
+        .from("custom_lines")
+        .select("*")
+        .eq("opening_id", openingId)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data ?? [];
+    },
+    enabled: !!user && !!openingId,
+  });
+
+  const handleDeleteCustomLine = async (lineId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!confirm("Delete this custom line?")) return;
+    await supabase.from("custom_lines").delete().eq("id", lineId);
+    queryClient.invalidateQueries({ queryKey: ["custom-lines", user?.id, openingId] });
+  };
+
 
   useEffect(() => {
     if (opening) setTheme(opening.themeId);
@@ -435,6 +465,74 @@ export default function StudyHub() {
             })}
           </div>
         </motion.div>
+
+        {/* Custom Lines */}
+        {user && customLines.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.35 }}
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <Sprout className="w-4 h-4 text-primary" />
+              <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
+                {t("yourCustomLines")}
+              </h2>
+              <div className="flex-1 h-px bg-border/50" />
+            </div>
+            <div className="space-y-2">
+              {customLines.map((line: any, i: number) => {
+                const prog = getLineProgress(`garden-${line.id}`);
+                return (
+                  <motion.button
+                    key={line.id}
+                    initial={{ opacity: 0, x: -6 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.2, delay: i * 0.04 }}
+                    whileHover={{ x: 4, backgroundColor: `${theme.accentColor}10` }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => navigate(`/study/${openingId}/custom/${line.id}`)}
+                    className="w-full text-left rounded-lg px-4 py-3 border transition-all duration-200 group cursor-pointer"
+                    style={{
+                      background: prog.mastered ? `${theme.accentColor}08` : "hsl(var(--card))",
+                      borderColor: prog.mastered ? `${theme.accentColor}30` : "hsl(var(--border) / 0.3)",
+                    }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <Sprout className="w-3.5 h-3.5 flex-shrink-0" style={{ color: theme.accentColor }} />
+                        <span className="text-sm font-medium truncate">{line.name}</span>
+                        <span className="text-[10px] text-muted-foreground/60 font-mono">
+                          {line.move_count} {t("moves")}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                        {prog.correctAttempts > 0 && !prog.mastered && (
+                          <span className="text-[10px] text-muted-foreground/60 font-mono">
+                            {prog.correctAttempts}× {t("correct")}
+                          </span>
+                        )}
+                        {prog.mastered && (
+                          <Check className="w-3.5 h-3.5" style={{ color: theme.accentColor }} />
+                        )}
+                        <button
+                          onClick={(e) => handleDeleteCustomLine(line.id, e)}
+                          className="p-1 rounded hover:bg-destructive/10 transition-colors opacity-0 group-hover:opacity-100"
+                        >
+                          <Trash2 className="w-3 h-3 text-muted-foreground hover:text-destructive" />
+                        </button>
+                        <Play className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-foreground/50 transition-colors" />
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground/60 mt-1 pl-5.5 font-mono truncate">
+                      {line.moves.slice(0, 8).join(" ")}{line.moves.length > 8 ? "..." : ""}
+                    </p>
+                  </motion.button>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
       </div>
     </div>
   );
