@@ -684,7 +684,7 @@ export default function Study() {
                         onClick={handleReset}
                         className="px-4 py-2 rounded-lg text-sm font-medium border border-border/50 text-foreground/70 hover:bg-accent transition-colors"
                       >
-                        Practice Again
+                        {t("practiceAgain")}
                       </motion.button>
                       {allVariationLines.length > 0 && currentLine && (
                         <motion.button
