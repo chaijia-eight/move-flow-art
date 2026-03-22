@@ -818,22 +818,34 @@ export default function Study() {
                     Your Options
                   </h4>
                   <div className="space-y-1.5">
-                    {validNodes.map((node, i) => {
+                    {[...validNodes].sort((a, b) => {
+                      const totalMoves = moveHistory.length;
+                      const aIsExpected = preferredMoves && totalMoves < preferredMoves.length && a.move === preferredMoves[totalMoves];
+                      const bIsExpected = preferredMoves && totalMoves < preferredMoves.length && b.move === preferredMoves[totalMoves];
+                      if (aIsExpected && !bIsExpected) return -1;
+                      if (!aIsExpected && bIsExpected) return 1;
+                      // main_line before alternatives
+                      if (a.category === "main_line" && b.category !== "main_line") return -1;
+                      if (a.category !== "main_line" && b.category === "main_line") return 1;
+                      return 0;
+                    }).map((node, i) => {
                       const totalMovesPlayed = moveHistory.length;
                       const isExpectedMove = preferredMoves && totalMovesPlayed < preferredMoves.length && node.move === preferredMoves[totalMovesPlayed];
+                      const isOnPath = isExpectedMove || node.category === "main_line";
+                      // Don't show variation name for the move we're studying; show it for alternatives
+                      const showVariationLabel = node.variationName && !isExpectedMove;
                       return (
                       <div key={i} className="flex items-center gap-2">
                         <div
                           className="w-2 h-2 rounded-full"
                           style={{
-                            background:
-                              isExpectedMove || node.category === "main_line"
-                                ? "hsl(42, 90%, 55%)"
-                                : "hsl(180, 40%, 55%)",
+                            background: isOnPath
+                              ? "hsl(42, 90%, 55%)"
+                              : "hsl(180, 40%, 55%)",
                           }}
                         />
                         <span className="font-mono text-sm text-foreground/70">{node.move}</span>
-                        {node.variationName && (
+                        {showVariationLabel && (
                           <span className="text-xs italic text-muted-foreground">
                             {node.variationName}
                           </span>
