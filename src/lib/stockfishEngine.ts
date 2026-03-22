@@ -25,16 +25,16 @@ const GOOD_MOVE_THRESHOLD = 80; // centipawn loss threshold — moves losing les
 
 class StockfishEngine {
   private worker: Worker | null = null;
-  private ready = false;
   private messageCallbacks: ((line: string) => void)[] = [];
   private initPromise: Promise<void> | null = null;
 
   async init(): Promise<void> {
     if (this.initPromise) return this.initPromise;
     
-    this.initPromise = new Promise((resolve, reject) => {
+    this.initPromise = new Promise<void>((resolve, reject) => {
       try {
-        this.worker = new Worker("/stockfish/stockfish.js");
+        // Use single-thread build so engine works in environments without SharedArrayBuffer.
+        this.worker = new Worker("/stockfish/stockfish-single.js");
         
         this.worker.onmessage = (e) => {
           const line = typeof e.data === "string" ? e.data : e.data?.toString?.() ?? "";
@@ -50,7 +50,6 @@ class StockfishEngine {
 
         // Wait for UCI initialization
         this.sendAndWait("uci", "uciok").then(() => {
-          this.ready = true;
           this.send("isready");
           return this.waitFor("readyok");
         }).then(() => {
@@ -59,6 +58,12 @@ class StockfishEngine {
       } catch (err) {
         reject(err);
       }
+    }).catch((err) => {
+      this.initPromise = null;
+      this.worker?.terminate();
+      this.worker = null;
+      this.messageCallbacks = [];
+      throw err;
     });
 
     return this.initPromise;
@@ -232,7 +237,6 @@ class StockfishEngine {
   destroy() {
     this.worker?.terminate();
     this.worker = null;
-    this.ready = false;
     this.initPromise = null;
     this.messageCallbacks = [];
   }
