@@ -1,4 +1,5 @@
 import { loadSettings } from "./settingsStore";
+import { openingDescriptions, variationTranslations } from "./i18n-openings";
 
 export type Language = "en" | "zh";
 
