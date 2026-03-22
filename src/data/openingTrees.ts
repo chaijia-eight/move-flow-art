@@ -2433,9 +2433,9 @@ export const openings: Opening[] = [
     themeId: "vienna", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "w", tree: viennaGameTree, totalVariations: 3,
     variations: [
-      { id: "vienna-gambit", name: "Vienna Gambit", description: "f4 — aggressive and sharp, attacking Black's center.", startingMoves: "1.e4 e5 2.Nc3 Nf6 3.f4", tree: viennaGameTree, depth: 10 },
-      { id: "vienna-italian", name: "Vienna Italian", description: "Bc4 — a trappy line with Qh5 threats.", startingMoves: "1.e4 e5 2.Nc3 Nf6 3.Bc4", tree: viennaGameTree, depth: 10 },
-      { id: "vienna-nc6", name: "Vienna with Nc6", description: "Black mirrors with Nc6 — symmetrical and strategic.", startingMoves: "1.e4 e5 2.Nc3 Nc6", tree: viennaGameTree, depth: 7 },
+      { id: "vienna-gambit", name: "Vienna Gambit", description: "f4 — aggressive and sharp, attacking Black's center.", plan: "Sacrifice or exchange the f-pawn to blast open the f-file and attack Black's king. Develop rapidly with Bc4 and Nf3. White aims for a sharp, tactical assault — play for the attack or nothing.", startingMoves: "1.e4 e5 2.Nc3 Nf6 3.f4", tree: viennaGameTree, depth: 10 },
+      { id: "vienna-italian", name: "Vienna Italian", description: "Bc4 — a trappy line with Qh5 threats.", plan: "Develop the bishop to c4 targeting f7, with ideas of Qh5+ tricks. Combine Nc3's support with aggressive piece play. White gets a dynamic position with multiple tactical threats in the early middlegame.", startingMoves: "1.e4 e5 2.Nc3 Nf6 3.Bc4", tree: viennaGameTree, depth: 10 },
+      { id: "vienna-nc6", name: "Vienna with Nc6", description: "Black mirrors with Nc6 — symmetrical and strategic.", plan: "Both sides develop knights to the center. White aims to exploit the initiative with f4 or Bc4 ideas. A balanced, classical position where both sides have equal chances and clear development plans.", startingMoves: "1.e4 e5 2.Nc3 Nc6", tree: viennaGameTree, depth: 7 },
     ]
   },
   {
