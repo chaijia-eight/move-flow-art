@@ -13,6 +13,7 @@ interface ChessboardProps {
   moveHints: Map<string, { category: MoveCategory; targets: Map<string, MoveCategory> }>;
   disabled?: boolean;
   flipped?: boolean;
+  playerColor?: "w" | "b";
 }
 
 interface AnimMove {
