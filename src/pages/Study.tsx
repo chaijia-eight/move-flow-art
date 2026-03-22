@@ -630,7 +630,7 @@ export default function Study() {
                     <Zap className="w-5 h-5" style={{ color: "hsl(45, 100%, 55%)" }} />
                   </div>
                   <p className="relative text-xs text-muted-foreground mt-1">
-                    No hints this time. Play the line from memory!
+                    {t("noHints")}
                   </p>
                 </motion.div>
               )}
