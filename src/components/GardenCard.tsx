@@ -36,6 +36,7 @@ export default function GardenCard({ line, index, onPractice }: GardenCardProps)
 
   const movesPreview = line.moves.slice(0, 6).join(" ");
   const isWhite = line.side === "w";
+  const baseOpening = line.opening_id ? openings.find(o => o.id === line.opening_id) : null;
 
   return (
     <motion.div
