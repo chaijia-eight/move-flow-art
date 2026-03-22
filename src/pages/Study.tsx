@@ -406,7 +406,7 @@ export default function Study() {
           setCurrentNodes(matchedNode.children);
           setCurrentVariation({
             name: matchedNode.variationName || "Alternative Line",
-            description: `You're now exploring the ${matchedNode.variationName || "Alternative Line"}.`,
+            description: tf<(n: string) => string>("nowExploring")(matchedNode.variationName || "Alternative Line"),
           });
           break;
         }
