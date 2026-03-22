@@ -14,6 +14,8 @@ interface ChessboardProps {
   disabled?: boolean;
   flipped?: boolean;
   playerColor?: "w" | "b";
+  arrowFrom?: string;
+  arrowTo?: string;
 }
 
 interface AnimMove {
