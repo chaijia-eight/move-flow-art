@@ -9,6 +9,7 @@ import Index from "./pages/Index.tsx";
 import StudyHub from "./pages/StudyHub.tsx";
 import Study from "./pages/Study.tsx";
 import Settings from "./pages/Settings.tsx";
+import About from "./pages/About.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
