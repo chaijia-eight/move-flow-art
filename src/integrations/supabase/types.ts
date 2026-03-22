@@ -22,6 +22,7 @@ export type Database = {
           move_count: number
           moves: string[]
           name: string
+          opening_id: string
           side: string
           updated_at: string
           user_id: string
@@ -33,6 +34,7 @@ export type Database = {
           move_count?: number
           moves: string[]
           name?: string
+          opening_id?: string
           side?: string
           updated_at?: string
           user_id: string
@@ -44,6 +46,7 @@ export type Database = {
           move_count?: number
           moves?: string[]
           name?: string
+          opening_id?: string
           side?: string
           updated_at?: string
           user_id?: string

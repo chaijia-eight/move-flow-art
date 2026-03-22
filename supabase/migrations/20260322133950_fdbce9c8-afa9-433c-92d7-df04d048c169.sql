@@ -1,0 +1,1 @@
+ALTER TABLE public.custom_lines ADD COLUMN opening_id text NOT NULL DEFAULT '';
