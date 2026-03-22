@@ -198,7 +198,7 @@ export default function Study() {
         setIsComputerTurn(false);
       }, 600);
     }
-  }, [opening, playerColor, chess]);
+  }, [opening, playerColor, chess, resetCounter]);
 
   const findInOtherOpenings = useCallback((moveList: string[]): { id: string; name: string; nodes: OpeningNode[] } | null => {
     for (const op of openings) {
