@@ -2319,9 +2319,9 @@ export const openings: Opening[] = [
     themeId: "carokann", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: caroKannTree, totalVariations: 4,
     variations: [
-      { id: "classical-ck", name: "Classical Caro-Kann", description: "Bf5 develops naturally and solidly.", startingMoves: "1.e4 c6 2.d4 d5 3.Nc3 dxe4 4.Nxe4 Bf5", tree: caroKannTree, depth: 10 },
-      { id: "advance-ck", name: "Advance Caro-Kann", description: "White pushes e5, locking the center early.", startingMoves: "1.e4 c6 2.d4 d5 3.e5", tree: caroKannTree, depth: 8 },
-      { id: "modern-ck", name: "Modern Caro-Kann", description: "Nd7 keeps flexible — a modern approach.", startingMoves: "1.e4 c6 2.d4 d5 3.Nc3 dxe4 4.Nxe4 Nd7", tree: caroKannTree, depth: 7 },
+      { id: "classical-ck", name: "Classical Caro-Kann", description: "Bf5 develops naturally and solidly.", plan: "Develop the bishop to f5 before playing e6, avoiding the 'French bishop' problem. Build a solid structure and aim for a safe, slightly inferior but very playable middlegame. Excellent for grinding down opponents.", startingMoves: "1.e4 c6 2.d4 d5 3.Nc3 dxe4 4.Nxe4 Bf5", tree: caroKannTree, depth: 10 },
+      { id: "advance-ck", name: "Advance Caro-Kann", description: "White pushes e5, locking the center early.", plan: "As Black, attack the pawn chain with c5 and prepare Nc6 and Bf5. Undermine White's center and aim for piece activity. A strategic battle where Black has clear plans against the overextended pawns.", startingMoves: "1.e4 c6 2.d4 d5 3.e5", tree: caroKannTree, depth: 8 },
+      { id: "modern-ck", name: "Modern Caro-Kann", description: "Nd7 keeps flexible — a modern approach.", plan: "Develop Nd7 to keep options open for the knight and bishop. Play Ngf6 and aim for e6, Bd6 setups. A flexible approach that avoids the sharpest lines and gives Black a solid position with counterplay.", startingMoves: "1.e4 c6 2.d4 d5 3.Nc3 dxe4 4.Nxe4 Nd7", tree: caroKannTree, depth: 7 },
     ]
   },
   {
