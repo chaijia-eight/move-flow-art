@@ -2352,8 +2352,8 @@ export const openings: Opening[] = [
     themeId: "scotch", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "w", tree: scotchGameTree, totalVariations: 3,
     variations: [
-      { id: "classical-scotch", name: "Classical Scotch", description: "Bc5 against the knight — principled development.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.d4 exd4 4.Nxd4 Bc5", tree: scotchGameTree, depth: 8 },
-      { id: "scotch-four-knights", name: "Scotch Four Knights", description: "Nf6 leads to four knights territory.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.d4 exd4 4.Nxd4 Nf6", tree: scotchGameTree, depth: 6 },
+      { id: "classical-scotch", name: "Classical Scotch", description: "Bc5 against the knight — principled development.", plan: "As White, dominate the center after the early d4 exchange. Place the knight actively on d4 and develop quickly. As Black, challenge with Bc5 and aim for piece activity. An open, tactical middlegame with clear plans.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.d4 exd4 4.Nxd4 Bc5", tree: scotchGameTree, depth: 8 },
+      { id: "scotch-four-knights", name: "Scotch Four Knights", description: "Nf6 leads to four knights territory.", plan: "Both sides develop knights actively. White aims for a slight central advantage while Black seeks equality through active piece play. The position is solid and strategic with fewer tactical fireworks.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.d4 exd4 4.Nxd4 Nf6", tree: scotchGameTree, depth: 6 },
     ]
   },
   {
