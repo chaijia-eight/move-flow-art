@@ -245,6 +245,9 @@ export default function Index() {
           </div>
         </motion.section>
 
+        {/* Your Garden - Custom Lines */}
+        <GardenSection />
+
         <section>
           <motion.div
             initial={{ opacity: 0 }}
@@ -269,9 +272,6 @@ export default function Index() {
             ))}
           </div>
         </section>
-
-        {/* Your Garden - Custom Lines */}
-        <GardenSection />
       </main>
     </div>
   );
