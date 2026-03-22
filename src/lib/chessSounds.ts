@@ -73,6 +73,7 @@ function createShapedNoise(ctx: AudioContext, duration: number, shape: "exp" | "
 }
 
 export function playMoveSound() {
+  if (!isSoundEnabled()) return;
   const ctx = getAudioContext();
   const now = ctx.currentTime;
 
