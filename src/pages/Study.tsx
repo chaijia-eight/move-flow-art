@@ -225,22 +225,25 @@ export default function Study() {
   const moveHints = useMemo(() => {
     const hints = new Map<string, { category: MoveCategory; targets: Map<string, MoveCategory> }>();
     if (!currentNodes.length) return hints;
-    // Only show hints when it's the player's turn
     const tempChess = new Chess(fen);
     if (tempChess.turn() !== playerColor) return hints;
     const legalMoves = tempChess.moves({ verbose: true });
+    const totalMovesPlayed = moveHistory.length;
     currentNodes.forEach((node) => {
       const matching = legalMoves.find((m) => m.san === node.move);
       if (matching) {
+        // Treat preferred-path moves as main_line on the board
+        const isOnPreferredPath = preferredMoves && totalMovesPlayed < preferredMoves.length && node.move === preferredMoves[totalMovesPlayed];
+        const effectiveCat: MoveCategory = isOnPreferredPath ? "main_line" : node.category;
         if (!hints.has(matching.from)) {
-          hints.set(matching.from, { category: node.category, targets: new Map() });
+          hints.set(matching.from, { category: effectiveCat, targets: new Map() });
         }
-        hints.get(matching.from)!.targets.set(matching.to, node.category);
-        hints.get(matching.from)!.targets.set(matching.san, node.category);
+        hints.get(matching.from)!.targets.set(matching.to, effectiveCat);
+        hints.get(matching.from)!.targets.set(matching.san, effectiveCat);
       }
     });
     return hints;
-  }, [currentNodes, fen, playerColor]);
+  }, [currentNodes, fen, playerColor, moveHistory.length, preferredMoves]);
 
   const autoPlayComputerMove = useCallback((children: OpeningNode[], moveIndex: number) => {
     const chosen = pickComputerNode(children, moveIndex);
