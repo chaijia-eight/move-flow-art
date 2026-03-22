@@ -113,7 +113,16 @@ export default function Study() {
     restoreSnapshot(next);
   };
 
-  // Auto-play computer's first move if computer goes first
+  const pickComputerNode = useCallback((children: OpeningNode[], moveIndex: number): OpeningNode | null => {
+    if (children.length === 0) return null;
+    if (preferredMoves && moveIndex < preferredMoves.length) {
+      const preferredSan = preferredMoves[moveIndex];
+      const preferred = children.find((c) => c.move === preferredSan);
+      if (preferred) return preferred;
+    }
+    return children.find((c) => c.category === "main_line") || children[0];
+  }, [preferredMoves]);
+
   const initialAutoPlayed = useRef(false);
   useEffect(() => {
     if (initialAutoPlayed.current) return;
