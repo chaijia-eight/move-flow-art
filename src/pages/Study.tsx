@@ -334,10 +334,13 @@ export default function Study() {
       }
 
       switch (matchedNode.category) {
-        case "main_line":
+        case "main_line": {
+          // Don't announce variation name if it matches what we're already studying
+          const isAlreadyStudying = matchedNode.variationName && variationParam && 
+            matchedNode.variationName.toLowerCase().replace(/\s+/g, '-') === variationParam;
           setFeedback({
             type: "main_line",
-            message: matchedNode.variationName
+            message: matchedNode.variationName && !isAlreadyStudying
               ? `Good. This is the ${matchedNode.variationName}.`
               : "Good. Let's continue.",
           });
@@ -350,6 +353,7 @@ export default function Study() {
           setCurrentNodes(matchedNode.children);
           autoPlayComputerMove(matchedNode.children, newHistory.length);
           break;
+        }
 
         case "legit_alternative":
           setFeedback({
@@ -810,7 +814,8 @@ export default function Study() {
                   </h4>
                   <div className="space-y-1.5">
                     {validNodes.map((node, i) => {
-                      const isExpectedMove = preferredMoves && moveCount < preferredMoves.length && node.move === preferredMoves[moveCount];
+                      const totalMovesPlayed = moveHistory.length;
+                      const isExpectedMove = preferredMoves && totalMovesPlayed < preferredMoves.length && node.move === preferredMoves[totalMovesPlayed];
                       return (
                       <div key={i} className="flex items-center gap-2">
                         <div
