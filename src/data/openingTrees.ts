@@ -66,7 +66,35 @@ const italianMainTree: OpeningNode[] = [
                       children: [{
                         fen: "r1bqk1nr/pppp1ppp/2n5/4p3/1bB1P3/2P2N2/P2P1PPP/RNBQK2R b KQkq - 0 5",
                         move: "c3", category: "main_line",
-                        children: []
+                        children: [{
+                          fen: "r1bqk1nr/pppp1ppp/2n5/b3p3/2B1P3/2P2N2/P2P1PPP/RNBQK2R w KQkq - 1 6",
+                          move: "Ba5", category: "main_line",
+                          children: [{
+                            fen: "r1bqk1nr/pppp1ppp/2n5/b3p3/2BPP3/2P2N2/P4PPP/RNBQK2R b KQkq - 0 6",
+                            move: "d4", category: "main_line",
+                            children: [{
+                              fen: "r1bqk1nr/pppp1ppp/2n5/b7/2BpP3/2P2N2/P4PPP/RNBQK2R w KQkq - 0 7",
+                              move: "exd4", category: "main_line",
+                              children: [{
+                                fen: "r1bqk1nr/pppp1ppp/2n5/b7/2BpP3/2P2N2/P4PPP/RNBQ1RK1 b kq - 1 7",
+                                move: "O-O", category: "main_line",
+                                children: [{
+                                  fen: "r1bqk1nr/pppp1ppp/2n5/b7/2B1P3/2p2N2/P4PPP/RNBQ1RK1 w kq - 0 8",
+                                  move: "dxc3", category: "main_line",
+                                  children: [{
+                                    fen: "r1bqk1nr/pppp1ppp/2n5/b7/2B1P3/1Qp2N2/P4PPP/RNB2RK1 b kq - 1 8",
+                                    move: "Qb3", category: "main_line",
+                                    children: [{
+                                      fen: "r1b1k1nr/pppp1ppp/2n5/bq6/2B1P3/1Qp2N2/P4PPP/RNB2RK1 w kq - 2 9",
+                                      move: "Qe7", category: "main_line",
+                                      children: []
+                                    }]
+                                  }]
+                                }]
+                              }]
+                            }]
+                          }]
+                        }]
                       }]
                     }]
                   },
