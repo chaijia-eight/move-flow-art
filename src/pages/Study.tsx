@@ -487,6 +487,15 @@ export default function Study() {
             <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider">
               {sideLabel}
               {isReview && " · Review Mode"}
+              {isChallengeMode && !lineCompleted && (
+                <span className="ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold tracking-widest" style={{
+                  background: "hsl(45, 100%, 50%, 0.15)",
+                  color: "hsl(45, 100%, 60%)",
+                  border: "1px solid hsl(45, 100%, 50%, 0.25)",
+                }}>
+                  <Zap className="w-3 h-3" /> CHALLENGE
+                </span>
+              )}
             </p>
           </div>
         </div>
