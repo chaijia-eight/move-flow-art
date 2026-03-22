@@ -244,7 +244,23 @@ const sicilianMainTree: OpeningNode[] = [
                               children: [{
                                 fen: "rnbqk2r/pp2ppbp/3p1np1/8/3NP3/2N1BP2/PPP3PP/R2QKB1R b KQkq - 0 7",
                                 move: "f3", category: "main_line", variationName: "Yugoslav Attack",
-                                children: []
+                                children: [{
+                                  fen: "rnbq1rk1/pp2ppbp/3p1np1/8/3NP3/2N1BP2/PPP3PP/R2QKB1R w KQ - 1 8",
+                                  move: "O-O", category: "main_line",
+                                  children: [{
+                                    fen: "rnbq1rk1/pp2ppbp/3p1np1/8/3NP3/2N1BP2/PPPQ2PP/R3KB1R b KQ - 2 8",
+                                    move: "Qd2", category: "main_line",
+                                    children: [{
+                                      fen: "r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/R3KB1R w KQ - 3 9",
+                                      move: "Nc6", category: "main_line",
+                                      children: [{
+                                        fen: "r1bq1rk1/pp2ppbp/2np1np1/8/2BNP3/2N1BP2/PPPQ2PP/R3K2R b KQ - 4 9",
+                                        move: "Bc4", category: "main_line",
+                                        children: []
+                                      }]
+                                    }]
+                                  }]
+                                }]
                               }]
                             }]
                           }]
