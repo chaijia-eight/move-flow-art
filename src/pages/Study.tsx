@@ -762,6 +762,7 @@ export default function Study() {
                     onSwitch={() => {
                       if (feedback.detectedOpening) {
                         // Cross-opening transposition: navigate to the other opening's study page
+                        setFeedback(null);
                         navigate(`/study/${feedback.detectedOpening.id}/play?color=${playerColor}`);
                       } else if (feedback.detectedVariation) {
                         // Same-opening variation switch: navigate to the detected variation's line
