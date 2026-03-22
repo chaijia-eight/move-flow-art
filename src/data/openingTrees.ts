@@ -2373,8 +2373,8 @@ export const openings: Opening[] = [
     themeId: "pirc", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: pircDefenseTree, totalVariations: 3,
     variations: [
-      { id: "classical-pirc", name: "Classical Pirc", description: "Nf3 + Be2 — restrained but potent.", startingMoves: "1.e4 d6 2.d4 Nf6 3.Nc3 g6 4.Nf3", tree: pircDefenseTree, depth: 8 },
-      { id: "austrian-attack", name: "Austrian Attack", description: "f3 — White plays aggressively.", startingMoves: "1.e4 d6 2.d4 Nf6 3.Nc3 g6 4.f3", tree: pircDefenseTree, depth: 7 },
+      { id: "classical-pirc", name: "Classical Pirc", description: "Nf3 + Be2 — restrained but potent.", plan: "As Black, develop flexibly with g6, Bg7, d6, and Nf6. Let White overextend in the center, then strike back with c5 or e5. A patient, hypermodern approach that punishes aggressive play.", startingMoves: "1.e4 d6 2.d4 Nf6 3.Nc3 g6 4.Nf3", tree: pircDefenseTree, depth: 8 },
+      { id: "austrian-attack", name: "Austrian Attack", description: "f3 — White plays aggressively.", plan: "As White, build a massive center with f4 and e5, aiming to crush Black's setup. As Black, survive the early pressure and counterattack once White overextends. High-tension chess with decisive games.", startingMoves: "1.e4 d6 2.d4 Nf6 3.Nc3 g6 4.f3", tree: pircDefenseTree, depth: 7 },
     ]
   },
   {
