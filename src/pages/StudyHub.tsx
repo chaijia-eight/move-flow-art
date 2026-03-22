@@ -47,7 +47,6 @@ export default function StudyHub() {
     queryClient.invalidateQueries({ queryKey: ["custom-lines", user?.id, openingId] });
   };
 
-  const opening = openings.find((o) => o.id === openingId);
 
   useEffect(() => {
     if (opening) setTheme(opening.themeId);
