@@ -16,7 +16,7 @@ import {
   isLineUnlocked,
   MASTERY_PROMPT_THRESHOLD,
 } from "@/lib/progressStore";
-import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight } from "lucide-react";
+import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap } from "lucide-react";
 
 interface MoveRecord {
   san: string;
