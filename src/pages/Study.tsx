@@ -191,17 +191,6 @@ export default function Study() {
     return hints;
   }, [currentNodes, fen]);
 
-  const pickComputerNode = useCallback((children: OpeningNode[], moveIndex: number): OpeningNode | null => {
-    if (children.length === 0) return null;
-    // If we have a preferred variation, try to follow its move sequence
-    if (preferredMoves && moveIndex < preferredMoves.length) {
-      const preferredSan = preferredMoves[moveIndex];
-      const preferred = children.find((c) => c.move === preferredSan);
-      if (preferred) return preferred;
-    }
-    // Fallback to main_line
-    return children.find((c) => c.category === "main_line") || children[0];
-  }, [preferredMoves]);
 
   const autoPlayComputerMove = useCallback((children: OpeningNode[], moveIndex: number) => {
     const chosen = pickComputerNode(children, moveIndex);
