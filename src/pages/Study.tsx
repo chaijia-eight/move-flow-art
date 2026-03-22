@@ -408,6 +408,14 @@ export default function Study() {
       setUndoStack((prev) => [...prev, snapshot]);
       setRedoStack([]);
 
+      const getSuggestedMoveForCurrentPly = (fallback?: string) =>
+        (preferredMoves && newHistory.length - 1 < preferredMoves.length
+          ? preferredMoves[newHistory.length - 1]
+          : currentNodes.find((n) => n.category === "main_line")?.move) ||
+        fallback ||
+        currentNodes[0]?.move ||
+        san;
+
       // Custom branch: evaluate every move with engine
       if (isCustomBranch) {
         if (newHistory.length >= MAX_CUSTOM_MOVES) {
@@ -465,8 +473,7 @@ export default function Study() {
         const allSans = newHistory.map((m) => m.san);
         const detected = findInOtherOpenings(allSans);
         if (detected) {
-          const mainLineNode = currentNodes.find(n => n.category === "main_line");
-          const recommendedSan = mainLineNode?.move || (preferredMoves && newHistory.length - 1 < preferredMoves.length ? preferredMoves[newHistory.length - 1] : undefined);
+          const recommendedSan = getSuggestedMoveForCurrentPly();
           setFeedback({
             type: "legit_alternative",
             message: tf<(n: string) => string>("thatsThe")(detected.name),
@@ -491,8 +498,7 @@ export default function Study() {
 
           if (evaluation.isGood) {
             // Good off-tree move — offer to switch to custom branch
-            const mainLineNode = currentNodes.find(n => n.category === "main_line");
-            const recommendedSan = mainLineNode?.move || evaluation.bestMoveSan;
+            const recommendedSan = getSuggestedMoveForCurrentPly(evaluation.bestMoveSan);
             setFeedback({
               type: "legit_alternative",
               message: tf<(s: string) => string>("moveIsValidAlt")(san),
@@ -522,12 +528,7 @@ export default function Study() {
           setFen(newFen);
 
           // Still surface switch controls so the user can continue
-          const suggestedFallback =
-            (preferredMoves && newHistory.length - 1 < preferredMoves.length
-              ? preferredMoves[newHistory.length - 1]
-              : currentNodes.find((n) => n.category === "main_line")?.move) ||
-            currentNodes[0]?.move ||
-            san;
+          const suggestedFallback = getSuggestedMoveForCurrentPly();
 
           setFeedback({
             type: "legit_alternative",
@@ -602,15 +603,12 @@ export default function Study() {
             }
           }
           // Find the recommended move (preferred path move) to show as suggestion
-          const totalMovesSoFar = newHistory.length;
-          const recommendedSan = preferredMoves && (totalMovesSoFar - 1) < preferredMoves.length
-            ? preferredMoves[totalMovesSoFar - 1]
-            : currentNodes.find(n => n.category === "main_line")?.move;
+          const recommendedSan = getSuggestedMoveForCurrentPly(matchedNode.suggestedMove);
           setFeedback({
             type: "legit_alternative",
             message: tf<(n: string) => string>("alsoGood")(matchedNode.variationName || "Alternative Line"),
             variationName: matchedNode.variationName,
-            suggestedMove: recommendedSan || matchedNode.suggestedMove,
+            suggestedMove: recommendedSan,
             alternativeNode: matchedNode,
             detectedVariation: detectedVar,
           });
