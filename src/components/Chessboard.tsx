@@ -196,7 +196,11 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
         }}
       >
         <div className="p-1 rounded-lg" style={{ background: `${currentTheme.accentColor}30` }}>
-          <div className="grid grid-cols-8 rounded-md overflow-hidden" style={{ aspectRatio: "1" }}>
+          <div className="grid grid-cols-8 rounded-md overflow-hidden relative" style={{ aspectRatio: "1" }}>
+            {/* Move arrow overlay */}
+            {arrowFrom && arrowTo && (
+              <MoveArrow from={arrowFrom} to={arrowTo} flipped={flipped} />
+            )}
             {Array.from({ length: 8 }, (_, displayRow) =>
               Array.from({ length: 8 }, (_, displayCol) => {
                 const [boardRow, boardCol] = displayToBoard(displayRow, displayCol);
