@@ -565,7 +565,7 @@ export default function Study() {
                 color: playerColor === "w" ? "hsl(var(--background))" : "hsl(var(--muted-foreground))",
               }}
             >
-              White
+              {t("white")}
             </button>
             <button
               onClick={() => handleColorSwitch("b")}
