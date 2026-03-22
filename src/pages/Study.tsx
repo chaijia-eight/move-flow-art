@@ -333,7 +333,7 @@ export default function Study() {
         } else {
           setFeedback({
             type: "main_line",
-            message: "Interesting move. We don't have this in our study lines yet.",
+            message: t("interestingMove"),
           });
           setCurrentNodes([]);
         }
