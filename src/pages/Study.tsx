@@ -354,8 +354,8 @@ export default function Study() {
           setFeedback({
             type: "main_line",
             message: matchedNode.variationName && !isAlreadyStudying
-              ? `Good. This is the ${matchedNode.variationName}.`
-              : "Good. Let's continue.",
+              ? tf<(n: string) => string>("goodThisIs")(matchedNode.variationName)
+              : t("goodContinue"),
           });
           if (matchedNode.variationName) {
             setCurrentVariation({
