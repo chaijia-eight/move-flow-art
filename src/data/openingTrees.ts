@@ -2454,8 +2454,8 @@ export const openings: Opening[] = [
     themeId: "benoni", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: benoniTree, totalVariations: 3,
     variations: [
-      { id: "modern-benoni", name: "Modern Benoni", description: "e4 — the critical test with a strong center vs Black's activity.", startingMoves: "1.d4 Nf6 2.c4 c5 3.d5 e6 4.Nc3 exd5 5.cxd5 d6 6.e4", tree: benoniTree, depth: 14 },
-      { id: "fianchetto-benoni", name: "Fianchetto Benoni", description: "g3 — a quieter approach with long-term pressure.", startingMoves: "1.d4 Nf6 2.c4 c5 3.d5 e6 4.Nc3 exd5 5.cxd5 d6 6.g3", tree: benoniTree, depth: 14 },
+      { id: "modern-benoni", name: "Modern Benoni", description: "e4 — the critical test with a strong center vs Black's activity.", plan: "As Black, accept a space disadvantage in exchange for queenside counterplay with a6, b5, and activity on the c-file. White has a strong center but Black's pieces are active. A dynamic, unbalanced fight.", startingMoves: "1.d4 Nf6 2.c4 c5 3.d5 e6 4.Nc3 exd5 5.cxd5 d6 6.e4", tree: benoniTree, depth: 14 },
+      { id: "fianchetto-benoni", name: "Fianchetto Benoni", description: "g3 — a quieter approach with long-term pressure.", plan: "As White, fianchetto and maintain a flexible center. The Bg2 supports e4 and controls key central squares. As Black, use the c5 pawn to create queenside counterplay. A more strategic, positional approach.", startingMoves: "1.d4 Nf6 2.c4 c5 3.d5 e6 4.Nc3 exd5 5.cxd5 d6 6.g3", tree: benoniTree, depth: 14 },
     ]
   },
   {
