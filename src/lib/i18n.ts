@@ -189,7 +189,7 @@ const translations = {
     "grunfeld-defense": { en: "Grünfeld Defense", zh: "格林菲尔德防御" },
     "alekhines-defense": { en: "Alekhine's Defense", zh: "阿廖欣防御" },
     "vienna-game": { en: "Vienna Game", zh: "维也纳开局" },
-    "catalan-opening": { en: "Catalan Opening", zh: "加泰罗尼亚开局" },
+    "catalan-opening": { en: "Catalan Opening", zh: "卡塔兰开局" },
     "benoni-defense": { en: "Benoni Defense", zh: "贝诺尼防御" },
     "philidor-defense": { en: "Philidor Defense", zh: "菲利多尔防御" },
     "reti-opening": { en: "Réti Opening", zh: "列季开局" },
