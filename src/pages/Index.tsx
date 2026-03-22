@@ -23,12 +23,22 @@ export default function Index() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         >
-          <h1 className="font-serif text-5xl font-bold text-foreground tracking-tight">
-            First Move
-          </h1>
-          <p className="text-muted-foreground mt-2 text-lg max-w-md leading-relaxed">
-            Explore chess openings at your own pace. No pressure, no streaks — just beautiful learning.
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="font-serif text-5xl font-bold text-foreground tracking-tight">
+                First Move
+              </h1>
+              <p className="text-muted-foreground mt-2 text-lg max-w-md leading-relaxed">
+                Explore chess openings at your own pace. No pressure, no streaks — just beautiful learning.
+              </p>
+            </div>
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="text-sm text-muted-foreground hover:text-foreground border border-border rounded-lg px-4 py-2 transition-colors"
+            >
+              Dashboard
+            </button>
+          </div>
         </motion.div>
       </header>
 
