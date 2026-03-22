@@ -2427,4 +2427,55 @@ export const openings: Opening[] = [
       { id: "exchange-alekhine", name: "Exchange Variation", description: "White plays d3 — quiet and positional.", startingMoves: "1.e4 Nf6 2.e5 Nd5 3.d3", tree: alekhineTree, depth: 6 },
     ]
   },
+  {
+    id: "vienna-game", name: "Vienna Game", family: "Vienna",
+    description: "White develops Nc3 before Nf3, allowing aggressive f4 gambits or positional Bc4 setups.",
+    themeId: "vienna", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    primarySide: "w", tree: viennaGameTree, totalVariations: 3,
+    variations: [
+      { id: "vienna-gambit", name: "Vienna Gambit", description: "f4 — aggressive and sharp, attacking Black's center.", startingMoves: "1.e4 e5 2.Nc3 Nf6 3.f4", tree: viennaGameTree, depth: 10 },
+      { id: "vienna-italian", name: "Vienna Italian", description: "Bc4 — a trappy line with Qh5 threats.", startingMoves: "1.e4 e5 2.Nc3 Nf6 3.Bc4", tree: viennaGameTree, depth: 10 },
+      { id: "vienna-nc6", name: "Vienna with Nc6", description: "Black mirrors with Nc6 — symmetrical and strategic.", startingMoves: "1.e4 e5 2.Nc3 Nc6", tree: viennaGameTree, depth: 7 },
+    ]
+  },
+  {
+    id: "catalan-opening", name: "Catalan Opening", family: "Catalan",
+    description: "A sophisticated opening where White fianchettoes on g2, combining Queen's Gambit ideas with a powerful bishop.",
+    themeId: "catalan", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    primarySide: "w", tree: catalanTree, totalVariations: 3,
+    variations: [
+      { id: "open-catalan", name: "Open Catalan", description: "Black takes on c4 — White's Bg2 pressures the queenside.", startingMoves: "1.d4 Nf6 2.c4 e6 3.g3 d5 4.Bg2 Be7 5.Nf3 O-O 6.O-O dxc4", tree: catalanTree, depth: 14 },
+      { id: "closed-catalan", name: "Closed Catalan", description: "Black keeps the center closed with Nbd7.", startingMoves: "1.d4 Nf6 2.c4 e6 3.g3 d5 4.Bg2 Be7 5.Nf3 O-O 6.O-O Nbd7", tree: catalanTree, depth: 12 },
+    ]
+  },
+  {
+    id: "benoni-defense", name: "Benoni Defense", family: "Benoni",
+    description: "Black creates asymmetric pawn structure with c5 against d4, leading to dynamic kingside vs queenside battles.",
+    themeId: "benoni", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    primarySide: "b", tree: benoniTree, totalVariations: 3,
+    variations: [
+      { id: "modern-benoni", name: "Modern Benoni", description: "e4 — the critical test with a strong center vs Black's activity.", startingMoves: "1.d4 Nf6 2.c4 c5 3.d5 e6 4.Nc3 exd5 5.cxd5 d6 6.e4", tree: benoniTree, depth: 14 },
+      { id: "fianchetto-benoni", name: "Fianchetto Benoni", description: "g3 — a quieter approach with long-term pressure.", startingMoves: "1.d4 Nf6 2.c4 c5 3.d5 e6 4.Nc3 exd5 5.cxd5 d6 6.g3", tree: benoniTree, depth: 14 },
+    ]
+  },
+  {
+    id: "philidor-defense", name: "Philidor Defense", family: "Philidor",
+    description: "A solid but slightly passive defense with d6. Named after the legendary 18th-century player Philidor.",
+    themeId: "philidor", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    primarySide: "b", tree: philidorTree, totalVariations: 3,
+    variations: [
+      { id: "philidor-main", name: "Philidor Main Line", description: "Nf6 and Nbd7 — the classical setup.", startingMoves: "1.e4 e5 2.Nf3 d6 3.d4 Nf6", tree: philidorTree, depth: 12 },
+      { id: "hanham-philidor", name: "Hanham Philidor", description: "Nd7 first — a more flexible move order.", startingMoves: "1.e4 e5 2.Nf3 d6 3.d4 Nd7", tree: philidorTree, depth: 10 },
+    ]
+  },
+  {
+    id: "reti-opening", name: "Réti Opening", family: "Réti",
+    description: "A hypermodern opening — White controls the center with pieces rather than pawns. Flexible and transpositional.",
+    themeId: "reti", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    primarySide: "w", tree: retiTree, totalVariations: 3,
+    variations: [
+      { id: "reti-accepted", name: "Réti Accepted", description: "e6 and classical development — rich strategic play.", startingMoves: "1.Nf3 d5 2.c4 e6", tree: retiTree, depth: 12 },
+      { id: "reti-kia", name: "King's Indian Attack", description: "g3 + Bg2 — a universal system for White.", startingMoves: "1.Nf3 d5 2.g3", tree: retiTree, depth: 10 },
+    ]
+  },
 ];
