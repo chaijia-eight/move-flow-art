@@ -805,7 +805,7 @@ export default function Study() {
                         {t("yourPlan")}
                       </p>
                       <p className="text-sm text-foreground/70 leading-relaxed">
-                        {variation.plan}
+                        {tVar(variation.id, "plan", variation.plan)}
                       </p>
                     </motion.div>
                   );
