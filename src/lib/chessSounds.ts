@@ -1,4 +1,5 @@
 // Chess sound effects using Web Audio API — warm, rich, non-pixelated
+import { isSoundEnabled } from "@/lib/settingsStore";
 
 let audioCtx: AudioContext | null = null;
 let reverbBuffer: AudioBuffer | null = null;
@@ -72,6 +73,7 @@ function createShapedNoise(ctx: AudioContext, duration: number, shape: "exp" | "
 }
 
 export function playMoveSound() {
+  if (!isSoundEnabled()) return;
   const ctx = getAudioContext();
   const now = ctx.currentTime;
 
@@ -144,6 +146,7 @@ export function playMoveSound() {
 }
 
 export function playCaptureSound() {
+  if (!isSoundEnabled()) return;
   const ctx = getAudioContext();
   const now = ctx.currentTime;
 
@@ -233,6 +236,7 @@ export function playCaptureSound() {
 }
 
 export function playMasterySound() {
+  if (!isSoundEnabled()) return;
   const ctx = getAudioContext();
   const now = ctx.currentTime;
 
@@ -307,6 +311,7 @@ export function playMasterySound() {
 }
 
 export function playLineCompleteSound() {
+  if (!isSoundEnabled()) return;
   const ctx = getAudioContext();
   const now = ctx.currentTime;
 
