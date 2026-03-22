@@ -236,6 +236,7 @@ export function playCaptureSound() {
 }
 
 export function playMasterySound() {
+  if (!isSoundEnabled()) return;
   const ctx = getAudioContext();
   const now = ctx.currentTime;
 
