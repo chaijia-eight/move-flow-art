@@ -690,7 +690,7 @@ export default function Study() {
     const match = legalMoves.find(m => m.san === expectedSan);
     if (!match) return null;
     return { from: match.from, to: match.to };
-  }, [opening, fen, playerColor, moveHistory.length, preferredMoves, currentNodes, isChallengeMode, isCustomBranch, lineCompleted, isComputerTurn]);
+  }, [opening, fen, playerColor, moveHistory.length, preferredMoves, currentNodes, currentLine, isCustomBranch, lineCompleted, isComputerTurn]);
 
   const totalPlayerMoves = useMemo(() => {
     if (!currentLine) return 0;
