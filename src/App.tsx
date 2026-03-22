@@ -9,6 +9,7 @@ import Index from "./pages/Index.tsx";
 import StudyHub from "./pages/StudyHub.tsx";
 import Study from "./pages/Study.tsx";
 import Settings from "./pages/Settings.tsx";
+import About from "./pages/About.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/about" element={<About />} />
               <Route path="/study/:openingId" element={<StudyHub />} />
               <Route path="/study/:openingId/play" element={<Study />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
