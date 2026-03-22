@@ -282,7 +282,7 @@ export default function Study() {
           if (chosen.variationName) {
             setCurrentVariation({
               name: chosen.variationName,
-              description: `You're studying the ${chosen.variationName}.`,
+              description: tf<(n: string) => string>("studyingThe")(chosen.variationName),
             });
           }
           setUndoStack((prev) => [...prev, snapBefore]);
