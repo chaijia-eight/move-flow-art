@@ -367,12 +367,40 @@ export default function Study() {
           break;
         }
 
-        case "legit_alternative":
+        case "legit_alternative": {
+          // Try to find which variation this alternative belongs to
+          let detectedVar: { variationId: string; lineIndex: number } | undefined;
+          if (opening && matchedNode.variationName) {
+            const altName = matchedNode.variationName.toLowerCase().replace(/\s+/g, '-');
+            const matchingVariation = opening.variations.find(
+              (v) => v.id === altName || v.name === matchedNode.variationName
+            );
+            if (matchingVariation) {
+              // Find which line within this variation best matches the moves played so far
+              const varLines = extractLinesForVariation(opening, matchingVariation);
+              const allSans = newHistory.map((m) => m.san);
+              let bestLineIdx = 0;
+              let bestMatch = 0;
+              varLines.forEach((line, idx) => {
+                let matchCount = 0;
+                for (let i = 0; i < Math.min(allSans.length, line.moves.length); i++) {
+                  if (allSans[i] === line.moves[i]) matchCount++;
+                  else break;
+                }
+                if (matchCount > bestMatch) {
+                  bestMatch = matchCount;
+                  bestLineIdx = idx;
+                }
+              });
+              detectedVar = { variationId: matchingVariation.id, lineIndex: bestLineIdx };
+            }
+          }
           setFeedback({
             type: "legit_alternative",
-            message: `This move is also good — it's called the ${matchedNode.variationName || "Alternative Line"}.`,
+            message: `This move is also good — it's called the ${matchedNode.variationName || "Alternative Line"}. Want to switch?`,
             variationName: matchedNode.variationName,
             alternativeNode: matchedNode,
+            detectedVariation: detectedVar,
           });
           setCurrentNodes(matchedNode.children);
           setCurrentVariation({
@@ -380,6 +408,7 @@ export default function Study() {
             description: `You're now exploring the ${matchedNode.variationName || "Alternative Line"}.`,
           });
           break;
+        }
 
         case "mistake":
           chess.undo();
