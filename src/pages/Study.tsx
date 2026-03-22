@@ -810,7 +810,8 @@ export default function Study() {
                   </h4>
                   <div className="space-y-1.5">
                     {validNodes.map((node, i) => {
-                      const isExpectedMove = preferredMoves && moveCount < preferredMoves.length && node.move === preferredMoves[moveCount];
+                      const totalMovesPlayed = moveHistory.length;
+                      const isExpectedMove = preferredMoves && totalMovesPlayed < preferredMoves.length && node.move === preferredMoves[totalMovesPlayed];
                       return (
                       <div key={i} className="flex items-center gap-2">
                         <div
