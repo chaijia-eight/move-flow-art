@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import MoveArrow from "@/components/MoveArrow";
 import { Chess } from "chess.js";
 import { fenToBoard, PIECE_IMAGES, coordsToSquare, squareToCoords } from "@/data/pieceUnicode";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -14,6 +15,8 @@ interface ChessboardProps {
   disabled?: boolean;
   flipped?: boolean;
   playerColor?: "w" | "b";
+  arrowFrom?: string;
+  arrowTo?: string;
 }
 
 interface AnimMove {
@@ -25,7 +28,7 @@ interface AnimMove {
 
 let animIdCounter = 0;
 
-export default function Chessboard({ fen, onMove, moveHints, disabled, flipped = false, playerColor }: ChessboardProps) {
+export default function Chessboard({ fen, onMove, moveHints, disabled, flipped = false, playerColor, arrowFrom, arrowTo }: ChessboardProps) {
   const { currentTheme } = useTheme();
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
   const [lastMove, setLastMove] = useState<{ from: string; to: string } | null>(null);
@@ -193,7 +196,11 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
         }}
       >
         <div className="p-1 rounded-lg" style={{ background: `${currentTheme.accentColor}30` }}>
-          <div className="grid grid-cols-8 rounded-md overflow-hidden" style={{ aspectRatio: "1" }}>
+          <div className="grid grid-cols-8 rounded-md overflow-hidden relative" style={{ aspectRatio: "1" }}>
+            {/* Move arrow overlay */}
+            {arrowFrom && arrowTo && (
+              <MoveArrow from={arrowFrom} to={arrowTo} flipped={flipped} />
+            )}
             {Array.from({ length: 8 }, (_, displayRow) =>
               Array.from({ length: 8 }, (_, displayCol) => {
                 const [boardRow, boardCol] = displayToBoard(displayRow, displayCol);
