@@ -2298,8 +2298,8 @@ export const openings: Opening[] = [
     themeId: "kingsindian", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: kingsIndianTree, totalVariations: 4,
     variations: [
-      { id: "classical-kid", name: "Classical KID", description: "Nf3 + Be2 setup — the main battleground.", startingMoves: "1.d4 Nf6 2.c4 g6 3.Nc3 Bg7 4.e4 d6 5.Nf3", tree: kingsIndianTree, depth: 12 },
-      { id: "samisch", name: "Sämisch Variation", description: "White plays f3 for an aggressive kingside setup.", startingMoves: "1.d4 Nf6 2.c4 g6 3.Nc3 Bg7 4.e4 d6 5.f3", tree: kingsIndianTree, depth: 8 },
+      { id: "classical-kid", name: "Classical KID", description: "Nf3 + Be2 setup — the main battleground.", plan: "As Black, let White build the center, then strike with e5 and f5. Launch a kingside attack while White expands on the queenside. The result is a thrilling race between opposite-side attacks.", startingMoves: "1.d4 Nf6 2.c4 g6 3.Nc3 Bg7 4.e4 d6 5.Nf3", tree: kingsIndianTree, depth: 12 },
+      { id: "samisch", name: "Sämisch Variation", description: "White plays f3 for an aggressive kingside setup.", plan: "As White, build a massive center with f3 and Be3, then castle queenside and launch a pawn storm. As Black, strike with c5 or e5 and counterattack. Double-edged with fireworks on both flanks.", startingMoves: "1.d4 Nf6 2.c4 g6 3.Nc3 Bg7 4.e4 d6 5.f3", tree: kingsIndianTree, depth: 8 },
     ]
   },
   {
