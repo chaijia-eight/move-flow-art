@@ -2413,8 +2413,8 @@ export const openings: Opening[] = [
     themeId: "grunfeld", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: grunfeldTree, totalVariations: 3,
     variations: [
-      { id: "exchange-grunfeld", name: "Exchange Grünfeld", description: "White takes on d5 and plays e4 — the critical test.", startingMoves: "1.d4 Nf6 2.c4 g6 3.Nc3 d5 4.cxd5 Nxd5 5.e4", tree: grunfeldTree, depth: 10 },
-      { id: "russian-grunfeld", name: "Russian System", description: "Nf3 — more restrained and positional.", startingMoves: "1.d4 Nf6 2.c4 g6 3.Nc3 d5 4.Nf3", tree: grunfeldTree, depth: 7 },
+      { id: "exchange-grunfeld", name: "Exchange Grünfeld", description: "White takes on d5 and plays e4 — the critical test.", plan: "As White, build a powerful center with e4 and d4, then defend it. As Black, attack the center relentlessly with c5, Nc6, Bg7, and pieces. The ultimate clash: central pawns vs piece pressure.", startingMoves: "1.d4 Nf6 2.c4 g6 3.Nc3 d5 4.cxd5 Nxd5 5.e4", tree: grunfeldTree, depth: 10 },
+      { id: "russian-grunfeld", name: "Russian System", description: "Nf3 — more restrained and positional.", plan: "As White, avoid the sharp Exchange lines and build a slower, more positional advantage. As Black, develop flexibly and seek counterplay. A calmer approach that still offers White a slight edge.", startingMoves: "1.d4 Nf6 2.c4 g6 3.Nc3 d5 4.Nf3", tree: grunfeldTree, depth: 7 },
     ]
   },
   {
