@@ -541,8 +541,8 @@ export default function Study() {
               </p>
             </motion.div>
 
-            {/* Available lines */}
-            {currentNodes.length > 0 && (
+            {/* Available lines — only show on player's turn */}
+            {currentNodes.length > 0 && !isComputerTurn && chess.turn() === playerColor && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -550,7 +550,7 @@ export default function Study() {
                 style={{ background: "hsl(var(--card))" }}
               >
                 <h4 className="text-xs uppercase tracking-wider text-muted-foreground mb-2 font-medium">
-                  Available Lines
+                  Your Options
                 </h4>
                 <div className="space-y-1.5">
                   {currentNodes
