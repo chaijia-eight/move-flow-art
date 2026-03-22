@@ -6,6 +6,7 @@ import { getLineProgress } from "@/lib/progressStore";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
+import { openings } from "@/data/openingTrees";
 
 interface GardenCardProps {
   line: {
