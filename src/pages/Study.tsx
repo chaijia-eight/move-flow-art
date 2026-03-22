@@ -505,8 +505,8 @@ export default function Study() {
   const displayName = currentLine
     ? currentLine.name
     : currentVariation
-    ? currentVariation.name
-    : opening.name;
+    ? tVar(currentVariation.name, "name", currentVariation.name)
+    : tn("openingName", opening.id);
 
   const lineProgress = currentLine ? getLineProgress(currentLine.id) : null;
   const isChallengeMode = !!(lineProgress && !lineProgress.mastered && lineProgress.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1);
