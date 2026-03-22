@@ -122,7 +122,7 @@ export default function Study() {
     const firstMover = "w"; // chess always starts with white
     if (playerColor !== firstMover && opening.tree.length > 0) {
       initialAutoPlayed.current = true;
-      const mainNode = opening.tree.find((n) => n.category === "main_line") || opening.tree[0];
+      const mainNode = pickComputerNode(opening.tree, 0) || opening.tree[0];
       setIsComputerTurn(true);
       setTimeout(() => {
         try {
