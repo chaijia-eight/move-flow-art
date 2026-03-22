@@ -575,7 +575,7 @@ export default function Study() {
                 color: playerColor === "b" ? "hsl(var(--background))" : "hsl(var(--muted-foreground))",
               }}
             >
-              Black
+              {t("black")}
             </button>
           </div>
 
