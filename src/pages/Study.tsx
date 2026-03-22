@@ -398,7 +398,7 @@ export default function Study() {
           }
           setFeedback({
             type: "legit_alternative",
-            message: `This move is also good — it's called the ${matchedNode.variationName || "Alternative Line"}. Want to switch?`,
+            message: tf<(n: string) => string>("alsoGood")(matchedNode.variationName || "Alternative Line"),
             variationName: matchedNode.variationName,
             alternativeNode: matchedNode,
             detectedVariation: detectedVar,
