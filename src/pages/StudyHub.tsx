@@ -1,15 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
 import { openings } from "@/data/openingTrees";
 import { themes } from "@/data/openings";
-import { ArrowLeft, ChevronRight, Crown, Shield } from "lucide-react";
+import { ArrowLeft, ChevronRight, Crown, Shield, ChevronDown } from "lucide-react";
 
 export default function StudyHub() {
   const { openingId } = useParams();
   const navigate = useNavigate();
   const { setTheme, currentTheme } = useTheme();
+  const [showAgainstVariations, setShowAgainstVariations] = useState(false);
 
   const opening = openings.find((o) => o.id === openingId);
 
@@ -27,6 +28,7 @@ export default function StudyHub() {
 
   const theme = themes[opening.themeId];
   const isWhiteOpening = opening.primarySide === "w";
+  const againstColor = isWhiteOpening ? "b" : "w";
 
   return (
     <div className="min-h-screen bg-background">
@@ -143,34 +145,97 @@ export default function StudyHub() {
               </div>
             </motion.button>
 
-            {/* Play against */}
-            <motion.button
-              whileHover={{ y: -2, boxShadow: `0 10px 30px -10px ${theme.primaryColor}40` }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => navigate(`/study/${opening.id}/play?color=${isWhiteOpening ? "b" : "w"}`)}
-              className="text-left rounded-xl p-5 border transition-all duration-300"
-              style={{
-                background: "hsl(var(--card))",
-                borderColor: "hsl(var(--border) / 0.5)",
-              }}
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center border"
-                  style={{ borderColor: `${theme.accentColor}50` }}
-                >
-                  <Shield className="w-5 h-5" style={{ color: theme.accentColor }} />
+            {/* Play against — expandable */}
+            <div className="flex flex-col">
+              <motion.button
+                whileHover={{ y: -2, boxShadow: `0 10px 30px -10px ${theme.primaryColor}40` }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => {
+                  if (opening.variations.length <= 1) {
+                    navigate(`/study/${opening.id}/play?color=${againstColor}`);
+                  } else {
+                    setShowAgainstVariations((v) => !v);
+                  }
+                }}
+                className="text-left rounded-xl p-5 border transition-all duration-300"
+                style={{
+                  background: "hsl(var(--card))",
+                  borderColor: showAgainstVariations ? `${theme.accentColor}50` : "hsl(var(--border) / 0.5)",
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center border"
+                    style={{ borderColor: `${theme.accentColor}50` }}
+                  >
+                    <Shield className="w-5 h-5" style={{ color: theme.accentColor }} />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-serif text-lg font-semibold text-foreground">
+                      Play Against It
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      As {isWhiteOpening ? "Black" : "White"} — choose the opponent's line
+                    </p>
+                  </div>
+                  {opening.variations.length > 1 && (
+                    <motion.div
+                      animate={{ rotate: showAgainstVariations ? 180 : 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ChevronDown className="w-5 h-5 text-muted-foreground/50" />
+                    </motion.div>
+                  )}
                 </div>
-                <div>
-                  <p className="font-serif text-lg font-semibold text-foreground">
-                    Play Against It
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    As {isWhiteOpening ? "Black" : "White"} — learn the best responses
-                  </p>
-                </div>
-              </div>
-            </motion.button>
+              </motion.button>
+
+              {/* Variation picker for "play against" */}
+              <AnimatePresence>
+                {showAgainstVariations && opening.variations.length > 1 && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pt-2 space-y-1.5">
+                      {opening.variations.map((variation, i) => (
+                        <motion.button
+                          key={variation.id}
+                          initial={{ opacity: 0, x: -8 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.2, delay: i * 0.04 }}
+                          whileHover={{ x: 4, backgroundColor: `${theme.accentColor}12` }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() =>
+                            navigate(`/study/${opening.id}/play?color=${againstColor}&variation=${variation.id}`)
+                          }
+                          className="w-full text-left rounded-lg p-3 border border-border/30 transition-all duration-200 group"
+                          style={{ background: "hsl(var(--card))" }}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2 min-w-0">
+                              <div
+                                className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                                style={{ background: theme.accentColor }}
+                              />
+                              <span className="text-sm font-medium text-foreground truncate">
+                                vs {variation.name}
+                              </span>
+                            </div>
+                            <ChevronRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-foreground/50 transition-colors flex-shrink-0 ml-2" />
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-1 pl-3.5 line-clamp-1">
+                            {variation.description}
+                          </p>
+                        </motion.button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </motion.div>
 
