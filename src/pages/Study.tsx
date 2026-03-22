@@ -759,8 +759,16 @@ export default function Study() {
                     suggestedMove={feedback.suggestedMove}
                     onSwitch={() => {
                       if (feedback.detectedOpening) {
-                        navigate(`/study/${feedback.detectedOpening.id}`);
+                        // Cross-opening transposition: navigate to the other opening's study page
+                        navigate(`/study/${feedback.detectedOpening.id}/play?color=${playerColor}`);
+                      } else if (feedback.detectedVariation) {
+                        // Same-opening variation switch: navigate to the detected variation's line
+                        navigate(
+                          `/study/${openingId}/play?color=${colorParam || opening.primarySide}&variation=${feedback.detectedVariation.variationId}&line=${feedback.detectedVariation.lineIndex}`,
+                        );
+                        window.location.reload();
                       } else {
+                        // Fallback: just continue exploring
                         setFeedback({
                           type: "main_line",
                           message: `Switched to the ${feedback.variationName}. Let's explore this line.`,
