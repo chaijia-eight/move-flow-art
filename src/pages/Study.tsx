@@ -437,10 +437,13 @@ export default function Study() {
         const allSans = newHistory.map((m) => m.san);
         const detected = findInOtherOpenings(allSans);
         if (detected) {
+          const mainLineNode = currentNodes.find(n => n.category === "main_line");
+          const recommendedSan = mainLineNode?.move || (preferredMoves && newHistory.length - 1 < preferredMoves.length ? preferredMoves[newHistory.length - 1] : undefined);
           setFeedback({
             type: "legit_alternative",
             message: tf<(n: string) => string>("thatsThe")(detected.name),
             variationName: detected.name,
+            suggestedMove: recommendedSan,
             detectedOpening: detected,
           });
           setCurrentNodes(detected.nodes);
