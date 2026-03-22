@@ -561,6 +561,7 @@ export default function Study() {
         }
 
         case "mistake":
+          setMoveResults(prev => [...prev, "mistake"]);
           chess.undo();
           setFen(chess.fen());
           setMoveHistory((prev) => prev.slice(0, -1));
