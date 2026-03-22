@@ -601,6 +601,7 @@ export default function Study() {
                 moveHints={isChallengeMode ? new Map() : moveHints}
                 disabled={isComputerTurn || lineCompleted}
                 flipped={playerColor === "b"}
+                playerColor={playerColor}
               />
             </div>
 

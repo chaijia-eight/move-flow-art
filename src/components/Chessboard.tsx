@@ -119,6 +119,8 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
 
   const handleSquareClick = (displayRow: number, displayCol: number) => {
     if (disabled) return;
+    // Block interaction if it's not the player's turn
+    if (playerColor && chess.turn() !== playerColor) return;
     const [row, col] = displayToBoard(displayRow, displayCol);
     const square = coordsToSquare(row, col);
     const piece = board[row][col];
