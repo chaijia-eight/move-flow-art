@@ -32,6 +32,20 @@ export default function Study() {
 
   const opening = openings.find((o) => o.id === openingId);
   const colorParam = searchParams.get("color") as "w" | "b" | null;
+  const variationParam = searchParams.get("variation");
+
+  // Parse the preferred variation's starting moves into a SAN sequence
+  const preferredMoves = useMemo(() => {
+    if (!variationParam || !opening) return null;
+    const variation = opening.variations.find((v) => v.id === variationParam);
+    if (!variation?.startingMoves) return null;
+    // Parse "1.d4 Nf6 2.Bf4 d5 3.e3 e6" → ["d4","Nf6","Bf4","d5","e3","e6"]
+    return variation.startingMoves
+      .replace(/\d+\./g, "")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
+  }, [variationParam, opening]);
 
   useEffect(() => {
     if (opening) setTheme(opening.themeId);
@@ -99,7 +113,16 @@ export default function Study() {
     restoreSnapshot(next);
   };
 
-  // Auto-play computer's first move if computer goes first
+  const pickComputerNode = useCallback((children: OpeningNode[], moveIndex: number): OpeningNode | null => {
+    if (children.length === 0) return null;
+    if (preferredMoves && moveIndex < preferredMoves.length) {
+      const preferredSan = preferredMoves[moveIndex];
+      const preferred = children.find((c) => c.move === preferredSan);
+      if (preferred) return preferred;
+    }
+    return children.find((c) => c.category === "main_line") || children[0];
+  }, [preferredMoves]);
+
   const initialAutoPlayed = useRef(false);
   useEffect(() => {
     if (initialAutoPlayed.current) return;
@@ -108,7 +131,7 @@ export default function Study() {
     const firstMover = "w"; // chess always starts with white
     if (playerColor !== firstMover && opening.tree.length > 0) {
       initialAutoPlayed.current = true;
-      const mainNode = opening.tree.find((n) => n.category === "main_line") || opening.tree[0];
+      const mainNode = pickComputerNode(opening.tree, 0) || opening.tree[0];
       setIsComputerTurn(true);
       setTimeout(() => {
         try {
@@ -168,10 +191,10 @@ export default function Study() {
     return hints;
   }, [currentNodes, fen]);
 
-  const autoPlayComputerMove = useCallback((children: OpeningNode[]) => {
-    if (children.length === 0) return;
-    const mainResponse = children.find((c) => c.category === "main_line");
-    if (!mainResponse) return;
+
+  const autoPlayComputerMove = useCallback((children: OpeningNode[], moveIndex: number) => {
+    const chosen = pickComputerNode(children, moveIndex);
+    if (!chosen) return;
 
     setIsComputerTurn(true);
     setTimeout(() => {
@@ -184,21 +207,21 @@ export default function Study() {
       };
 
       try {
-        const result = chess.move(mainResponse.move);
+        const result = chess.move(chosen.move);
         if (result) {
           const newFen = chess.fen();
           setFen(newFen);
           const isW = chess.turn() === "b";
           const mn = Math.ceil(chess.moveNumber());
           setMoveHistory((prev) => {
-            const updated = [...prev, { san: mainResponse.move, moveNumber: isW ? mn : mn - 1, isWhite: isW }];
+            const updated = [...prev, { san: chosen.move, moveNumber: isW ? mn : mn - 1, isWhite: isW }];
             return updated;
           });
-          setCurrentNodes(mainResponse.children);
-          if (mainResponse.variationName) {
+          setCurrentNodes(chosen.children);
+          if (chosen.variationName) {
             setCurrentVariation({
-              name: mainResponse.variationName,
-              description: `You're studying the ${mainResponse.variationName}.`,
+              name: chosen.variationName,
+              description: `You're studying the ${chosen.variationName}.`,
             });
           }
           setUndoStack((prev) => [...prev, snapBefore]);
@@ -271,7 +294,7 @@ export default function Study() {
             });
           }
           setCurrentNodes(matchedNode.children);
-          autoPlayComputerMove(matchedNode.children);
+          autoPlayComputerMove(matchedNode.children, moveCount + 1);
           break;
 
         case "legit_alternative":
@@ -335,7 +358,7 @@ export default function Study() {
 
     // Auto-play if computer goes first
     if (color !== "w" && opening && opening.tree.length > 0) {
-      const mainNode = opening.tree.find((n) => n.category === "main_line") || opening.tree[0];
+      const mainNode = pickComputerNode(opening.tree, 0) || opening.tree[0];
       initialAutoPlayed.current = true;
       setIsComputerTurn(true);
       setTimeout(() => {
