@@ -14,7 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      custom_lines: {
+        Row: {
+          created_at: string
+          fens: string[]
+          id: string
+          move_count: number
+          moves: string[]
+          name: string
+          side: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          fens: string[]
+          id?: string
+          move_count?: number
+          moves: string[]
+          name?: string
+          side?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          fens?: string[]
+          id?: string
+          move_count?: number
+          moves?: string[]
+          name?: string
+          side?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

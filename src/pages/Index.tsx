@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Play, ChevronRight, Trophy, BookOpen, Target, Settings, Info } from "lucide-react";
 import OpeningCard from "@/components/OpeningCard";
+import GardenSection from "@/components/GardenSection";
 import { openings } from "@/data/openingTrees";
 import { themes } from "@/data/openings";
 import { extractAllLines, extractLinesForVariation } from "@/lib/lineExtractor";
@@ -252,7 +253,7 @@ export default function Index() {
             className="flex items-center gap-3 mb-6"
           >
             <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
-              {t("yourGarden")}
+              {t("yourBookshelf")}
             </h2>
             <div className="flex-1 h-px bg-border/50" />
           </motion.div>
@@ -268,6 +269,9 @@ export default function Index() {
             ))}
           </div>
         </section>
+
+        {/* Your Garden - Custom Lines */}
+        <GardenSection />
       </main>
     </div>
   );
