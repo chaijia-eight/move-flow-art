@@ -494,10 +494,15 @@ export default function Study() {
       }
 
       // If this move is on the preferred study path, treat it as main_line
+      // If there IS a preferred path and this move is NOT on it, demote to legit_alternative
       const totalMovesPlayed = newHistory.length;
       const isOnPreferredPath = preferredMoves && (totalMovesPlayed - 1) < preferredMoves.length && 
         san === preferredMoves[totalMovesPlayed - 1];
-      const effectiveCategory = isOnPreferredPath ? "main_line" : matchedNode.category;
+      const effectiveCategory: MoveCategory = isOnPreferredPath 
+        ? "main_line" 
+        : (preferredMoves && matchedNode.category === "main_line" && !isOnPreferredPath)
+          ? "legit_alternative"
+          : matchedNode.category;
 
       switch (effectiveCategory) {
         case "main_line": {
