@@ -2275,10 +2275,10 @@ export const openings: Opening[] = [
     themeId: "sicilian", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: sicilianMainTree, totalVariations: 6,
     variations: [
-      { id: "najdorf", name: "Najdorf Variation", description: "The sharpest and most popular Sicilian — 5...a6.", startingMoves: "1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 a6", tree: sicilianMainTree, depth: 12 },
-      { id: "dragon", name: "Dragon Variation", description: "Black fianchettoes the bishop for kingside pressure.", startingMoves: "1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 g6", tree: sicilianMainTree, depth: 10 },
-      { id: "classical-sic", name: "Classical Variation", description: "Black develops the knight to c6 for classical play.", startingMoves: "1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 Nc6", tree: sicilianMainTree, depth: 8 },
-      { id: "scheveningen", name: "Scheveningen", description: "Flexible with e6 — sets up a strong pawn duo.", startingMoves: "1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 e6", tree: sicilianMainTree, depth: 8 },
+      { id: "najdorf", name: "Najdorf Variation", description: "The sharpest and most popular Sicilian — 5...a6.", plan: "As Black, play a6 to control b5 and prepare queenside expansion with b5. Aim for counterplay on the c-file and queenside while White attacks the kingside. A complex, double-edged battle.", startingMoves: "1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 a6", tree: sicilianMainTree, depth: 12 },
+      { id: "dragon", name: "Dragon Variation", description: "Black fianchettoes the bishop for kingside pressure.", plan: "Fianchetto the bishop on g7, aiming it at White's queenside. Castle kingside and attack on the c-file. White often castles queenside and attacks your king — it's a race. Exciting, razor-sharp play.", startingMoves: "1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 g6", tree: sicilianMainTree, depth: 10 },
+      { id: "classical-sic", name: "Classical Variation", description: "Black develops the knight to c6 for classical play.", plan: "Develop naturally with Nc6 to pressure d4. Aim for queenside play and central control. A well-rounded setup that avoids the sharpest theoretical lines while keeping dynamic chances.", startingMoves: "1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 Nc6", tree: sicilianMainTree, depth: 8 },
+      { id: "scheveningen", name: "Scheveningen", description: "Flexible with e6 — sets up a strong pawn duo.", plan: "Build a solid pawn structure with d6+e6. Develop flexibly and prepare breaks like d5 or b5. The position is rich and strategic — Black has a resilient setup with long-term counterplay.", startingMoves: "1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 e6", tree: sicilianMainTree, depth: 8 },
     ]
   },
   {
