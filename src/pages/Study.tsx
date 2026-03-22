@@ -834,7 +834,8 @@ export default function Study() {
                     }).map((node, i) => {
                       const totalMovesPlayed = moveHistory.length;
                       const isExpectedMove = preferredMoves && totalMovesPlayed < preferredMoves.length && node.move === preferredMoves[totalMovesPlayed];
-                      const isOnPath = isExpectedMove || node.category === "main_line";
+                      // When we have a preferred path, ONLY the expected move is yellow; otherwise fall back to category
+                      const isOnPath = preferredMoves ? isExpectedMove : node.category === "main_line";
                       // Don't show variation name for the move we're studying; show it for alternatives
                       const showVariationLabel = node.variationName && !isExpectedMove;
                       return (
