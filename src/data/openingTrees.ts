@@ -2393,8 +2393,8 @@ export const openings: Opening[] = [
     themeId: "english", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "w", tree: englishOpeningTree, totalVariations: 3,
     variations: [
-      { id: "reversed-sicilian", name: "Reversed Sicilian", description: "After e5, White plays a Sicilian with an extra tempo.", startingMoves: "1.c4 e5 2.Nc3 Nf6 3.g3", tree: englishOpeningTree, depth: 8 },
-      { id: "four-knights-english", name: "Four Knights English", description: "Symmetrical development — strategic maneuvering.", startingMoves: "1.c4 e5 2.Nc3 Nc6", tree: englishOpeningTree, depth: 6 },
+      { id: "reversed-sicilian", name: "Reversed Sicilian", description: "After e5, White plays a Sicilian with an extra tempo.", plan: "As White, play a Sicilian Defense with colors reversed and an extra move. Fianchetto with g3, Bg2 and control the center. The extra tempo gives White a comfortable edge with flexible development options.", startingMoves: "1.c4 e5 2.Nc3 Nf6 3.g3", tree: englishOpeningTree, depth: 8 },
+      { id: "four-knights-english", name: "Four Knights English", description: "Symmetrical development — strategic maneuvering.", plan: "Both sides develop knights symmetrically. White aims to exploit the first-move advantage through subtle positional play. A strategic, slow-burning opening where understanding trumps memorization.", startingMoves: "1.c4 e5 2.Nc3 Nc6", tree: englishOpeningTree, depth: 6 },
     ]
   },
   {
