@@ -835,7 +835,7 @@ export default function Study() {
             {(() => {
               const turnChess = new Chess(fen);
               const isPlayerTurn = turnChess.turn() === playerColor;
-              if (!isPlayerTurn || isComputerTurn || lineCompleted || currentNodes.length === 0) return null;
+              if (!isPlayerTurn || isComputerTurn || lineCompleted || isChallengeMode || currentNodes.length === 0) return null;
               const legalMoves = turnChess.moves();
               const validNodes = currentNodes.filter((n) => n.category !== "mistake" && legalMoves.includes(n.move));
               if (validNodes.length === 0) return null;
