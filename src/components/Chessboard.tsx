@@ -1,8 +1,9 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Chess } from "chess.js";
-import { fenToBoard, PIECE_IMAGES, coordsToSquare } from "@/data/pieceUnicode";
+import { fenToBoard, PIECE_IMAGES, coordsToSquare, squareToCoords } from "@/data/pieceUnicode";
 import { useTheme } from "@/contexts/ThemeContext";
+import CaptureEffect from "@/components/CaptureEffect";
 import type { MoveCategory } from "@/data/openings";
 
 interface ChessboardProps {
@@ -13,13 +14,78 @@ interface ChessboardProps {
   flipped?: boolean;
 }
 
+interface AnimMove {
+  from: string;
+  to: string;
+  isCapture: boolean;
+  id: number;
+}
+
+let animIdCounter = 0;
+
 export default function Chessboard({ fen, onMove, moveHints, disabled, flipped = false }: ChessboardProps) {
   const { currentTheme } = useTheme();
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
   const [lastMove, setLastMove] = useState<{ from: string; to: string } | null>(null);
+  const [animMove, setAnimMove] = useState<AnimMove | null>(null);
+  const prevBoardRef = useRef<(string | null)[][] | null>(null);
+  const prevFenRef = useRef<string>(fen);
 
   const board = useMemo(() => fenToBoard(fen), [fen]);
   const chess = useMemo(() => new Chess(fen), [fen]);
+
+  // Detect moves by comparing previous and current board
+  useEffect(() => {
+    const prevBoard = prevBoardRef.current;
+    if (prevBoard && prevFenRef.current !== fen) {
+      // Find the from/to by diffing boards
+      let fromSquare: string | null = null;
+      let toSquare: string | null = null;
+      let wasCapture = false;
+
+      for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+          const prev = prevBoard[r][c];
+          const curr = board[r][c];
+          if (prev !== curr) {
+            const sq = coordsToSquare(r, c);
+            if (prev && !curr) {
+              // Piece left this square
+              fromSquare = sq;
+            } else if (curr && !prev) {
+              // Piece arrived at empty square
+              toSquare = sq;
+            } else if (prev && curr && prev !== curr) {
+              // Piece replaced another (capture)
+              // Could be "to" if a piece landed here, or castling
+              if (!toSquare) {
+                toSquare = sq;
+                wasCapture = true;
+              } else {
+                fromSquare = sq;
+              }
+            }
+          }
+        }
+      }
+
+      if (fromSquare && toSquare) {
+        setAnimMove({ from: fromSquare, to: toSquare, isCapture: wasCapture, id: ++animIdCounter });
+        setLastMove({ from: fromSquare, to: toSquare });
+      }
+    }
+
+    prevBoardRef.current = board.map(row => [...row]);
+    prevFenRef.current = fen;
+  }, [fen, board]);
+
+  // Clear capture effect after animation
+  useEffect(() => {
+    if (animMove) {
+      const t = setTimeout(() => setAnimMove(null), 500);
+      return () => clearTimeout(t);
+    }
+  }, [animMove]);
 
   const getLegalMoves = useCallback((square: string) => {
     try {
@@ -33,10 +99,14 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
     return (row + col) % 2 === 0 ? "light" : "dark";
   };
 
-  // Convert display coords to board coords
   const displayToBoard = (displayRow: number, displayCol: number): [number, number] => {
     if (flipped) return [7 - displayRow, 7 - displayCol];
     return [displayRow, displayCol];
+  };
+
+  const boardToDisplay = (boardRow: number, boardCol: number): [number, number] => {
+    if (flipped) return [7 - boardRow, 7 - boardCol];
+    return [boardRow, boardCol];
   };
 
   const handleSquareClick = (displayRow: number, displayCol: number) => {
@@ -50,7 +120,6 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
       const targetMove = legalMoves.find(m => m.to === square);
       
       if (targetMove) {
-        setLastMove({ from: selectedSquare, to: square });
         onMove(selectedSquare, square, targetMove.san);
         setSelectedSquare(null);
         return;
@@ -93,6 +162,17 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
     }
   };
 
+  // Calculate slide offset in percentage (each square = 12.5%)
+  const getSlideOffset = (from: string, to: string): { x: string; y: string } => {
+    const [fromRow, fromCol] = squareToCoords(from);
+    const [toRow, toCol] = squareToCoords(to);
+    const [fromDispRow, fromDispCol] = boardToDisplay(fromRow, fromCol);
+    const [toDispRow, toDispCol] = boardToDisplay(toRow, toCol);
+    const dx = (fromDispCol - toDispCol) * 100;
+    const dy = (fromDispRow - toDispRow) * 100;
+    return { x: `${dx}%`, y: `${dy}%` };
+  };
+
   return (
     <div className="relative">
       <div 
@@ -114,11 +194,17 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
                 const isLastMove = lastMove?.from === square || lastMove?.to === square;
                 const targetCategory = legalTargets.get(square);
                 const isTarget = targetCategory !== undefined;
+                const isAnimTo = animMove?.to === square;
+                const isCaptureSquare = animMove?.isCapture && animMove?.to === square;
+
+                const slideOffset = isAnimTo && animMove
+                  ? getSlideOffset(animMove.from, animMove.to)
+                  : null;
 
                 return (
                   <div
                     key={square}
-                    className="relative flex items-center justify-center cursor-pointer transition-all duration-150"
+                    className="relative flex items-center justify-center cursor-pointer transition-colors duration-150"
                     style={{
                       background: isSelected
                         ? `${currentTheme.accentColor}60`
@@ -139,6 +225,9 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
                         }}
                       />
                     )}
+
+                    {/* Capture burst effect */}
+                    <CaptureEffect active={!!isCaptureSquare} />
 
                     {/* Move target indicators */}
                     <AnimatePresence>
@@ -195,14 +284,18 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
                       )}
                     </AnimatePresence>
 
-                    {/* Chess piece as SVG image */}
+                    {/* Chess piece with slide animation */}
                     {piece && (
                       <motion.img
+                        key={`${square}-${animMove?.id ?? 0}`}
                         src={PIECE_IMAGES[piece]}
                         alt={piece}
                         draggable={false}
                         className="relative z-20 select-none w-[80%] h-[80%] object-contain"
                         style={{ cursor: disabled ? "default" : "pointer" }}
+                        initial={slideOffset ? { x: slideOffset.x, y: slideOffset.y } : false}
+                        animate={{ x: 0, y: 0 }}
+                        transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
                         whileHover={!disabled ? { scale: 1.1, transition: { duration: 0.15 } } : {}}
                         whileTap={!disabled ? { scale: 0.95 } : {}}
                       />
