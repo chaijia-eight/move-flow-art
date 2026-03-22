@@ -17,8 +17,35 @@ export default function StudyHub() {
   const { openingId } = useParams();
   const navigate = useNavigate();
   const { setTheme, currentTheme } = useTheme();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [showAgainstVariations, setShowAgainstVariations] = useState(false);
   const [expandedVariation, setExpandedVariation] = useState<string | null>(null);
+
+  const opening = openings.find((o) => o.id === openingId);
+
+  // Fetch custom lines for this opening
+  const { data: customLines = [] } = useQuery({
+    queryKey: ["custom-lines", user?.id, openingId],
+    queryFn: async () => {
+      if (!user || !openingId) return [];
+      const { data, error } = await supabase
+        .from("custom_lines")
+        .select("*")
+        .eq("opening_id", openingId)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data ?? [];
+    },
+    enabled: !!user && !!openingId,
+  });
+
+  const handleDeleteCustomLine = async (lineId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!confirm("Delete this custom line?")) return;
+    await supabase.from("custom_lines").delete().eq("id", lineId);
+    queryClient.invalidateQueries({ queryKey: ["custom-lines", user?.id, openingId] });
+  };
 
   const opening = openings.find((o) => o.id === openingId);
 
