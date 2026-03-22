@@ -461,9 +461,11 @@ export default function Study() {
     <div className="min-h-screen bg-background">
       {/* Ambient background */}
       <div
-        className="fixed inset-0 pointer-events-none"
+        className="fixed inset-0 pointer-events-none transition-all duration-700"
         style={{
-          background: `radial-gradient(ellipse at 50% 0%, ${currentTheme.primaryColor}15, transparent 60%), radial-gradient(ellipse at 80% 100%, ${currentTheme.accentColor}08, transparent 50%)`,
+          background: isChallengeMode
+            ? `radial-gradient(ellipse at 50% 0%, hsl(45, 100%, 50%)12, transparent 50%), radial-gradient(ellipse at 20% 80%, hsl(30, 100%, 45%)08, transparent 40%), radial-gradient(ellipse at 80% 100%, hsl(0, 80%, 50%)06, transparent 50%)`
+            : `radial-gradient(ellipse at 50% 0%, ${currentTheme.primaryColor}15, transparent 60%), radial-gradient(ellipse at 80% 100%, ${currentTheme.accentColor}08, transparent 50%)`,
         }}
       />
 
