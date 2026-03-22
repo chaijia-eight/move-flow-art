@@ -407,7 +407,9 @@ export default function Study() {
             <ArrowLeft className="w-5 h-5 text-foreground/70" />
           </motion.button>
           <div>
-            <h1 className="font-serif text-2xl font-semibold text-foreground">{opening.name}</h1>
+            <h1 className="font-serif text-2xl font-semibold text-foreground">
+              {currentVariation ? currentVariation.name : opening.name}
+            </h1>
             <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider">
               {sideLabel}
             </p>
