@@ -26,7 +26,7 @@ const italianMainTree: OpeningNode[] = [
                 children: [
                   {
                     fen: "r1bqk1nr/pppp1ppp/2n5/2b1p3/2B1P3/2P2N2/PP1P1PPP/RNBQK2R b KQkq - 0 4",
-                    move: "c3", category: "main_line",
+                    move: "c3", category: "main_line", variationName: "Giuoco Piano",
                     children: [
                       {
                         fen: "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/2P2N2/PP1P1PPP/RNBQK2R w KQkq - 1 5",
