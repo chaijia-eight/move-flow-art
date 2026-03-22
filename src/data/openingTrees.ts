@@ -300,51 +300,51 @@ const italianGameTree: OpeningNode[] = [
                           },
                           {
                             fen: "r1bqk1nr/pppp1ppp/2n5/2b1p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R b KQkq - 0 4",
-                            move: "d3", category: "legit_alternative",
+                            move: "d3", category: "main_line", variationName: "Giuoco Pianissimo",
                             children: [
                               {
                                 fen: "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 1 5",
-                                move: "Nf6", category: "legit_alternative",
+                                move: "Nf6", category: "main_line",
                                 children: [
                                   {
                                     fen: "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/3P1N2/PPP2PPP/RNBQ1RK1 b kq - 2 5",
-                                    move: "O-O", category: "legit_alternative",
+                                    move: "O-O", category: "main_line",
                                     children: [
                                       {
                                         fen: "r1bqk2r/ppp2ppp/2np1n2/2b1p3/2B1P3/3P1N2/PPP2PPP/RNBQ1RK1 w kq - 0 6",
-                                        move: "d6", category: "legit_alternative",
+                                        move: "d6", category: "main_line",
                                         children: [
                                           {
                                             fen: "r1bqk2r/ppp2ppp/2np1n2/2b1p3/2B1P3/2PP1N2/PP3PPP/RNBQ1RK1 b kq - 0 6",
-                                            move: "c3", category: "legit_alternative",
+                                            move: "c3", category: "main_line",
                                             children: [
                                               {
                                                 fen: "r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2B1P3/2PP1N2/PP3PPP/RNBQ1RK1 w - - 1 7",
-                                                move: "O-O", category: "legit_alternative",
+                                                move: "O-O", category: "main_line",
                                                 children: [
                                                   {
                                                     fen: "r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2B1P3/2PP1N2/PP3PPP/RNBQR1K1 b - - 2 7",
-                                                    move: "Re1", category: "legit_alternative",
+                                                    move: "Re1", category: "main_line",
                                                     children: [
                                                       {
                                                         fen: "r1bq1rk1/1pp2ppp/p1np1n2/2b1p3/2B1P3/2PP1N2/PP3PPP/RNBQR1K1 w - - 0 8",
-                                                        move: "a6", category: "legit_alternative",
+                                                        move: "a6", category: "main_line",
                                                         children: [
                                                           {
                                                             fen: "r1bq1rk1/1pp2ppp/p1np1n2/2b1p3/4P3/1BPP1N2/PP3PPP/RNBQR1K1 b - - 1 8",
-                                                            move: "Bb3", category: "legit_alternative",
+                                                            move: "Bb3", category: "main_line",
                                                             children: [
                                                               {
                                                                 fen: "r1bq1rk1/bpp2ppp/p1np1n2/4p3/4P3/1BPP1N2/PP3PPP/RNBQR1K1 w - - 2 9",
-                                                                move: "Ba7", category: "legit_alternative",
+                                                                move: "Ba7", category: "main_line",
                                                                 children: [
                                                                   {
                                                                     fen: "r1bq1rk1/bpp2ppp/p1np1n2/4p3/4P3/1BPP1N2/PP1N1PPP/R1BQR1K1 b - - 3 9",
-                                                                    move: "Nbd2", category: "legit_alternative",
+                                                                    move: "Nbd2", category: "main_line",
                                                                     children: [
                                                                       {
                                                                         fen: "r2q1rk1/bpp2ppp/p1npbn2/4p3/4P3/1BPP1N2/PP1N1PPP/R1BQR1K1 w - - 4 10",
-                                                                        move: "Be6", category: "legit_alternative",
+                                                                        move: "Be6", category: "main_line",
                                                                         children: []
                                                                       }
                                                                     ]
