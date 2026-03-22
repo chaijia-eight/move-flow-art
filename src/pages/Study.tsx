@@ -690,21 +690,53 @@ export default function Study() {
 
   const canSaveCustomLine = isCustomBranch && user && moveHistory.length >= MIN_CUSTOM_MOVES && !customLineSaved;
 
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Ambient background */}
-      <div
-        className="fixed inset-0 pointer-events-none transition-all duration-700"
-        style={{
-          background: isChallengeMode
-            ? `radial-gradient(ellipse at 50% 0%, hsl(45, 100%, 50%)12, transparent 50%), radial-gradient(ellipse at 20% 80%, hsl(30, 100%, 45%)08, transparent 40%), radial-gradient(ellipse at 80% 100%, hsl(0, 80%, 50%)06, transparent 50%)`
-            : `radial-gradient(ellipse at 50% 0%, ${currentTheme.primaryColor}15, transparent 60%), radial-gradient(ellipse at 80% 100%, ${currentTheme.accentColor}08, transparent 50%)`,
-        }}
-      />
+  // Compute arrow: show the recommended move arrow on the board
+  const arrowTarget = useMemo(() => {
+    if (isChallengeMode || isCustomBranch || lineCompleted || isComputerTurn) return null;
+    const tempChess = new Chess(fen);
+    if (tempChess.turn() !== playerColor) return null;
 
+    // Find the expected move
+    const totalMoves = moveHistory.length;
+    let expectedSan: string | null = null;
+    if (preferredMoves && totalMoves < preferredMoves.length) {
+      expectedSan = preferredMoves[totalMoves];
+    } else {
+      const mainNode = currentNodes.find(n => n.category === "main_line");
+      if (mainNode) expectedSan = mainNode.move;
+    }
+    if (!expectedSan) return null;
+
+    const legalMoves = tempChess.moves({ verbose: true });
+    const match = legalMoves.find(m => m.san === expectedSan);
+    if (!match) return null;
+    return { from: match.from, to: match.to };
+  }, [fen, playerColor, moveHistory.length, preferredMoves, currentNodes, isChallengeMode, isCustomBranch, lineCompleted, isComputerTurn]);
+
+  // Total player moves expected in the current line
+  const totalPlayerMoves = useMemo(() => {
+    if (!currentLine) return 0;
+    return currentLine.moves.filter((_, i) => {
+      // Player moves on even indices if white, odd if black
+      return playerColor === "w" ? i % 2 === 0 : i % 2 === 1;
+    }).length;
+  }, [currentLine, playerColor]);
+
+  const playerMovesCompleted = useMemo(() => {
+    return moveHistory.filter(m => (playerColor === "w" ? m.isWhite : !m.isWhite)).length;
+  }, [moveHistory, playerColor]);
+
+  const formatEval = (cp: number | null) => {
+    if (cp === null) return "";
+    const sign = cp >= 0 ? "+" : "";
+    return `${sign}${(cp / 100).toFixed(2)}`;
+  };
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
-      <header className="relative z-10 flex items-center justify-between px-6 py-4 border-b border-border/30">
-        <div className="flex items-center gap-4">
+      <header className="relative z-10 flex items-center justify-between px-4 py-3 border-b border-border/30">
+        <div className="flex items-center gap-3">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -714,569 +746,446 @@ export default function Study() {
             <ArrowLeft className="w-5 h-5 text-foreground/70" />
           </motion.button>
           <div>
-            <h1 className="font-serif text-2xl font-semibold text-foreground">
+            <h1 className="font-serif text-lg font-semibold text-foreground leading-tight">
               {displayName}
             </h1>
-            <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider">
+            <p className="text-xs text-muted-foreground">
               {sideLabel}
-              {isReview && ` · ${t("reviewMode")}`}
-              {isCustomBranch && (
-                <span className="ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold tracking-widest"
-                  style={{
-                    background: "hsl(180, 40%, 55%, 0.15)",
-                    color: "hsl(180, 40%, 55%)",
-                    border: "1px solid hsl(180, 40%, 55%, 0.25)",
-                  }}
-                >
-                  {t("customBranch")}
-                </span>
-              )}
               {isChallengeMode && !lineCompleted && (
-                <span className="ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold tracking-widest" style={{
-                  background: "hsl(45, 100%, 50%, 0.15)",
-                  color: "hsl(45, 100%, 60%)",
-                  border: "1px solid hsl(45, 100%, 50%, 0.25)",
-                }}>
-                  <Zap className="w-3 h-3" /> {t("challenge")}
+                <span className="ml-2 inline-flex items-center gap-0.5 text-[10px] font-bold" style={{ color: "hsl(45, 100%, 60%)" }}>
+                  <Zap className="w-3 h-3" /> Challenge
                 </span>
               )}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          {/* Color toggle */}
-          <div className="flex rounded-lg overflow-hidden border border-border/50 mr-2">
-            <button
-              onClick={() => handleColorSwitch("w")}
-              className="px-3 py-1.5 text-xs font-medium transition-all duration-300"
+        <div className="flex items-center gap-1">
+          {isCustomBranch && (
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold mr-2"
               style={{
-                background: playerColor === "w" ? currentTheme.accentColor : "transparent",
-                color: playerColor === "w" ? "hsl(var(--background))" : "hsl(var(--muted-foreground))",
+                background: "hsl(140, 50%, 45%, 0.15)",
+                color: "hsl(140, 50%, 50%)",
+                border: "1px solid hsl(140, 50%, 45%, 0.25)",
               }}
             >
-              {t("white")}
-            </button>
-            <button
-              onClick={() => handleColorSwitch("b")}
-              className="px-3 py-1.5 text-xs font-medium transition-all duration-300"
-              style={{
-                background: playerColor === "b" ? currentTheme.accentColor : "transparent",
-                color: playerColor === "b" ? "hsl(var(--background))" : "hsl(var(--muted-foreground))",
-              }}
-            >
-              {t("black")}
-            </button>
-          </div>
-
+              Custom
+            </span>
+          )}
           <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
             onClick={handleUndo} disabled={undoStack.length === 0 || isComputerTurn}
-            className="p-2 rounded-lg hover:bg-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed" title="Undo"
+            className="p-2 rounded-lg hover:bg-accent transition-colors disabled:opacity-30" title="Undo"
           >
-            <Undo2 className="w-5 h-5 text-foreground/70" />
+            <Undo2 className="w-4 h-4 text-foreground/70" />
           </motion.button>
           <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
             onClick={handleRedo} disabled={redoStack.length === 0 || isComputerTurn}
-            className="p-2 rounded-lg hover:bg-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed" title="Redo"
+            className="p-2 rounded-lg hover:bg-accent transition-colors disabled:opacity-30" title="Redo"
           >
-            <Redo2 className="w-5 h-5 text-foreground/70" />
+            <Redo2 className="w-4 h-4 text-foreground/70" />
           </motion.button>
-
           <motion.button whileHover={{ scale: 1.05, rotate: -20 }} whileTap={{ scale: 0.95 }}
-            onClick={handleReset} className="p-2.5 rounded-lg hover:bg-accent transition-colors" title="Reset board"
+            onClick={handleReset} className="p-2 rounded-lg hover:bg-accent transition-colors" title="Reset"
           >
-            <RotateCcw className="w-5 h-5 text-foreground/70" />
+            <RotateCcw className="w-4 h-4 text-foreground/70" />
           </motion.button>
         </div>
       </header>
 
-      {/* Main content */}
-      <div className="relative z-10 max-w-6xl mx-auto px-4 py-6">
-        <div className="flex flex-col lg:flex-row gap-6 items-start">
-          {/* Board section */}
-          <div className="flex-1 w-full max-w-lg mx-auto lg:mx-0">
-            {/* Challenge mode banner */}
-            <AnimatePresence>
-              {isChallengeMode && !lineCompleted && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                  className="mb-4 rounded-xl p-4 text-center relative overflow-hidden"
-                  style={{
-                    background: `linear-gradient(135deg, hsl(45, 100%, 50%, 0.12), hsl(30, 100%, 45%, 0.08), hsl(0, 80%, 50%, 0.06))`,
-                    border: `1px solid hsl(45, 100%, 50%, 0.3)`,
-                    boxShadow: `0 0 30px hsl(45, 100%, 50%, 0.1), inset 0 0 30px hsl(45, 100%, 50%, 0.05)`,
-                  }}
-                >
-                  <div className="absolute inset-0 pointer-events-none" style={{
-                    background: `radial-gradient(ellipse at 50% 50%, hsl(45, 100%, 60%, 0.08), transparent 70%)`,
-                  }} />
-                  <div className="relative flex items-center justify-center gap-2">
-                    <Zap className="w-5 h-5" style={{ color: "hsl(45, 100%, 55%)" }} />
-                    <span className="font-serif text-sm font-semibold" style={{ color: "hsl(45, 100%, 65%)" }}>
-                      {t("challengeMode")}
-                    </span>
-                    <Zap className="w-5 h-5" style={{ color: "hsl(45, 100%, 55%)" }} />
-                  </div>
-                  <p className="relative text-xs text-muted-foreground mt-1">
-                    {t("noHints")}
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
+      {/* Eval progress bar */}
+      <div className="w-full h-1" style={{ background: "hsl(var(--muted))" }}>
+        <div
+          className="h-full transition-all duration-500"
+          style={{
+            width: totalPlayerMoves > 0 ? `${Math.min(100, (playerMovesCompleted / totalPlayerMoves) * 100)}%` : "0%",
+            background: isChallengeMode
+              ? "hsl(45, 100%, 50%)"
+              : `linear-gradient(90deg, ${currentTheme.primaryColor}, ${currentTheme.accentColor})`,
+          }}
+        />
+      </div>
 
-            {/* Evaluating engine indicator */}
-            <AnimatePresence>
-              {evaluatingEngine && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="mb-4 rounded-xl p-3 flex items-center justify-center gap-2"
-                  style={{
-                    background: `linear-gradient(135deg, ${currentTheme.primaryColor}10, ${currentTheme.accentColor}08)`,
-                    border: `1px solid ${currentTheme.primaryColor}20`,
-                  }}
-                >
-                  <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground">{t("evaluatingMove")}</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <div
-              className="transition-all duration-500"
-              style={isChallengeMode ? {
-                filter: `drop-shadow(0 0 20px hsl(45, 100%, 50%, 0.15))`,
-              } : {}}
-            >
-              <Chessboard
-                fen={fen}
-                onMove={handleMove}
-                moveHints={isChallengeMode || isCustomBranch ? new Map() : moveHints}
-                disabled={isComputerTurn || lineCompleted || evaluatingEngine}
-                flipped={playerColor === "b"}
-                playerColor={playerColor}
-              />
-            </div>
-
-            {/* Feedback area */}
-            <div className="mt-4 min-h-[80px]">
-              <AnimatePresence mode="wait">
-                {/* Custom branch line completed */}
-                {isCustomBranch && lineCompleted && !customLineSaved && (
-                  <motion.div
-                    key="custom-complete"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="rounded-xl p-5 text-center"
-                    style={{
-                      background: `linear-gradient(135deg, hsl(180, 40%, 55%, 0.12), ${currentTheme.primaryColor}10)`,
-                      border: `1px solid hsl(180, 40%, 55%, 0.3)`,
-                    }}
-                  >
-                    <Trophy className="w-8 h-8 mx-auto mb-2" style={{ color: "hsl(180, 40%, 55%)" }} />
-                    <p className="font-serif text-lg font-semibold text-foreground mb-1">
-                      {t("lineRecorded")}
-                    </p>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      {t("saveCustomLineDesc")}
-                    </p>
-                    <div className="flex gap-2 justify-center">
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={handleReset}
-                        className="px-4 py-2 rounded-lg text-sm font-medium border border-border/50 text-foreground/70 hover:bg-accent transition-colors"
-                      >
-                        {t("discard")}
-                      </motion.button>
-                      {user && moveHistory.length >= MIN_CUSTOM_MOVES && (
-                        <motion.button
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={handleSaveCustomLine}
-                          className="px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-1.5 transition-colors"
-                          style={{
-                            background: "hsl(180, 40%, 55%)",
-                            color: "hsl(var(--background))",
-                          }}
-                        >
-                          <Save className="w-4 h-4" />
-                          {t("saveCustomLine")}
-                        </motion.button>
-                      )}
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* Custom line saved confirmation */}
-                {customLineSaved && (
-                  <motion.div
-                    key="custom-saved"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="rounded-xl p-5 text-center"
-                    style={{
-                      background: `linear-gradient(135deg, hsl(180, 40%, 55%, 0.15), ${currentTheme.primaryColor}10)`,
-                      border: `1px solid hsl(180, 40%, 55%, 0.3)`,
-                    }}
-                  >
-                    <Trophy className="w-8 h-8 mx-auto mb-2" style={{ color: "hsl(180, 40%, 55%)" }} />
-                    <p className="font-serif text-lg font-semibold text-foreground mb-1">
-                      {t("lineSaved")}
-                    </p>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      {t("lineSavedDesc")}
-                    </p>
-                    <div className="flex gap-2 justify-center">
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={handleReset}
-                        className="px-4 py-2 rounded-lg text-sm font-medium border border-border/50 text-foreground/70 hover:bg-accent transition-colors"
-                      >
-                        {t("practiceAgain")}
-                      </motion.button>
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => navigate(`/study/${openingId}`)}
-                        className="px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                        style={{
-                          background: currentTheme.accentColor,
-                          color: "hsl(var(--background))",
-                        }}
-                      >
-                        {t("backToHub")}
-                      </motion.button>
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* Line completed overlay (non-custom) */}
-                {lineCompleted && !showMasteryPrompt && !isCustomBranch && (
-                  <motion.div
-                    key="line-complete"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="rounded-xl p-5 text-center"
-                    style={{
-                      background: `linear-gradient(135deg, ${currentTheme.accentColor}15, ${currentTheme.primaryColor}10)`,
-                      border: `1px solid ${currentTheme.accentColor}30`,
-                    }}
-                  >
-                    <Trophy className="w-8 h-8 mx-auto mb-2" style={{ color: currentTheme.accentColor }} />
-                    <p className="font-serif text-lg font-semibold text-foreground mb-1">
-                      {hadMistake ? t("lineCompleted") : t("perfectRun")}
-                    </p>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      {hadMistake
-                        ? t("hadMistakesMsg")
-                        : tf<(c: number) => string>("greatJob")(lineProgress ? lineProgress.correctAttempts + 1 : 1)}
-                    </p>
-                    <div className="flex gap-2 justify-center">
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={handleReset}
-                        className="px-4 py-2 rounded-lg text-sm font-medium border border-border/50 text-foreground/70 hover:bg-accent transition-colors"
-                      >
-                        {t("practiceAgain")}
-                      </motion.button>
-                      {allVariationLines.length > 0 && currentLine && (
-                        <motion.button
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={goToNextLine}
-                          className="px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-1.5 transition-colors"
-                          style={{
-                            background: currentTheme.accentColor,
-                            color: "hsl(var(--background))",
-                          }}
-                        >
-                          {allVariationLines.findIndex((l) => l.id === currentLine.id) < allVariationLines.length - 1
-                            ? <>{t("nextLine")} <ChevronRight className="w-4 h-4" /></>
-                            : t("backToHub")}
-                        </motion.button>
-                      )}
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* Mastery prompt */}
-                {showMasteryPrompt && (
-                  <motion.div
-                    key="mastery-prompt"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    className="rounded-xl p-5 text-center"
-                    style={{
-                      background: `linear-gradient(135deg, ${currentTheme.accentColor}20, ${currentTheme.primaryColor}15)`,
-                      border: `1px solid ${currentTheme.accentColor}40`,
-                    }}
-                  >
-                    <Trophy className="w-10 h-10 mx-auto mb-3" style={{ color: currentTheme.accentColor }} />
-                    <p className="font-serif text-xl font-semibold text-foreground mb-2">
-                      {t("masteryQuestion")}
-                    </p>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      {tf<(c: number) => string>("completedCorrectly")(lineProgress ? lineProgress.correctAttempts + 1 : MASTERY_PROMPT_THRESHOLD)}
-                    </p>
-                    <div className="flex gap-2 justify-center">
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => handleMasteryResponse(false)}
-                        className="px-5 py-2.5 rounded-lg text-sm font-medium border border-border/50 text-foreground/70 hover:bg-accent transition-colors"
-                      >
-                        {t("notYet")}
-                      </motion.button>
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => handleMasteryResponse(true)}
-                        className="px-5 py-2.5 rounded-lg text-sm font-medium transition-colors"
-                        style={{
-                          background: currentTheme.accentColor,
-                          color: "hsl(var(--background))",
-                        }}
-                      >
-                        {t("yesMastered")}
-                      </motion.button>
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* Normal feedback */}
-                {feedback && !lineCompleted && !showMasteryPrompt && (
-                  <FeedbackBanner
-                    key={`${feedback.type}-${moveCount}`}
-                    type={feedback.type}
-                    message={feedback.message}
-                    variationName={feedback.variationName}
-                    suggestedMove={feedback.suggestedMove}
-                    onSwitch={() => {
-                      if (feedback.detectedOpening) {
-                        setFeedback(null);
-                        navigate(`/study/${feedback.detectedOpening.id}/play?color=${playerColor}`);
-                        window.location.reload();
-                      } else if (feedback.detectedVariation) {
-                        navigate(
-                          `/study/${openingId}/play?color=${colorParam || opening.primarySide}&variation=${feedback.detectedVariation.variationId}&line=${feedback.detectedVariation.lineIndex}`,
-                        );
-                        window.location.reload();
-                      } else {
-                        // Off-tree good move: enter custom branch
-                        setIsCustomBranch(true);
-                        setFeedback({
-                          type: "main_line",
-                          message: t("customBranchStarted"),
-                        });
-                        // Computer responds via engine
-                        playEngineComputerMove(moveHistory);
-                      }
-                    }}
-                    onStay={() => {
-                      setFeedback(null);
-                      handleUndo();
-                    }}
-                    onRetry={() => setFeedback(null)}
-                  />
-                )}
-
-                {/* Plan/strategy text when no other feedback */}
-                {!feedback && !lineCompleted && !showMasteryPrompt && (() => {
-                  const variation = opening.variations.find((v) => v.id === variationParam);
-                  if (!variation?.plan) return null;
-                  return (
-                    <motion.div
-                      key="plan"
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -5 }}
-                      className="rounded-xl p-4"
-                      style={{
-                        background: `linear-gradient(135deg, ${currentTheme.primaryColor}08, ${currentTheme.accentColor}05)`,
-                        border: `1px solid ${currentTheme.primaryColor}15`,
-                      }}
-                    >
-                      <p className="text-xs uppercase tracking-wider font-medium mb-1.5" style={{ color: currentTheme.accentColor }}>
-                        {t("yourPlan")}
-                      </p>
-                      <p className="text-sm text-foreground/70 leading-relaxed">
-                        {tVar(variation.id, "plan", variation.plan)}
-                      </p>
-                    </motion.div>
-                  );
-                })()}
-              </AnimatePresence>
-            </div>
+      {/* Main content - mobile-first stacked layout */}
+      <div className="flex-1 flex flex-col max-w-lg mx-auto w-full px-3 pt-2">
+        {/* Eval display */}
+        {currentEval !== null && (
+          <div className="px-1 py-1.5">
+            <span className="text-sm font-mono text-muted-foreground">
+              Evaluation: <span className="font-semibold text-foreground">{formatEval(currentEval)}</span>
+            </span>
           </div>
+        )}
 
-          {/* Side panel */}
-          <div className="w-full lg:w-72 space-y-4">
-            <MoveHistory moves={moveHistory} />
+        {/* Feedback scores when comparing moves */}
+        {feedback && feedback.type === "legit_alternative" && feedback.suggestedMove && !lineCompleted && (
+          <div className="flex justify-between px-1 py-1.5">
+            <span className="text-sm font-mono text-muted-foreground">
+              Saved move: <span className="font-semibold text-foreground">{formatEval(currentEval)}</span>
+            </span>
+            <span className="text-sm font-mono text-muted-foreground">
+              Your move: <span className="font-semibold text-foreground">{formatEval(currentEval)}</span>
+            </span>
+          </div>
+        )}
 
-            {/* Save custom line button (in sidebar) */}
-            {canSaveCustomLine && !lineCompleted && (
-              <motion.button
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleSaveCustomLine}
-                className="w-full rounded-xl p-4 flex items-center justify-center gap-2 text-sm font-medium transition-colors"
-                style={{
-                  background: "hsl(180, 40%, 55%, 0.12)",
-                  border: "1px solid hsl(180, 40%, 55%, 0.3)",
-                  color: "hsl(180, 40%, 55%)",
-                }}
+        {/* Board */}
+        <Chessboard
+          fen={fen}
+          onMove={handleMove}
+          moveHints={isChallengeMode || isCustomBranch ? new Map() : moveHints}
+          disabled={isComputerTurn || lineCompleted || evaluatingEngine || (feedback?.type === "legit_alternative" && !!feedback?.suggestedMove)}
+          flipped={playerColor === "b"}
+          playerColor={playerColor}
+          arrowFrom={arrowTarget?.from}
+          arrowTo={arrowTarget?.to}
+        />
+
+        {/* Feedback message area */}
+        <div className="min-h-[52px] flex items-center justify-center text-center px-2 py-2">
+          <AnimatePresence mode="wait">
+            {evaluatingEngine && (
+              <motion.div key="eval" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                className="flex items-center gap-2"
               >
-                <Save className="w-4 h-4" />
-                {t("saveCustomLine")} ({moveHistory.length} {t("moves")})
-              </motion.button>
+                <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Evaluating move…</span>
+              </motion.div>
             )}
 
-            {/* Custom branch info */}
-            {isCustomBranch && !lineCompleted && (
-              <motion.div
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="rounded-xl p-4"
-                style={{
-                  background: "hsl(180, 40%, 55%, 0.08)",
-                  border: "1px solid hsl(180, 40%, 55%, 0.2)",
-                }}
+            {/* Challenge mode instruction */}
+            {isChallengeMode && !lineCompleted && !feedback && !evaluatingEngine && (
+              <motion.div key="challenge-hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                className="rounded-lg px-4 py-2 text-sm font-medium"
+                style={{ background: "hsl(45, 100%, 50%, 0.1)", color: "hsl(45, 100%, 55%)" }}
               >
-                <p className="text-xs uppercase tracking-wider font-medium mb-1" style={{ color: "hsl(180, 40%, 55%)" }}>
-                  {t("customBranch")}
+                Play the move indicated by the green arrow
+              </motion.div>
+            )}
+
+            {/* Default: show "Play the move indicated by the green arrow" */}
+            {!isChallengeMode && !feedback && !lineCompleted && !evaluatingEngine && arrowTarget && (
+              <motion.div key="play-hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                className="rounded-lg px-4 py-2.5 text-sm text-muted-foreground"
+                style={{ background: "hsl(var(--muted) / 0.5)" }}
+              >
+                Play the move indicated by the green arrow
+              </motion.div>
+            )}
+
+            {/* Waiting for user (no arrow) */}
+            {!feedback && !lineCompleted && !evaluatingEngine && !arrowTarget && !isComputerTurn && currentNodes.length > 0 && (
+              <motion.div key="your-turn" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                className="text-sm text-muted-foreground"
+              >
+                Your turn
+              </motion.div>
+            )}
+
+            {/* Good move feedback */}
+            {feedback && feedback.type === "main_line" && !lineCompleted && (
+              <motion.div key="good" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                className="text-sm font-medium" style={{ color: "hsl(140, 65%, 45%)" }}
+              >
+                {feedback.message}
+              </motion.div>
+            )}
+
+            {/* Alternative move feedback */}
+            {feedback && feedback.type === "legit_alternative" && !lineCompleted && (
+              <motion.div key="alt" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                className="text-sm text-foreground"
+              >
+                We recommend <span className="font-bold" style={{ color: currentTheme.accentColor }}>{feedback.suggestedMove}</span>.{" "}
+                <span className="font-bold" style={{ color: "hsl(140, 50%, 50%)" }}>
+                  {moveHistory[moveHistory.length - 1]?.san}
+                </span>{" "}
+                is a good move – do you want to switch?
+              </motion.div>
+            )}
+
+            {/* Mistake feedback */}
+            {feedback && feedback.type === "mistake" && !lineCompleted && (
+              <motion.div key="mistake" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                className="text-sm text-foreground"
+              >
+                <span className="font-bold" style={{ color: "hsl(0, 65%, 50%)" }}>{feedback.message}</span>
+                {feedback.suggestedMove && (
+                  <span className="ml-1">
+                    You should play <span className="font-bold" style={{ color: currentTheme.accentColor }}>{feedback.suggestedMove}</span> instead.
+                  </span>
+                )}
+              </motion.div>
+            )}
+
+            {/* Line completed - challenge mode message */}
+            {lineCompleted && isChallengeMode && !showMasteryPrompt && !isCustomBranch && (
+              <motion.div key="challenge-done" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                className="rounded-lg px-4 py-3 text-sm font-medium"
+                style={{ background: "hsl(140, 65%, 45%, 0.12)", color: "hsl(140, 65%, 45%)" }}
+              >
+                Now try to play the line correctly without guidance.
+              </motion.div>
+            )}
+
+            {/* Line completed - normal */}
+            {lineCompleted && !isChallengeMode && !showMasteryPrompt && !isCustomBranch && (
+              <motion.div key="done" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                className="text-center"
+              >
+                <Trophy className="w-6 h-6 mx-auto mb-1" style={{ color: currentTheme.accentColor }} />
+                <p className="text-sm font-semibold text-foreground">
+                  {hadMistake ? t("lineCompleted") : t("perfectRun")}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {t("customBranchDesc")}
-                </p>
-                <p className="text-xs text-muted-foreground mt-1 font-mono">
-                  {moveHistory.length}/{MAX_CUSTOM_MOVES} {t("moves")}
+                  {hadMistake ? t("hadMistakesMsg") : tf<(c: number) => string>("greatJob")(lineProgress ? lineProgress.correctAttempts + 1 : 1)}
                 </p>
               </motion.div>
             )}
 
-            {/* Line progress card */}
-            {currentLine && lineProgress && (
-              <motion.div
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="rounded-xl p-4"
-                style={{ background: "hsl(var(--card))" }}
+            {/* Custom branch completed */}
+            {isCustomBranch && lineCompleted && !customLineSaved && (
+              <motion.div key="custom-done" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                className="text-center"
               >
-                <h4 className="text-xs uppercase tracking-wider text-muted-foreground mb-2 font-medium">
-                  {t("lineProgress")}
-                </h4>
-                <div className="flex items-center gap-3">
-                  <div className="flex-1">
-                    <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                      <span>{lineProgress.correctAttempts} {t("correctCount")}</span>
-                      <span>{lineProgress.attempts} {t("totalCount")}</span>
-                    </div>
-                    <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: "hsl(var(--muted))" }}>
-                      <div
-                        className="h-full rounded-full transition-all duration-500"
-                        style={{
-                          width: `${Math.min(100, (lineProgress.correctAttempts / MASTERY_PROMPT_THRESHOLD) * 100)}%`,
-                          background: lineProgress.mastered
-                            ? currentTheme.accentColor
-                            : currentTheme.primaryColor,
-                        }}
-                      />
-                    </div>
-                  </div>
-                  {lineProgress.mastered && (
-                    <Trophy className="w-4 h-4 flex-shrink-0" style={{ color: currentTheme.accentColor }} />
-                  )}
-                </div>
+                <Trophy className="w-6 h-6 mx-auto mb-1" style={{ color: "hsl(140, 50%, 50%)" }} />
+                <p className="text-sm font-semibold text-foreground">{t("lineRecorded")}</p>
+                <p className="text-xs text-muted-foreground">{t("saveCustomLineDesc")}</p>
               </motion.div>
             )}
 
-            {/* Opening info card */}
-            <motion.div
-              key={currentVariation?.name || "base"}
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="rounded-xl p-4"
-              style={{ background: "hsl(var(--card))" }}
-            >
-              <h4 className="text-xs uppercase tracking-wider text-muted-foreground mb-2 font-medium">
-                {currentVariation ? currentVariation.name : t("aboutThisOpening")}
-              </h4>
-              <p className="text-sm text-foreground/70 leading-relaxed">
-                {currentVariation ? currentVariation.description : tDesc(opening.id, opening.description)}
-              </p>
-            </motion.div>
+            {customLineSaved && (
+              <motion.div key="saved" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+                className="text-center"
+              >
+                <Trophy className="w-6 h-6 mx-auto mb-1" style={{ color: "hsl(140, 50%, 50%)" }} />
+                <p className="text-sm font-semibold text-foreground">{t("lineSaved")}</p>
+              </motion.div>
+            )}
 
-            {/* Available lines — only show on player's turn */}
-            {(() => {
-              if (isCustomBranch) return null;
-              const turnChess = new Chess(fen);
-              const isPlayerTurn = turnChess.turn() === playerColor;
-              if (!isPlayerTurn || isComputerTurn || lineCompleted || isChallengeMode || currentNodes.length === 0) return null;
-              const legalMoves = turnChess.moves();
-              const validNodes = currentNodes.filter((n) => n.category !== "mistake" && legalMoves.includes(n.move));
-              if (validNodes.length === 0) return null;
-              return (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="rounded-xl p-4"
-                  style={{ background: "hsl(var(--card))" }}
+            {/* Mastery prompt */}
+            {showMasteryPrompt && (
+              <motion.div key="mastery" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+                className="text-center"
+              >
+                <Trophy className="w-8 h-8 mx-auto mb-2" style={{ color: currentTheme.accentColor }} />
+                <p className="font-serif text-lg font-semibold text-foreground mb-1">{t("masteryQuestion")}</p>
+                <p className="text-xs text-muted-foreground">
+                  {tf<(c: number) => string>("completedCorrectly")(lineProgress ? lineProgress.correctAttempts + 1 : MASTERY_PROMPT_THRESHOLD)}
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Progress dots */}
+        {totalPlayerMoves > 0 && (
+          <ProgressDots
+            total={totalPlayerMoves}
+            current={playerMovesCompleted}
+            results={moveResults}
+          />
+        )}
+
+        {/* Spacer */}
+        <div className="flex-1" />
+
+        {/* Bottom action bar */}
+        <div className="pb-6 pt-2">
+          <AnimatePresence mode="wait">
+            {/* Alternative: show two move buttons */}
+            {feedback && feedback.type === "legit_alternative" && feedback.suggestedMove && !lineCompleted && (
+              <motion.div key="alt-buttons" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
+                className="flex gap-3 items-center"
+              >
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => {
+                    setFeedback(null);
+                    handleUndo();
+                  }}
+                  className="flex-1 py-3.5 rounded-xl text-sm font-semibold border border-border/50 text-foreground hover:bg-accent transition-colors"
                 >
-                  <h4 className="text-xs uppercase tracking-wider text-muted-foreground mb-2 font-medium">
-                    {t("yourOptions")}
-                  </h4>
-                  <div className="space-y-1.5">
-                    {[...validNodes].sort((a, b) => {
-                      const totalMoves = moveHistory.length;
-                      const aIsExpected = preferredMoves && totalMoves < preferredMoves.length && a.move === preferredMoves[totalMoves];
-                      const bIsExpected = preferredMoves && totalMoves < preferredMoves.length && b.move === preferredMoves[totalMoves];
-                      if (aIsExpected && !bIsExpected) return -1;
-                      if (!aIsExpected && bIsExpected) return 1;
-                      if (a.category === "main_line" && b.category !== "main_line") return -1;
-                      if (a.category !== "main_line" && b.category === "main_line") return 1;
-                      return 0;
-                    }).map((node, i) => {
-                      const totalMovesPlayed = moveHistory.length;
-                      const isExpectedMove = preferredMoves && totalMovesPlayed < preferredMoves.length && node.move === preferredMoves[totalMovesPlayed];
-                      const isOnPath = preferredMoves ? isExpectedMove : node.category === "main_line";
-                      const showVariationLabel = !isExpectedMove && (node.variationName || (preferredMoves && node.category === "main_line"));
-                      return (
-                      <div key={i} className="flex items-center gap-2">
-                        <div
-                          className="w-2 h-2 rounded-full"
-                          style={{
-                            background: isOnPath
-                              ? "hsl(42, 90%, 55%)"
-                              : "hsl(180, 40%, 55%)",
-                          }}
-                        />
-                        <span className="font-mono text-sm text-foreground/70">{node.move}</span>
-                        {showVariationLabel && (
-                          <span className="text-xs italic text-muted-foreground">
-                            {node.variationName}
-                          </span>
-                        )}
-                      </div>
-                    );})}
-                  </div>
-                </motion.div>
-              );
-            })()}
-          </div>
+                  {feedback.suggestedMove}
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => {
+                    // Show confirmation modal
+                    setShowSwitchConfirm(true);
+                    setPendingSwitchData({
+                      playerMoveScore: currentEval,
+                      masterMoveScore: currentEval,
+                      playerMoveSan: moveHistory[moveHistory.length - 1]?.san || "",
+                      masterMoveSan: feedback.suggestedMove || "",
+                      onAdopt: () => {
+                        setShowSwitchConfirm(false);
+                        setPendingSwitchData(null);
+                        // Switch to custom branch or detected variation
+                        if (feedback.detectedOpening) {
+                          setFeedback(null);
+                          navigate(`/study/${feedback.detectedOpening.id}/play?color=${playerColor}`);
+                          window.location.reload();
+                        } else if (feedback.detectedVariation) {
+                          navigate(
+                            `/study/${openingId}/play?color=${colorParam || opening.primarySide}&variation=${feedback.detectedVariation.variationId}&line=${feedback.detectedVariation.lineIndex}`,
+                          );
+                          window.location.reload();
+                        } else {
+                          setIsCustomBranch(true);
+                          setFeedback({ type: "main_line", message: t("customBranchStarted") });
+                          playEngineComputerMove(moveHistory);
+                        }
+                      },
+                      onStay: () => {
+                        setShowSwitchConfirm(false);
+                        setPendingSwitchData(null);
+                        setFeedback(null);
+                        handleUndo();
+                      },
+                    });
+                  }}
+                  className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-background transition-colors"
+                  style={{ background: currentTheme.accentColor }}
+                >
+                  {moveHistory[moveHistory.length - 1]?.san}
+                </motion.button>
+              </motion.div>
+            )}
+
+            {/* Mistake: retry button */}
+            {feedback && feedback.type === "mistake" && !lineCompleted && (
+              <motion.div key="mistake-btn" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setFeedback(null)}
+                  className="w-full py-3.5 rounded-xl text-sm font-semibold text-white transition-colors"
+                  style={{ background: "hsl(0, 65%, 50%)" }}
+                >
+                  {t("tryAgain")}
+                </motion.button>
+              </motion.div>
+            )}
+
+            {/* Line completed actions */}
+            {lineCompleted && !showMasteryPrompt && !isCustomBranch && (
+              <motion.div key="complete-btn" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
+                className="flex gap-3"
+              >
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleReset}
+                  className="flex-1 py-3.5 rounded-xl text-sm font-semibold border border-border/50 text-foreground hover:bg-accent transition-colors"
+                >
+                  {t("practiceAgain")}
+                </motion.button>
+                {allVariationLines.length > 0 && currentLine && (
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={goToNextLine}
+                    className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-background flex items-center justify-center gap-1.5 transition-colors"
+                    style={{ background: currentTheme.accentColor }}
+                  >
+                    Continue
+                  </motion.button>
+                )}
+              </motion.div>
+            )}
+
+            {/* Custom branch completed */}
+            {isCustomBranch && lineCompleted && !customLineSaved && (
+              <motion.div key="custom-btns" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
+                className="flex gap-3"
+              >
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleReset}
+                  className="flex-1 py-3.5 rounded-xl text-sm font-semibold border border-border/50 text-foreground transition-colors"
+                >
+                  {t("discard")}
+                </motion.button>
+                {user && moveHistory.length >= MIN_CUSTOM_MOVES && (
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleSaveCustomLine}
+                    className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-background flex items-center justify-center gap-1.5 transition-colors"
+                    style={{ background: "hsl(140, 50%, 45%)" }}
+                  >
+                    <Save className="w-4 h-4" />
+                    {t("saveCustomLine")}
+                  </motion.button>
+                )}
+              </motion.div>
+            )}
+
+            {customLineSaved && (
+              <motion.div key="saved-btns" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
+                className="flex gap-3"
+              >
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleReset}
+                  className="flex-1 py-3.5 rounded-xl text-sm font-semibold border border-border/50 text-foreground transition-colors"
+                >
+                  {t("practiceAgain")}
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => navigate(`/study/${openingId}`)}
+                  className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-background transition-colors"
+                  style={{ background: currentTheme.accentColor }}
+                >
+                  {t("backToHub")}
+                </motion.button>
+              </motion.div>
+            )}
+
+            {/* Mastery prompt buttons */}
+            {showMasteryPrompt && (
+              <motion.div key="mastery-btns" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
+                className="flex gap-3"
+              >
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleMasteryResponse(false)}
+                  className="flex-1 py-3.5 rounded-xl text-sm font-semibold border border-border/50 text-foreground transition-colors"
+                >
+                  {t("notYet")}
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleMasteryResponse(true)}
+                  className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-background transition-colors"
+                  style={{ background: currentTheme.accentColor }}
+                >
+                  {t("yesMastered")}
+                </motion.button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
+
+      {/* Switch confirmation modal */}
+      <SwitchConfirmModal
+        open={showSwitchConfirm}
+        playerMoveScore={pendingSwitchData?.playerMoveScore ?? null}
+        masterMoveScore={pendingSwitchData?.masterMoveScore ?? null}
+        playerMoveSan={pendingSwitchData?.playerMoveSan ?? ""}
+        masterMoveSan={pendingSwitchData?.masterMoveSan ?? ""}
+        onAdopt={() => pendingSwitchData?.onAdopt()}
+        onStay={() => pendingSwitchData?.onStay()}
+      />
     </div>
   );
 }
