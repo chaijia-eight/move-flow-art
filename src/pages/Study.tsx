@@ -773,7 +773,7 @@ export default function Study() {
                         // Fallback: just continue exploring
                         setFeedback({
                           type: "main_line",
-                          message: `Switched to the ${feedback.variationName}. Let's explore this line.`,
+                          message: tf<(n: string) => string>("switchedTo")(feedback.variationName || ""),
                         });
                       }
                     }}
