@@ -14,7 +14,6 @@ export default function Settings() {
   const { user, loading, signUp, signIn, signOut } = useAuth();
   const { setDarkMode } = useTheme();
   const [settings, setSettings] = useState<AppSettings>(loadSettings);
-  const [settings, setSettings] = useState<AppSettings>(loadSettings);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
