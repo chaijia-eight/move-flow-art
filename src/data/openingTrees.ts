@@ -2474,8 +2474,8 @@ export const openings: Opening[] = [
     themeId: "reti", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "w", tree: retiTree, totalVariations: 3,
     variations: [
-      { id: "reti-accepted", name: "Réti Accepted", description: "e6 and classical development — rich strategic play.", startingMoves: "1.Nf3 d5 2.c4 e6", tree: retiTree, depth: 12 },
-      { id: "reti-kia", name: "King's Indian Attack", description: "g3 + Bg2 — a universal system for White.", startingMoves: "1.Nf3 d5 2.g3", tree: retiTree, depth: 10 },
+      { id: "reti-accepted", name: "Réti Accepted", description: "e6 and classical development — rich strategic play.", plan: "As White, use Nf3 and c4 to control the center from the flanks. Fianchetto with g3, Bg2 and transpose into favorable positions. A flexible, transpositional opening where understanding matters more than memorization.", startingMoves: "1.Nf3 d5 2.c4 e6", tree: retiTree, depth: 12 },
+      { id: "reti-kia", name: "King's Indian Attack", description: "g3 + Bg2 — a universal system for White.", plan: "Set up with g3, Bg2, d3, Nbd2, e4 — a universal system playable against almost anything. Aim for a kingside attack with e4-e5 and piece pressure. Safe, solid, and easy to play at any level.", startingMoves: "1.Nf3 d5 2.g3", tree: retiTree, depth: 10 },
     ]
   },
 ];
