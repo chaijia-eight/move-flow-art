@@ -2464,8 +2464,8 @@ export const openings: Opening[] = [
     themeId: "philidor", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: philidorTree, totalVariations: 3,
     variations: [
-      { id: "philidor-main", name: "Philidor Main Line", description: "Nf6 and Nbd7 — the classical setup.", startingMoves: "1.e4 e5 2.Nf3 d6 3.d4 Nf6", tree: philidorTree, depth: 12 },
-      { id: "hanham-philidor", name: "Hanham Philidor", description: "Nd7 first — a more flexible move order.", startingMoves: "1.e4 e5 2.Nf3 d6 3.d4 Nd7", tree: philidorTree, depth: 10 },
+      { id: "philidor-main", name: "Philidor Main Line", description: "Nf6 and Nbd7 — the classical setup.", plan: "As Black, build a solid fortress with d6, Nf6, Be7, O-O, and Nbd7. Prepare the f5 or d5 break when the time is right. Slightly cramped but rock-solid — ideal for patient players who like to grind.", startingMoves: "1.e4 e5 2.Nf3 d6 3.d4 Nf6", tree: philidorTree, depth: 12 },
+      { id: "hanham-philidor", name: "Hanham Philidor", description: "Nd7 first — a more flexible move order.", plan: "Develop Nd7 first to support e5 and keep options open for the king's knight. A more flexible version of the Philidor that avoids some of White's sharpest lines. Solid and reliable.", startingMoves: "1.e4 e5 2.Nf3 d6 3.d4 Nd7", tree: philidorTree, depth: 10 },
     ]
   },
   {
