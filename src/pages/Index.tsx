@@ -9,6 +9,7 @@ import { extractAllLines, extractLinesForVariation } from "@/lib/lineExtractor";
 import { getLineProgress, getOpeningProgress } from "@/lib/progressStore";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { t, tf, tn } from "@/lib/i18n";
 
 interface Recommendation {
   openingId: string;
@@ -52,8 +53,8 @@ function getRecommendation(): Recommendation | null {
           themeId: opening.themeId,
           reason:
             lp.attempts > 0
-              ? `Continue practicing — ${lp.correctAttempts}/${lp.attempts} correct`
-              : "Start this line",
+              ? tf<(c: number, t: number) => string>("continueReason")(lp.correctAttempts, lp.attempts)
+              : t("startThisLine"),
         };
 
         if (lp.attempts > 0 && !bestInProgress) {
@@ -106,7 +107,6 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Ambient background gradient */}
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
@@ -115,7 +115,6 @@ export default function Index() {
         }}
       />
 
-      {/* Header */}
       <header className="relative z-10 px-6 pt-12 pb-6 max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -128,13 +127,13 @@ export default function Index() {
                 BookChess
               </h1>
               <p className="text-muted-foreground mt-2 text-lg max-w-md leading-relaxed">
-                Explore chess openings at your own pace. No pressure, no streaks — just beautiful learning.
+                {t("appTagline")}
               </p>
             </div>
             <button
               onClick={() => navigate("/settings")}
               className="mt-2 p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
-              aria-label="Settings"
+              aria-label={t("settings")}
             >
               <Settings className="w-5 h-5" />
             </button>
@@ -143,7 +142,6 @@ export default function Index() {
       </header>
 
       <main className="relative z-10 px-6 pb-16 max-w-5xl mx-auto space-y-10">
-        {/* Dashboard: Recommended Next Step */}
         <section className="max-w-3xl">
           {recommendation && recTheme && (
             <motion.div
@@ -152,7 +150,7 @@ export default function Index() {
               transition={{ duration: 0.5, delay: 0.1 }}
             >
               <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-3">
-                Recommended Next Step
+                {t("recommendedNextStep")}
               </h2>
               <div
                 className="rounded-xl border border-border overflow-hidden cursor-pointer group"
@@ -169,7 +167,7 @@ export default function Index() {
                       <div className="flex items-center gap-2 mb-1">
                         <Target className="w-4 h-4 text-primary shrink-0" />
                         <span className="text-xs text-muted-foreground uppercase tracking-wider font-medium">
-                          {recommendation.openingName}
+                          {tn("openingName", recommendation.openingId)}
                         </span>
                       </div>
                       <h3 className="font-serif text-xl font-semibold text-foreground mb-1 truncate">
@@ -178,7 +176,7 @@ export default function Index() {
                       <p className="text-sm text-muted-foreground">{recommendation.reason}</p>
                       <div className="mt-3">
                         <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
-                          <span>Opening progress</span>
+                          <span>{t("openingProgress")}</span>
                           <span>{Math.round(recommendation.progress * 100)}%</span>
                         </div>
                         <Progress value={recommendation.progress * 100} className="h-1.5" />
@@ -186,7 +184,7 @@ export default function Index() {
                     </div>
                     <Button size="lg" className="shrink-0 gap-2 group-hover:scale-105 transition-transform">
                       <Play className="w-4 h-4" />
-                      Start
+                      {t("start")}
                     </Button>
                   </div>
                 </div>
@@ -202,13 +200,12 @@ export default function Index() {
               className="rounded-xl border border-border bg-card p-8 text-center"
             >
               <Trophy className="w-10 h-10 text-primary mx-auto mb-3" />
-              <h3 className="font-serif text-xl font-semibold text-foreground mb-1">All Mastered!</h3>
-              <p className="text-sm text-muted-foreground">You've mastered every line. Impressive.</p>
+              <h3 className="font-serif text-xl font-semibold text-foreground mb-1">{t("allMastered")}</h3>
+              <p className="text-sm text-muted-foreground">{t("allMasteredDesc")}</p>
             </motion.div>
           )}
         </section>
 
-        {/* Dashboard: Quick Stats */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -216,15 +213,15 @@ export default function Index() {
           className="max-w-3xl"
         >
           <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-3">
-            Progress
+            {t("progress")}
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { label: "Lines Mastered", value: `${stats.masteredLines}/${stats.totalLines}`, icon: Trophy },
-              { label: "Openings Started", value: `${stats.openingsStarted}/${stats.totalOpenings}`, icon: BookOpen },
-              { label: "Total Attempts", value: String(stats.totalAttempts), icon: Target },
+              { label: t("linesMastered"), value: `${stats.masteredLines}/${stats.totalLines}`, icon: Trophy },
+              { label: t("openingsStarted"), value: `${stats.openingsStarted}/${stats.totalOpenings}`, icon: BookOpen },
+              { label: t("totalAttempts"), value: String(stats.totalAttempts), icon: Target },
               {
-                label: "Mastery",
+                label: t("mastery"),
                 value: stats.totalLines > 0 ? `${Math.round((stats.masteredLines / stats.totalLines) * 100)}%` : "0%",
                 icon: ChevronRight,
               },
@@ -238,7 +235,6 @@ export default function Index() {
           </div>
         </motion.section>
 
-        {/* Opening Garden */}
         <section>
           <motion.div
             initial={{ opacity: 0 }}
@@ -247,7 +243,7 @@ export default function Index() {
             className="flex items-center gap-3 mb-6"
           >
             <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
-              Your Garden
+              {t("yourGarden")}
             </h2>
             <div className="flex-1 h-px bg-border/50" />
           </motion.div>

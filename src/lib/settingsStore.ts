@@ -2,14 +2,16 @@ const SETTINGS_KEY = "chess-app-settings";
 
 export interface AppSettings {
   soundEnabled: boolean;
-  boardThemeFollowOpening: boolean; // true = use opening theme, false = use default
+  boardThemeFollowOpening: boolean;
   darkMode: boolean;
+  language: "en" | "zh";
 }
 
 const defaults: AppSettings = {
   soundEnabled: true,
   boardThemeFollowOpening: true,
   darkMode: true,
+  language: "en",
 };
 
 export function loadSettings(): AppSettings {

@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
 import type { MoveCategory } from "@/data/openings";
+import { t } from "@/lib/i18n";
 
 interface FeedbackBannerProps {
   type: MoveCategory;
@@ -68,13 +69,12 @@ export default function FeedbackBanner({
             <p className="text-sm leading-relaxed text-foreground/90">{message}</p>
             {suggestedMove && (
               <p className="text-sm mt-1 text-foreground/70">
-                Try <span className="font-mono font-medium" style={{ color: borderMap[type] }}>{suggestedMove}</span> instead.
+                {t("tryInstead")} <span className="font-mono font-medium" style={{ color: borderMap[type] }}>{suggestedMove}</span> {t("instead")}
               </p>
             )}
           </div>
         </div>
 
-        {/* Action buttons */}
         {type === "legit_alternative" && onSwitch && onStay && (
           <div className="flex gap-2 mt-3 ml-8">
             <motion.button
@@ -87,7 +87,7 @@ export default function FeedbackBanner({
                 color: "hsl(var(--background))",
               }}
             >
-              Switch
+              {t("switchBtn")}
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -99,7 +99,7 @@ export default function FeedbackBanner({
                 color: borderMap[type],
               }}
             >
-              Stay
+              {t("stayBtn")}
             </motion.button>
           </div>
         )}
@@ -116,7 +116,7 @@ export default function FeedbackBanner({
                 color: "white",
               }}
             >
-              Try Again
+              {t("tryAgain")}
             </motion.button>
           </div>
         )}

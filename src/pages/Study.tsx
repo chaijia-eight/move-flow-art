@@ -18,6 +18,7 @@ import {
 } from "@/lib/progressStore";
 import { playLineCompleteSound, playMasterySound } from "@/lib/chessSounds";
 import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap } from "lucide-react";
+import { t, tf, tn } from "@/lib/i18n";
 
 interface MoveRecord {
   san: string;
@@ -281,7 +282,7 @@ export default function Study() {
           if (chosen.variationName) {
             setCurrentVariation({
               name: chosen.variationName,
-              description: `You're studying the ${chosen.variationName}.`,
+              description: tf<(n: string) => string>("studyingThe")(chosen.variationName),
             });
           }
           setUndoStack((prev) => [...prev, snapBefore]);
@@ -324,7 +325,7 @@ export default function Study() {
         if (detected) {
           setFeedback({
             type: "legit_alternative",
-            message: `That's the ${detected.name}! Want to switch to studying that opening?`,
+            message: tf<(n: string) => string>("thatsThe")(detected.name),
             variationName: detected.name,
             detectedOpening: detected,
           });
@@ -332,7 +333,7 @@ export default function Study() {
         } else {
           setFeedback({
             type: "main_line",
-            message: "Interesting move. We don't have this in our study lines yet.",
+            message: t("interestingMove"),
           });
           setCurrentNodes([]);
         }
@@ -353,13 +354,13 @@ export default function Study() {
           setFeedback({
             type: "main_line",
             message: matchedNode.variationName && !isAlreadyStudying
-              ? `Good. This is the ${matchedNode.variationName}.`
-              : "Good. Let's continue.",
+              ? tf<(n: string) => string>("goodThisIs")(matchedNode.variationName)
+              : t("goodContinue"),
           });
           if (matchedNode.variationName) {
             setCurrentVariation({
               name: matchedNode.variationName,
-              description: `You're studying the ${matchedNode.variationName}.`,
+              description: tf<(n: string) => string>("studyingThe")(matchedNode.variationName),
             });
           }
           setCurrentNodes(matchedNode.children);
@@ -397,7 +398,7 @@ export default function Study() {
           }
           setFeedback({
             type: "legit_alternative",
-            message: `This move is also good — it's called the ${matchedNode.variationName || "Alternative Line"}. Want to switch?`,
+            message: tf<(n: string) => string>("alsoGood")(matchedNode.variationName || "Alternative Line"),
             variationName: matchedNode.variationName,
             alternativeNode: matchedNode,
             detectedVariation: detectedVar,
@@ -405,7 +406,7 @@ export default function Study() {
           setCurrentNodes(matchedNode.children);
           setCurrentVariation({
             name: matchedNode.variationName || "Alternative Line",
-            description: `You're now exploring the ${matchedNode.variationName || "Alternative Line"}.`,
+            description: tf<(n: string) => string>("nowExploring")(matchedNode.variationName || "Alternative Line"),
           });
           break;
         }
@@ -418,7 +419,7 @@ export default function Study() {
           setHadMistake(true);
           setFeedback({
             type: "mistake",
-            message: matchedNode.explanation || "That's not the best move here.",
+            message: matchedNode.explanation || t("notBestMove"),
             suggestedMove: matchedNode.suggestedMove,
           });
           break;
@@ -491,14 +492,15 @@ export default function Study() {
   if (!opening) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <p className="text-muted-foreground">Opening not found.</p>
+        <p className="text-muted-foreground">{t("openingNotFound")}</p>
       </div>
     );
   }
 
+  const colorLabel = playerColor === "w" ? t("white") : t("black");
   const sideLabel = playerColor === opening.primarySide
-    ? `Play as ${playerColor === "w" ? "White" : "Black"}`
-    : `Play against (as ${playerColor === "w" ? "White" : "Black"})`;
+    ? tf<(c: string) => string>("playAs")(colorLabel)
+    : tf<(c: string) => string>("playAgainst")(colorLabel);
 
   const displayName = currentLine
     ? currentLine.name
@@ -538,14 +540,14 @@ export default function Study() {
             </h1>
             <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider">
               {sideLabel}
-              {isReview && " · Review Mode"}
+              {isReview && ` · ${t("reviewMode")}`}
               {isChallengeMode && !lineCompleted && (
                 <span className="ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold tracking-widest" style={{
                   background: "hsl(45, 100%, 50%, 0.15)",
                   color: "hsl(45, 100%, 60%)",
                   border: "1px solid hsl(45, 100%, 50%, 0.25)",
                 }}>
-                  <Zap className="w-3 h-3" /> CHALLENGE
+                  <Zap className="w-3 h-3" /> {t("challenge")}
                 </span>
               )}
             </p>
@@ -563,7 +565,7 @@ export default function Study() {
                 color: playerColor === "w" ? "hsl(var(--background))" : "hsl(var(--muted-foreground))",
               }}
             >
-              White
+              {t("white")}
             </button>
             <button
               onClick={() => handleColorSwitch("b")}
@@ -573,7 +575,7 @@ export default function Study() {
                 color: playerColor === "b" ? "hsl(var(--background))" : "hsl(var(--muted-foreground))",
               }}
             >
-              Black
+              {t("black")}
             </button>
           </div>
 
@@ -623,12 +625,12 @@ export default function Study() {
                   <div className="relative flex items-center justify-center gap-2">
                     <Zap className="w-5 h-5" style={{ color: "hsl(45, 100%, 55%)" }} />
                     <span className="font-serif text-sm font-semibold" style={{ color: "hsl(45, 100%, 65%)" }}>
-                      Challenge Mode
+                      {t("challengeMode")}
                     </span>
                     <Zap className="w-5 h-5" style={{ color: "hsl(45, 100%, 55%)" }} />
                   </div>
                   <p className="relative text-xs text-muted-foreground mt-1">
-                    No hints this time. Play the line from memory!
+                    {t("noHints")}
                   </p>
                 </motion.div>
               )}
@@ -668,12 +670,12 @@ export default function Study() {
                   >
                     <Trophy className="w-8 h-8 mx-auto mb-2" style={{ color: currentTheme.accentColor }} />
                     <p className="font-serif text-lg font-semibold text-foreground mb-1">
-                      {hadMistake ? "Line Completed" : "Perfect Run!"}
+                      {hadMistake ? t("lineCompleted") : t("perfectRun")}
                     </p>
                     <p className="text-sm text-muted-foreground mb-4">
                       {hadMistake
-                        ? "You made it through, but had some mistakes. Try again for a perfect run!"
-                        : `Great job! ${lineProgress ? `${lineProgress.correctAttempts + 1} correct attempt${lineProgress.correctAttempts > 0 ? "s" : ""}.` : ""}`}
+                        ? t("hadMistakesMsg")
+                        : tf<(c: number) => string>("greatJob")(lineProgress ? lineProgress.correctAttempts + 1 : 1)}
                     </p>
                     <div className="flex gap-2 justify-center">
                       <motion.button
@@ -682,7 +684,7 @@ export default function Study() {
                         onClick={handleReset}
                         className="px-4 py-2 rounded-lg text-sm font-medium border border-border/50 text-foreground/70 hover:bg-accent transition-colors"
                       >
-                        Practice Again
+                        {t("practiceAgain")}
                       </motion.button>
                       {allVariationLines.length > 0 && currentLine && (
                         <motion.button
@@ -696,8 +698,8 @@ export default function Study() {
                           }}
                         >
                           {allVariationLines.findIndex((l) => l.id === currentLine.id) < allVariationLines.length - 1
-                            ? <>Next Line <ChevronRight className="w-4 h-4" /></>
-                            : "Back to Hub"}
+                            ? <>{t("nextLine")} <ChevronRight className="w-4 h-4" /></>
+                            : t("backToHub")}
                         </motion.button>
                       )}
                     </div>
@@ -719,10 +721,10 @@ export default function Study() {
                   >
                     <Trophy className="w-10 h-10 mx-auto mb-3" style={{ color: currentTheme.accentColor }} />
                     <p className="font-serif text-xl font-semibold text-foreground mb-2">
-                      Do you think you've mastered this line?
+                      {t("masteryQuestion")}
                     </p>
                     <p className="text-sm text-muted-foreground mb-4">
-                      You've completed it {lineProgress ? lineProgress.correctAttempts + 1 : MASTERY_PROMPT_THRESHOLD} times correctly.
+                      {tf<(c: number) => string>("completedCorrectly")(lineProgress ? lineProgress.correctAttempts + 1 : MASTERY_PROMPT_THRESHOLD)}
                     </p>
                     <div className="flex gap-2 justify-center">
                       <motion.button
@@ -731,7 +733,7 @@ export default function Study() {
                         onClick={() => handleMasteryResponse(false)}
                         className="px-5 py-2.5 rounded-lg text-sm font-medium border border-border/50 text-foreground/70 hover:bg-accent transition-colors"
                       >
-                        Not yet, keep practicing
+                        {t("notYet")}
                       </motion.button>
                       <motion.button
                         whileHover={{ scale: 1.02 }}
@@ -743,7 +745,7 @@ export default function Study() {
                           color: "hsl(var(--background))",
                         }}
                       >
-                        Yes, I've mastered it!
+                        {t("yesMastered")}
                       </motion.button>
                     </div>
                   </motion.div>
@@ -771,7 +773,7 @@ export default function Study() {
                         // Fallback: just continue exploring
                         setFeedback({
                           type: "main_line",
-                          message: `Switched to the ${feedback.variationName}. Let's explore this line.`,
+                          message: tf<(n: string) => string>("switchedTo")(feedback.variationName || ""),
                         });
                       }
                     }}
@@ -800,7 +802,7 @@ export default function Study() {
                       }}
                     >
                       <p className="text-xs uppercase tracking-wider font-medium mb-1.5" style={{ color: currentTheme.accentColor }}>
-                        Your Plan
+                        {t("yourPlan")}
                       </p>
                       <p className="text-sm text-foreground/70 leading-relaxed">
                         {variation.plan}
@@ -825,13 +827,13 @@ export default function Study() {
                 style={{ background: "hsl(var(--card))" }}
               >
                 <h4 className="text-xs uppercase tracking-wider text-muted-foreground mb-2 font-medium">
-                  Line Progress
+                  {t("lineProgress")}
                 </h4>
                 <div className="flex items-center gap-3">
                   <div className="flex-1">
                     <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                      <span>{lineProgress.correctAttempts} correct</span>
-                      <span>{lineProgress.attempts} total</span>
+                      <span>{lineProgress.correctAttempts} {t("correctCount")}</span>
+                      <span>{lineProgress.attempts} {t("totalCount")}</span>
                     </div>
                     <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: "hsl(var(--muted))" }}>
                       <div
@@ -862,7 +864,7 @@ export default function Study() {
               style={{ background: "hsl(var(--card))" }}
             >
               <h4 className="text-xs uppercase tracking-wider text-muted-foreground mb-2 font-medium">
-                {currentVariation ? currentVariation.name : "About This Opening"}
+                {currentVariation ? currentVariation.name : t("aboutThisOpening")}
               </h4>
               <p className="text-sm text-foreground/70 leading-relaxed">
                 {currentVariation ? currentVariation.description : opening.description}
@@ -885,7 +887,7 @@ export default function Study() {
                   style={{ background: "hsl(var(--card))" }}
                 >
                   <h4 className="text-xs uppercase tracking-wider text-muted-foreground mb-2 font-medium">
-                    Your Options
+                    {t("yourOptions")}
                   </h4>
                   <div className="space-y-1.5">
                     {[...validNodes].sort((a, b) => {
