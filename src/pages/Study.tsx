@@ -90,6 +90,7 @@ export default function Study() {
   } | null>(null);
   const [moveCount, setMoveCount] = useState(0);
   const [isComputerTurn, setIsComputerTurn] = useState(false);
+  const [resetCounter, setResetCounter] = useState(0);
   const [currentVariation, setCurrentVariation] = useState<{ name: string; description: string } | null>(null);
   const [hadMistake, setHadMistake] = useState(false);
 
@@ -197,7 +198,7 @@ export default function Study() {
         setIsComputerTurn(false);
       }, 600);
     }
-  }, [opening, playerColor, chess]);
+  }, [opening, playerColor, chess, resetCounter]);
 
   const findInOtherOpenings = useCallback((moveList: string[]): { id: string; name: string; nodes: OpeningNode[] } | null => {
     for (const op of openings) {
@@ -389,6 +390,7 @@ export default function Study() {
     setHadMistake(false);
     setLineCompleted(false);
     setShowMasteryPrompt(false);
+    setResetCounter((c) => c + 1);
   };
 
   const handleColorSwitch = (color: "w" | "b") => {
