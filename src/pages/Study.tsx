@@ -419,7 +419,7 @@ export default function Study() {
           setHadMistake(true);
           setFeedback({
             type: "mistake",
-            message: matchedNode.explanation || "That's not the best move here.",
+            message: matchedNode.explanation || t("notBestMove"),
             suggestedMove: matchedNode.suggestedMove,
           });
           break;
