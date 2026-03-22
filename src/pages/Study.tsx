@@ -296,7 +296,7 @@ export default function Study() {
             });
           }
           setCurrentNodes(matchedNode.children);
-          autoPlayComputerMove(matchedNode.children);
+          autoPlayComputerMove(matchedNode.children, moveCount + 1);
           break;
 
         case "legit_alternative":
