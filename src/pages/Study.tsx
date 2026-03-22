@@ -325,7 +325,7 @@ export default function Study() {
         if (detected) {
           setFeedback({
             type: "legit_alternative",
-            message: `That's the ${detected.name}! Want to switch to studying that opening?`,
+            message: tf<(n: string) => string>("thatsThe")(detected.name),
             variationName: detected.name,
             detectedOpening: detected,
           });
