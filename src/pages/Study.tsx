@@ -505,7 +505,7 @@ export default function Study() {
   const displayName = currentLine
     ? currentLine.name
     : currentVariation
-    ? tVar(currentVariation.name, "name", currentVariation.name)
+    ? currentVariation.name
     : tn("openingName", opening.id);
 
   const lineProgress = currentLine ? getLineProgress(currentLine.id) : null;
