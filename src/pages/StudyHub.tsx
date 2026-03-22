@@ -248,13 +248,13 @@ export default function StudyHub() {
                                 style={{ background: theme.accentColor }}
                               />
                               <span className="text-sm font-medium text-foreground truncate">
-                                {t("vs")} {variation.name}
+                                {t("vs")} {tVar(variation.id, "name", variation.name)}
                               </span>
                             </div>
                             <ChevronRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-foreground/50 transition-colors flex-shrink-0 ml-2" />
                           </div>
                           <p className="text-xs text-muted-foreground mt-1 pl-3.5 line-clamp-1">
-                            {variation.description}
+                            {tVar(variation.id, "description", variation.description)}
                           </p>
                         </motion.button>
                       ))}
