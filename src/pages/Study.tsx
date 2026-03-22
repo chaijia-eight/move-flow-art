@@ -353,6 +353,7 @@ export default function Study() {
           setCurrentNodes(matchedNode.children);
           autoPlayComputerMove(matchedNode.children, newHistory.length);
           break;
+        }
 
         case "legit_alternative":
           setFeedback({
