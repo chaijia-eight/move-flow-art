@@ -7,6 +7,7 @@ import { themes } from "@/data/openings";
 import { extractLinesForVariation, extractAllLines, type Line } from "@/lib/lineExtractor";
 import { getLineProgress, isLineUnlocked, getOpeningProgress } from "@/lib/progressStore";
 import { ArrowLeft, ChevronRight, Crown, Shield, ChevronDown, Lock, Check, BookOpen, RotateCcw } from "lucide-react";
+import { t, tn } from "@/lib/i18n";
 
 export default function StudyHub() {
   const { openingId } = useParams();
@@ -21,7 +22,6 @@ export default function StudyHub() {
     if (opening) setTheme(opening.themeId);
   }, [opening, setTheme]);
 
-  // Extract all lines for progress calculation
   const allLines = useMemo(() => {
     if (!opening) return [];
     return extractAllLines(opening);
@@ -29,7 +29,6 @@ export default function StudyHub() {
 
   const allLineIds = useMemo(() => allLines.map((l) => l.id), [allLines]);
 
-  // Lines grouped by variation
   const linesByVariation = useMemo(() => {
     if (!opening) return new Map<string, Line[]>();
     const map = new Map<string, Line[]>();
@@ -39,7 +38,6 @@ export default function StudyHub() {
     return map;
   }, [opening]);
 
-  // Force re-render on navigation back (progress may have changed)
   const [, setTick] = useState(0);
   useEffect(() => {
     setTick((t) => t + 1);
@@ -48,7 +46,7 @@ export default function StudyHub() {
   if (!opening) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <p className="text-muted-foreground">Opening not found.</p>
+        <p className="text-muted-foreground">{t("openingNotFound")}</p>
       </div>
     );
   }
@@ -57,10 +55,11 @@ export default function StudyHub() {
   const isWhiteOpening = opening.primarySide === "w";
   const againstColor = isWhiteOpening ? "b" : "w";
   const progress = getOpeningProgress(allLineIds);
+  const openingName = tn("openingName", opening.id);
+  const familyName = tn("familyName", opening.family);
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Ambient background */}
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
@@ -68,7 +67,6 @@ export default function StudyHub() {
         }}
       />
 
-      {/* Header */}
       <header className="relative z-10 px-6 py-5 border-b border-border/30">
         <div className="max-w-4xl mx-auto flex items-center gap-4">
           <motion.button
@@ -81,14 +79,13 @@ export default function StudyHub() {
           </motion.button>
           <div className="flex-1">
             <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider">
-              {opening.family} Family
+              {familyName} {t("family")}
             </p>
           </div>
         </div>
       </header>
 
       <div className="relative z-10 max-w-4xl mx-auto px-6 py-8">
-        {/* Opening Hero */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -96,13 +93,12 @@ export default function StudyHub() {
           className="mb-10"
         >
           <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground tracking-tight mb-3">
-            {opening.name}
+            {openingName}
           </h1>
           <p className="text-muted-foreground text-lg leading-relaxed max-w-2xl">
             {opening.description}
           </p>
 
-          {/* Stats row */}
           <div className="flex gap-6 mt-6">
             <div className="flex items-center gap-2">
               <div
@@ -116,22 +112,22 @@ export default function StudyHub() {
                 )}
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Played as</p>
+                <p className="text-xs text-muted-foreground">{t("playedAs")}</p>
                 <p className="text-sm font-medium text-foreground">
-                  {isWhiteOpening ? "White" : "Black"}
+                  {isWhiteOpening ? t("white") : t("black")}
                 </p>
               </div>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Variations</p>
+              <p className="text-xs text-muted-foreground">{t("variationsLabel")}</p>
               <p className="text-sm font-medium text-foreground">{opening.variations.length}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Total Lines</p>
+              <p className="text-xs text-muted-foreground">{t("totalLines")}</p>
               <p className="text-sm font-medium text-foreground">{allLines.length}</p>
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Mastered</p>
+              <p className="text-xs text-muted-foreground">{t("masteredLabel")}</p>
               <p className="text-sm font-medium text-foreground">
                 {Math.round(progress * 100)}%
               </p>
@@ -147,10 +143,9 @@ export default function StudyHub() {
           className="mb-10"
         >
           <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-4">
-            Study Modes
+            {t("studyModes")}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {/* Play as primary side */}
             <motion.button
               whileHover={{ y: -2, boxShadow: `0 10px 30px -10px ${theme.primaryColor}40` }}
               whileTap={{ scale: 0.98 }}
@@ -170,16 +165,15 @@ export default function StudyHub() {
                 </div>
                 <div>
                   <p className="font-serif text-lg font-semibold text-foreground">
-                    Play the {opening.name}
+                    {t("playThe")} {openingName}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    As {isWhiteOpening ? "White" : "Black"} — learn the main ideas
+                    {isWhiteOpening ? t("asWhiteLearn") : t("asBlackLearn")}
                   </p>
                 </div>
               </div>
             </motion.button>
 
-            {/* Play against — expandable */}
             <div className="flex flex-col">
               <motion.button
                 whileHover={{ y: -2, boxShadow: `0 10px 30px -10px ${theme.primaryColor}40` }}
@@ -206,10 +200,10 @@ export default function StudyHub() {
                   </div>
                   <div className="flex-1">
                     <p className="font-serif text-lg font-semibold text-foreground">
-                      Play Against It
+                      {t("playAgainstIt")}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      As {isWhiteOpening ? "Black" : "White"} — choose the opponent's line
+                      {isWhiteOpening ? t("asBlackChoose") : t("asWhiteChoose")}
                     </p>
                   </div>
                   {opening.variations.length > 1 && (
@@ -223,7 +217,6 @@ export default function StudyHub() {
                 </div>
               </motion.button>
 
-              {/* Variation picker for "play against" */}
               <AnimatePresence>
                 {showAgainstVariations && opening.variations.length > 1 && (
                   <motion.div
@@ -255,7 +248,7 @@ export default function StudyHub() {
                                 style={{ background: theme.accentColor }}
                               />
                               <span className="text-sm font-medium text-foreground truncate">
-                                vs {variation.name}
+                                {t("vs")} {variation.name}
                               </span>
                             </div>
                             <ChevronRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-foreground/50 transition-colors flex-shrink-0 ml-2" />
@@ -280,12 +273,11 @@ export default function StudyHub() {
           transition={{ duration: 0.4, delay: 0.25 }}
         >
           <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-4">
-            Lines to Learn
+            {t("linesToLearn")}
           </h2>
           <div className="space-y-3">
             {opening.variations.map((variation, vi) => {
               const lines = linesByVariation.get(variation.id) || [];
-              const variationLineIds = lines.map((l) => l.id);
               const masteredInVariation = lines.filter((l) => getLineProgress(l.id).mastered).length;
               const isExpanded = expandedVariation === variation.id;
 
@@ -296,7 +288,6 @@ export default function StudyHub() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: 0.3 + vi * 0.06 }}
                 >
-                  {/* Variation header */}
                   <motion.button
                     whileHover={{ backgroundColor: `${theme.accentColor}08` }}
                     whileTap={{ scale: 0.99 }}
@@ -315,7 +306,7 @@ export default function StudyHub() {
                             {variation.name}
                           </h3>
                           <span className="text-xs text-muted-foreground/60 font-mono ml-1">
-                            {masteredInVariation}/{lines.length} lines
+                            {masteredInVariation}/{lines.length} {t("linesCount")}
                           </span>
                         </div>
                         <p className="text-sm text-muted-foreground leading-relaxed pl-4 line-clamp-1">
@@ -323,7 +314,6 @@ export default function StudyHub() {
                         </p>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0 ml-3">
-                        {/* Mini progress bar */}
                         <div className="w-16 h-1.5 rounded-full overflow-hidden" style={{ background: "hsl(var(--muted))" }}>
                           <div
                             className="h-full rounded-full transition-all duration-500"
@@ -343,7 +333,6 @@ export default function StudyHub() {
                     </div>
                   </motion.button>
 
-                  {/* Lines within variation */}
                   <AnimatePresence>
                     {isExpanded && (
                       <motion.div
@@ -356,6 +345,7 @@ export default function StudyHub() {
                         <div className="pt-1.5 pl-4 space-y-1">
                           {lines.map((line, li) => {
                             const prog = getLineProgress(line.id);
+                            const variationLineIds = lines.map((l) => l.id);
                             const unlocked = isLineUnlocked(line.id, variationLineIds);
                             const isMastered = prog.mastered;
 
@@ -406,7 +396,7 @@ export default function StudyHub() {
                                   <div className="flex items-center gap-2 flex-shrink-0 ml-2">
                                     {prog.correctAttempts > 0 && !isMastered && (
                                       <span className="text-[10px] text-muted-foreground/60 font-mono">
-                                        {prog.correctAttempts}× correct
+                                        {prog.correctAttempts}× {t("correct")}
                                       </span>
                                     )}
                                     {isMastered && (
@@ -420,7 +410,7 @@ export default function StudyHub() {
                                         whileHover={{ scale: 1.1 }}
                                         whileTap={{ scale: 0.9 }}
                                         className="p-1 rounded hover:bg-accent/50 transition-colors"
-                                        title="Review this line"
+                                        title={t("reviewMode")}
                                       >
                                         <RotateCcw className="w-3.5 h-3.5 text-muted-foreground/50" />
                                       </motion.button>
