@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Play, ChevronRight, Trophy, BookOpen, Target, Settings, Info } from "lucide-react";
 import OpeningCard from "@/components/OpeningCard";
+import GardenSection from "@/components/GardenSection";
 import { openings } from "@/data/openingTrees";
 import { themes } from "@/data/openings";
 import { extractAllLines, extractLinesForVariation } from "@/lib/lineExtractor";
