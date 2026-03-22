@@ -2308,9 +2308,9 @@ export const openings: Opening[] = [
     themeId: "french", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: frenchDefenseTree, totalVariations: 4,
     variations: [
-      { id: "winawer", name: "Winawer Variation", description: "Black pins the knight with Bb4 — sharp and complex.", startingMoves: "1.e4 e6 2.d4 d5 3.Nc3 Bb4", tree: frenchDefenseTree, depth: 10 },
-      { id: "classical-french", name: "Classical French", description: "Black plays Nf6, a solid and traditional approach.", startingMoves: "1.e4 e6 2.d4 d5 3.Nc3 Nf6", tree: frenchDefenseTree, depth: 8 },
-      { id: "advance-french", name: "Advance Variation", description: "White pushes e5 early, locking the center.", startingMoves: "1.e4 e6 2.d4 d5 3.e5", tree: frenchDefenseTree, depth: 8 },
+      { id: "winawer", name: "Winawer Variation", description: "Black pins the knight with Bb4 — sharp and complex.", plan: "As Black, pin the knight with Bb4, creating immediate tension. After White plays e5, undermine the center with c5 and f6. The result is a sharp, imbalanced position where Black gets queenside play against White's kingside space.", startingMoves: "1.e4 e6 2.d4 d5 3.Nc3 Bb4", tree: frenchDefenseTree, depth: 10 },
+      { id: "classical-french", name: "Classical French", description: "Black plays Nf6, a solid and traditional approach.", plan: "Develop the knight to f6 attacking e4, then play c5 to challenge the center. Aim for a solid pawn structure and piece activity. Black gets a reliable, slightly cramped but resilient position.", startingMoves: "1.e4 e6 2.d4 d5 3.Nc3 Nf6", tree: frenchDefenseTree, depth: 8 },
+      { id: "advance-french", name: "Advance Variation", description: "White pushes e5 early, locking the center.", plan: "As Black, attack the pawn chain base with c5 and prepare f6 to undermine e5. Develop the dark-squared bishop actively via a5 or b4. The position becomes a strategic battle around the center pawns.", startingMoves: "1.e4 e6 2.d4 d5 3.e5", tree: frenchDefenseTree, depth: 8 },
     ]
   },
   {
