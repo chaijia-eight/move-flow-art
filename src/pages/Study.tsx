@@ -721,10 +721,10 @@ export default function Study() {
                   >
                     <Trophy className="w-10 h-10 mx-auto mb-3" style={{ color: currentTheme.accentColor }} />
                     <p className="font-serif text-xl font-semibold text-foreground mb-2">
-                      Do you think you've mastered this line?
+                      {t("masteryQuestion")}
                     </p>
                     <p className="text-sm text-muted-foreground mb-4">
-                      You've completed it {lineProgress ? lineProgress.correctAttempts + 1 : MASTERY_PROMPT_THRESHOLD} times correctly.
+                      {tf<(c: number) => string>("completedCorrectly")(lineProgress ? lineProgress.correctAttempts + 1 : MASTERY_PROMPT_THRESHOLD)}
                     </p>
                     <div className="flex gap-2 justify-center">
                       <motion.button
