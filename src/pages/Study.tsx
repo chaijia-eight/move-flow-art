@@ -827,13 +827,13 @@ export default function Study() {
                 style={{ background: "hsl(var(--card))" }}
               >
                 <h4 className="text-xs uppercase tracking-wider text-muted-foreground mb-2 font-medium">
-                  Line Progress
+                  {t("lineProgress")}
                 </h4>
                 <div className="flex items-center gap-3">
                   <div className="flex-1">
                     <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                      <span>{lineProgress.correctAttempts} correct</span>
-                      <span>{lineProgress.attempts} total</span>
+                      <span>{lineProgress.correctAttempts} {t("correctCount")}</span>
+                      <span>{lineProgress.attempts} {t("totalCount")}</span>
                     </div>
                     <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: "hsl(var(--muted))" }}>
                       <div
