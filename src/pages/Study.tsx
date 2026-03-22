@@ -455,6 +455,7 @@ export default function Study() {
     : opening.name;
 
   const lineProgress = currentLine ? getLineProgress(currentLine.id) : null;
+  const isChallengeMode = !!(lineProgress && !lineProgress.mastered && lineProgress.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1);
 
   return (
     <div className="min-h-screen bg-background">
