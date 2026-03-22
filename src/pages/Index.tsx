@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Play, ChevronRight, Trophy, BookOpen, Target, Settings } from "lucide-react";
+import { Play, ChevronRight, Trophy, BookOpen, Target, Settings, Info } from "lucide-react";
 import OpeningCard from "@/components/OpeningCard";
 import { openings } from "@/data/openingTrees";
 import { themes } from "@/data/openings";
@@ -130,13 +130,22 @@ export default function Index() {
                 {t("appTagline")}
               </p>
             </div>
-            <button
-              onClick={() => navigate("/settings")}
-              className="mt-2 p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
-              aria-label={t("settings")}
-            >
-              <Settings className="w-5 h-5" />
-            </button>
+            <div className="flex gap-1 mt-2">
+              <button
+                onClick={() => navigate("/about")}
+                className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                aria-label="About"
+              >
+                <Info className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => navigate("/settings")}
+                className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                aria-label={t("settings")}
+              >
+                <Settings className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </motion.div>
       </header>
