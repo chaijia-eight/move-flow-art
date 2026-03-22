@@ -3,8 +3,9 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Chess } from "chess.js";
 import { motion, AnimatePresence } from "framer-motion";
 import Chessboard from "@/components/Chessboard";
-import FeedbackBanner from "@/components/FeedbackBanner";
 import MoveHistory from "@/components/MoveHistory";
+import ProgressDots from "@/components/ProgressDots";
+import SwitchConfirmModal from "@/components/SwitchConfirmModal";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,7 +21,8 @@ import {
 } from "@/lib/progressStore";
 import { getEngine } from "@/lib/stockfishEngine";
 import { playLineCompleteSound, playMasterySound } from "@/lib/chessSounds";
-import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap, Loader2, Save } from "lucide-react";
+import { squareToCoords } from "@/data/pieceUnicode";
+import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap, Loader2, Save, Search } from "lucide-react";
 import { t, tf, tn, tDesc, tVar } from "@/lib/i18n";
 
 const MIN_CUSTOM_MOVES = 9;
