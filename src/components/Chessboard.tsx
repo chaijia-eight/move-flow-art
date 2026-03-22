@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import MoveArrow from "@/components/MoveArrow";
 import { Chess } from "chess.js";
 import { fenToBoard, PIECE_IMAGES, coordsToSquare, squareToCoords } from "@/data/pieceUnicode";
 import { useTheme } from "@/contexts/ThemeContext";
