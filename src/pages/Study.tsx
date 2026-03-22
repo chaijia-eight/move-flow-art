@@ -887,7 +887,7 @@ export default function Study() {
                   style={{ background: "hsl(var(--card))" }}
                 >
                   <h4 className="text-xs uppercase tracking-wider text-muted-foreground mb-2 font-medium">
-                    Your Options
+                    {t("yourOptions")}
                   </h4>
                   <div className="space-y-1.5">
                     {[...validNodes].sort((a, b) => {
