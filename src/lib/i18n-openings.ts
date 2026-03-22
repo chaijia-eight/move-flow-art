@@ -192,7 +192,7 @@ export const variationTranslations: Record<string, { name: { en: string; zh: str
   },
   "berlin-defense": {
     name: { en: "Berlin Defense", zh: "柏林防御" },
-    description: { en: "Ultra-solid — the 'Berlin Wall' endgame.", zh: "超级坚固——"柏林墙"残局。" },
+    description: { en: "Ultra-solid — the 'Berlin Wall' endgame.", zh: "超级坚固——'柏林墙'残局。" },
     plan: { en: "As Black, simplify into the Berlin endgame after Nf6. Trade queens early and aim for a solid, slightly worse but very holdable endgame. White has a small edge but Black's position is fortress-like.", zh: "执黑方，走Nf6后简化进入柏林残局。早期兑换皇后，瞄准坚固的、略逊但非常可守的残局。白方有微小优势但黑方阵地如堡垒一般。" },
   },
   // London System
