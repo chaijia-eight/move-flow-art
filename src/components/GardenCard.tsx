@@ -16,6 +16,7 @@ interface GardenCardProps {
     side: string;
     move_count: number;
     created_at: string;
+    opening_id?: string;
   };
   index: number;
   onPractice: () => void;
