@@ -668,7 +668,11 @@ export default function Study() {
 
   // Compute arrow: show the recommended move arrow on the board
   const arrowTarget = useMemo(() => {
-    if (!opening || isChallengeMode || isCustomBranch || lineCompleted || isComputerTurn) return null;
+    if (!opening || isCustomBranch || lineCompleted || isComputerTurn) return null;
+    // Check challenge mode inline to avoid forward reference
+    const lp = currentLine ? getLineProgress(currentLine.id) : null;
+    const isChallenge = !!(lp && !lp.mastered && lp.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1);
+    if (isChallenge) return null;
     const tempChess = new Chess(fen);
     if (tempChess.turn() !== playerColor) return null;
 
