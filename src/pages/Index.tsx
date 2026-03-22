@@ -122,12 +122,23 @@ export default function Index() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         >
-          <h1 className="font-serif text-5xl font-bold text-foreground tracking-tight">
-            First Move
-          </h1>
-          <p className="text-muted-foreground mt-2 text-lg max-w-md leading-relaxed">
-            Explore chess openings at your own pace. No pressure, no streaks — just beautiful learning.
-          </p>
+          <div className="flex items-start justify-between">
+            <div>
+              <h1 className="font-serif text-5xl font-bold text-foreground tracking-tight">
+                First Move
+              </h1>
+              <p className="text-muted-foreground mt-2 text-lg max-w-md leading-relaxed">
+                Explore chess openings at your own pace. No pressure, no streaks — just beautiful learning.
+              </p>
+            </div>
+            <button
+              onClick={() => navigate("/settings")}
+              className="mt-2 p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+              aria-label="Settings"
+            >
+              <Settings className="w-5 h-5" />
+            </button>
+          </div>
         </motion.div>
       </header>
 
