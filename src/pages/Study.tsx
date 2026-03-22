@@ -357,7 +357,29 @@ export default function Study() {
         setFeedback(null);
       }
     } catch {
-      // Engine failed - just stop
+      // Engine fallback: play a legal move so the study flow never gets stuck on opponent turn
+      const fallbackMove = chess.moves({ verbose: true })[0];
+      if (fallbackMove) {
+        const result = chess.move({
+          from: fallbackMove.from,
+          to: fallbackMove.to,
+          promotion: fallbackMove.promotion,
+        });
+        if (result) {
+          const newFen = chess.fen();
+          setFen(newFen);
+          const isW = chess.turn() === "b";
+          const mn = Math.ceil(chess.moveNumber());
+          setMoveHistory((prev) => [
+            ...prev,
+            { san: result.san, moveNumber: isW ? mn : mn - 1, isWhite: isW },
+          ]);
+          setFeedback(null);
+        }
+      } else {
+        setLineCompleted(true);
+        playLineCompleteSound();
+      }
     }
     setIsComputerTurn(false);
   }, [chess]);
@@ -485,7 +507,19 @@ export default function Study() {
             });
           }
         } catch {
-          // Engine failed — just allow
+          // Engine failed — still surface switch controls so the user can continue
+          const suggestedFallback =
+            (preferredMoves && newHistory.length - 1 < preferredMoves.length
+              ? preferredMoves[newHistory.length - 1]
+              : currentNodes.find((n) => n.category === "main_line")?.move) ||
+            currentNodes[0]?.move ||
+            san;
+
+          setFeedback({
+            type: "legit_alternative",
+            message: tf<(s: string) => string>("moveIsValidAlt")(san),
+            suggestedMove: suggestedFallback,
+          });
           setCurrentNodes([]);
         } finally {
           setEvaluatingEngine(false);
@@ -589,7 +623,7 @@ export default function Study() {
           break;
       }
     },
-    [chess, currentNodes, isComputerTurn, moveHistory, autoPlayComputerMove, lineCompleted, findInOtherOpenings, isCustomBranch, evaluatingEngine, playEngineComputerMove]
+    [chess, currentNodes, isComputerTurn, moveHistory, autoPlayComputerMove, lineCompleted, findInOtherOpenings, isCustomBranch, evaluatingEngine, playEngineComputerMove, opening, preferredMoves, variationParam]
   );
 
   // Save custom line to database
