@@ -66,7 +66,35 @@ const italianMainTree: OpeningNode[] = [
                       children: [{
                         fen: "r1bqk1nr/pppp1ppp/2n5/4p3/1bB1P3/2P2N2/P2P1PPP/RNBQK2R b KQkq - 0 5",
                         move: "c3", category: "main_line",
-                        children: []
+                        children: [{
+                          fen: "r1bqk1nr/pppp1ppp/2n5/b3p3/2B1P3/2P2N2/P2P1PPP/RNBQK2R w KQkq - 1 6",
+                          move: "Ba5", category: "main_line",
+                          children: [{
+                            fen: "r1bqk1nr/pppp1ppp/2n5/b3p3/2BPP3/2P2N2/P4PPP/RNBQK2R b KQkq - 0 6",
+                            move: "d4", category: "main_line",
+                            children: [{
+                              fen: "r1bqk1nr/pppp1ppp/2n5/b7/2BpP3/2P2N2/P4PPP/RNBQK2R w KQkq - 0 7",
+                              move: "exd4", category: "main_line",
+                              children: [{
+                                fen: "r1bqk1nr/pppp1ppp/2n5/b7/2BpP3/2P2N2/P4PPP/RNBQ1RK1 b kq - 1 7",
+                                move: "O-O", category: "main_line",
+                                children: [{
+                                  fen: "r1bqk1nr/pppp1ppp/2n5/b7/2B1P3/2p2N2/P4PPP/RNBQ1RK1 w kq - 0 8",
+                                  move: "dxc3", category: "main_line",
+                                  children: [{
+                                    fen: "r1bqk1nr/pppp1ppp/2n5/b7/2B1P3/1Qp2N2/P4PPP/RNB2RK1 b kq - 1 8",
+                                    move: "Qb3", category: "main_line",
+                                    children: [{
+                                      fen: "r1b1k1nr/pppp1ppp/2n5/bq6/2B1P3/1Qp2N2/P4PPP/RNB2RK1 w kq - 2 9",
+                                      move: "Qe7", category: "main_line",
+                                      children: []
+                                    }]
+                                  }]
+                                }]
+                              }]
+                            }]
+                          }]
+                        }]
                       }]
                     }]
                   },
@@ -177,7 +205,23 @@ const sicilianMainTree: OpeningNode[] = [
                                 children: [{
                                   fen: "rn1qkb1r/1p3ppp/p2ppn2/8/3NP1b1/2N5/PPP1BPPP/R1BQ1RK1 w kq - 2 8",
                                   move: "Be7", category: "main_line",
-                                  children: []
+                                  children: [{
+                                    fen: "rnbqk2r/1p2bppp/p2ppn2/8/3NPP2/2N5/PPP1B1PP/R1BQ1RK1 b kq - 0 8",
+                                    move: "f4", category: "main_line",
+                                    children: [{
+                                      fen: "rnbq1rk1/1p2bppp/p2ppn2/8/3NPP2/2N5/PPP1B1PP/R1BQ1RK1 w - - 1 9",
+                                      move: "O-O", category: "main_line",
+                                      children: [{
+                                        fen: "rnbq1rk1/1p2bppp/p2ppn2/8/3NPP2/2N1B3/PPP1B1PP/R2Q1RK1 b - - 2 9",
+                                        move: "Be3", category: "main_line",
+                                        children: [{
+                                          fen: "rn1q1rk1/1p2bppp/p2ppn2/8/3NPP2/2N1B3/PPPbB1PP/R2Q1RK1 w - - 3 10",
+                                          move: "Qc7", category: "main_line",
+                                          children: []
+                                        }]
+                                      }]
+                                    }]
+                                  }]
                                 }]
                               }]
                             }]
@@ -200,7 +244,23 @@ const sicilianMainTree: OpeningNode[] = [
                               children: [{
                                 fen: "rnbqk2r/pp2ppbp/3p1np1/8/3NP3/2N1BP2/PPP3PP/R2QKB1R b KQkq - 0 7",
                                 move: "f3", category: "main_line", variationName: "Yugoslav Attack",
-                                children: []
+                                children: [{
+                                  fen: "rnbq1rk1/pp2ppbp/3p1np1/8/3NP3/2N1BP2/PPP3PP/R2QKB1R w KQ - 1 8",
+                                  move: "O-O", category: "main_line",
+                                  children: [{
+                                    fen: "rnbq1rk1/pp2ppbp/3p1np1/8/3NP3/2N1BP2/PPPQ2PP/R3KB1R b KQ - 2 8",
+                                    move: "Qd2", category: "main_line",
+                                    children: [{
+                                      fen: "r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/R3KB1R w KQ - 3 9",
+                                      move: "Nc6", category: "main_line",
+                                      children: [{
+                                        fen: "r1bq1rk1/pp2ppbp/2np1np1/8/2BNP3/2N1BP2/PPPQ2PP/R3K2R b KQ - 4 9",
+                                        move: "Bc4", category: "main_line",
+                                        children: []
+                                      }]
+                                    }]
+                                  }]
+                                }]
                               }]
                             }]
                           }]
@@ -289,7 +349,23 @@ const queensGambitTree: OpeningNode[] = [
                           children: [{
                             fen: "rnbq1rk1/ppp1bppp/4pn2/3p2B1/2PP4/2N1PN2/PP3PPP/R2QKB1R b KQ - 1 6",
                             move: "Nf3", category: "main_line",
-                            children: []
+                            children: [{
+                              fen: "r1bq1rk1/pppnbppp/4pn2/3p2B1/2PP4/2N1PN2/PP3PPP/R2QKB1R w KQ - 3 7",
+                              move: "Nbd7", category: "main_line",
+                              children: [{
+                                fen: "r1bq1rk1/pppnbppp/4pn2/3p2B1/2PP4/2N1PN2/PP3PPP/2RQKB1R b K - 4 7",
+                                move: "Rc1", category: "main_line",
+                                children: [{
+                                  fen: "r1bq1rk1/pp1nbppp/2p1pn2/3p2B1/2PP4/2N1PN2/PP3PPP/2RQKB1R w K - 0 8",
+                                  move: "c6", category: "main_line",
+                                  children: [{
+                                    fen: "r1bq1rk1/pp1nbppp/2p1pn2/3p2B1/2PP4/2NBPN2/PP3PPP/2RQK2R b K - 1 8",
+                                    move: "Bd3", category: "main_line",
+                                    children: []
+                                  }]
+                                }]
+                              }]
+                            }]
                           }]
                         }]
                       }]
@@ -712,7 +788,23 @@ const ruyLopezTree: OpeningNode[] = [
                               children: [{
                                 fen: "r1bqk2r/2p1bppp/p1np1n2/1p2p3/4P3/1B3N2/PPPP1PPP/RNBQR1K1 w kq - 0 8",
                                 move: "d6", category: "main_line",
-                                children: []
+                                children: [{
+                                  fen: "r1bqk2r/2p1bppp/p1np1n2/1p2p3/4P3/1BP2N2/PP1P1PPP/RNBQR1K1 b kq - 0 8",
+                                  move: "c3", category: "main_line",
+                                  children: [{
+                                    fen: "r1bq1rk1/2p1bppp/p1np1n2/1p2p3/4P3/1BP2N2/PP1P1PPP/RNBQR1K1 w - - 1 9",
+                                    move: "O-O", category: "main_line",
+                                    children: [{
+                                      fen: "r1bq1rk1/2p1bppp/p1np1n2/1p2p3/4P3/1BP2N1P/PP1P1PP1/RNBQR1K1 b - - 0 9",
+                                      move: "h3", category: "main_line",
+                                      children: [{
+                                        fen: "r1bq1rk1/2p1bppp/p1n2n2/1p1pp3/4P3/1BP2N1P/PP1P1PP1/RNBQR1K1 w - - 0 10",
+                                        move: "d5", category: "main_line",
+                                        children: []
+                                      }]
+                                    }]
+                                  }]
+                                }]
                               }]
                             }]
                           }]
@@ -1323,7 +1415,27 @@ const englishOpeningTree: OpeningNode[] = [
                   children: [{
                     fen: "rnbq1rk1/pppp1ppp/5n2/2b1p3/2P5/2N3P1/PP1PPPBP/R1BQK1NR w KQ - 3 5",
                     move: "O-O", category: "main_line",
-                    children: []
+                    children: [{
+                      fen: "rnbq1rk1/pppp1ppp/5n2/2b1p3/2P5/2N3P1/PP1PPPBP/R1BQK1NR w KQ - 3 5",
+                      move: "Nf3", category: "main_line",
+                      children: [{
+                        fen: "rnbq1rk1/ppp2ppp/3p1n2/2b1p3/2P5/2N2NP1/PP1PPPBP/R1BQK2R b KQ - 0 5",
+                        move: "d6", category: "main_line",
+                        children: [{
+                          fen: "rnbq1rk1/ppp2ppp/3p1n2/2b1p3/2P5/2N2NP1/PP1PPPBP/R1BQ1RK1 b - - 1 6",
+                          move: "O-O", category: "main_line",
+                          children: [{
+                            fen: "r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2P5/2N2NP1/PP1PPPBP/R1BQ1RK1 w - - 2 7",
+                            move: "Nc6", category: "main_line",
+                            children: [{
+                              fen: "r1bq1rk1/ppp2ppp/2np1n2/2b1p3/2P1P3/2N2NP1/PP1P1PBP/R1BQ1RK1 b - - 0 7",
+                              move: "e3", category: "main_line",
+                              children: []
+                            }]
+                          }]
+                        }]
+                      }]
+                    }]
                   }]
                 }]
               }]
@@ -1559,6 +1671,590 @@ const alekhineTree: OpeningNode[] = [
 ];
 
 // =============================================
+// VIENNA GAME
+// =============================================
+const viennaGameTree: OpeningNode[] = [
+  {
+    fen: "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
+    move: "e4", category: "main_line",
+    children: [{
+      fen: "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+      move: "e5", category: "main_line",
+      children: [{
+        fen: "rnbqkbnr/pppp1ppp/8/4p3/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 1 2",
+        move: "Nc3", category: "main_line",
+        children: [
+          {
+            fen: "rnbqkb1r/pppp1ppp/5n2/4p3/4P3/2N5/PPPP1PPP/R1BQKBNR w KQkq - 2 3",
+            move: "Nf6", category: "main_line",
+            children: [
+              {
+                fen: "rnbqkb1r/pppp1ppp/5n2/4p3/4PP2/2N5/PPPP2PP/R1BQKBNR b KQkq - 0 3",
+                move: "f4", category: "main_line", variationName: "Vienna Gambit",
+                children: [{
+                  fen: "rnbqkb1r/ppp2ppp/5n2/3pp3/4PP2/2N5/PPPP2PP/R1BQKBNR w KQkq - 0 4",
+                  move: "d5", category: "main_line",
+                  children: [{
+                    fen: "rnbqkb1r/ppp2ppp/5n2/3pP3/4P3/2N5/PPPP2PP/R1BQKBNR b KQkq - 0 4",
+                    move: "fxe5", category: "main_line",
+                    children: [{
+                      fen: "rnbqkb1r/ppp2ppp/8/3pP3/4n3/2N5/PPPP2PP/R1BQKBNR w KQkq - 0 5",
+                      move: "Nxe4", category: "main_line",
+                      children: [{
+                        fen: "rnbqkb1r/ppp2ppp/8/3pP3/4n3/2N2N2/PPPP2PP/R1BQKB1R b KQkq - 1 5",
+                        move: "Nf3", category: "main_line",
+                        children: [{
+                          fen: "rn1qkb1r/ppp2ppp/8/3pP3/4n1b1/2N2N2/PPPP2PP/R1BQKB1R w KQkq - 2 6",
+                          move: "Bg4", category: "main_line",
+                          children: [{
+                            fen: "rn1qkb1r/ppp2ppp/8/3pP3/4n1b1/2N2N2/PPPPB1PP/R1BQK2R b KQkq - 3 6",
+                            move: "Be2", category: "main_line",
+                            children: []
+                          }]
+                        }]
+                      }]
+                    }]
+                  }]
+                }]
+              },
+              {
+                fen: "rnbqkb1r/pppp1ppp/5n2/4p3/2B1P3/2N5/PPPP1PPP/R1BQK1NR b KQkq - 3 3",
+                move: "Bc4", category: "legit_alternative", variationName: "Vienna Italian",
+                children: [{
+                  fen: "rnbqkb1r/pppp1ppp/8/4p3/2B1n3/2N5/PPPP1PPP/R1BQK1NR w KQkq - 0 4",
+                  move: "Nxe4", category: "main_line",
+                  children: [{
+                    fen: "rnbqkb1r/pppp1ppp/8/4p2Q/2B1n3/2N5/PPPP1PPP/R1B1K1NR b KQkq - 1 4",
+                    move: "Qh5", category: "main_line",
+                    children: [{
+                      fen: "rnbqkb1r/pppp1ppp/3n4/4p2Q/2B5/2N5/PPPP1PPP/R1B1K1NR w KQkq - 2 5",
+                      move: "Nd6", category: "main_line",
+                      children: [{
+                        fen: "rnbqkb1r/pppp1ppp/3n4/4p2Q/8/1BN5/PPPP1PPP/R1B1K1NR b KQkq - 3 5",
+                        move: "Bb3", category: "main_line",
+                        children: [{
+                          fen: "rnbqk2r/ppppbppp/3n4/4p2Q/8/1BN5/PPPP1PPP/R1B1K1NR w KQkq - 4 6",
+                          move: "Be7", category: "main_line",
+                          children: [{
+                            fen: "rnbqk2r/ppppbppp/3n4/4p2Q/8/1BN2N2/PPPP1PPP/R1B1K2R b KQkq - 5 6",
+                            move: "Nf3", category: "main_line",
+                            children: [{
+                              fen: "r1bqk2r/ppppbppp/2nn4/4p2Q/8/1BN2N2/PPPP1PPP/R1B1K2R w KQkq - 6 7",
+                              move: "Nc6", category: "main_line",
+                              children: []
+                            }]
+                          }]
+                        }]
+                      }]
+                    }]
+                  }]
+                }]
+              }
+            ]
+          },
+          {
+            fen: "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/2N5/PPPP1PPP/R1BQKBNR w KQkq - 2 3",
+            move: "Nc6", category: "legit_alternative", variationName: "Vienna with Nc6",
+            children: [{
+              fen: "r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/2N5/PPPP1PPP/R1BQK1NR b KQkq - 3 3",
+              move: "Bc4", category: "main_line",
+              children: [{
+                fen: "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/2N5/PPPP1PPP/R1BQK1NR w KQkq - 4 4",
+                move: "Nf6", category: "main_line",
+                children: [{
+                  fen: "r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/2NP4/PPP2PPP/R1BQK1NR b KQkq - 0 4",
+                  move: "d3", category: "main_line",
+                  children: [{
+                    fen: "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2NP4/PPP2PPP/R1BQK1NR w KQkq - 1 5",
+                    move: "Bb4", category: "main_line",
+                    children: []
+                  }]
+                }]
+              }]
+            }]
+          },
+          {
+            fen: "rnbqkbnr/pppp1ppp/8/4p3/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 1 2",
+            move: "f5", category: "mistake",
+            explanation: "f5 is premature and weakens your king. Develop with Nf6 or Nc6.",
+            suggestedMove: "Nf6", children: []
+          }
+        ]
+      }]
+    }]
+  }
+];
+
+// =============================================
+// CATALAN OPENING
+// =============================================
+const catalanTree: OpeningNode[] = [
+  {
+    fen: "rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1",
+    move: "d4", category: "main_line",
+    children: [{
+      fen: "rnbqkb1r/pppppppp/5n2/8/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 1 2",
+      move: "Nf6", category: "main_line",
+      children: [{
+        fen: "rnbqkb1r/pppppppp/5n2/8/2PP4/8/PP2PPPP/RNBQKBNR b KQkq - 0 2",
+        move: "c4", category: "main_line",
+        children: [{
+          fen: "rnbqkb1r/pppp1ppp/4pn2/8/2PP4/8/PP2PPPP/RNBQKBNR w KQkq - 0 3",
+          move: "e6", category: "main_line",
+          children: [{
+            fen: "rnbqkb1r/pppp1ppp/4pn2/8/2PP4/6P1/PP2PP1P/RNBQKBNR b KQkq - 0 3",
+            move: "g3", category: "main_line",
+            children: [{
+              fen: "rnbqkb1r/ppp2ppp/4pn2/3p4/2PP4/6P1/PP2PP1P/RNBQKBNR w KQkq - 0 4",
+              move: "d5", category: "main_line",
+              children: [{
+                fen: "rnbqkb1r/ppp2ppp/4pn2/3p4/2PP4/6P1/PP2PPBP/RNBQK1NR b KQkq - 1 4",
+                move: "Bg2", category: "main_line",
+                children: [
+                  {
+                    fen: "rnbqk2r/ppp1bppp/4pn2/3p4/2PP4/6P1/PP2PPBP/RNBQK1NR w KQkq - 2 5",
+                    move: "Be7", category: "main_line",
+                    children: [{
+                      fen: "rnbqk2r/ppp1bppp/4pn2/3p4/2PP4/5NP1/PP2PPBP/RNBQK2R b KQkq - 3 5",
+                      move: "Nf3", category: "main_line",
+                      children: [{
+                        fen: "rnbq1rk1/ppp1bppp/4pn2/3p4/2PP4/5NP1/PP2PPBP/RNBQK2R w KQ - 4 6",
+                        move: "O-O", category: "main_line",
+                        children: [{
+                          fen: "rnbq1rk1/ppp1bppp/4pn2/3p4/2PP4/5NP1/PP2PPBP/RNBQ1RK1 b - - 5 6",
+                          move: "O-O", category: "main_line",
+                          children: [
+                            {
+                              fen: "rnbq1rk1/ppp1bppp/4pn2/8/2pP4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 7",
+                              move: "dxc4", category: "main_line", variationName: "Open Catalan",
+                              children: [{
+                                fen: "rnbq1rk1/ppp1bppp/4pn2/8/2pP4/5NP1/PPQ1PPBP/RNB2RK1 b - - 1 7",
+                                move: "Qc2", category: "main_line",
+                                children: [{
+                                  fen: "rnbq1rk1/1pp1bppp/p3pn2/8/2pP4/5NP1/PPQ1PPBP/RNB2RK1 w - - 0 8",
+                                  move: "a6", category: "main_line",
+                                  children: [{
+                                    fen: "rnbq1rk1/1pp1bppp/p3pn2/8/2QP4/5NP1/PP2PPBP/RNB2RK1 b - - 0 8",
+                                    move: "Qxc4", category: "main_line",
+                                    children: [{
+                                      fen: "rnbq1rk1/2p1bppp/p3pn2/1p6/2QP4/5NP1/PP2PPBP/RNB2RK1 w - - 0 9",
+                                      move: "b5", category: "main_line",
+                                      children: [{
+                                        fen: "rnbq1rk1/2p1bppp/p3pn2/1p6/3P4/5NP1/PPQ1PPBP/RNB2RK1 b - - 1 9",
+                                        move: "Qc2", category: "main_line",
+                                        children: [{
+                                          fen: "rn1q1rk1/1bp1bppp/p3pn2/1p6/3P4/5NP1/PPQ1PPBP/RNB2RK1 w - - 2 10",
+                                          move: "Bb7", category: "main_line",
+                                          children: []
+                                        }]
+                                      }]
+                                    }]
+                                  }]
+                                }]
+                              }]
+                            },
+                            {
+                              fen: "r1bq1rk1/pppnbppp/4pn2/3p4/2PP4/5NP1/PP2PPBP/RNBQ1RK1 w - - 6 7",
+                              move: "Nbd7", category: "legit_alternative", variationName: "Closed Catalan",
+                              children: [{
+                                fen: "r1bq1rk1/pppnbppp/4pn2/3p4/2PP4/5NP1/PPQ1PPBP/RNB2RK1 b - - 7 7",
+                                move: "Qc2", category: "main_line",
+                                children: [{
+                                  fen: "r1bq1rk1/pp1nbppp/2p1pn2/3p4/2PP4/5NP1/PPQ1PPBP/RNB2RK1 w - - 0 8",
+                                  move: "c6", category: "main_line",
+                                  children: [{
+                                    fen: "r1bq1rk1/pp1nbppp/2p1pn2/3p4/2PP4/5NP1/PPQNPPBP/R1B2RK1 b - - 1 8",
+                                    move: "Nbd2", category: "main_line",
+                                    children: [{
+                                      fen: "r1bq1rk1/p2nbppp/1pp1pn2/3p4/2PP4/5NP1/PPQNPPBP/R1B2RK1 w - - 0 9",
+                                      move: "b6", category: "main_line",
+                                      children: [{
+                                        fen: "r1bq1rk1/p2nbppp/1pp1pn2/3p4/2PPP3/5NP1/PPQN1PBP/R1B2RK1 b - - 0 9",
+                                        move: "e4", category: "main_line",
+                                        children: []
+                                      }]
+                                    }]
+                                  }]
+                                }]
+                              }]
+                            }
+                          ]
+                        }]
+                      }]
+                    }]
+                  },
+                  {
+                    fen: "rnbqkb1r/ppp2ppp/4pn2/3p4/2PP4/6P1/PP2PPBP/RNBQK1NR b KQkq - 1 4",
+                    move: "c6", category: "legit_alternative", variationName: "Catalan Slav",
+                    children: []
+                  }
+                ]
+              }]
+            }]
+          }]
+        }]
+      }]
+    }]
+  }
+];
+
+// =============================================
+// BENONI DEFENSE
+// =============================================
+const benoniTree: OpeningNode[] = [
+  {
+    fen: "rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq - 0 1",
+    move: "d4", category: "main_line",
+    children: [{
+      fen: "rnbqkb1r/pppppppp/5n2/8/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 1 2",
+      move: "Nf6", category: "main_line",
+      children: [{
+        fen: "rnbqkb1r/pppppppp/5n2/8/2PP4/8/PP2PPPP/RNBQKBNR b KQkq - 0 2",
+        move: "c4", category: "main_line",
+        children: [{
+          fen: "rnbqkb1r/pp1ppppp/5n2/2p5/2PP4/8/PP2PPPP/RNBQKBNR w KQkq - 0 3",
+          move: "c5", category: "main_line",
+          children: [{
+            fen: "rnbqkb1r/pp1ppppp/5n2/2pP4/2P5/8/PP2PPPP/RNBQKBNR b KQkq - 0 3",
+            move: "d5", category: "main_line",
+            children: [{
+              fen: "rnbqkb1r/pp1p1ppp/4pn2/2pP4/2P5/8/PP2PPPP/RNBQKBNR w KQkq - 0 4",
+              move: "e6", category: "main_line",
+              children: [{
+                fen: "rnbqkb1r/pp1p1ppp/4pn2/2pP4/2P5/2N5/PP2PPPP/R1BQKBNR b KQkq - 1 4",
+                move: "Nc3", category: "main_line",
+                children: [{
+                  fen: "rnbqkb1r/pp1p1ppp/5n2/2pp4/2P5/2N5/PP2PPPP/R1BQKBNR w KQkq - 0 5",
+                  move: "exd5", category: "main_line",
+                  children: [{
+                    fen: "rnbqkb1r/pp1p1ppp/5n2/2pP4/8/2N5/PP2PPPP/R1BQKBNR b KQkq - 0 5",
+                    move: "cxd5", category: "main_line",
+                    children: [{
+                      fen: "rnbqkb1r/pp3ppp/3p1n2/2pP4/8/2N5/PP2PPPP/R1BQKBNR w KQkq - 0 6",
+                      move: "d6", category: "main_line",
+                      children: [
+                        {
+                          fen: "rnbqkb1r/pp3ppp/3p1n2/2pP4/4P3/2N5/PP3PPP/R1BQKBNR b KQkq - 0 6",
+                          move: "e4", category: "main_line", variationName: "Modern Benoni",
+                          children: [{
+                            fen: "rnbqkb1r/pp3p1p/3p1np1/2pP4/4P3/2N5/PP3PPP/R1BQKBNR w KQkq - 0 7",
+                            move: "g6", category: "main_line",
+                            children: [{
+                              fen: "rnbqkb1r/pp3p1p/3p1np1/2pP4/4P3/2N2N2/PP3PPP/R1BQKB1R b KQkq - 1 7",
+                              move: "Nf3", category: "main_line",
+                              children: [{
+                                fen: "rnbqk2r/pp3pbp/3p1np1/2pP4/4P3/2N2N2/PP3PPP/R1BQKB1R w KQkq - 2 8",
+                                move: "Bg7", category: "main_line",
+                                children: [{
+                                  fen: "rnbqk2r/pp3pbp/3p1np1/2pP4/4P3/2N2N2/PP2BPPP/R1BQK2R b KQkq - 3 8",
+                                  move: "Be2", category: "main_line",
+                                  children: [{
+                                    fen: "rnbq1rk1/pp3pbp/3p1np1/2pP4/4P3/2N2N2/PP2BPPP/R1BQK2R w KQ - 4 9",
+                                    move: "O-O", category: "main_line",
+                                    children: [{
+                                      fen: "rnbq1rk1/pp3pbp/3p1np1/2pP4/4P3/2N2N2/PP2BPPP/R1BQ1RK1 b - - 5 9",
+                                      move: "O-O", category: "main_line",
+                                      children: [{
+                                        fen: "rnbqr1k1/pp3pbp/3p1np1/2pP4/4P3/2N2N2/PP2BPPP/R1BQ1RK1 w - - 6 10",
+                                        move: "Re8", category: "main_line",
+                                        children: []
+                                      }]
+                                    }]
+                                  }]
+                                }]
+                              }]
+                            }]
+                          }]
+                        },
+                        {
+                          fen: "rnbqkb1r/pp3ppp/3p1n2/2pP4/8/2N3P1/PP2PP1P/R1BQKBNR b KQkq - 0 6",
+                          move: "g3", category: "legit_alternative", variationName: "Fianchetto Benoni",
+                          children: [{
+                            fen: "rnbqkb1r/pp3p1p/3p1np1/2pP4/8/2N3P1/PP2PP1P/R1BQKBNR w KQkq - 0 7",
+                            move: "g6", category: "main_line",
+                            children: [{
+                              fen: "rnbqkb1r/pp3p1p/3p1np1/2pP4/8/2N3P1/PP2PPBP/R1BQK1NR b KQkq - 1 7",
+                              move: "Bg2", category: "main_line",
+                              children: [{
+                                fen: "rnbqk2r/pp3pbp/3p1np1/2pP4/8/2N3P1/PP2PPBP/R1BQK1NR w KQkq - 2 8",
+                                move: "Bg7", category: "main_line",
+                                children: [{
+                                  fen: "rnbqk2r/pp3pbp/3p1np1/2pP4/8/2N2NP1/PP2PPBP/R1BQK2R b KQkq - 3 8",
+                                  move: "Nf3", category: "main_line",
+                                  children: [{
+                                    fen: "rnbq1rk1/pp3pbp/3p1np1/2pP4/8/2N2NP1/PP2PPBP/R1BQK2R w KQ - 4 9",
+                                    move: "O-O", category: "main_line",
+                                    children: [{
+                                      fen: "rnbq1rk1/pp3pbp/3p1np1/2pP4/8/2N2NP1/PP2PPBP/R1BQ1RK1 b - - 5 9",
+                                      move: "O-O", category: "main_line",
+                                      children: [{
+                                        fen: "rnbq1rk1/1p3pbp/p2p1np1/2pP4/8/2N2NP1/PP2PPBP/R1BQ1RK1 w - - 0 10",
+                                        move: "a6", category: "main_line",
+                                        children: [{
+                                          fen: "rnbq1rk1/1p3pbp/p2p1np1/2pP4/P7/2N2NP1/1P2PPBP/R1BQ1RK1 b - - 0 10",
+                                          move: "a4", category: "main_line",
+                                          children: []
+                                        }]
+                                      }]
+                                    }]
+                                  }]
+                                }]
+                              }]
+                            }]
+                          }]
+                        }
+                      ]
+                    }]
+                  }]
+                }]
+              }]
+            }]
+          }]
+        }]
+      }]
+    }]
+  }
+];
+
+// =============================================
+// PHILIDOR DEFENSE
+// =============================================
+const philidorTree: OpeningNode[] = [
+  {
+    fen: "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
+    move: "e4", category: "main_line",
+    children: [{
+      fen: "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+      move: "e5", category: "main_line",
+      children: [{
+        fen: "rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2",
+        move: "Nf3", category: "main_line",
+        children: [{
+          fen: "rnbqkbnr/ppp2ppp/3p4/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 3",
+          move: "d6", category: "main_line",
+          children: [{
+            fen: "rnbqkbnr/ppp2ppp/3p4/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq - 0 3",
+            move: "d4", category: "main_line",
+            children: [
+              {
+                fen: "rnbqkb1r/ppp2ppp/3p1n2/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R w KQkq - 1 4",
+                move: "Nf6", category: "main_line", variationName: "Philidor Main Line",
+                children: [{
+                  fen: "rnbqkb1r/ppp2ppp/3p1n2/4p3/3PP3/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 2 4",
+                  move: "Nc3", category: "main_line",
+                  children: [{
+                    fen: "r1bqkb1r/pppn1ppp/3p1n2/4p3/3PP3/2N2N2/PPP2PPP/R1BQKB1R w KQkq - 3 5",
+                    move: "Nbd7", category: "main_line",
+                    children: [{
+                      fen: "r1bqkb1r/pppn1ppp/3p1n2/4p3/2BPP3/2N2N2/PPP2PPP/R1BQK2R b KQkq - 4 5",
+                      move: "Bc4", category: "main_line",
+                      children: [{
+                        fen: "r1bqk2r/pppnbppp/3p1n2/4p3/2BPP3/2N2N2/PPP2PPP/R1BQK2R w KQkq - 5 6",
+                        move: "Be7", category: "main_line",
+                        children: [{
+                          fen: "r1bqk2r/pppnbppp/3p1n2/4p3/2BPP3/2N2N2/PPP2PPP/R1BQ1RK1 b kq - 6 6",
+                          move: "O-O", category: "main_line",
+                          children: [{
+                            fen: "r1bq1rk1/pppnbppp/3p1n2/4p3/2BPP3/2N2N2/PPP2PPP/R1BQ1RK1 w - - 7 7",
+                            move: "O-O", category: "main_line",
+                            children: [{
+                              fen: "r1bq1rk1/pppnbppp/3p1n2/4p3/2BPP3/2N2N2/PPP2PPP/R1BQR1K1 b - - 8 7",
+                              move: "Re1", category: "main_line",
+                              children: [{
+                                fen: "r1bq1rk1/pp1nbppp/2pp1n2/4p3/2BPP3/2N2N2/PPP2PPP/R1BQR1K1 w - - 0 8",
+                                move: "c6", category: "main_line",
+                                children: [{
+                                  fen: "r1bq1rk1/pp1nbppp/2pp1n2/4p3/P1BPP3/2N2N2/1PP2PPP/R1BQR1K1 b - - 0 8",
+                                  move: "a4", category: "main_line",
+                                  children: []
+                                }]
+                              }]
+                            }]
+                          }]
+                        }]
+                      }]
+                    }]
+                  }]
+                }]
+              },
+              {
+                fen: "r1bqkbnr/pppn1ppp/3p4/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R w KQkq - 1 4",
+                move: "Nd7", category: "legit_alternative", variationName: "Hanham Philidor",
+                children: [{
+                  fen: "r1bqkbnr/pppn1ppp/3p4/4p3/2BPP3/5N2/PPP2PPP/RNBQK2R b KQkq - 2 4",
+                  move: "Bc4", category: "main_line",
+                  children: [{
+                    fen: "r1bqkbnr/pp1n1ppp/2pp4/4p3/2BPP3/5N2/PPP2PPP/RNBQK2R w KQkq - 0 5",
+                    move: "c6", category: "main_line",
+                    children: [{
+                      fen: "r1bqkbnr/pp1n1ppp/2pp4/4p3/2BPP3/5N2/PPP2PPP/RNBQ1RK1 b kq - 1 5",
+                      move: "O-O", category: "main_line",
+                      children: [{
+                        fen: "r1bqk1nr/pp1nbppp/2pp4/4p3/2BPP3/5N2/PPP2PPP/RNBQ1RK1 w kq - 2 6",
+                        move: "Be7", category: "main_line",
+                        children: [{
+                          fen: "r1bqk1nr/pp1nbppp/2pp4/4p3/2BPP3/5N2/PPP2PPP/RNBQR1K1 b kq - 3 6",
+                          move: "Re1", category: "main_line",
+                          children: [{
+                            fen: "r1bqk2r/pp1nbppp/2pp1n2/4p3/2BPP3/5N2/PPP2PPP/RNBQR1K1 w kq - 4 7",
+                            move: "Ngf6", category: "main_line",
+                            children: [{
+                              fen: "r1bqk2r/pp1nbppp/2pp1n2/4p3/2BPP3/2N2N2/PPP2PPP/R1BQR1K1 b kq - 5 7",
+                              move: "Nc3", category: "main_line",
+                              children: []
+                            }]
+                          }]
+                        }]
+                      }]
+                    }]
+                  }]
+                }]
+              },
+              {
+                fen: "rnbqkbnr/ppp2ppp/3p4/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq - 0 3",
+                move: "f5", category: "mistake",
+                explanation: "f5 weakens the kingside prematurely. Develop with Nf6 or Nd7 first.",
+                suggestedMove: "Nf6", children: []
+              }
+            ]
+          }]
+        }]
+      }]
+    }]
+  }
+];
+
+// =============================================
+// RÉTI OPENING
+// =============================================
+const retiTree: OpeningNode[] = [
+  {
+    fen: "rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 1 1",
+    move: "Nf3", category: "main_line",
+    children: [{
+      fen: "rnbqkbnr/ppp1pppp/8/3p4/8/5N2/PPPPPPPP/RNBQKB1R w KQkq - 0 2",
+      move: "d5", category: "main_line",
+      children: [
+        {
+          fen: "rnbqkbnr/ppp1pppp/8/3p4/2P5/5N2/PP1PPPPP/RNBQKB1R b KQkq - 0 2",
+          move: "c4", category: "main_line",
+          children: [
+            {
+              fen: "rnbqkbnr/ppp2ppp/4p3/3p4/2P5/5N2/PP1PPPPP/RNBQKB1R w KQkq - 0 3",
+              move: "e6", category: "main_line", variationName: "Réti Accepted",
+              children: [{
+                fen: "rnbqkbnr/ppp2ppp/4p3/3p4/2P5/5NP1/PP1PPP1P/RNBQKB1R b KQkq - 0 3",
+                move: "g3", category: "main_line",
+                children: [{
+                  fen: "rnbqkb1r/ppp2ppp/4pn2/3p4/2P5/5NP1/PP1PPP1P/RNBQKB1R w KQkq - 1 4",
+                  move: "Nf6", category: "main_line",
+                  children: [{
+                    fen: "rnbqkb1r/ppp2ppp/4pn2/3p4/2P5/5NP1/PP1PPPBP/RNBQK2R b KQkq - 2 4",
+                    move: "Bg2", category: "main_line",
+                    children: [{
+                      fen: "rnbqk2r/ppp1bppp/4pn2/3p4/2P5/5NP1/PP1PPPBP/RNBQK2R w KQkq - 3 5",
+                      move: "Be7", category: "main_line",
+                      children: [{
+                        fen: "rnbqk2r/ppp1bppp/4pn2/3p4/2P5/5NP1/PP1PPPBP/RNBQ1RK1 b kq - 4 5",
+                        move: "O-O", category: "main_line",
+                        children: [{
+                          fen: "rnbq1rk1/ppp1bppp/4pn2/3p4/2P5/5NP1/PP1PPPBP/RNBQ1RK1 w - - 5 6",
+                          move: "O-O", category: "main_line",
+                          children: [{
+                            fen: "rnbq1rk1/ppp1bppp/4pn2/3p4/2P5/1P3NP1/P2PPPBP/RNBQ1RK1 b - - 0 6",
+                            move: "b3", category: "main_line",
+                            children: [{
+                              fen: "rnbq1rk1/pp2bppp/4pn2/2pp4/2P5/1P3NP1/P2PPPBP/RNBQ1RK1 w - - 0 7",
+                              move: "c5", category: "main_line",
+                              children: [{
+                                fen: "rnbq1rk1/pp2bppp/4pn2/2pp4/2P5/1P3NP1/PB1PPPBP/RN1Q1RK1 b - - 1 7",
+                                move: "Bb2", category: "main_line",
+                                children: [{
+                                  fen: "r1bq1rk1/pp2bppp/2n1pn2/2pp4/2P5/1P3NP1/PB1PPPBP/RN1Q1RK1 w - - 2 8",
+                                  move: "Nc6", category: "main_line",
+                                  children: [{
+                                    fen: "r1bq1rk1/pp2bppp/2n1pn2/2pp4/2P5/1P2PNP1/PB1P1PBP/RN1Q1RK1 b - - 0 8",
+                                    move: "e3", category: "main_line",
+                                    children: []
+                                  }]
+                                }]
+                              }]
+                            }]
+                          }]
+                        }]
+                      }]
+                    }]
+                  }]
+                }]
+              }]
+            },
+            {
+              fen: "rnbqkb1r/ppp1pppp/5n2/3p4/2P5/5N2/PP1PPPPP/RNBQKB1R w KQkq - 1 3",
+              move: "Nf6", category: "legit_alternative", variationName: "Réti with Nf6",
+              children: []
+            },
+            {
+              fen: "rnbqkbnr/ppp1pppp/8/8/2pP4/5N2/PP2PPPP/RNBQKB1R b KQkq - 0 3",
+              move: "dxc4", category: "legit_alternative", variationName: "Réti Gambit Accepted",
+              children: []
+            }
+          ]
+        },
+        {
+          fen: "rnbqkbnr/ppp1pppp/8/3p4/8/5NP1/PPPPPP1P/RNBQKB1R b KQkq - 0 2",
+          move: "g3", category: "legit_alternative", variationName: "King's Indian Attack Setup",
+          children: [{
+            fen: "rnbqkb1r/ppp1pppp/5n2/3p4/8/5NP1/PPPPPP1P/RNBQKB1R w KQkq - 1 3",
+            move: "Nf6", category: "main_line",
+            children: [{
+              fen: "rnbqkb1r/ppp1pppp/5n2/3p4/8/5NP1/PPPPPPBP/RNBQK2R b KQkq - 2 3",
+              move: "Bg2", category: "main_line",
+              children: [{
+                fen: "rnbqkb1r/pp2pppp/2p2n2/3p4/8/5NP1/PPPPPPBP/RNBQK2R w KQkq - 0 4",
+                move: "c6", category: "main_line",
+                children: [{
+                  fen: "rnbqkb1r/pp2pppp/2p2n2/3p4/8/5NP1/PPPPPPBP/RNBQ1RK1 b kq - 1 4",
+                  move: "O-O", category: "main_line",
+                  children: [{
+                    fen: "rn1qkb1r/pp2pppp/2p2n2/3p4/6b1/5NP1/PPPPPPBP/RNBQ1RK1 w kq - 2 5",
+                    move: "Bg4", category: "main_line",
+                    children: [{
+                      fen: "rn1qkb1r/pp2pppp/2p2n2/3p4/6b1/3P1NP1/PPP1PPBP/RNBQ1RK1 b kq - 0 5",
+                      move: "d3", category: "main_line",
+                      children: [{
+                        fen: "r2qkb1r/pp1npppp/2p2n2/3p4/6b1/3P1NP1/PPP1PPBP/RNBQ1RK1 w kq - 1 6",
+                        move: "Nbd7", category: "main_line",
+                        children: [{
+                          fen: "r2qkb1r/pp1npppp/2p2n2/3p4/6b1/3P1NP1/PPPNPPBP/R1BQ1RK1 b kq - 2 6",
+                          move: "Nbd2", category: "main_line",
+                          children: [{
+                            fen: "r2qkb1r/pp1n1ppp/2p2n2/3pp3/6b1/3P1NP1/PPPNPPBP/R1BQ1RK1 w kq - 0 7",
+                            move: "e5", category: "main_line",
+                            children: [{
+                              fen: "r2qkb1r/pp1n1ppp/2p2n2/3pp3/4P1b1/3P1NP1/PPPN1PBP/R1BQ1RK1 b kq - 0 7",
+                              move: "e4", category: "main_line",
+                              children: [{
+                                fen: "r2qk2r/pp1n1ppp/2pb1n2/3pp3/4P1b1/3P1NP1/PPPN1PBP/R1BQ1RK1 w kq - 1 8",
+                                move: "Bd6", category: "main_line",
+                                children: []
+                              }]
+                            }]
+                          }]
+                        }]
+                      }]
+                    }]
+                  }]
+                }]
+              }]
+            }]
+          }]
+        }
+      ]
+    }]
+  }
+];
+
+// =============================================
 // EXPORT ALL OPENINGS
 // =============================================
 export const openings: Opening[] = [
@@ -1729,6 +2425,57 @@ export const openings: Opening[] = [
     variations: [
       { id: "four-pawns-alekhine", name: "Four Pawns Attack", description: "White pushes d4 — the most aggressive test.", startingMoves: "1.e4 Nf6 2.e5 Nd5 3.d4", tree: alekhineTree, depth: 8 },
       { id: "exchange-alekhine", name: "Exchange Variation", description: "White plays d3 — quiet and positional.", startingMoves: "1.e4 Nf6 2.e5 Nd5 3.d3", tree: alekhineTree, depth: 6 },
+    ]
+  },
+  {
+    id: "vienna-game", name: "Vienna Game", family: "Vienna",
+    description: "White develops Nc3 before Nf3, allowing aggressive f4 gambits or positional Bc4 setups.",
+    themeId: "vienna", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    primarySide: "w", tree: viennaGameTree, totalVariations: 3,
+    variations: [
+      { id: "vienna-gambit", name: "Vienna Gambit", description: "f4 — aggressive and sharp, attacking Black's center.", startingMoves: "1.e4 e5 2.Nc3 Nf6 3.f4", tree: viennaGameTree, depth: 10 },
+      { id: "vienna-italian", name: "Vienna Italian", description: "Bc4 — a trappy line with Qh5 threats.", startingMoves: "1.e4 e5 2.Nc3 Nf6 3.Bc4", tree: viennaGameTree, depth: 10 },
+      { id: "vienna-nc6", name: "Vienna with Nc6", description: "Black mirrors with Nc6 — symmetrical and strategic.", startingMoves: "1.e4 e5 2.Nc3 Nc6", tree: viennaGameTree, depth: 7 },
+    ]
+  },
+  {
+    id: "catalan-opening", name: "Catalan Opening", family: "Catalan",
+    description: "A sophisticated opening where White fianchettoes on g2, combining Queen's Gambit ideas with a powerful bishop.",
+    themeId: "catalan", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    primarySide: "w", tree: catalanTree, totalVariations: 3,
+    variations: [
+      { id: "open-catalan", name: "Open Catalan", description: "Black takes on c4 — White's Bg2 pressures the queenside.", startingMoves: "1.d4 Nf6 2.c4 e6 3.g3 d5 4.Bg2 Be7 5.Nf3 O-O 6.O-O dxc4", tree: catalanTree, depth: 14 },
+      { id: "closed-catalan", name: "Closed Catalan", description: "Black keeps the center closed with Nbd7.", startingMoves: "1.d4 Nf6 2.c4 e6 3.g3 d5 4.Bg2 Be7 5.Nf3 O-O 6.O-O Nbd7", tree: catalanTree, depth: 12 },
+    ]
+  },
+  {
+    id: "benoni-defense", name: "Benoni Defense", family: "Benoni",
+    description: "Black creates asymmetric pawn structure with c5 against d4, leading to dynamic kingside vs queenside battles.",
+    themeId: "benoni", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    primarySide: "b", tree: benoniTree, totalVariations: 3,
+    variations: [
+      { id: "modern-benoni", name: "Modern Benoni", description: "e4 — the critical test with a strong center vs Black's activity.", startingMoves: "1.d4 Nf6 2.c4 c5 3.d5 e6 4.Nc3 exd5 5.cxd5 d6 6.e4", tree: benoniTree, depth: 14 },
+      { id: "fianchetto-benoni", name: "Fianchetto Benoni", description: "g3 — a quieter approach with long-term pressure.", startingMoves: "1.d4 Nf6 2.c4 c5 3.d5 e6 4.Nc3 exd5 5.cxd5 d6 6.g3", tree: benoniTree, depth: 14 },
+    ]
+  },
+  {
+    id: "philidor-defense", name: "Philidor Defense", family: "Philidor",
+    description: "A solid but slightly passive defense with d6. Named after the legendary 18th-century player Philidor.",
+    themeId: "philidor", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    primarySide: "b", tree: philidorTree, totalVariations: 3,
+    variations: [
+      { id: "philidor-main", name: "Philidor Main Line", description: "Nf6 and Nbd7 — the classical setup.", startingMoves: "1.e4 e5 2.Nf3 d6 3.d4 Nf6", tree: philidorTree, depth: 12 },
+      { id: "hanham-philidor", name: "Hanham Philidor", description: "Nd7 first — a more flexible move order.", startingMoves: "1.e4 e5 2.Nf3 d6 3.d4 Nd7", tree: philidorTree, depth: 10 },
+    ]
+  },
+  {
+    id: "reti-opening", name: "Réti Opening", family: "Réti",
+    description: "A hypermodern opening — White controls the center with pieces rather than pawns. Flexible and transpositional.",
+    themeId: "reti", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    primarySide: "w", tree: retiTree, totalVariations: 3,
+    variations: [
+      { id: "reti-accepted", name: "Réti Accepted", description: "e6 and classical development — rich strategic play.", startingMoves: "1.Nf3 d5 2.c4 e6", tree: retiTree, depth: 12 },
+      { id: "reti-kia", name: "King's Indian Attack", description: "g3 + Bg2 — a universal system for White.", startingMoves: "1.Nf3 d5 2.g3", tree: retiTree, depth: 10 },
     ]
   },
 ];

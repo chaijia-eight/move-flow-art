@@ -809,13 +809,15 @@ export default function Study() {
                     Your Options
                   </h4>
                   <div className="space-y-1.5">
-                    {validNodes.map((node, i) => (
+                    {validNodes.map((node, i) => {
+                      const isExpectedMove = preferredMoves && moveCount < preferredMoves.length && node.move === preferredMoves[moveCount];
+                      return (
                       <div key={i} className="flex items-center gap-2">
                         <div
                           className="w-2 h-2 rounded-full"
                           style={{
                             background:
-                              node.category === "main_line"
+                              isExpectedMove || node.category === "main_line"
                                 ? "hsl(42, 90%, 55%)"
                                 : "hsl(180, 40%, 55%)",
                           }}
@@ -827,7 +829,7 @@ export default function Study() {
                           </span>
                         )}
                       </div>
-                    ))}
+                    );})}
                   </div>
                 </motion.div>
               );
