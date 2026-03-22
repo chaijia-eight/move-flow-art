@@ -498,6 +498,7 @@ export default function Study() {
 
       switch (effectiveCategory) {
         case "main_line": {
+          setMoveResults(prev => [...prev, "correct"]);
           const isAlreadyStudying = matchedNode.variationName && variationParam && 
             matchedNode.variationName.toLowerCase().replace(/\s+/g, '-') === variationParam;
           setFeedback({
