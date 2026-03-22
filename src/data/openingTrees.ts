@@ -788,7 +788,23 @@ const ruyLopezTree: OpeningNode[] = [
                               children: [{
                                 fen: "r1bqk2r/2p1bppp/p1np1n2/1p2p3/4P3/1B3N2/PPPP1PPP/RNBQR1K1 w kq - 0 8",
                                 move: "d6", category: "main_line",
-                                children: []
+                                children: [{
+                                  fen: "r1bqk2r/2p1bppp/p1np1n2/1p2p3/4P3/1BP2N2/PP1P1PPP/RNBQR1K1 b kq - 0 8",
+                                  move: "c3", category: "main_line",
+                                  children: [{
+                                    fen: "r1bq1rk1/2p1bppp/p1np1n2/1p2p3/4P3/1BP2N2/PP1P1PPP/RNBQR1K1 w - - 1 9",
+                                    move: "O-O", category: "main_line",
+                                    children: [{
+                                      fen: "r1bq1rk1/2p1bppp/p1np1n2/1p2p3/4P3/1BP2N1P/PP1P1PP1/RNBQR1K1 b - - 0 9",
+                                      move: "h3", category: "main_line",
+                                      children: [{
+                                        fen: "r1bq1rk1/2p1bppp/p1n2n2/1p1pp3/4P3/1BP2N1P/PP1P1PP1/RNBQR1K1 w - - 0 10",
+                                        move: "d5", category: "main_line",
+                                        children: []
+                                      }]
+                                    }]
+                                  }]
+                                }]
                               }]
                             }]
                           }]
