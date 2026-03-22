@@ -181,32 +181,6 @@ export default function Settings() {
           </Card>
         </motion.div>
 
-        {/* Board Theme */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Palette className="w-4 h-4" />
-                Board Theme
-              </CardTitle>
-              <CardDescription>Choose how the board looks during study.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-foreground">Follow opening theme</span>
-                <Switch
-                  checked={settings.boardThemeFollowOpening}
-                  onCheckedChange={(v) => updateSetting("boardThemeFollowOpening", v)}
-                />
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                {settings.boardThemeFollowOpening
-                  ? "Board colors adapt to each opening's unique theme."
-                  : "Board uses the default Italian Game theme for all openings."}
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
 
         {/* Dark/Light Mode */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
