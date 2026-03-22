@@ -666,6 +666,39 @@ export default function Study() {
     }
   };
 
+  // Compute arrow: show the recommended move arrow on the board
+  const arrowTarget = useMemo(() => {
+    if (!opening || isChallengeMode || isCustomBranch || lineCompleted || isComputerTurn) return null;
+    const tempChess = new Chess(fen);
+    if (tempChess.turn() !== playerColor) return null;
+
+    const totalMoves = moveHistory.length;
+    let expectedSan: string | null = null;
+    if (preferredMoves && totalMoves < preferredMoves.length) {
+      expectedSan = preferredMoves[totalMoves];
+    } else {
+      const mainNode = currentNodes.find(n => n.category === "main_line");
+      if (mainNode) expectedSan = mainNode.move;
+    }
+    if (!expectedSan) return null;
+
+    const legalMoves = tempChess.moves({ verbose: true });
+    const match = legalMoves.find(m => m.san === expectedSan);
+    if (!match) return null;
+    return { from: match.from, to: match.to };
+  }, [opening, fen, playerColor, moveHistory.length, preferredMoves, currentNodes, isChallengeMode, isCustomBranch, lineCompleted, isComputerTurn]);
+
+  const totalPlayerMoves = useMemo(() => {
+    if (!currentLine) return 0;
+    return currentLine.moves.filter((_, i) => {
+      return playerColor === "w" ? i % 2 === 0 : i % 2 === 1;
+    }).length;
+  }, [currentLine, playerColor]);
+
+  const playerMovesCompleted = useMemo(() => {
+    return moveHistory.filter(m => (playerColor === "w" ? m.isWhite : !m.isWhite)).length;
+  }, [moveHistory, playerColor]);
+
   if (!opening) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -689,42 +722,6 @@ export default function Study() {
   const isChallengeMode = !!(lineProgress && !lineProgress.mastered && lineProgress.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1);
 
   const canSaveCustomLine = isCustomBranch && user && moveHistory.length >= MIN_CUSTOM_MOVES && !customLineSaved;
-
-  // Compute arrow: show the recommended move arrow on the board
-  const arrowTarget = useMemo(() => {
-    if (isChallengeMode || isCustomBranch || lineCompleted || isComputerTurn) return null;
-    const tempChess = new Chess(fen);
-    if (tempChess.turn() !== playerColor) return null;
-
-    // Find the expected move
-    const totalMoves = moveHistory.length;
-    let expectedSan: string | null = null;
-    if (preferredMoves && totalMoves < preferredMoves.length) {
-      expectedSan = preferredMoves[totalMoves];
-    } else {
-      const mainNode = currentNodes.find(n => n.category === "main_line");
-      if (mainNode) expectedSan = mainNode.move;
-    }
-    if (!expectedSan) return null;
-
-    const legalMoves = tempChess.moves({ verbose: true });
-    const match = legalMoves.find(m => m.san === expectedSan);
-    if (!match) return null;
-    return { from: match.from, to: match.to };
-  }, [fen, playerColor, moveHistory.length, preferredMoves, currentNodes, isChallengeMode, isCustomBranch, lineCompleted, isComputerTurn]);
-
-  // Total player moves expected in the current line
-  const totalPlayerMoves = useMemo(() => {
-    if (!currentLine) return 0;
-    return currentLine.moves.filter((_, i) => {
-      // Player moves on even indices if white, odd if black
-      return playerColor === "w" ? i % 2 === 0 : i % 2 === 1;
-    }).length;
-  }, [currentLine, playerColor]);
-
-  const playerMovesCompleted = useMemo(() => {
-    return moveHistory.filter(m => (playerColor === "w" ? m.isWhite : !m.isWhite)).length;
-  }, [moveHistory, playerColor]);
 
   const formatEval = (cp: number | null) => {
     if (cp === null) return "";
