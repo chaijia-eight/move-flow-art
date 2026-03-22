@@ -139,7 +139,7 @@ export default function Settings() {
                 {t("account")}
               </CardTitle>
               <CardDescription>
-                {user ? t("signedInAs").replace("$email", "") : ""}{user ? user.email : t("signInToSync")}
+                {user ? `${t("signedInAs")} ${user.email}` : t("signInToSync")}
               </CardDescription>
             </CardHeader>
             <CardContent>
