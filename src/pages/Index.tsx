@@ -269,6 +269,9 @@ export default function Index() {
             ))}
           </div>
         </section>
+
+        {/* Your Garden - Custom Lines */}
+        <GardenSection />
       </main>
     </div>
   );
