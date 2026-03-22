@@ -32,6 +32,20 @@ export default function Study() {
 
   const opening = openings.find((o) => o.id === openingId);
   const colorParam = searchParams.get("color") as "w" | "b" | null;
+  const variationParam = searchParams.get("variation");
+
+  // Parse the preferred variation's starting moves into a SAN sequence
+  const preferredMoves = useMemo(() => {
+    if (!variationParam || !opening) return null;
+    const variation = opening.variations.find((v) => v.id === variationParam);
+    if (!variation?.startingMoves) return null;
+    // Parse "1.d4 Nf6 2.Bf4 d5 3.e3 e6" → ["d4","Nf6","Bf4","d5","e3","e6"]
+    return variation.startingMoves
+      .replace(/\d+\./g, "")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
+  }, [variationParam, opening]);
 
   useEffect(() => {
     if (opening) setTheme(opening.themeId);
