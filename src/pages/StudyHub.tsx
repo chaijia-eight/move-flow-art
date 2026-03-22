@@ -303,14 +303,14 @@ export default function StudyHub() {
                             style={{ background: theme.accentColor }}
                           />
                           <h3 className="font-serif text-base font-semibold text-foreground truncate">
-                            {variation.name}
+                            {tVar(variation.id, "name", variation.name)}
                           </h3>
                           <span className="text-xs text-muted-foreground/60 font-mono ml-1">
                             {masteredInVariation}/{lines.length} {t("linesCount")}
                           </span>
                         </div>
                         <p className="text-sm text-muted-foreground leading-relaxed pl-4 line-clamp-1">
-                          {variation.description}
+                          {tVar(variation.id, "description", variation.description)}
                         </p>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0 ml-3">

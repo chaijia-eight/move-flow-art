@@ -84,7 +84,7 @@ export default function OpeningCard({ opening, onClick, index }: OpeningCardProp
         </div>
 
         <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-          {opening.description}
+          {tDesc(opening.id, opening.description)}
         </p>
 
         <div className="flex items-center justify-between mt-4 pt-3 border-t border-border/50">
