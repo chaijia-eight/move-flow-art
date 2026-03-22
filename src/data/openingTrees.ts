@@ -2340,10 +2340,10 @@ export const openings: Opening[] = [
     themeId: "london", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "w", tree: londonSystemTree, totalVariations: 4,
     variations: [
-      { id: "london-classical", name: "Classical London", description: "The standard 2...d5 3.e3 e6 setup with Nd2, c3, Ngf3, Bd3.", startingMoves: "1.d4 Nf6 2.Bf4 d5 3.e3 e6", tree: londonSystemTree, depth: 14 },
-      { id: "london-c5", name: "Early c5 Counter", description: "Black challenges with c5 immediately — leads to dynamic play.", startingMoves: "1.d4 Nf6 2.Bf4 d5 3.e3 c5", tree: londonSystemTree, depth: 10 },
-      { id: "london-bf5", name: "Bishop Sortie", description: "Black develops Bf5 early to trade light-squared bishops.", startingMoves: "1.d4 Nf6 2.Bf4 d5 3.e3 Bf5", tree: londonSystemTree, depth: 12 },
-      { id: "anti-london", name: "Anti-London with e6", description: "Black plays e6 to transpose into QGD-like positions.", startingMoves: "1.d4 Nf6 2.Bf4 e6", tree: londonSystemTree, depth: 8 },
+      { id: "london-classical", name: "Classical London", description: "The standard 2...d5 3.e3 e6 setup with Nd2, c3, Ngf3, Bd3.", plan: "Develop solidly with Bf4, e3, Bd3, Nbd2, and c3. Build a fortress-like structure, then expand with e4 when ready. The London gives White a safe, easy-to-play position with clear plans in the middlegame.", startingMoves: "1.d4 Nf6 2.Bf4 d5 3.e3 e6", tree: londonSystemTree, depth: 14 },
+      { id: "london-c5", name: "Early c5 Counter", description: "Black challenges with c5 immediately — leads to dynamic play.", plan: "As White, maintain the d4 pawn with c3 and develop naturally. As Black, challenge with c5 to open the position. The fight centers on whether White's solid structure or Black's activity prevails.", startingMoves: "1.d4 Nf6 2.Bf4 d5 3.e3 c5", tree: londonSystemTree, depth: 10 },
+      { id: "london-bf5", name: "Bishop Sortie", description: "Black develops Bf5 early to trade light-squared bishops.", plan: "As Black, develop Bf5 to trade off the potentially bad bishop. As White, avoid the trade and maintain the bishop pair. The position is balanced with clear strategic themes for both sides.", startingMoves: "1.d4 Nf6 2.Bf4 d5 3.e3 Bf5", tree: londonSystemTree, depth: 12 },
+      { id: "anti-london", name: "Anti-London with e6", description: "Black plays e6 to transpose into QGD-like positions.", plan: "As Black, play e6 followed by c5 to challenge the center. Aim to neutralize White's London setup by creating central tension. The result is a balanced middlegame with chances for active piece play.", startingMoves: "1.d4 Nf6 2.Bf4 e6", tree: londonSystemTree, depth: 8 },
     ]
   },
   {
