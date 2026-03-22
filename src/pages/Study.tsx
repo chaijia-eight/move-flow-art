@@ -437,10 +437,13 @@ export default function Study() {
         const allSans = newHistory.map((m) => m.san);
         const detected = findInOtherOpenings(allSans);
         if (detected) {
+          const mainLineNode = currentNodes.find(n => n.category === "main_line");
+          const recommendedSan = mainLineNode?.move || (preferredMoves && newHistory.length - 1 < preferredMoves.length ? preferredMoves[newHistory.length - 1] : undefined);
           setFeedback({
             type: "legit_alternative",
             message: tf<(n: string) => string>("thatsThe")(detected.name),
             variationName: detected.name,
+            suggestedMove: recommendedSan,
             detectedOpening: detected,
           });
           setCurrentNodes(detected.nodes);
@@ -545,10 +548,16 @@ export default function Study() {
               detectedVar = { variationId: matchingVariation.id, lineIndex: bestLineIdx };
             }
           }
+          // Find the recommended move (preferred path move) to show as suggestion
+          const totalMovesSoFar = newHistory.length;
+          const recommendedSan = preferredMoves && (totalMovesSoFar - 1) < preferredMoves.length
+            ? preferredMoves[totalMovesSoFar - 1]
+            : currentNodes.find(n => n.category === "main_line")?.move;
           setFeedback({
             type: "legit_alternative",
             message: tf<(n: string) => string>("alsoGood")(matchedNode.variationName || "Alternative Line"),
             variationName: matchedNode.variationName,
+            suggestedMove: recommendedSan || matchedNode.suggestedMove,
             alternativeNode: matchedNode,
             detectedVariation: detectedVar,
           });
