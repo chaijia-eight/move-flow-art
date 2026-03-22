@@ -73,6 +73,12 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
       if (fromSquare && toSquare) {
         setAnimMove({ from: fromSquare, to: toSquare, isCapture: wasCapture, id: ++animIdCounter });
         setLastMove({ from: fromSquare, to: toSquare });
+        // Play sound
+        if (wasCapture) {
+          playCaptureSound();
+        } else {
+          playMoveSound();
+        }
       }
     }
 
