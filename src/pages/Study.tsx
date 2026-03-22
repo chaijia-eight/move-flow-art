@@ -698,8 +698,8 @@ export default function Study() {
                           }}
                         >
                           {allVariationLines.findIndex((l) => l.id === currentLine.id) < allVariationLines.length - 1
-                            ? <>Next Line <ChevronRight className="w-4 h-4" /></>
-                            : "Back to Hub"}
+                            ? <>{t("nextLine")} <ChevronRight className="w-4 h-4" /></>
+                            : t("backToHub")}
                         </motion.button>
                       )}
                     </div>
