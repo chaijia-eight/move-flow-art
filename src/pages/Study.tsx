@@ -733,7 +733,7 @@ export default function Study() {
                         onClick={() => handleMasteryResponse(false)}
                         className="px-5 py-2.5 rounded-lg text-sm font-medium border border-border/50 text-foreground/70 hover:bg-accent transition-colors"
                       >
-                        Not yet, keep practicing
+                        {t("notYet")}
                       </motion.button>
                       <motion.button
                         whileHover={{ scale: 1.02 }}
