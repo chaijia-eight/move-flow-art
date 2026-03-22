@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Play, ChevronRight, Trophy, BookOpen, Target } from "lucide-react";
+import { Play, ChevronRight, Trophy, BookOpen, Target, Settings } from "lucide-react";
 import OpeningCard from "@/components/OpeningCard";
 import { openings } from "@/data/openingTrees";
 import { themes } from "@/data/openings";
