@@ -90,6 +90,7 @@ export default function Study() {
   } | null>(null);
   const [moveCount, setMoveCount] = useState(0);
   const [isComputerTurn, setIsComputerTurn] = useState(false);
+  const [resetCounter, setResetCounter] = useState(0);
   const [currentVariation, setCurrentVariation] = useState<{ name: string; description: string } | null>(null);
   const [hadMistake, setHadMistake] = useState(false);
 
