@@ -16,6 +16,7 @@ import {
   isLineUnlocked,
   MASTERY_PROMPT_THRESHOLD,
 } from "@/lib/progressStore";
+import { playLineCompleteSound, playMasterySound } from "@/lib/chessSounds";
 import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap } from "lucide-react";
 
 interface MoveRecord {
@@ -156,10 +157,14 @@ export default function Study() {
     if (!currentLine) return;
     const progress = recordAttempt(currentLine.id, wasCorrect);
     setLineCompleted(true);
+    playLineCompleteSound();
 
     if (wasCorrect && !progress.mastered && progress.correctAttempts >= MASTERY_PROMPT_THRESHOLD) {
-      // Show mastery prompt
-      setTimeout(() => setShowMasteryPrompt(true), 800);
+      // Show mastery prompt with mastery sound
+      setTimeout(() => {
+        playMasterySound();
+        setShowMasteryPrompt(true);
+      }, 800);
     }
   }, [currentLine]);
 
