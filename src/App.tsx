@@ -10,7 +10,6 @@ import StudyHub from "./pages/StudyHub.tsx";
 import Study from "./pages/Study.tsx";
 import Settings from "./pages/Settings.tsx";
 import About from "./pages/About.tsx";
-import GardenBuilder from "./pages/GardenBuilder.tsx";
 import GardenPractice from "./pages/GardenPractice.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
@@ -28,10 +27,9 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/about" element={<About />} />
-              <Route path="/garden/new" element={<GardenBuilder />} />
-              <Route path="/garden/:lineId/practice" element={<GardenPractice />} />
               <Route path="/study/:openingId" element={<StudyHub />} />
               <Route path="/study/:openingId/play" element={<Study />} />
+              <Route path="/study/:openingId/custom/:lineId" element={<GardenPractice />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

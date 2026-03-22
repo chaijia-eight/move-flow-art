@@ -1,9 +1,8 @@
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Play, ChevronRight, Trophy, BookOpen, Target, Settings, Info } from "lucide-react";
+import { Play, ChevronRight, Trophy, BookOpen, Target, Settings, Info, Sprout } from "lucide-react";
 import OpeningCard from "@/components/OpeningCard";
-import GardenSection from "@/components/GardenSection";
 import { openings } from "@/data/openingTrees";
 import { themes } from "@/data/openings";
 import { extractAllLines, extractLinesForVariation } from "@/lib/lineExtractor";
@@ -11,6 +10,9 @@ import { getLineProgress, getOpeningProgress } from "@/lib/progressStore";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { t, tf, tn, tDesc } from "@/lib/i18n";
+import { useAuth } from "@/contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Recommendation {
   openingId: string;
@@ -76,6 +78,21 @@ function getRecommendation(): Recommendation | null {
 
 export default function Index() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const { data: customLines = [] } = useQuery({
+    queryKey: ["custom-lines", user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data, error } = await supabase
+        .from("custom_lines")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data ?? [];
+    },
+    enabled: !!user,
+  });
 
   const { recommendation, stats } = useMemo(() => {
     const rec = getRecommendation();
@@ -100,9 +117,9 @@ export default function Index() {
 
     return {
       recommendation: rec,
-      stats: { totalLines, masteredLines, totalAttempts, openingsStarted, totalOpenings: openings.length },
+      stats: { totalLines, masteredLines, totalAttempts, openingsStarted, totalOpenings: openings.length, customLines: customLines.length },
     };
-  }, []);
+  }, [customLines.length]);
 
   const recTheme = recommendation ? themes[recommendation.themeId] : null;
 
@@ -230,11 +247,7 @@ export default function Index() {
               { label: t("linesMastered"), value: `${stats.masteredLines}/${stats.totalLines}`, icon: Trophy },
               { label: t("openingsStarted"), value: `${stats.openingsStarted}/${stats.totalOpenings}`, icon: BookOpen },
               { label: t("totalAttempts"), value: String(stats.totalAttempts), icon: Target },
-              {
-                label: t("mastery"),
-                value: stats.totalLines > 0 ? `${Math.round((stats.masteredLines / stats.totalLines) * 100)}%` : "0%",
-                icon: ChevronRight,
-              },
+              { label: t("customLines"), value: String(stats.customLines), icon: Sprout },
             ].map(({ label, value, icon: Icon }) => (
               <div key={label} className="rounded-lg border border-border bg-card p-4">
                 <Icon className="w-4 h-4 text-muted-foreground mb-2" />
@@ -244,9 +257,6 @@ export default function Index() {
             ))}
           </div>
         </motion.section>
-
-        {/* Your Garden - Custom Lines */}
-        <GardenSection />
 
         <section>
           <motion.div
