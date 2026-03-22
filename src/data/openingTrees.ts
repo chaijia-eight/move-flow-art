@@ -1642,10 +1642,12 @@ export const openings: Opening[] = [
     id: "london-system", name: "London System", family: "London",
     description: "A solid, easy-to-learn system for White. Develop Bf4, e3, Nf3 — reliable at every level.",
     themeId: "london", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-    primarySide: "w", tree: londonSystemTree, totalVariations: 3,
+    primarySide: "w", tree: londonSystemTree, totalVariations: 4,
     variations: [
-      { id: "london-main", name: "London Main Line", description: "The standard Bf4 + e3 + Nd2 setup.", startingMoves: "1.d4 Nf6 2.Bf4 d6 3.e3", tree: londonSystemTree, depth: 10 },
-      { id: "anti-london", name: "Anti-London with e6", description: "Black plays e6 to transpose into QGD-like positions.", startingMoves: "1.d4 Nf6 2.Bf4 e6", tree: londonSystemTree, depth: 7 },
+      { id: "london-classical", name: "Classical London", description: "The standard 2...d5 3.e3 e6 setup with Nd2, c3, Ngf3, Bd3.", startingMoves: "1.d4 Nf6 2.Bf4 d5 3.e3 e6", tree: londonSystemTree, depth: 14 },
+      { id: "london-c5", name: "Early c5 Counter", description: "Black challenges with c5 immediately — leads to dynamic play.", startingMoves: "1.d4 Nf6 2.Bf4 d5 3.e3 c5", tree: londonSystemTree, depth: 10 },
+      { id: "london-bf5", name: "Bishop Sortie", description: "Black develops Bf5 early to trade light-squared bishops.", startingMoves: "1.d4 Nf6 2.Bf4 d5 3.e3 Bf5", tree: londonSystemTree, depth: 12 },
+      { id: "anti-london", name: "Anti-London with e6", description: "Black plays e6 to transpose into QGD-like positions.", startingMoves: "1.d4 Nf6 2.Bf4 e6", tree: londonSystemTree, depth: 8 },
     ]
   },
   {
