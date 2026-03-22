@@ -6,6 +6,7 @@ import { getLineProgress } from "@/lib/progressStore";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
+import { openings } from "@/data/openingTrees";
 
 interface GardenCardProps {
   line: {
@@ -15,6 +16,7 @@ interface GardenCardProps {
     side: string;
     move_count: number;
     created_at: string;
+    opening_id?: string;
   };
   index: number;
   onPractice: () => void;
@@ -34,6 +36,7 @@ export default function GardenCard({ line, index, onPractice }: GardenCardProps)
 
   const movesPreview = line.moves.slice(0, 6).join(" ");
   const isWhite = line.side === "w";
+  const baseOpening = line.opening_id ? openings.find(o => o.id === line.opening_id) : null;
 
   return (
     <motion.div
@@ -67,7 +70,7 @@ export default function GardenCard({ line, index, onPractice }: GardenCardProps)
               {line.name}
             </h3>
             <p className="text-xs text-muted-foreground mt-0.5 font-mono uppercase tracking-wider">
-              {isWhite ? "White" : "Black"} · {line.move_count} moves
+              {baseOpening ? baseOpening.name : isWhite ? "White" : "Black"} · {line.move_count} moves
             </p>
           </div>
 

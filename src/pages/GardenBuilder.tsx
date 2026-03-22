@@ -4,12 +4,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Check, Loader2, Undo2 } from "lucide-react";
 import { Chess } from "chess.js";
 import Chessboard from "@/components/Chessboard";
-import { getEngine, type MoveEvaluation } from "@/lib/stockfishEngine";
+import { getEngine } from "@/lib/stockfishEngine";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { t } from "@/lib/i18n";
-import type { MoveCategory } from "@/data/openings";
+import { openings } from "@/data/openingTrees";
+import { themes } from "@/data/openings";
+import type { MoveCategory, Opening } from "@/data/openings";
 
 const MIN_MOVES = 9;
 const MAX_MOVES = 16;
@@ -21,14 +23,115 @@ interface MoveRecord {
   engineSuggestion?: string;
   engineSuggestionSan?: string;
   isEngineSuggestion?: boolean;
+  isLocked?: boolean; // Locked = from opening prefix, can't undo
 }
 
+// Extract the first few moves from an opening tree (the common trunk before variations branch)
+function extractOpeningPrefix(opening: Opening): { moves: string[]; fens: string[] } {
+  const moves: string[] = [];
+  const fens: string[] = [];
+  let nodes = opening.tree;
+  
+  while (nodes.length > 0) {
+    // Follow the main_line path
+    const mainNode = nodes.find(n => n.category === "main_line") || nodes[0];
+    moves.push(mainNode.move);
+    fens.push(mainNode.fen);
+    
+    // If there are multiple children (branching point), stop here
+    if (mainNode.children.length > 1) {
+      // Include one more level to get past the branch point
+      break;
+    }
+    if (mainNode.children.length === 0) break;
+    nodes = mainNode.children;
+  }
+  
+  return { moves, fens };
+}
+
+// ============= Opening Picker =============
+function OpeningPicker({ onSelect }: { onSelect: (opening: Opening) => void }) {
+  const navigate = useNavigate();
+
+  return (
+    <div className="min-h-screen bg-background">
+      <header className="px-6 pt-6 pb-4 max-w-5xl mx-auto">
+        <button
+          onClick={() => navigate("/")}
+          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span className="text-sm">{t("back")}</span>
+        </button>
+      </header>
+      <main className="px-6 pb-16 max-w-5xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <h1 className="font-serif text-3xl font-bold text-foreground mb-2">
+            {t("pickOpening")}
+          </h1>
+          <p className="text-muted-foreground text-sm mb-8 max-w-lg">
+            {t("pickOpeningDesc")}
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {openings.map((opening, i) => {
+            const theme = themes[opening.themeId];
+            const prefix = extractOpeningPrefix(opening);
+            return (
+              <motion.div
+                key={opening.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: i * 0.04 }}
+                whileHover={{ y: -4, transition: { duration: 0.25 } }}
+                whileTap={{ scale: 0.98 }}
+                className="rounded-xl overflow-hidden cursor-pointer border border-border bg-card group"
+                onClick={() => onSelect(opening)}
+              >
+                <div
+                  className="h-1.5"
+                  style={{
+                    background: theme
+                      ? `linear-gradient(90deg, ${theme.primaryColor}, ${theme.accentColor})`
+                      : "hsl(var(--primary))",
+                  }}
+                />
+                <div className="p-5">
+                  <h3 className="font-serif text-lg font-semibold text-foreground mb-1">
+                    {opening.name}
+                  </h3>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    {opening.primarySide === "w" ? "White" : "Black"} · {opening.family}
+                  </p>
+                  <p className="text-xs text-muted-foreground font-mono truncate">
+                    {prefix.moves.slice(0, 6).join(" ")}
+                    {prefix.moves.length > 6 ? "…" : ""}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+// ============= Builder (main board UI) =============
 export default function GardenBuilder() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [selectedOpening, setSelectedOpening] = useState<Opening | null>(null);
   const [game] = useState(() => new Chess());
   const [fen, setFen] = useState(game.fen());
   const [moves, setMoves] = useState<MoveRecord[]>([]);
+  const [lockedCount, setLockedCount] = useState(0); // Number of prefix moves that can't be undone
   const [evaluating, setEvaluating] = useState(false);
   const [engineSuggestion, setEngineSuggestion] = useState<{ uci: string; san: string } | null>(null);
   const [feedback, setFeedback] = useState<{
@@ -40,15 +143,38 @@ export default function GardenBuilder() {
   const [showNameDialog, setShowNameDialog] = useState(false);
   const [lineName, setLineName] = useState("");
   const [saving, setSaving] = useState(false);
-  const [side] = useState<"w" | "b">("w"); // Always build as white for now
   const engineInitRef = useRef(false);
 
-  // Initialize engine and get first suggestion
+  // When an opening is selected, pre-fill its prefix moves
+  const handleOpeningSelect = useCallback((opening: Opening) => {
+    setSelectedOpening(opening);
+    const prefix = extractOpeningPrefix(opening);
+    
+    // Play all prefix moves on the game
+    const records: MoveRecord[] = [];
+    for (let i = 0; i < prefix.moves.length; i++) {
+      game.move(prefix.moves[i]);
+      records.push({
+        san: prefix.moves[i],
+        uci: "",
+        fen: prefix.fens[i],
+        isEngineSuggestion: true,
+        isLocked: true,
+      });
+    }
+    setMoves(records);
+    setLockedCount(records.length);
+    setFen(game.fen());
+  }, [game]);
+
+  // Get engine suggestion after opening is selected
   useEffect(() => {
-    if (engineInitRef.current) return;
+    if (!selectedOpening || engineInitRef.current) return;
     engineInitRef.current = true;
     getEngineSuggestion(game.fen());
-  }, []);
+  }, [selectedOpening]);
+
+  const side = selectedOpening?.primarySide || "w";
 
   const getEngineSuggestion = useCallback(async (currentFen: string) => {
     setEvaluating(true);
@@ -76,11 +202,10 @@ export default function GardenBuilder() {
   const handleMove = useCallback(
     async (from: string, to: string, san: string) => {
       if (moves.length >= MAX_MOVES) return;
-      if (feedback) return; // Block moves while showing feedback
+      if (feedback) return;
 
       const moveUci = from + to;
 
-      // If this is the engine suggestion, accept directly
       if (engineSuggestion && moveUci === engineSuggestion.uci) {
         const newMoveRecord: MoveRecord = {
           san,
@@ -97,29 +222,22 @@ export default function GardenBuilder() {
         return;
       }
 
-      // Otherwise, evaluate the move
       setEvaluating(true);
       try {
-        // We need to evaluate BEFORE the move was made, so undo it
         game.undo();
         const preFen = game.fen();
         const engine = getEngine();
         const evaluation = await engine.evaluateMove(preFen, moveUci, san, 12);
-
-        // Re-apply the move
         game.move(san);
 
         if (evaluation.isGood) {
-          // Good move — show choice dialog
           setFeedback({
             type: "good",
             message: evaluation.explanation,
             playerSan: san,
             engineSan: engineSuggestion?.san || evaluation.bestMoveSan,
           });
-          // Don't add the move yet — wait for user choice
         } else {
-          // Bad move — reject and undo
           game.undo();
           setFen(game.fen());
           setFeedback({
@@ -131,7 +249,6 @@ export default function GardenBuilder() {
         }
       } catch (err) {
         console.error("Evaluation error:", err);
-        // On error, accept the move
         const newMoveRecord: MoveRecord = {
           san,
           uci: moveUci,
@@ -165,7 +282,6 @@ export default function GardenBuilder() {
 
   const keepEngineSuggestion = useCallback(() => {
     if (!feedback || feedback.type !== "good") return;
-    // Undo player move and play engine move instead
     game.undo();
     const engineMove = engineSuggestion;
     if (engineMove) {
@@ -187,7 +303,6 @@ export default function GardenBuilder() {
   }, [feedback, engineSuggestion, game, getEngineSuggestion]);
 
   const keepBoth = useCallback(() => {
-    // For now, keep the player's move (the "both" concept applies during practice)
     acceptPlayerMove();
   }, [acceptPlayerMove]);
 
@@ -196,13 +311,13 @@ export default function GardenBuilder() {
   }, []);
 
   const handleUndo = useCallback(() => {
-    if (moves.length === 0) return;
+    if (moves.length <= lockedCount) return; // Can't undo past prefix
     game.undo();
     setMoves((prev) => prev.slice(0, -1));
     setFen(game.fen());
     setFeedback(null);
     getEngineSuggestion(game.fen());
-  }, [game, moves.length, getEngineSuggestion]);
+  }, [game, moves.length, lockedCount, getEngineSuggestion]);
 
   const canFinish = moves.length >= MIN_MOVES;
   const isMaxed = moves.length >= MAX_MOVES;
@@ -210,11 +325,11 @@ export default function GardenBuilder() {
   const handleFinish = () => {
     if (!canFinish) return;
     setShowNameDialog(true);
-    setLineName(`Custom Line #${Date.now().toString(36).slice(-4)}`);
+    setLineName(`${selectedOpening?.name || "Custom"} Line`);
   };
 
   const handleSave = async () => {
-    if (!user || !canFinish) return;
+    if (!user || !canFinish || !selectedOpening) return;
     setSaving(true);
     try {
       const movesSan = moves.map((m) => m.san);
@@ -227,6 +342,7 @@ export default function GardenBuilder() {
         fens: fensList,
         side,
         move_count: moves.length,
+        opening_id: selectedOpening.id,
       } as any);
 
       if (error) throw error;
@@ -238,7 +354,11 @@ export default function GardenBuilder() {
     }
   };
 
-  // Build move hints for the chessboard (engine suggestion highlighted)
+  // Show opening picker if nothing selected yet
+  if (!selectedOpening) {
+    return <OpeningPicker onSelect={handleOpeningSelect} />;
+  }
+
   const moveHints = new Map<string, { category: MoveCategory; targets: Map<string, MoveCategory> }>();
   if (engineSuggestion && !feedback) {
     const from = engineSuggestion.uci.slice(0, 2);
@@ -248,12 +368,14 @@ export default function GardenBuilder() {
     moveHints.set(from, { category: "main_line", targets });
   }
 
+  const openingTheme = themes[selectedOpening.themeId];
+
   return (
     <div className="min-h-screen bg-background">
       <header className="px-6 pt-6 pb-4 max-w-5xl mx-auto">
         <div className="flex items-center justify-between">
           <button
-            onClick={() => navigate("/")}
+            onClick={() => setSelectedOpening(null)}
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -262,7 +384,7 @@ export default function GardenBuilder() {
           <div className="flex items-center gap-2">
             <button
               onClick={handleUndo}
-              disabled={moves.length === 0}
+              disabled={moves.length <= lockedCount}
               className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors disabled:opacity-30"
             >
               <Undo2 className="w-4 h-4" />
@@ -301,7 +423,7 @@ export default function GardenBuilder() {
               <div className="h-1.5 bg-muted rounded-full overflow-hidden">
                 <motion.div
                   className="h-full rounded-full"
-                  style={{ background: "hsl(var(--primary))" }}
+                  style={{ background: openingTheme ? openingTheme.primaryColor : "hsl(var(--primary))" }}
                   animate={{ width: `${(moves.length / MAX_MOVES) * 100}%` }}
                   transition={{ duration: 0.3 }}
                 />
@@ -311,6 +433,20 @@ export default function GardenBuilder() {
 
           {/* Sidebar */}
           <div className="space-y-4">
+            {/* Opening badge */}
+            <div
+              className="rounded-lg border border-border p-3 flex items-center gap-3"
+              style={{
+                borderLeftWidth: 3,
+                borderLeftColor: openingTheme ? openingTheme.primaryColor : "hsl(var(--primary))",
+              }}
+            >
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-muted-foreground uppercase tracking-wider">{t("baseOpening")}</p>
+                <p className="font-serif font-semibold text-foreground truncate">{selectedOpening.name}</p>
+              </div>
+            </div>
+
             <div className="rounded-xl border border-border bg-card p-4">
               <h2 className="font-serif text-lg font-semibold text-foreground mb-1">
                 {t("buildingLine")}
@@ -319,7 +455,6 @@ export default function GardenBuilder() {
                 {t("depth")}: {moves.length}/{MAX_MOVES}
               </p>
 
-              {/* Engine suggestion */}
               {evaluating && (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground py-2">
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -338,6 +473,7 @@ export default function GardenBuilder() {
                 {moves.map((move, i) => {
                   const moveNum = Math.floor(i / 2) + 1;
                   const isWhiteMove = i % 2 === 0;
+                  const isLocked = i < lockedCount;
                   return (
                     <span key={i} className="inline-block mr-1">
                       {isWhiteMove && (
@@ -345,7 +481,11 @@ export default function GardenBuilder() {
                       )}
                       <span
                         className={`text-sm font-mono ${
-                          move.isEngineSuggestion ? "text-primary" : "text-accent-foreground"
+                          isLocked
+                            ? "text-muted-foreground/60"
+                            : move.isEngineSuggestion
+                            ? "text-primary"
+                            : "text-accent-foreground"
                         }`}
                       >
                         {move.san}
@@ -353,6 +493,9 @@ export default function GardenBuilder() {
                     </span>
                   );
                 })}
+                {lockedCount > 0 && moves.length > lockedCount && (
+                  <div className="border-t border-border/30 my-1" />
+                )}
               </div>
             </div>
 
