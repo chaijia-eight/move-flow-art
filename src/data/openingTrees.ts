@@ -349,7 +349,23 @@ const queensGambitTree: OpeningNode[] = [
                           children: [{
                             fen: "rnbq1rk1/ppp1bppp/4pn2/3p2B1/2PP4/2N1PN2/PP3PPP/R2QKB1R b KQ - 1 6",
                             move: "Nf3", category: "main_line",
-                            children: []
+                            children: [{
+                              fen: "r1bq1rk1/pppnbppp/4pn2/3p2B1/2PP4/2N1PN2/PP3PPP/R2QKB1R w KQ - 3 7",
+                              move: "Nbd7", category: "main_line",
+                              children: [{
+                                fen: "r1bq1rk1/pppnbppp/4pn2/3p2B1/2PP4/2N1PN2/PP3PPP/2RQKB1R b K - 4 7",
+                                move: "Rc1", category: "main_line",
+                                children: [{
+                                  fen: "r1bq1rk1/pp1nbppp/2p1pn2/3p2B1/2PP4/2N1PN2/PP3PPP/2RQKB1R w K - 0 8",
+                                  move: "c6", category: "main_line",
+                                  children: [{
+                                    fen: "r1bq1rk1/pp1nbppp/2p1pn2/3p2B1/2PP4/2NBPN2/PP3PPP/2RQK2R b K - 1 8",
+                                    move: "Bd3", category: "main_line",
+                                    children: []
+                                  }]
+                                }]
+                              }]
+                            }]
                           }]
                         }]
                       }]
