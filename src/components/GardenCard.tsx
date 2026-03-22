@@ -70,7 +70,7 @@ export default function GardenCard({ line, index, onPractice }: GardenCardProps)
               {line.name}
             </h3>
             <p className="text-xs text-muted-foreground mt-0.5 font-mono uppercase tracking-wider">
-              {isWhite ? "White" : "Black"} · {line.move_count} moves
+              {baseOpening ? baseOpening.name : isWhite ? "White" : "Black"} · {line.move_count} moves
             </p>
           </div>
 
