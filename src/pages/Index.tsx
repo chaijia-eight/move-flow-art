@@ -9,7 +9,7 @@ import { extractAllLines, extractLinesForVariation } from "@/lib/lineExtractor";
 import { getLineProgress, getOpeningProgress } from "@/lib/progressStore";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { t, tf, tn } from "@/lib/i18n";
+import { t, tf, tn, tDesc } from "@/lib/i18n";
 
 interface Recommendation {
   openingId: string;
