@@ -547,7 +547,7 @@ export default function Study() {
                   color: "hsl(45, 100%, 60%)",
                   border: "1px solid hsl(45, 100%, 50%, 0.25)",
                 }}>
-                  <Zap className="w-3 h-3" /> CHALLENGE
+                  <Zap className="w-3 h-3" /> {t("challenge")}
                 </span>
               )}
             </p>
