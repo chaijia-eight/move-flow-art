@@ -252,7 +252,7 @@ export default function Index() {
             className="flex items-center gap-3 mb-6"
           >
             <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
-              {t("yourGarden")}
+              {t("yourBookshelf")}
             </h2>
             <div className="flex-1 h-px bg-border/50" />
           </motion.div>
