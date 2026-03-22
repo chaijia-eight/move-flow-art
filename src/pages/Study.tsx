@@ -234,7 +234,10 @@ export default function Study() {
       if (matching) {
         // Treat preferred-path moves as main_line on the board
         const isOnPreferredPath = preferredMoves && totalMovesPlayed < preferredMoves.length && node.move === preferredMoves[totalMovesPlayed];
-        const effectiveCat: MoveCategory = isOnPreferredPath ? "main_line" : node.category;
+        // When we have a preferred path, only the expected move is main_line; demote others to alternative
+        const effectiveCat: MoveCategory = preferredMoves 
+          ? (isOnPreferredPath ? "main_line" : "legit_alternative")
+          : node.category;
         if (!hints.has(matching.from)) {
           hints.set(matching.from, { category: effectiveCat, targets: new Map() });
         }
