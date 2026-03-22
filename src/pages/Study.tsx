@@ -744,6 +744,32 @@ export default function Study() {
                     onRetry={() => setFeedback(null)}
                   />
                 )}
+
+                {/* Plan/strategy text when no other feedback */}
+                {!feedback && !lineCompleted && !showMasteryPrompt && (() => {
+                  const variation = opening.variations.find((v) => v.id === variationParam);
+                  if (!variation?.plan) return null;
+                  return (
+                    <motion.div
+                      key="plan"
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -5 }}
+                      className="rounded-xl p-4"
+                      style={{
+                        background: `linear-gradient(135deg, ${currentTheme.primaryColor}08, ${currentTheme.accentColor}05)`,
+                        border: `1px solid ${currentTheme.primaryColor}15`,
+                      }}
+                    >
+                      <p className="text-xs uppercase tracking-wider font-medium mb-1.5" style={{ color: currentTheme.accentColor }}>
+                        Your Plan
+                      </p>
+                      <p className="text-sm text-foreground/70 leading-relaxed">
+                        {variation.plan}
+                      </p>
+                    </motion.div>
+                  );
+                })()}
               </AnimatePresence>
             </div>
           </div>

@@ -2264,9 +2264,9 @@ export const openings: Opening[] = [
     themeId: "italian", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "w", tree: italianMainTree, totalVariations: 5,
     variations: [
-      { id: "giuoco-piano", name: "Giuoco Piano", description: "The quiet game — solid development with c3 and d4.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5", tree: italianMainTree, depth: 10 },
-      { id: "two-knights", name: "Two Knights Defense", description: "Black plays Nf6 instead of Bc5 for sharper play.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bc4 Nf6", tree: italianMainTree, depth: 8 },
-      { id: "evans-gambit", name: "Evans Gambit", description: "White sacrifices a pawn with b4 for rapid development.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.b4", tree: italianMainTree, depth: 7 },
+      { id: "giuoco-piano", name: "Giuoco Piano", description: "The quiet game — solid development with c3 and d4.", plan: "Aim for a strong center with c3 and d4. Castle kingside, develop pieces actively, and launch a central attack. The result is an open, tactical middlegame where White has a slight space advantage.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5", tree: italianMainTree, depth: 10 },
+      { id: "two-knights", name: "Two Knights Defense", description: "Black plays Nf6 instead of Bc5 for sharper play.", plan: "As White, attack with d4 and aim for the Fried Liver or Traxler. As Black, challenge White's center early and seek active piece play. Leads to sharp, tactical positions with chances for both sides.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bc4 Nf6", tree: italianMainTree, depth: 8 },
+      { id: "evans-gambit", name: "Evans Gambit", description: "White sacrifices a pawn with b4 for rapid development.", plan: "Sacrifice the b4 pawn to deflect Black's bishop, then build a powerful center with c3 and d4. Develop rapidly and attack the kingside. White gets a dangerous initiative in exchange for a pawn.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.b4", tree: italianMainTree, depth: 7 },
     ]
   },
   {
@@ -2275,10 +2275,10 @@ export const openings: Opening[] = [
     themeId: "sicilian", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: sicilianMainTree, totalVariations: 6,
     variations: [
-      { id: "najdorf", name: "Najdorf Variation", description: "The sharpest and most popular Sicilian — 5...a6.", startingMoves: "1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 a6", tree: sicilianMainTree, depth: 12 },
-      { id: "dragon", name: "Dragon Variation", description: "Black fianchettoes the bishop for kingside pressure.", startingMoves: "1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 g6", tree: sicilianMainTree, depth: 10 },
-      { id: "classical-sic", name: "Classical Variation", description: "Black develops the knight to c6 for classical play.", startingMoves: "1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 Nc6", tree: sicilianMainTree, depth: 8 },
-      { id: "scheveningen", name: "Scheveningen", description: "Flexible with e6 — sets up a strong pawn duo.", startingMoves: "1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 e6", tree: sicilianMainTree, depth: 8 },
+      { id: "najdorf", name: "Najdorf Variation", description: "The sharpest and most popular Sicilian — 5...a6.", plan: "As Black, play a6 to control b5 and prepare queenside expansion with b5. Aim for counterplay on the c-file and queenside while White attacks the kingside. A complex, double-edged battle.", startingMoves: "1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 a6", tree: sicilianMainTree, depth: 12 },
+      { id: "dragon", name: "Dragon Variation", description: "Black fianchettoes the bishop for kingside pressure.", plan: "Fianchetto the bishop on g7, aiming it at White's queenside. Castle kingside and attack on the c-file. White often castles queenside and attacks your king — it's a race. Exciting, razor-sharp play.", startingMoves: "1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 g6", tree: sicilianMainTree, depth: 10 },
+      { id: "classical-sic", name: "Classical Variation", description: "Black develops the knight to c6 for classical play.", plan: "Develop naturally with Nc6 to pressure d4. Aim for queenside play and central control. A well-rounded setup that avoids the sharpest theoretical lines while keeping dynamic chances.", startingMoves: "1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 Nc6", tree: sicilianMainTree, depth: 8 },
+      { id: "scheveningen", name: "Scheveningen", description: "Flexible with e6 — sets up a strong pawn duo.", plan: "Build a solid pawn structure with d6+e6. Develop flexibly and prepare breaks like d5 or b5. The position is rich and strategic — Black has a resilient setup with long-term counterplay.", startingMoves: "1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 e6", tree: sicilianMainTree, depth: 8 },
     ]
   },
   {
@@ -2287,9 +2287,9 @@ export const openings: Opening[] = [
     themeId: "queensgambit", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "w", tree: queensGambitTree, totalVariations: 4,
     variations: [
-      { id: "qgd", name: "Queen's Gambit Declined", description: "Black declines with e6, maintaining solid structure.", startingMoves: "1.d4 d5 2.c4 e6", tree: queensGambitTree, depth: 10 },
-      { id: "qga", name: "Queen's Gambit Accepted", description: "Black takes the pawn, aiming to equalize.", startingMoves: "1.d4 d5 2.c4 dxc4", tree: queensGambitTree, depth: 7 },
-      { id: "slav", name: "Slav Defense", description: "Black supports d5 with c6 — solid and flexible.", startingMoves: "1.d4 d5 2.c4 c6", tree: queensGambitTree, depth: 8 },
+      { id: "qgd", name: "Queen's Gambit Declined", description: "Black declines with e6, maintaining solid structure.", plan: "As White, build a strong center and develop pieces to active squares. Aim for a minority attack on the queenside (b4-b5) or a central breakthrough with e4. White maintains a lasting positional edge.", startingMoves: "1.d4 d5 2.c4 e6", tree: queensGambitTree, depth: 10 },
+      { id: "qga", name: "Queen's Gambit Accepted", description: "Black takes the pawn, aiming to equalize.", plan: "As White, reclaim the pawn and exploit your development advantage. Push e4 to dominate the center. As Black, hold onto the pawn temporarily while developing. The position often simplifies with a slight White edge.", startingMoves: "1.d4 d5 2.c4 dxc4", tree: queensGambitTree, depth: 7 },
+      { id: "slav", name: "Slav Defense", description: "Black supports d5 with c6 — solid and flexible.", plan: "As Black, maintain the d5 pawn with c6 and develop the bishop to f5 or g4 before playing e6. A rock-solid structure that avoids the bad bishop problem of the QGD. Aim for equality with chances.", startingMoves: "1.d4 d5 2.c4 c6", tree: queensGambitTree, depth: 8 },
     ]
   },
   {
@@ -2298,8 +2298,8 @@ export const openings: Opening[] = [
     themeId: "kingsindian", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: kingsIndianTree, totalVariations: 4,
     variations: [
-      { id: "classical-kid", name: "Classical KID", description: "Nf3 + Be2 setup — the main battleground.", startingMoves: "1.d4 Nf6 2.c4 g6 3.Nc3 Bg7 4.e4 d6 5.Nf3", tree: kingsIndianTree, depth: 12 },
-      { id: "samisch", name: "Sämisch Variation", description: "White plays f3 for an aggressive kingside setup.", startingMoves: "1.d4 Nf6 2.c4 g6 3.Nc3 Bg7 4.e4 d6 5.f3", tree: kingsIndianTree, depth: 8 },
+      { id: "classical-kid", name: "Classical KID", description: "Nf3 + Be2 setup — the main battleground.", plan: "As Black, let White build the center, then strike with e5 and f5. Launch a kingside attack while White expands on the queenside. The result is a thrilling race between opposite-side attacks.", startingMoves: "1.d4 Nf6 2.c4 g6 3.Nc3 Bg7 4.e4 d6 5.Nf3", tree: kingsIndianTree, depth: 12 },
+      { id: "samisch", name: "Sämisch Variation", description: "White plays f3 for an aggressive kingside setup.", plan: "As White, build a massive center with f3 and Be3, then castle queenside and launch a pawn storm. As Black, strike with c5 or e5 and counterattack. Double-edged with fireworks on both flanks.", startingMoves: "1.d4 Nf6 2.c4 g6 3.Nc3 Bg7 4.e4 d6 5.f3", tree: kingsIndianTree, depth: 8 },
     ]
   },
   {
@@ -2308,9 +2308,9 @@ export const openings: Opening[] = [
     themeId: "french", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: frenchDefenseTree, totalVariations: 4,
     variations: [
-      { id: "winawer", name: "Winawer Variation", description: "Black pins the knight with Bb4 — sharp and complex.", startingMoves: "1.e4 e6 2.d4 d5 3.Nc3 Bb4", tree: frenchDefenseTree, depth: 10 },
-      { id: "classical-french", name: "Classical French", description: "Black plays Nf6, a solid and traditional approach.", startingMoves: "1.e4 e6 2.d4 d5 3.Nc3 Nf6", tree: frenchDefenseTree, depth: 8 },
-      { id: "advance-french", name: "Advance Variation", description: "White pushes e5 early, locking the center.", startingMoves: "1.e4 e6 2.d4 d5 3.e5", tree: frenchDefenseTree, depth: 8 },
+      { id: "winawer", name: "Winawer Variation", description: "Black pins the knight with Bb4 — sharp and complex.", plan: "As Black, pin the knight with Bb4, creating immediate tension. After White plays e5, undermine the center with c5 and f6. The result is a sharp, imbalanced position where Black gets queenside play against White's kingside space.", startingMoves: "1.e4 e6 2.d4 d5 3.Nc3 Bb4", tree: frenchDefenseTree, depth: 10 },
+      { id: "classical-french", name: "Classical French", description: "Black plays Nf6, a solid and traditional approach.", plan: "Develop the knight to f6 attacking e4, then play c5 to challenge the center. Aim for a solid pawn structure and piece activity. Black gets a reliable, slightly cramped but resilient position.", startingMoves: "1.e4 e6 2.d4 d5 3.Nc3 Nf6", tree: frenchDefenseTree, depth: 8 },
+      { id: "advance-french", name: "Advance Variation", description: "White pushes e5 early, locking the center.", plan: "As Black, attack the pawn chain base with c5 and prepare f6 to undermine e5. Develop the dark-squared bishop actively via a5 or b4. The position becomes a strategic battle around the center pawns.", startingMoves: "1.e4 e6 2.d4 d5 3.e5", tree: frenchDefenseTree, depth: 8 },
     ]
   },
   {
@@ -2319,9 +2319,9 @@ export const openings: Opening[] = [
     themeId: "carokann", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: caroKannTree, totalVariations: 4,
     variations: [
-      { id: "classical-ck", name: "Classical Caro-Kann", description: "Bf5 develops naturally and solidly.", startingMoves: "1.e4 c6 2.d4 d5 3.Nc3 dxe4 4.Nxe4 Bf5", tree: caroKannTree, depth: 10 },
-      { id: "advance-ck", name: "Advance Caro-Kann", description: "White pushes e5, locking the center early.", startingMoves: "1.e4 c6 2.d4 d5 3.e5", tree: caroKannTree, depth: 8 },
-      { id: "modern-ck", name: "Modern Caro-Kann", description: "Nd7 keeps flexible — a modern approach.", startingMoves: "1.e4 c6 2.d4 d5 3.Nc3 dxe4 4.Nxe4 Nd7", tree: caroKannTree, depth: 7 },
+      { id: "classical-ck", name: "Classical Caro-Kann", description: "Bf5 develops naturally and solidly.", plan: "Develop the bishop to f5 before playing e6, avoiding the 'French bishop' problem. Build a solid structure and aim for a safe, slightly inferior but very playable middlegame. Excellent for grinding down opponents.", startingMoves: "1.e4 c6 2.d4 d5 3.Nc3 dxe4 4.Nxe4 Bf5", tree: caroKannTree, depth: 10 },
+      { id: "advance-ck", name: "Advance Caro-Kann", description: "White pushes e5, locking the center early.", plan: "As Black, attack the pawn chain with c5 and prepare Nc6 and Bf5. Undermine White's center and aim for piece activity. A strategic battle where Black has clear plans against the overextended pawns.", startingMoves: "1.e4 c6 2.d4 d5 3.e5", tree: caroKannTree, depth: 8 },
+      { id: "modern-ck", name: "Modern Caro-Kann", description: "Nd7 keeps flexible — a modern approach.", plan: "Develop Nd7 to keep options open for the knight and bishop. Play Ngf6 and aim for e6, Bd6 setups. A flexible approach that avoids the sharpest lines and gives Black a solid position with counterplay.", startingMoves: "1.e4 c6 2.d4 d5 3.Nc3 dxe4 4.Nxe4 Nd7", tree: caroKannTree, depth: 7 },
     ]
   },
   {
@@ -2330,8 +2330,8 @@ export const openings: Opening[] = [
     themeId: "ruylopez", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "w", tree: ruyLopezTree, totalVariations: 4,
     variations: [
-      { id: "morphy-defense", name: "Morphy Defense", description: "a6 challenges the bishop — the main line.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bb5 a6", tree: ruyLopezTree, depth: 14 },
-      { id: "berlin-defense", name: "Berlin Defense", description: "Ultra-solid — the 'Berlin Wall' endgame.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bb5 Nf6", tree: ruyLopezTree, depth: 8 },
+      { id: "morphy-defense", name: "Morphy Defense", description: "a6 challenges the bishop — the main line.", plan: "As White, maintain pressure on e5 via the bishop and build a strong center. As Black, play a6 to force the bishop to retreat, then aim for d5 counterplay. The position is rich with strategic depth — a lifelong opening.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bb5 a6", tree: ruyLopezTree, depth: 14 },
+      { id: "berlin-defense", name: "Berlin Defense", description: "Ultra-solid — the 'Berlin Wall' endgame.", plan: "As Black, simplify into the Berlin endgame after Nf6. Trade queens early and aim for a solid, slightly worse but very holdable endgame. White has a small edge but Black's position is fortress-like.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bb5 Nf6", tree: ruyLopezTree, depth: 8 },
     ]
   },
   {
@@ -2340,10 +2340,10 @@ export const openings: Opening[] = [
     themeId: "london", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "w", tree: londonSystemTree, totalVariations: 4,
     variations: [
-      { id: "london-classical", name: "Classical London", description: "The standard 2...d5 3.e3 e6 setup with Nd2, c3, Ngf3, Bd3.", startingMoves: "1.d4 Nf6 2.Bf4 d5 3.e3 e6", tree: londonSystemTree, depth: 14 },
-      { id: "london-c5", name: "Early c5 Counter", description: "Black challenges with c5 immediately — leads to dynamic play.", startingMoves: "1.d4 Nf6 2.Bf4 d5 3.e3 c5", tree: londonSystemTree, depth: 10 },
-      { id: "london-bf5", name: "Bishop Sortie", description: "Black develops Bf5 early to trade light-squared bishops.", startingMoves: "1.d4 Nf6 2.Bf4 d5 3.e3 Bf5", tree: londonSystemTree, depth: 12 },
-      { id: "anti-london", name: "Anti-London with e6", description: "Black plays e6 to transpose into QGD-like positions.", startingMoves: "1.d4 Nf6 2.Bf4 e6", tree: londonSystemTree, depth: 8 },
+      { id: "london-classical", name: "Classical London", description: "The standard 2...d5 3.e3 e6 setup with Nd2, c3, Ngf3, Bd3.", plan: "Develop solidly with Bf4, e3, Bd3, Nbd2, and c3. Build a fortress-like structure, then expand with e4 when ready. The London gives White a safe, easy-to-play position with clear plans in the middlegame.", startingMoves: "1.d4 Nf6 2.Bf4 d5 3.e3 e6", tree: londonSystemTree, depth: 14 },
+      { id: "london-c5", name: "Early c5 Counter", description: "Black challenges with c5 immediately — leads to dynamic play.", plan: "As White, maintain the d4 pawn with c3 and develop naturally. As Black, challenge with c5 to open the position. The fight centers on whether White's solid structure or Black's activity prevails.", startingMoves: "1.d4 Nf6 2.Bf4 d5 3.e3 c5", tree: londonSystemTree, depth: 10 },
+      { id: "london-bf5", name: "Bishop Sortie", description: "Black develops Bf5 early to trade light-squared bishops.", plan: "As Black, develop Bf5 to trade off the potentially bad bishop. As White, avoid the trade and maintain the bishop pair. The position is balanced with clear strategic themes for both sides.", startingMoves: "1.d4 Nf6 2.Bf4 d5 3.e3 Bf5", tree: londonSystemTree, depth: 12 },
+      { id: "anti-london", name: "Anti-London with e6", description: "Black plays e6 to transpose into QGD-like positions.", plan: "As Black, play e6 followed by c5 to challenge the center. Aim to neutralize White's London setup by creating central tension. The result is a balanced middlegame with chances for active piece play.", startingMoves: "1.d4 Nf6 2.Bf4 e6", tree: londonSystemTree, depth: 8 },
     ]
   },
   {
@@ -2352,8 +2352,8 @@ export const openings: Opening[] = [
     themeId: "scotch", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "w", tree: scotchGameTree, totalVariations: 3,
     variations: [
-      { id: "classical-scotch", name: "Classical Scotch", description: "Bc5 against the knight — principled development.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.d4 exd4 4.Nxd4 Bc5", tree: scotchGameTree, depth: 8 },
-      { id: "scotch-four-knights", name: "Scotch Four Knights", description: "Nf6 leads to four knights territory.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.d4 exd4 4.Nxd4 Nf6", tree: scotchGameTree, depth: 6 },
+      { id: "classical-scotch", name: "Classical Scotch", description: "Bc5 against the knight — principled development.", plan: "As White, dominate the center after the early d4 exchange. Place the knight actively on d4 and develop quickly. As Black, challenge with Bc5 and aim for piece activity. An open, tactical middlegame with clear plans.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.d4 exd4 4.Nxd4 Bc5", tree: scotchGameTree, depth: 8 },
+      { id: "scotch-four-knights", name: "Scotch Four Knights", description: "Nf6 leads to four knights territory.", plan: "Both sides develop knights actively. White aims for a slight central advantage while Black seeks equality through active piece play. The position is solid and strategic with fewer tactical fireworks.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.d4 exd4 4.Nxd4 Nf6", tree: scotchGameTree, depth: 6 },
     ]
   },
   {
@@ -2362,9 +2362,9 @@ export const openings: Opening[] = [
     themeId: "dutch", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: dutchDefenseTree, totalVariations: 3,
     variations: [
-      { id: "classical-dutch", name: "Classical Dutch", description: "e6 + Be7 — solid and traditional.", startingMoves: "1.d4 f5 2.g3 Nf6 3.Bg2 e6", tree: dutchDefenseTree, depth: 10 },
-      { id: "leningrad-dutch", name: "Leningrad Dutch", description: "g6 + Bg7 — a KID-like structure.", startingMoves: "1.d4 f5 2.g3 Nf6 3.Bg2 g6", tree: dutchDefenseTree, depth: 8 },
-      { id: "stonewall-dutch", name: "Stonewall Dutch", description: "d5 creates a wall — ultra-solid.", startingMoves: "1.d4 f5 2.g3 Nf6 3.Bg2 d5", tree: dutchDefenseTree, depth: 6 },
+      { id: "classical-dutch", name: "Classical Dutch", description: "e6 + Be7 — solid and traditional.", plan: "As Black, control e4 with f5 and develop solidly with e6, Be7, O-O. Aim for a kingside attack with pieces behind the f-pawn. White has more central space but Black has clear attacking chances.", startingMoves: "1.d4 f5 2.g3 Nf6 3.Bg2 e6", tree: dutchDefenseTree, depth: 10 },
+      { id: "leningrad-dutch", name: "Leningrad Dutch", description: "g6 + Bg7 — a KID-like structure.", plan: "Fianchetto the bishop and combine it with the f5 pawn for a powerful kingside presence. Play e5 when the time is right to seize space. A dynamic, fighting setup with real attacking potential.", startingMoves: "1.d4 f5 2.g3 Nf6 3.Bg2 g6", tree: dutchDefenseTree, depth: 8 },
+      { id: "stonewall-dutch", name: "Stonewall Dutch", description: "d5 creates a wall — ultra-solid.", plan: "Set up pawns on d5, e6, f5, c6 to form an unbreakable wall. Develop pieces behind the wall and aim for a kingside attack with Qf3, Bd6, and Ne4. Solid but with real attacking chances.", startingMoves: "1.d4 f5 2.g3 Nf6 3.Bg2 d5", tree: dutchDefenseTree, depth: 6 },
     ]
   },
   {
@@ -2373,8 +2373,8 @@ export const openings: Opening[] = [
     themeId: "pirc", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: pircDefenseTree, totalVariations: 3,
     variations: [
-      { id: "classical-pirc", name: "Classical Pirc", description: "Nf3 + Be2 — restrained but potent.", startingMoves: "1.e4 d6 2.d4 Nf6 3.Nc3 g6 4.Nf3", tree: pircDefenseTree, depth: 8 },
-      { id: "austrian-attack", name: "Austrian Attack", description: "f3 — White plays aggressively.", startingMoves: "1.e4 d6 2.d4 Nf6 3.Nc3 g6 4.f3", tree: pircDefenseTree, depth: 7 },
+      { id: "classical-pirc", name: "Classical Pirc", description: "Nf3 + Be2 — restrained but potent.", plan: "As Black, develop flexibly with g6, Bg7, d6, and Nf6. Let White overextend in the center, then strike back with c5 or e5. A patient, hypermodern approach that punishes aggressive play.", startingMoves: "1.e4 d6 2.d4 Nf6 3.Nc3 g6 4.Nf3", tree: pircDefenseTree, depth: 8 },
+      { id: "austrian-attack", name: "Austrian Attack", description: "f3 — White plays aggressively.", plan: "As White, build a massive center with f4 and e5, aiming to crush Black's setup. As Black, survive the early pressure and counterattack once White overextends. High-tension chess with decisive games.", startingMoves: "1.e4 d6 2.d4 Nf6 3.Nc3 g6 4.f3", tree: pircDefenseTree, depth: 7 },
     ]
   },
   {
@@ -2383,8 +2383,8 @@ export const openings: Opening[] = [
     themeId: "scandinavian", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: scandinavianTree, totalVariations: 3,
     variations: [
-      { id: "qxd5-scandi", name: "Qxd5 Scandinavian", description: "Recapture with the queen — the classic approach.", startingMoves: "1.e4 d5 2.exd5 Qxd5", tree: scandinavianTree, depth: 8 },
-      { id: "modern-scandi", name: "Modern Scandinavian", description: "Nf6 — recapture with the knight instead.", startingMoves: "1.e4 d5 2.exd5 Nf6", tree: scandinavianTree, depth: 6 },
+      { id: "qxd5-scandi", name: "Qxd5 Scandinavian", description: "Recapture with the queen — the classic approach.", plan: "As Black, recapture with the queen and develop quickly after Qa5 or Qd6. White gains a tempo with Nc3 but Black gets rapid development. Aim for a solid, easy-to-play position with clear piece activity.", startingMoves: "1.e4 d5 2.exd5 Qxd5", tree: scandinavianTree, depth: 8 },
+      { id: "modern-scandi", name: "Modern Scandinavian", description: "Nf6 — recapture with the knight instead.", plan: "Recapture with the knight, keeping the queen safe. Play g6 and Bg7 for a King's Indian-like setup, or c6 and e6 for a solid structure. Less common but avoids the queen being harassed early.", startingMoves: "1.e4 d5 2.exd5 Nf6", tree: scandinavianTree, depth: 6 },
     ]
   },
   {
@@ -2393,8 +2393,8 @@ export const openings: Opening[] = [
     themeId: "english", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "w", tree: englishOpeningTree, totalVariations: 3,
     variations: [
-      { id: "reversed-sicilian", name: "Reversed Sicilian", description: "After e5, White plays a Sicilian with an extra tempo.", startingMoves: "1.c4 e5 2.Nc3 Nf6 3.g3", tree: englishOpeningTree, depth: 8 },
-      { id: "four-knights-english", name: "Four Knights English", description: "Symmetrical development — strategic maneuvering.", startingMoves: "1.c4 e5 2.Nc3 Nc6", tree: englishOpeningTree, depth: 6 },
+      { id: "reversed-sicilian", name: "Reversed Sicilian", description: "After e5, White plays a Sicilian with an extra tempo.", plan: "As White, play a Sicilian Defense with colors reversed and an extra move. Fianchetto with g3, Bg2 and control the center. The extra tempo gives White a comfortable edge with flexible development options.", startingMoves: "1.c4 e5 2.Nc3 Nf6 3.g3", tree: englishOpeningTree, depth: 8 },
+      { id: "four-knights-english", name: "Four Knights English", description: "Symmetrical development — strategic maneuvering.", plan: "Both sides develop knights symmetrically. White aims to exploit the first-move advantage through subtle positional play. A strategic, slow-burning opening where understanding trumps memorization.", startingMoves: "1.c4 e5 2.Nc3 Nc6", tree: englishOpeningTree, depth: 6 },
     ]
   },
   {
@@ -2403,8 +2403,8 @@ export const openings: Opening[] = [
     themeId: "nimzoindian", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: nimzoIndianTree, totalVariations: 3,
     variations: [
-      { id: "classical-nimzo", name: "Classical Nimzo", description: "Qc2 avoids doubled pawns — the main line.", startingMoves: "1.d4 Nf6 2.c4 e6 3.Nc3 Bb4 4.Qc2", tree: nimzoIndianTree, depth: 8 },
-      { id: "rubinstein-nimzo", name: "Rubinstein Nimzo", description: "e3 — solid and positional.", startingMoves: "1.d4 Nf6 2.c4 e6 3.Nc3 Bb4 4.e3", tree: nimzoIndianTree, depth: 8 },
+      { id: "classical-nimzo", name: "Classical Nimzo", description: "Qc2 avoids doubled pawns — the main line.", plan: "As White, play Qc2 to prevent doubled c-pawns after Bxc3. Aim for a strong center with e4 and develop harmoniously. As Black, seek counterplay with c5, d5, and active piece play. A deep, strategic battle.", startingMoves: "1.d4 Nf6 2.c4 e6 3.Nc3 Bb4 4.Qc2", tree: nimzoIndianTree, depth: 8 },
+      { id: "rubinstein-nimzo", name: "Rubinstein Nimzo", description: "e3 — solid and positional.", plan: "As White, play e3 and develop the bishop to d3. Accept doubled pawns if Black takes on c3 — the bishop pair compensates. As Black, maintain pressure on the center and exploit the doubled pawns. A classic positional struggle.", startingMoves: "1.d4 Nf6 2.c4 e6 3.Nc3 Bb4 4.e3", tree: nimzoIndianTree, depth: 8 },
     ]
   },
   {
@@ -2413,8 +2413,8 @@ export const openings: Opening[] = [
     themeId: "grunfeld", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: grunfeldTree, totalVariations: 3,
     variations: [
-      { id: "exchange-grunfeld", name: "Exchange Grünfeld", description: "White takes on d5 and plays e4 — the critical test.", startingMoves: "1.d4 Nf6 2.c4 g6 3.Nc3 d5 4.cxd5 Nxd5 5.e4", tree: grunfeldTree, depth: 10 },
-      { id: "russian-grunfeld", name: "Russian System", description: "Nf3 — more restrained and positional.", startingMoves: "1.d4 Nf6 2.c4 g6 3.Nc3 d5 4.Nf3", tree: grunfeldTree, depth: 7 },
+      { id: "exchange-grunfeld", name: "Exchange Grünfeld", description: "White takes on d5 and plays e4 — the critical test.", plan: "As White, build a powerful center with e4 and d4, then defend it. As Black, attack the center relentlessly with c5, Nc6, Bg7, and pieces. The ultimate clash: central pawns vs piece pressure.", startingMoves: "1.d4 Nf6 2.c4 g6 3.Nc3 d5 4.cxd5 Nxd5 5.e4", tree: grunfeldTree, depth: 10 },
+      { id: "russian-grunfeld", name: "Russian System", description: "Nf3 — more restrained and positional.", plan: "As White, avoid the sharp Exchange lines and build a slower, more positional advantage. As Black, develop flexibly and seek counterplay. A calmer approach that still offers White a slight edge.", startingMoves: "1.d4 Nf6 2.c4 g6 3.Nc3 d5 4.Nf3", tree: grunfeldTree, depth: 7 },
     ]
   },
   {
@@ -2423,8 +2423,8 @@ export const openings: Opening[] = [
     themeId: "alekhine", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: alekhineTree, totalVariations: 3,
     variations: [
-      { id: "four-pawns-alekhine", name: "Four Pawns Attack", description: "White pushes d4 — the most aggressive test.", startingMoves: "1.e4 Nf6 2.e5 Nd5 3.d4", tree: alekhineTree, depth: 8 },
-      { id: "exchange-alekhine", name: "Exchange Variation", description: "White plays d3 — quiet and positional.", startingMoves: "1.e4 Nf6 2.e5 Nd5 3.d3", tree: alekhineTree, depth: 6 },
+      { id: "four-pawns-alekhine", name: "Four Pawns Attack", description: "White pushes d4 — the most aggressive test.", plan: "As White, push pawns aggressively to crush Black's position. As Black, provoke weaknesses in the pawn chain and strike back with c5, d6, and piece activity. High-risk, high-reward for both sides.", startingMoves: "1.e4 Nf6 2.e5 Nd5 3.d4", tree: alekhineTree, depth: 8 },
+      { id: "exchange-alekhine", name: "Exchange Variation", description: "White plays d3 — quiet and positional.", plan: "As White, keep a modest but stable center with d3. Develop solidly and aim for a small, lasting edge. As Black, equalize comfortably and aim for active piece play. A quieter but strategically rich line.", startingMoves: "1.e4 Nf6 2.e5 Nd5 3.d3", tree: alekhineTree, depth: 6 },
     ]
   },
   {
@@ -2433,9 +2433,9 @@ export const openings: Opening[] = [
     themeId: "vienna", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "w", tree: viennaGameTree, totalVariations: 3,
     variations: [
-      { id: "vienna-gambit", name: "Vienna Gambit", description: "f4 — aggressive and sharp, attacking Black's center.", startingMoves: "1.e4 e5 2.Nc3 Nf6 3.f4", tree: viennaGameTree, depth: 10 },
-      { id: "vienna-italian", name: "Vienna Italian", description: "Bc4 — a trappy line with Qh5 threats.", startingMoves: "1.e4 e5 2.Nc3 Nf6 3.Bc4", tree: viennaGameTree, depth: 10 },
-      { id: "vienna-nc6", name: "Vienna with Nc6", description: "Black mirrors with Nc6 — symmetrical and strategic.", startingMoves: "1.e4 e5 2.Nc3 Nc6", tree: viennaGameTree, depth: 7 },
+      { id: "vienna-gambit", name: "Vienna Gambit", description: "f4 — aggressive and sharp, attacking Black's center.", plan: "Sacrifice or exchange the f-pawn to blast open the f-file and attack Black's king. Develop rapidly with Bc4 and Nf3. White aims for a sharp, tactical assault — play for the attack or nothing.", startingMoves: "1.e4 e5 2.Nc3 Nf6 3.f4", tree: viennaGameTree, depth: 10 },
+      { id: "vienna-italian", name: "Vienna Italian", description: "Bc4 — a trappy line with Qh5 threats.", plan: "Develop the bishop to c4 targeting f7, with ideas of Qh5+ tricks. Combine Nc3's support with aggressive piece play. White gets a dynamic position with multiple tactical threats in the early middlegame.", startingMoves: "1.e4 e5 2.Nc3 Nf6 3.Bc4", tree: viennaGameTree, depth: 10 },
+      { id: "vienna-nc6", name: "Vienna with Nc6", description: "Black mirrors with Nc6 — symmetrical and strategic.", plan: "Both sides develop knights to the center. White aims to exploit the initiative with f4 or Bc4 ideas. A balanced, classical position where both sides have equal chances and clear development plans.", startingMoves: "1.e4 e5 2.Nc3 Nc6", tree: viennaGameTree, depth: 7 },
     ]
   },
   {
@@ -2444,8 +2444,8 @@ export const openings: Opening[] = [
     themeId: "catalan", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "w", tree: catalanTree, totalVariations: 3,
     variations: [
-      { id: "open-catalan", name: "Open Catalan", description: "Black takes on c4 — White's Bg2 pressures the queenside.", startingMoves: "1.d4 Nf6 2.c4 e6 3.g3 d5 4.Bg2 Be7 5.Nf3 O-O 6.O-O dxc4", tree: catalanTree, depth: 14 },
-      { id: "closed-catalan", name: "Closed Catalan", description: "Black keeps the center closed with Nbd7.", startingMoves: "1.d4 Nf6 2.c4 e6 3.g3 d5 4.Bg2 Be7 5.Nf3 O-O 6.O-O Nbd7", tree: catalanTree, depth: 12 },
+      { id: "open-catalan", name: "Open Catalan", description: "Black takes on c4 — White's Bg2 pressures the queenside.", plan: "As White, let Black take on c4 and recover it with Bg2's long diagonal pressure. The bishop on g2 becomes a monster, controlling the center and queenside. White gets a lasting positional advantage with pressure on b7 and d5.", startingMoves: "1.d4 Nf6 2.c4 e6 3.g3 d5 4.Bg2 Be7 5.Nf3 O-O 6.O-O dxc4", tree: catalanTree, depth: 14 },
+      { id: "closed-catalan", name: "Closed Catalan", description: "Black keeps the center closed with Nbd7.", plan: "As White, build pressure on the queenside with the Bg2 and prepare e4 or b3. As Black, maintain a solid structure with Nbd7 and aim for c5 or e5 breaks. A deep positional battle with slow maneuvering.", startingMoves: "1.d4 Nf6 2.c4 e6 3.g3 d5 4.Bg2 Be7 5.Nf3 O-O 6.O-O Nbd7", tree: catalanTree, depth: 12 },
     ]
   },
   {
@@ -2454,8 +2454,8 @@ export const openings: Opening[] = [
     themeId: "benoni", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: benoniTree, totalVariations: 3,
     variations: [
-      { id: "modern-benoni", name: "Modern Benoni", description: "e4 — the critical test with a strong center vs Black's activity.", startingMoves: "1.d4 Nf6 2.c4 c5 3.d5 e6 4.Nc3 exd5 5.cxd5 d6 6.e4", tree: benoniTree, depth: 14 },
-      { id: "fianchetto-benoni", name: "Fianchetto Benoni", description: "g3 — a quieter approach with long-term pressure.", startingMoves: "1.d4 Nf6 2.c4 c5 3.d5 e6 4.Nc3 exd5 5.cxd5 d6 6.g3", tree: benoniTree, depth: 14 },
+      { id: "modern-benoni", name: "Modern Benoni", description: "e4 — the critical test with a strong center vs Black's activity.", plan: "As Black, accept a space disadvantage in exchange for queenside counterplay with a6, b5, and activity on the c-file. White has a strong center but Black's pieces are active. A dynamic, unbalanced fight.", startingMoves: "1.d4 Nf6 2.c4 c5 3.d5 e6 4.Nc3 exd5 5.cxd5 d6 6.e4", tree: benoniTree, depth: 14 },
+      { id: "fianchetto-benoni", name: "Fianchetto Benoni", description: "g3 — a quieter approach with long-term pressure.", plan: "As White, fianchetto and maintain a flexible center. The Bg2 supports e4 and controls key central squares. As Black, use the c5 pawn to create queenside counterplay. A more strategic, positional approach.", startingMoves: "1.d4 Nf6 2.c4 c5 3.d5 e6 4.Nc3 exd5 5.cxd5 d6 6.g3", tree: benoniTree, depth: 14 },
     ]
   },
   {
@@ -2464,8 +2464,8 @@ export const openings: Opening[] = [
     themeId: "philidor", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: philidorTree, totalVariations: 3,
     variations: [
-      { id: "philidor-main", name: "Philidor Main Line", description: "Nf6 and Nbd7 — the classical setup.", startingMoves: "1.e4 e5 2.Nf3 d6 3.d4 Nf6", tree: philidorTree, depth: 12 },
-      { id: "hanham-philidor", name: "Hanham Philidor", description: "Nd7 first — a more flexible move order.", startingMoves: "1.e4 e5 2.Nf3 d6 3.d4 Nd7", tree: philidorTree, depth: 10 },
+      { id: "philidor-main", name: "Philidor Main Line", description: "Nf6 and Nbd7 — the classical setup.", plan: "As Black, build a solid fortress with d6, Nf6, Be7, O-O, and Nbd7. Prepare the f5 or d5 break when the time is right. Slightly cramped but rock-solid — ideal for patient players who like to grind.", startingMoves: "1.e4 e5 2.Nf3 d6 3.d4 Nf6", tree: philidorTree, depth: 12 },
+      { id: "hanham-philidor", name: "Hanham Philidor", description: "Nd7 first — a more flexible move order.", plan: "Develop Nd7 first to support e5 and keep options open for the king's knight. A more flexible version of the Philidor that avoids some of White's sharpest lines. Solid and reliable.", startingMoves: "1.e4 e5 2.Nf3 d6 3.d4 Nd7", tree: philidorTree, depth: 10 },
     ]
   },
   {
@@ -2474,8 +2474,8 @@ export const openings: Opening[] = [
     themeId: "reti", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "w", tree: retiTree, totalVariations: 3,
     variations: [
-      { id: "reti-accepted", name: "Réti Accepted", description: "e6 and classical development — rich strategic play.", startingMoves: "1.Nf3 d5 2.c4 e6", tree: retiTree, depth: 12 },
-      { id: "reti-kia", name: "King's Indian Attack", description: "g3 + Bg2 — a universal system for White.", startingMoves: "1.Nf3 d5 2.g3", tree: retiTree, depth: 10 },
+      { id: "reti-accepted", name: "Réti Accepted", description: "e6 and classical development — rich strategic play.", plan: "As White, use Nf3 and c4 to control the center from the flanks. Fianchetto with g3, Bg2 and transpose into favorable positions. A flexible, transpositional opening where understanding matters more than memorization.", startingMoves: "1.Nf3 d5 2.c4 e6", tree: retiTree, depth: 12 },
+      { id: "reti-kia", name: "King's Indian Attack", description: "g3 + Bg2 — a universal system for White.", plan: "Set up with g3, Bg2, d3, Nbd2, e4 — a universal system playable against almost anything. Aim for a kingside attack with e4-e5 and piece pressure. Safe, solid, and easy to play at any level.", startingMoves: "1.Nf3 d5 2.g3", tree: retiTree, depth: 10 },
     ]
   },
 ];
