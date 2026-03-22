@@ -2423,8 +2423,8 @@ export const openings: Opening[] = [
     themeId: "alekhine", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: alekhineTree, totalVariations: 3,
     variations: [
-      { id: "four-pawns-alekhine", name: "Four Pawns Attack", description: "White pushes d4 — the most aggressive test.", startingMoves: "1.e4 Nf6 2.e5 Nd5 3.d4", tree: alekhineTree, depth: 8 },
-      { id: "exchange-alekhine", name: "Exchange Variation", description: "White plays d3 — quiet and positional.", startingMoves: "1.e4 Nf6 2.e5 Nd5 3.d3", tree: alekhineTree, depth: 6 },
+      { id: "four-pawns-alekhine", name: "Four Pawns Attack", description: "White pushes d4 — the most aggressive test.", plan: "As White, push pawns aggressively to crush Black's position. As Black, provoke weaknesses in the pawn chain and strike back with c5, d6, and piece activity. High-risk, high-reward for both sides.", startingMoves: "1.e4 Nf6 2.e5 Nd5 3.d4", tree: alekhineTree, depth: 8 },
+      { id: "exchange-alekhine", name: "Exchange Variation", description: "White plays d3 — quiet and positional.", plan: "As White, keep a modest but stable center with d3. Develop solidly and aim for a small, lasting edge. As Black, equalize comfortably and aim for active piece play. A quieter but strategically rich line.", startingMoves: "1.e4 Nf6 2.e5 Nd5 3.d3", tree: alekhineTree, depth: 6 },
     ]
   },
   {
