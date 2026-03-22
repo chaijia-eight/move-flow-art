@@ -6,11 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { loadSettings, saveSettings, type AppSettings } from "@/lib/settingsStore";
 
 export default function Settings() {
   const navigate = useNavigate();
   const { user, loading, signUp, signIn, signOut } = useAuth();
+  const { setDarkMode } = useTheme();
   const [settings, setSettings] = useState<AppSettings>(loadSettings);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
@@ -24,6 +26,13 @@ export default function Settings() {
     const updated = { ...settings, [key]: value };
     setSettings(updated);
     saveSettings(updated);
+    if (key === "darkMode") {
+      setDarkMode(value as boolean);
+    }
+    if (key === "boardThemeFollowOpening") {
+      // Reload to apply theme change across all pages
+      window.location.reload();
+    }
   };
 
   const handleResetProgress = () => {
