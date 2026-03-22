@@ -2330,8 +2330,8 @@ export const openings: Opening[] = [
     themeId: "ruylopez", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "w", tree: ruyLopezTree, totalVariations: 4,
     variations: [
-      { id: "morphy-defense", name: "Morphy Defense", description: "a6 challenges the bishop — the main line.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bb5 a6", tree: ruyLopezTree, depth: 14 },
-      { id: "berlin-defense", name: "Berlin Defense", description: "Ultra-solid — the 'Berlin Wall' endgame.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bb5 Nf6", tree: ruyLopezTree, depth: 8 },
+      { id: "morphy-defense", name: "Morphy Defense", description: "a6 challenges the bishop — the main line.", plan: "As White, maintain pressure on e5 via the bishop and build a strong center. As Black, play a6 to force the bishop to retreat, then aim for d5 counterplay. The position is rich with strategic depth — a lifelong opening.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bb5 a6", tree: ruyLopezTree, depth: 14 },
+      { id: "berlin-defense", name: "Berlin Defense", description: "Ultra-solid — the 'Berlin Wall' endgame.", plan: "As Black, simplify into the Berlin endgame after Nf6. Trade queens early and aim for a solid, slightly worse but very holdable endgame. White has a small edge but Black's position is fortress-like.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bb5 Nf6", tree: ruyLopezTree, depth: 8 },
     ]
   },
   {
