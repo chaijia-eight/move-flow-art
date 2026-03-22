@@ -497,9 +497,10 @@ export default function Study() {
     );
   }
 
+  const colorLabel = playerColor === "w" ? t("white") : t("black");
   const sideLabel = playerColor === opening.primarySide
-    ? `Play as ${playerColor === "w" ? "White" : "Black"}`
-    : `Play against (as ${playerColor === "w" ? "White" : "Black"})`;
+    ? tf<(c: string) => string>("playAs")(colorLabel)
+    : tf<(c: string) => string>("playAgainst")(colorLabel);
 
   const displayName = currentLine
     ? currentLine.name
