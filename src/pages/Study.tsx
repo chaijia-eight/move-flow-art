@@ -88,6 +88,7 @@ export default function Study() {
     suggestedMove?: string;
     alternativeNode?: OpeningNode;
     detectedOpening?: { id: string; name: string; nodes: OpeningNode[] };
+    detectedVariation?: { variationId: string; lineIndex: number };
   } | null>(null);
   const [moveCount, setMoveCount] = useState(0);
   const [isComputerTurn, setIsComputerTurn] = useState(false);
@@ -366,12 +367,40 @@ export default function Study() {
           break;
         }
 
-        case "legit_alternative":
+        case "legit_alternative": {
+          // Try to find which variation this alternative belongs to
+          let detectedVar: { variationId: string; lineIndex: number } | undefined;
+          if (opening && matchedNode.variationName) {
+            const altName = matchedNode.variationName.toLowerCase().replace(/\s+/g, '-');
+            const matchingVariation = opening.variations.find(
+              (v) => v.id === altName || v.name === matchedNode.variationName
+            );
+            if (matchingVariation) {
+              // Find which line within this variation best matches the moves played so far
+              const varLines = extractLinesForVariation(opening, matchingVariation);
+              const allSans = newHistory.map((m) => m.san);
+              let bestLineIdx = 0;
+              let bestMatch = 0;
+              varLines.forEach((line, idx) => {
+                let matchCount = 0;
+                for (let i = 0; i < Math.min(allSans.length, line.moves.length); i++) {
+                  if (allSans[i] === line.moves[i]) matchCount++;
+                  else break;
+                }
+                if (matchCount > bestMatch) {
+                  bestMatch = matchCount;
+                  bestLineIdx = idx;
+                }
+              });
+              detectedVar = { variationId: matchingVariation.id, lineIndex: bestLineIdx };
+            }
+          }
           setFeedback({
             type: "legit_alternative",
-            message: `This move is also good — it's called the ${matchedNode.variationName || "Alternative Line"}.`,
+            message: `This move is also good — it's called the ${matchedNode.variationName || "Alternative Line"}. Want to switch?`,
             variationName: matchedNode.variationName,
             alternativeNode: matchedNode,
+            detectedVariation: detectedVar,
           });
           setCurrentNodes(matchedNode.children);
           setCurrentVariation({
@@ -379,6 +408,7 @@ export default function Study() {
             description: `You're now exploring the ${matchedNode.variationName || "Alternative Line"}.`,
           });
           break;
+        }
 
         case "mistake":
           chess.undo();
@@ -729,8 +759,16 @@ export default function Study() {
                     suggestedMove={feedback.suggestedMove}
                     onSwitch={() => {
                       if (feedback.detectedOpening) {
-                        navigate(`/study/${feedback.detectedOpening.id}`);
+                        // Cross-opening transposition: navigate to the other opening's study page
+                        navigate(`/study/${feedback.detectedOpening.id}/play?color=${playerColor}`);
+                      } else if (feedback.detectedVariation) {
+                        // Same-opening variation switch: navigate to the detected variation's line
+                        navigate(
+                          `/study/${openingId}/play?color=${colorParam || opening.primarySide}&variation=${feedback.detectedVariation.variationId}&line=${feedback.detectedVariation.lineIndex}`,
+                        );
+                        window.location.reload();
                       } else {
+                        // Fallback: just continue exploring
                         setFeedback({
                           type: "main_line",
                           message: `Switched to the ${feedback.variationName}. Let's explore this line.`,
