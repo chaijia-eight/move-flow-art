@@ -1090,7 +1090,7 @@ export default function Study() {
                       onAdopt: () => {
                         setShowSwitchConfirm(false);
                         setPendingSwitchData(null);
-                        // Switch to custom branch or detected variation
+                        // Switch to detected variation/opening, or continue tree, or custom branch
                         if (feedback.detectedOpening) {
                           setFeedback(null);
                           navigate(`/study/${feedback.detectedOpening.id}/play?color=${playerColor}`);
@@ -1100,7 +1100,17 @@ export default function Study() {
                             `/study/${openingId}/play?color=${colorParam || opening.primarySide}&variation=${feedback.detectedVariation.variationId}&line=${feedback.detectedVariation.lineIndex}`,
                           );
                           window.location.reload();
+                        } else if (feedback.alternativeNode && feedback.alternativeNode.children.length > 0) {
+                          // In-tree alternative: continue with tree-based play
+                          setFeedback({ type: "main_line", message: t("goodContinue") });
+                          setCurrentNodes(feedback.alternativeNode.children);
+                          autoPlayComputerMove(feedback.alternativeNode.children, moveHistory.length);
+                        } else if (currentNodes.length > 0) {
+                          // We still have tree nodes: auto-play from tree
+                          setFeedback({ type: "main_line", message: t("goodContinue") });
+                          autoPlayComputerMove(currentNodes, moveHistory.length);
                         } else {
+                          // Truly off-tree: enter custom branch with engine
                           setIsCustomBranch(true);
                           setFeedback({ type: "main_line", message: t("customBranchStarted") });
                           playEngineComputerMove(moveHistory);
