@@ -864,10 +864,10 @@ export default function Study() {
               style={{ background: "hsl(var(--card))" }}
             >
               <h4 className="text-xs uppercase tracking-wider text-muted-foreground mb-2 font-medium">
-                {currentVariation ? currentVariation.name : t("aboutThisOpening")}
+                {currentVariation ? tVar(currentVariation.name, "name", currentVariation.name) : t("aboutThisOpening")}
               </h4>
               <p className="text-sm text-foreground/70 leading-relaxed">
-                {currentVariation ? currentVariation.description : opening.description}
+                {currentVariation ? tVar(currentVariation.name, "description", currentVariation.description) : tDesc(opening.id, opening.description)}
               </p>
             </motion.div>
 
