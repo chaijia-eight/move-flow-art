@@ -125,7 +125,7 @@ export default function Index() {
           <div className="flex items-start justify-between">
             <div>
               <h1 className="font-serif text-5xl font-bold text-foreground tracking-tight">
-                First Move
+                BookChess
               </h1>
               <p className="text-muted-foreground mt-2 text-lg max-w-md leading-relaxed">
                 Explore chess openings at your own pace. No pressure, no streaks — just beautiful learning.
