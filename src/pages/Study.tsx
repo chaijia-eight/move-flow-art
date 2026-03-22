@@ -836,8 +836,8 @@ export default function Study() {
                       const isExpectedMove = preferredMoves && totalMovesPlayed < preferredMoves.length && node.move === preferredMoves[totalMovesPlayed];
                       // When we have a preferred path, ONLY the expected move is yellow; otherwise fall back to category
                       const isOnPath = preferredMoves ? isExpectedMove : node.category === "main_line";
-                      // Don't show variation name for the move we're studying; show it for alternatives
-                      const showVariationLabel = node.variationName && !isExpectedMove;
+                      // Show variation name for non-expected moves that have one; also label main_line moves that aren't on our path
+                      const showVariationLabel = !isExpectedMove && (node.variationName || (preferredMoves && node.category === "main_line"));
                       return (
                       <div key={i} className="flex items-center gap-2">
                         <div
