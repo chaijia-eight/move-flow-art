@@ -12,6 +12,8 @@ import { loadSettings, saveSettings, type AppSettings } from "@/lib/settingsStor
 export default function Settings() {
   const navigate = useNavigate();
   const { user, loading, signUp, signIn, signOut } = useAuth();
+  const { setDarkMode } = useTheme();
+  const [settings, setSettings] = useState<AppSettings>(loadSettings);
   const [settings, setSettings] = useState<AppSettings>(loadSettings);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
