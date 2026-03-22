@@ -143,10 +143,7 @@ const translations = {
 
   // ==================== Settings ====================
   account: { en: "Account", zh: "账户" },
-  signedInAs: {
-    en: (email: string) => `Signed in as ${email}`,
-    zh: (email: string) => `已登录：${email}`,
-  },
+  signedInAs: { en: "Signed in as", zh: "已登录：" },
   signInToSync: { en: "Sign in to sync your progress across devices.", zh: "登录以在多设备间同步你的进度。" },
   signOut: { en: "Sign Out", zh: "退出登录" },
   signIn: { en: "Sign In", zh: "登录" },
