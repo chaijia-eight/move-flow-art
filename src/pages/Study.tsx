@@ -225,22 +225,28 @@ export default function Study() {
   const moveHints = useMemo(() => {
     const hints = new Map<string, { category: MoveCategory; targets: Map<string, MoveCategory> }>();
     if (!currentNodes.length) return hints;
-    // Only show hints when it's the player's turn
     const tempChess = new Chess(fen);
     if (tempChess.turn() !== playerColor) return hints;
     const legalMoves = tempChess.moves({ verbose: true });
+    const totalMovesPlayed = moveHistory.length;
     currentNodes.forEach((node) => {
       const matching = legalMoves.find((m) => m.san === node.move);
       if (matching) {
+        // Treat preferred-path moves as main_line on the board
+        const isOnPreferredPath = preferredMoves && totalMovesPlayed < preferredMoves.length && node.move === preferredMoves[totalMovesPlayed];
+        // When we have a preferred path, only the expected move is main_line; demote others to alternative
+        const effectiveCat: MoveCategory = preferredMoves 
+          ? (isOnPreferredPath ? "main_line" : "legit_alternative")
+          : node.category;
         if (!hints.has(matching.from)) {
-          hints.set(matching.from, { category: node.category, targets: new Map() });
+          hints.set(matching.from, { category: effectiveCat, targets: new Map() });
         }
-        hints.get(matching.from)!.targets.set(matching.to, node.category);
-        hints.get(matching.from)!.targets.set(matching.san, node.category);
+        hints.get(matching.from)!.targets.set(matching.to, effectiveCat);
+        hints.get(matching.from)!.targets.set(matching.san, effectiveCat);
       }
     });
     return hints;
-  }, [currentNodes, fen, playerColor]);
+  }, [currentNodes, fen, playerColor, moveHistory.length, preferredMoves]);
 
   const autoPlayComputerMove = useCallback((children: OpeningNode[], moveIndex: number) => {
     const chosen = pickComputerNode(children, moveIndex);
@@ -818,22 +824,35 @@ export default function Study() {
                     Your Options
                   </h4>
                   <div className="space-y-1.5">
-                    {validNodes.map((node, i) => {
+                    {[...validNodes].sort((a, b) => {
+                      const totalMoves = moveHistory.length;
+                      const aIsExpected = preferredMoves && totalMoves < preferredMoves.length && a.move === preferredMoves[totalMoves];
+                      const bIsExpected = preferredMoves && totalMoves < preferredMoves.length && b.move === preferredMoves[totalMoves];
+                      if (aIsExpected && !bIsExpected) return -1;
+                      if (!aIsExpected && bIsExpected) return 1;
+                      // main_line before alternatives
+                      if (a.category === "main_line" && b.category !== "main_line") return -1;
+                      if (a.category !== "main_line" && b.category === "main_line") return 1;
+                      return 0;
+                    }).map((node, i) => {
                       const totalMovesPlayed = moveHistory.length;
                       const isExpectedMove = preferredMoves && totalMovesPlayed < preferredMoves.length && node.move === preferredMoves[totalMovesPlayed];
+                      // When we have a preferred path, ONLY the expected move is yellow; otherwise fall back to category
+                      const isOnPath = preferredMoves ? isExpectedMove : node.category === "main_line";
+                      // Show variation name for non-expected moves that have one; also label main_line moves that aren't on our path
+                      const showVariationLabel = !isExpectedMove && (node.variationName || (preferredMoves && node.category === "main_line"));
                       return (
                       <div key={i} className="flex items-center gap-2">
                         <div
                           className="w-2 h-2 rounded-full"
                           style={{
-                            background:
-                              isExpectedMove || node.category === "main_line"
-                                ? "hsl(42, 90%, 55%)"
-                                : "hsl(180, 40%, 55%)",
+                            background: isOnPath
+                              ? "hsl(42, 90%, 55%)"
+                              : "hsl(180, 40%, 55%)",
                           }}
                         />
                         <span className="font-mono text-sm text-foreground/70">{node.move}</span>
-                        {node.variationName && (
+                        {showVariationLabel && (
                           <span className="text-xs italic text-muted-foreground">
                             {node.variationName}
                           </span>
