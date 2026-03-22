@@ -2264,9 +2264,9 @@ export const openings: Opening[] = [
     themeId: "italian", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "w", tree: italianMainTree, totalVariations: 5,
     variations: [
-      { id: "giuoco-piano", name: "Giuoco Piano", description: "The quiet game — solid development with c3 and d4.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5", tree: italianMainTree, depth: 10 },
-      { id: "two-knights", name: "Two Knights Defense", description: "Black plays Nf6 instead of Bc5 for sharper play.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bc4 Nf6", tree: italianMainTree, depth: 8 },
-      { id: "evans-gambit", name: "Evans Gambit", description: "White sacrifices a pawn with b4 for rapid development.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.b4", tree: italianMainTree, depth: 7 },
+      { id: "giuoco-piano", name: "Giuoco Piano", description: "The quiet game — solid development with c3 and d4.", plan: "Aim for a strong center with c3 and d4. Castle kingside, develop pieces actively, and launch a central attack. The result is an open, tactical middlegame where White has a slight space advantage.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5", tree: italianMainTree, depth: 10 },
+      { id: "two-knights", name: "Two Knights Defense", description: "Black plays Nf6 instead of Bc5 for sharper play.", plan: "As White, attack with d4 and aim for the Fried Liver or Traxler. As Black, challenge White's center early and seek active piece play. Leads to sharp, tactical positions with chances for both sides.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bc4 Nf6", tree: italianMainTree, depth: 8 },
+      { id: "evans-gambit", name: "Evans Gambit", description: "White sacrifices a pawn with b4 for rapid development.", plan: "Sacrifice the b4 pawn to deflect Black's bishop, then build a powerful center with c3 and d4. Develop rapidly and attack the kingside. White gets a dangerous initiative in exchange for a pawn.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bc4 Bc5 4.b4", tree: italianMainTree, depth: 7 },
     ]
   },
   {
