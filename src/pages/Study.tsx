@@ -209,21 +209,21 @@ export default function Study() {
       };
 
       try {
-        const result = chess.move(mainResponse.move);
+        const result = chess.move(chosen.move);
         if (result) {
           const newFen = chess.fen();
           setFen(newFen);
           const isW = chess.turn() === "b";
           const mn = Math.ceil(chess.moveNumber());
           setMoveHistory((prev) => {
-            const updated = [...prev, { san: mainResponse.move, moveNumber: isW ? mn : mn - 1, isWhite: isW }];
+            const updated = [...prev, { san: chosen.move, moveNumber: isW ? mn : mn - 1, isWhite: isW }];
             return updated;
           });
-          setCurrentNodes(mainResponse.children);
-          if (mainResponse.variationName) {
+          setCurrentNodes(chosen.children);
+          if (chosen.variationName) {
             setCurrentVariation({
-              name: mainResponse.variationName,
-              description: `You're studying the ${mainResponse.variationName}.`,
+              name: chosen.variationName,
+              description: `You're studying the ${chosen.variationName}.`,
             });
           }
           setUndoStack((prev) => [...prev, snapBefore]);
