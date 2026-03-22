@@ -7,7 +7,7 @@ import { themes } from "@/data/openings";
 import { extractLinesForVariation, extractAllLines, type Line } from "@/lib/lineExtractor";
 import { getLineProgress, isLineUnlocked, getOpeningProgress } from "@/lib/progressStore";
 import { ArrowLeft, ChevronRight, Crown, Shield, ChevronDown, Lock, Check, BookOpen, RotateCcw } from "lucide-react";
-import { t, tn } from "@/lib/i18n";
+import { t, tn, tDesc, tVar } from "@/lib/i18n";
 
 export default function StudyHub() {
   const { openingId } = useParams();
@@ -96,7 +96,7 @@ export default function StudyHub() {
             {openingName}
           </h1>
           <p className="text-muted-foreground text-lg leading-relaxed max-w-2xl">
-            {opening.description}
+            {tDesc(opening.id, opening.description)}
           </p>
 
           <div className="flex gap-6 mt-6">
@@ -248,13 +248,13 @@ export default function StudyHub() {
                                 style={{ background: theme.accentColor }}
                               />
                               <span className="text-sm font-medium text-foreground truncate">
-                                {t("vs")} {variation.name}
+                                {t("vs")} {tVar(variation.id, "name", variation.name)}
                               </span>
                             </div>
                             <ChevronRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-foreground/50 transition-colors flex-shrink-0 ml-2" />
                           </div>
                           <p className="text-xs text-muted-foreground mt-1 pl-3.5 line-clamp-1">
-                            {variation.description}
+                            {tVar(variation.id, "description", variation.description)}
                           </p>
                         </motion.button>
                       ))}
@@ -303,14 +303,14 @@ export default function StudyHub() {
                             style={{ background: theme.accentColor }}
                           />
                           <h3 className="font-serif text-base font-semibold text-foreground truncate">
-                            {variation.name}
+                            {tVar(variation.id, "name", variation.name)}
                           </h3>
                           <span className="text-xs text-muted-foreground/60 font-mono ml-1">
                             {masteredInVariation}/{lines.length} {t("linesCount")}
                           </span>
                         </div>
                         <p className="text-sm text-muted-foreground leading-relaxed pl-4 line-clamp-1">
-                          {variation.description}
+                          {tVar(variation.id, "description", variation.description)}
                         </p>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0 ml-3">

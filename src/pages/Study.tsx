@@ -18,7 +18,7 @@ import {
 } from "@/lib/progressStore";
 import { playLineCompleteSound, playMasterySound } from "@/lib/chessSounds";
 import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap } from "lucide-react";
-import { t, tf, tn } from "@/lib/i18n";
+import { t, tf, tn, tDesc, tVar } from "@/lib/i18n";
 
 interface MoveRecord {
   san: string;
@@ -506,7 +506,7 @@ export default function Study() {
     ? currentLine.name
     : currentVariation
     ? currentVariation.name
-    : opening.name;
+    : tn("openingName", opening.id);
 
   const lineProgress = currentLine ? getLineProgress(currentLine.id) : null;
   const isChallengeMode = !!(lineProgress && !lineProgress.mastered && lineProgress.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1);
@@ -805,7 +805,7 @@ export default function Study() {
                         {t("yourPlan")}
                       </p>
                       <p className="text-sm text-foreground/70 leading-relaxed">
-                        {variation.plan}
+                        {tVar(variation.id, "plan", variation.plan)}
                       </p>
                     </motion.div>
                   );
@@ -867,7 +867,7 @@ export default function Study() {
                 {currentVariation ? currentVariation.name : t("aboutThisOpening")}
               </h4>
               <p className="text-sm text-foreground/70 leading-relaxed">
-                {currentVariation ? currentVariation.description : opening.description}
+                {currentVariation ? currentVariation.description : tDesc(opening.id, opening.description)}
               </p>
             </motion.div>
 

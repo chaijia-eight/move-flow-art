@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { themes, type Opening } from "@/data/openings";
 import { extractAllLines } from "@/lib/lineExtractor";
 import { getOpeningProgress } from "@/lib/progressStore";
-import { t, tn } from "@/lib/i18n";
+import { t, tn, tDesc } from "@/lib/i18n";
 
 interface OpeningCardProps {
   opening: Opening;
@@ -84,7 +84,7 @@ export default function OpeningCard({ opening, onClick, index }: OpeningCardProp
         </div>
 
         <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-          {opening.description}
+          {tDesc(opening.id, opening.description)}
         </p>
 
         <div className="flex items-center justify-between mt-4 pt-3 border-t border-border/50">

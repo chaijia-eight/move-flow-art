@@ -1,4 +1,5 @@
 import { loadSettings } from "./settingsStore";
+import { openingDescriptions, variationTranslations } from "./i18n-openings";
 
 export type Language = "en" | "zh";
 
@@ -189,7 +190,7 @@ const translations = {
     "grunfeld-defense": { en: "Grünfeld Defense", zh: "格林菲尔德防御" },
     "alekhines-defense": { en: "Alekhine's Defense", zh: "阿廖欣防御" },
     "vienna-game": { en: "Vienna Game", zh: "维也纳开局" },
-    "catalan-opening": { en: "Catalan Opening", zh: "加泰罗尼亚开局" },
+    "catalan-opening": { en: "Catalan Opening", zh: "卡塔兰开局" },
     "benoni-defense": { en: "Benoni Defense", zh: "贝诺尼防御" },
     "philidor-defense": { en: "Philidor Defense", zh: "菲利多尔防御" },
     "reti-opening": { en: "Réti Opening", zh: "列季开局" },
@@ -236,4 +237,20 @@ export function tn(key: TranslationKey, subKey: string): string {
   const entry = (translations as any)[key];
   if (!entry || !entry[subKey]) return subKey;
   return entry[subKey][lang] || entry[subKey].en || subKey;
+}
+
+// Translate opening description
+export function tDesc(openingId: string, fallback: string): string {
+  const lang = getLanguage();
+  const entry = openingDescriptions[openingId];
+  if (!entry) return fallback;
+  return entry[lang] || entry.en || fallback;
+}
+
+// Translate variation field (name, description, plan)
+export function tVar(variationId: string, field: "name" | "description" | "plan", fallback: string): string {
+  const lang = getLanguage();
+  const entry = variationTranslations[variationId];
+  if (!entry || !entry[field]) return fallback;
+  return entry[field][lang] || entry[field].en || fallback;
 }
