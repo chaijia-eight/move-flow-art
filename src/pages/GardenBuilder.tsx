@@ -404,7 +404,6 @@ export default function GardenBuilder() {
                 moveHints={moveHints}
                 disabled={evaluating || isMaxed || !!feedback?.type}
                 flipped={side === "b"}
-                playerColor={side}
               />
             </div>
 
