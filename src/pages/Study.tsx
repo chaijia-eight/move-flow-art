@@ -545,10 +545,16 @@ export default function Study() {
               detectedVar = { variationId: matchingVariation.id, lineIndex: bestLineIdx };
             }
           }
+          // Find the recommended move (preferred path move) to show as suggestion
+          const totalMovesSoFar = newHistory.length;
+          const recommendedSan = preferredMoves && (totalMovesSoFar - 1) < preferredMoves.length
+            ? preferredMoves[totalMovesSoFar - 1]
+            : currentNodes.find(n => n.category === "main_line")?.move;
           setFeedback({
             type: "legit_alternative",
             message: tf<(n: string) => string>("alsoGood")(matchedNode.variationName || "Alternative Line"),
             variationName: matchedNode.variationName,
+            suggestedMove: recommendedSan || matchedNode.suggestedMove,
             alternativeNode: matchedNode,
             detectedVariation: detectedVar,
           });
