@@ -446,7 +446,13 @@ export default function Study() {
             });
           }
         } catch {
-          // Engine failed, allow the move
+          // Engine failed: keep the just-played move on board, then continue with fallback response
+          try {
+            chess.load(newFen);
+          } catch {
+            // ignore load failures and keep current state
+          }
+          setFen(newFen);
           await playEngineComputerMove(newHistory);
         } finally {
           setEvaluatingEngine(false);
@@ -507,7 +513,15 @@ export default function Study() {
             });
           }
         } catch {
-          // Engine failed — still surface switch controls so the user can continue
+          // Engine failed: ensure chess state stays synced with the board after player's move
+          try {
+            chess.load(newFen);
+          } catch {
+            // ignore load failures and keep current state
+          }
+          setFen(newFen);
+
+          // Still surface switch controls so the user can continue
           const suggestedFallback =
             (preferredMoves && newHistory.length - 1 < preferredMoves.length
               ? preferredMoves[newHistory.length - 1]
