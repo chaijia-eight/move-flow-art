@@ -2444,8 +2444,8 @@ export const openings: Opening[] = [
     themeId: "catalan", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "w", tree: catalanTree, totalVariations: 3,
     variations: [
-      { id: "open-catalan", name: "Open Catalan", description: "Black takes on c4 — White's Bg2 pressures the queenside.", startingMoves: "1.d4 Nf6 2.c4 e6 3.g3 d5 4.Bg2 Be7 5.Nf3 O-O 6.O-O dxc4", tree: catalanTree, depth: 14 },
-      { id: "closed-catalan", name: "Closed Catalan", description: "Black keeps the center closed with Nbd7.", startingMoves: "1.d4 Nf6 2.c4 e6 3.g3 d5 4.Bg2 Be7 5.Nf3 O-O 6.O-O Nbd7", tree: catalanTree, depth: 12 },
+      { id: "open-catalan", name: "Open Catalan", description: "Black takes on c4 — White's Bg2 pressures the queenside.", plan: "As White, let Black take on c4 and recover it with Bg2's long diagonal pressure. The bishop on g2 becomes a monster, controlling the center and queenside. White gets a lasting positional advantage with pressure on b7 and d5.", startingMoves: "1.d4 Nf6 2.c4 e6 3.g3 d5 4.Bg2 Be7 5.Nf3 O-O 6.O-O dxc4", tree: catalanTree, depth: 14 },
+      { id: "closed-catalan", name: "Closed Catalan", description: "Black keeps the center closed with Nbd7.", plan: "As White, build pressure on the queenside with the Bg2 and prepare e4 or b3. As Black, maintain a solid structure with Nbd7 and aim for c5 or e5 breaks. A deep positional battle with slow maneuvering.", startingMoves: "1.d4 Nf6 2.c4 e6 3.g3 d5 4.Bg2 Be7 5.Nf3 O-O 6.O-O Nbd7", tree: catalanTree, depth: 12 },
     ]
   },
   {
