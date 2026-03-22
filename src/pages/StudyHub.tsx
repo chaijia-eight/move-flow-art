@@ -96,7 +96,7 @@ export default function StudyHub() {
             {openingName}
           </h1>
           <p className="text-muted-foreground text-lg leading-relaxed max-w-2xl">
-            {opening.description}
+            {tDesc(opening.id, opening.description)}
           </p>
 
           <div className="flex gap-6 mt-6">
