@@ -259,7 +259,9 @@ export default function StudyHub() {
                 <motion.button
                   whileHover={{ x: 4, backgroundColor: `${theme.accentColor}10` }}
                   whileTap={{ scale: 0.99 }}
-                  onClick={() => navigate(`/study/${opening.id}/play?color=${opening.primarySide}`)}
+                  onClick={() =>
+                    navigate(`/study/${opening.id}/play?color=${opening.primarySide}&variation=${variation.id}`)
+                  }
                   className="w-full text-left rounded-xl p-4 border border-border/30 transition-all duration-300 group"
                   style={{ background: "hsl(var(--card))" }}
                 >
