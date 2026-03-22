@@ -621,6 +621,10 @@ export default function Study() {
     setIsCustomBranch(false);
     setEvaluatingEngine(false);
     setCustomLineSaved(false);
+    setCurrentEval(null);
+    setMoveResults([]);
+    setShowSwitchConfirm(false);
+    setPendingSwitchData(null);
     setResetCounter((c) => c + 1);
   };
 
