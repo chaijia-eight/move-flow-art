@@ -1,4 +1,5 @@
 // Chess sound effects using Web Audio API — warm, rich, non-pixelated
+import { isSoundEnabled } from "@/lib/settingsStore";
 
 let audioCtx: AudioContext | null = null;
 let reverbBuffer: AudioBuffer | null = null;
