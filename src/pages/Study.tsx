@@ -625,7 +625,7 @@ export default function Study() {
                   <div className="relative flex items-center justify-center gap-2">
                     <Zap className="w-5 h-5" style={{ color: "hsl(45, 100%, 55%)" }} />
                     <span className="font-serif text-sm font-semibold" style={{ color: "hsl(45, 100%, 65%)" }}>
-                      Challenge Mode
+                      {t("challengeMode")}
                     </span>
                     <Zap className="w-5 h-5" style={{ color: "hsl(45, 100%, 55%)" }} />
                   </div>
