@@ -1,17 +1,27 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { motion } from "framer-motion";
 import { themes, type Opening } from "@/data/openings";
+import { extractAllLines, countTotalLines } from "@/lib/lineExtractor";
+import { getOpeningProgress } from "@/lib/progressStore";
 
 interface OpeningCardProps {
   opening: Opening;
-  progress: number;
   onClick: () => void;
   index: number;
 }
 
-export default function OpeningCard({ opening, progress, onClick, index }: OpeningCardProps) {
+export default function OpeningCard({ opening, onClick, index }: OpeningCardProps) {
   const theme = themes[opening.themeId];
   const isAvailable = true;
+
+  const { totalLines, progress } = useMemo(() => {
+    const lines = extractAllLines(opening);
+    const lineIds = lines.map((l) => l.id);
+    return {
+      totalLines: lines.length,
+      progress: getOpeningProgress(lineIds),
+    };
+  }, [opening]);
 
   return (
     <motion.div
@@ -90,7 +100,7 @@ export default function OpeningCard({ opening, progress, onClick, index }: Openi
         {/* Footer */}
         <div className="flex items-center justify-between mt-4 pt-3 border-t border-border/50">
           <span className="text-xs text-muted-foreground">
-            {opening.totalVariations} variations
+            {opening.variations.length} variations · {totalLines} lines
           </span>
           {isAvailable ? (
             <span 

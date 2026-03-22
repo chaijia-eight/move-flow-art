@@ -8,7 +8,15 @@ import MoveHistory from "@/components/MoveHistory";
 import { useTheme } from "@/contexts/ThemeContext";
 import { type OpeningNode, type MoveCategory } from "@/data/openings";
 import { openings } from "@/data/openingTrees";
-import { ArrowLeft, RotateCcw, Undo2, Redo2 } from "lucide-react";
+import { extractLinesForVariation, type Line } from "@/lib/lineExtractor";
+import {
+  getLineProgress,
+  recordAttempt,
+  markMastered,
+  isLineUnlocked,
+  MASTERY_PROMPT_THRESHOLD,
+} from "@/lib/progressStore";
+import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight } from "lucide-react";
 
 interface MoveRecord {
   san: string;
@@ -33,25 +41,39 @@ export default function Study() {
   const opening = openings.find((o) => o.id === openingId);
   const colorParam = searchParams.get("color") as "w" | "b" | null;
   const variationParam = searchParams.get("variation");
+  const lineParam = searchParams.get("line");
+  const isReview = searchParams.get("review") === "1";
+
+  // Resolve current line
+  const { currentLine, allVariationLines } = useMemo(() => {
+    if (!opening || !variationParam) return { currentLine: null, allVariationLines: [] };
+    const variation = opening.variations.find((v) => v.id === variationParam);
+    if (!variation) return { currentLine: null, allVariationLines: [] };
+    const lines = extractLinesForVariation(opening, variation);
+    const lineIdx = lineParam !== null ? parseInt(lineParam, 10) : 0;
+    return {
+      currentLine: lines[lineIdx] || null,
+      allVariationLines: lines,
+    };
+  }, [opening, variationParam, lineParam]);
 
   // Parse the preferred variation's starting moves into a SAN sequence
   const preferredMoves = useMemo(() => {
+    if (currentLine) return currentLine.moves;
     if (!variationParam || !opening) return null;
     const variation = opening.variations.find((v) => v.id === variationParam);
     if (!variation?.startingMoves) return null;
-    // Parse "1.d4 Nf6 2.Bf4 d5 3.e3 e6" → ["d4","Nf6","Bf4","d5","e3","e6"]
     return variation.startingMoves
       .replace(/\d+\./g, "")
       .trim()
       .split(/\s+/)
       .filter(Boolean);
-  }, [variationParam, opening]);
+  }, [currentLine, variationParam, opening]);
 
   useEffect(() => {
     if (opening) setTheme(opening.themeId);
   }, [opening, setTheme]);
 
-  // Player color: from URL param, fallback to opening's primary side
   const [playerColor, setPlayerColor] = useState<"w" | "b">(colorParam || opening?.primarySide || "w");
 
   const chessRef = useRef(new Chess());
@@ -69,6 +91,11 @@ export default function Study() {
   const [moveCount, setMoveCount] = useState(0);
   const [isComputerTurn, setIsComputerTurn] = useState(false);
   const [currentVariation, setCurrentVariation] = useState<{ name: string; description: string } | null>(null);
+  const [hadMistake, setHadMistake] = useState(false);
+
+  // Mastery prompt state
+  const [showMasteryPrompt, setShowMasteryPrompt] = useState(false);
+  const [lineCompleted, setLineCompleted] = useState(false);
 
   // Undo/Redo stacks
   const [undoStack, setUndoStack] = useState<HistorySnapshot[]>([]);
@@ -123,12 +150,30 @@ export default function Study() {
     return children.find((c) => c.category === "main_line") || children[0];
   }, [preferredMoves]);
 
+  // Handle line completion
+  const handleLineComplete = useCallback((wasCorrect: boolean) => {
+    if (!currentLine) return;
+    const progress = recordAttempt(currentLine.id, wasCorrect);
+    setLineCompleted(true);
+
+    if (wasCorrect && !progress.mastered && progress.correctAttempts >= MASTERY_PROMPT_THRESHOLD) {
+      // Show mastery prompt
+      setTimeout(() => setShowMasteryPrompt(true), 800);
+    }
+  }, [currentLine]);
+
+  // Check if the line is complete (no more nodes + all moves played)
+  const checkLineCompletion = useCallback((nodes: OpeningNode[]) => {
+    if (nodes.length === 0 && !lineCompleted && currentLine) {
+      handleLineComplete(!hadMistake);
+    }
+  }, [lineCompleted, currentLine, hadMistake, handleLineComplete]);
+
   const initialAutoPlayed = useRef(false);
   useEffect(() => {
     if (initialAutoPlayed.current) return;
     if (!opening) return;
-    // If it's the computer's turn at start (playerColor doesn't match first mover)
-    const firstMover = "w"; // chess always starts with white
+    const firstMover = "w";
     if (playerColor !== firstMover && opening.tree.length > 0) {
       initialAutoPlayed.current = true;
       const mainNode = pickComputerNode(opening.tree, 0) || opening.tree[0];
@@ -147,17 +192,16 @@ export default function Study() {
             moveCount: 0,
             currentVariation: null,
           }]);
+          checkLineCompletion(mainNode.children);
         } catch {}
         setIsComputerTurn(false);
       }, 600);
     }
   }, [opening, playerColor, chess]);
 
-  // Search other openings' trees for a matching move sequence
   const findInOtherOpenings = useCallback((moveList: string[]): { id: string; name: string; nodes: OpeningNode[] } | null => {
     for (const op of openings) {
       if (op.id === openingId) continue;
-      // Walk the tree matching moves in order
       let nodes = op.tree;
       let matched = true;
       for (const san of moveList) {
@@ -172,7 +216,6 @@ export default function Study() {
     return null;
   }, [openingId]);
 
-  // Build move hints
   const moveHints = useMemo(() => {
     const hints = new Map<string, { category: MoveCategory; targets: Map<string, MoveCategory> }>();
     if (!currentNodes.length) return hints;
@@ -191,10 +234,12 @@ export default function Study() {
     return hints;
   }, [currentNodes, fen]);
 
-
   const autoPlayComputerMove = useCallback((children: OpeningNode[], moveIndex: number) => {
     const chosen = pickComputerNode(children, moveIndex);
-    if (!chosen) return;
+    if (!chosen) {
+      checkLineCompletion(children);
+      return;
+    }
 
     setIsComputerTurn(true);
     setTimeout(() => {
@@ -226,16 +271,17 @@ export default function Study() {
           }
           setUndoStack((prev) => [...prev, snapBefore]);
           setRedoStack([]);
+          checkLineCompletion(chosen.children);
         }
       } catch {}
       setIsComputerTurn(false);
       setFeedback(null);
     }, 800);
-  }, [chess, moveHistory, moveCount, currentVariation]);
+  }, [chess, moveHistory, moveCount, currentVariation, checkLineCompletion]);
 
   const handleMove = useCallback(
     (from: string, to: string, san: string) => {
-      if (isComputerTurn) return;
+      if (isComputerTurn || lineCompleted) return;
 
       const snapshot = saveSnapshot();
       const matchedNode = currentNodes.find((node) => node.move === san);
@@ -258,7 +304,6 @@ export default function Study() {
       setRedoStack([]);
 
       if (!matchedNode) {
-        // Check if this move matches another opening's tree
         const allSans = newHistory.map((m) => m.san);
         const detected = findInOtherOpenings(allSans);
         if (detected) {
@@ -276,6 +321,7 @@ export default function Study() {
           });
           setCurrentNodes([]);
         }
+        setHadMistake(true);
         return;
       }
 
@@ -300,7 +346,7 @@ export default function Study() {
         case "legit_alternative":
           setFeedback({
             type: "legit_alternative",
-            message: `This move is also good — it's called the ${matchedNode.variationName || "Alternative Line"}. Want to switch to studying that line?`,
+            message: `This move is also good — it's called the ${matchedNode.variationName || "Alternative Line"}.`,
             variationName: matchedNode.variationName,
             alternativeNode: matchedNode,
           });
@@ -315,7 +361,8 @@ export default function Study() {
           chess.undo();
           setFen(chess.fen());
           setMoveHistory((prev) => prev.slice(0, -1));
-          setUndoStack((prev) => prev.slice(0, -1)); // remove snapshot we just pushed
+          setUndoStack((prev) => prev.slice(0, -1));
+          setHadMistake(true);
           setFeedback({
             type: "mistake",
             message: matchedNode.explanation || "That's not the best move here.",
@@ -324,7 +371,7 @@ export default function Study() {
           break;
       }
     },
-    [chess, currentNodes, isComputerTurn, moveHistory, autoPlayComputerMove]
+    [chess, currentNodes, isComputerTurn, moveHistory, autoPlayComputerMove, lineCompleted, findInOtherOpenings]
   );
 
   const handleReset = () => {
@@ -339,24 +386,16 @@ export default function Study() {
     setCurrentVariation(null);
     setUndoStack([]);
     setRedoStack([]);
+    setHadMistake(false);
+    setLineCompleted(false);
+    setShowMasteryPrompt(false);
   };
 
   const handleColorSwitch = (color: "w" | "b") => {
     if (color === playerColor) return;
     setPlayerColor(color);
-    initialAutoPlayed.current = false;
-    chess.reset();
-    setFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-    setCurrentNodes(opening?.tree || []);
-    setMoveHistory([]);
-    setFeedback(null);
-    setMoveCount(0);
-    setIsComputerTurn(false);
-    setCurrentVariation(null);
-    setUndoStack([]);
-    setRedoStack([]);
+    handleReset();
 
-    // Auto-play if computer goes first
     if (color !== "w" && opening && opening.tree.length > 0) {
       const mainNode = pickComputerNode(opening.tree, 0) || opening.tree[0];
       initialAutoPlayed.current = true;
@@ -373,6 +412,28 @@ export default function Study() {
     }
   };
 
+  const handleMasteryResponse = (mastered: boolean) => {
+    if (currentLine) {
+      markMastered(currentLine.id, mastered);
+    }
+    setShowMasteryPrompt(false);
+  };
+
+  const goToNextLine = () => {
+    if (!currentLine || !variationParam) return;
+    const currentIdx = allVariationLines.findIndex((l) => l.id === currentLine.id);
+    if (currentIdx < allVariationLines.length - 1) {
+      navigate(
+        `/study/${openingId}/play?color=${colorParam || opening?.primarySide || "w"}&variation=${variationParam}&line=${currentIdx + 1}`,
+        { replace: true }
+      );
+      // Force full reset for new line
+      window.location.reload();
+    } else {
+      navigate(`/study/${openingId}`);
+    }
+  };
+
   if (!opening) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -384,6 +445,14 @@ export default function Study() {
   const sideLabel = playerColor === opening.primarySide
     ? `Play as ${playerColor === "w" ? "White" : "Black"}`
     : `Play against (as ${playerColor === "w" ? "White" : "Black"})`;
+
+  const displayName = currentLine
+    ? currentLine.name
+    : currentVariation
+    ? currentVariation.name
+    : opening.name;
+
+  const lineProgress = currentLine ? getLineProgress(currentLine.id) : null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -401,17 +470,18 @@ export default function Study() {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => navigate("/")}
+            onClick={() => navigate(`/study/${openingId}`)}
             className="p-2 rounded-lg hover:bg-accent transition-colors"
           >
             <ArrowLeft className="w-5 h-5 text-foreground/70" />
           </motion.button>
           <div>
             <h1 className="font-serif text-2xl font-semibold text-foreground">
-              {currentVariation ? currentVariation.name : opening.name}
+              {displayName}
             </h1>
             <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider">
               {sideLabel}
+              {isReview && " · Review Mode"}
             </p>
           </div>
         </div>
@@ -441,34 +511,21 @@ export default function Study() {
             </button>
           </div>
 
-          {/* Undo / Redo */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleUndo}
-            disabled={undoStack.length === 0 || isComputerTurn}
-            className="p-2 rounded-lg hover:bg-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-            title="Undo"
+          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+            onClick={handleUndo} disabled={undoStack.length === 0 || isComputerTurn}
+            className="p-2 rounded-lg hover:bg-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed" title="Undo"
           >
             <Undo2 className="w-5 h-5 text-foreground/70" />
           </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleRedo}
-            disabled={redoStack.length === 0 || isComputerTurn}
-            className="p-2 rounded-lg hover:bg-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-            title="Redo"
+          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+            onClick={handleRedo} disabled={redoStack.length === 0 || isComputerTurn}
+            className="p-2 rounded-lg hover:bg-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed" title="Redo"
           >
             <Redo2 className="w-5 h-5 text-foreground/70" />
           </motion.button>
 
-          <motion.button
-            whileHover={{ scale: 1.05, rotate: -20 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleReset}
-            className="p-2.5 rounded-lg hover:bg-accent transition-colors"
-            title="Reset board"
+          <motion.button whileHover={{ scale: 1.05, rotate: -20 }} whileTap={{ scale: 0.95 }}
+            onClick={handleReset} className="p-2.5 rounded-lg hover:bg-accent transition-colors" title="Reset board"
           >
             <RotateCcw className="w-5 h-5 text-foreground/70" />
           </motion.button>
@@ -484,14 +541,111 @@ export default function Study() {
               fen={fen}
               onMove={handleMove}
               moveHints={moveHints}
-              disabled={isComputerTurn}
+              disabled={isComputerTurn || lineCompleted}
               flipped={playerColor === "b"}
             />
 
             {/* Feedback area */}
             <div className="mt-4 min-h-[80px]">
               <AnimatePresence mode="wait">
-                {feedback && (
+                {/* Line completed overlay */}
+                {lineCompleted && !showMasteryPrompt && (
+                  <motion.div
+                    key="line-complete"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="rounded-xl p-5 text-center"
+                    style={{
+                      background: `linear-gradient(135deg, ${currentTheme.accentColor}15, ${currentTheme.primaryColor}10)`,
+                      border: `1px solid ${currentTheme.accentColor}30`,
+                    }}
+                  >
+                    <Trophy className="w-8 h-8 mx-auto mb-2" style={{ color: currentTheme.accentColor }} />
+                    <p className="font-serif text-lg font-semibold text-foreground mb-1">
+                      {hadMistake ? "Line Completed" : "Perfect Run!"}
+                    </p>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      {hadMistake
+                        ? "You made it through, but had some mistakes. Try again for a perfect run!"
+                        : `Great job! ${lineProgress ? `${lineProgress.correctAttempts + 1} correct attempt${lineProgress.correctAttempts > 0 ? "s" : ""}.` : ""}`}
+                    </p>
+                    <div className="flex gap-2 justify-center">
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={handleReset}
+                        className="px-4 py-2 rounded-lg text-sm font-medium border border-border/50 text-foreground/70 hover:bg-accent transition-colors"
+                      >
+                        Practice Again
+                      </motion.button>
+                      {allVariationLines.length > 0 && currentLine && (
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={goToNextLine}
+                          className="px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-1.5 transition-colors"
+                          style={{
+                            background: currentTheme.accentColor,
+                            color: "hsl(var(--background))",
+                          }}
+                        >
+                          {allVariationLines.findIndex((l) => l.id === currentLine.id) < allVariationLines.length - 1
+                            ? <>Next Line <ChevronRight className="w-4 h-4" /></>
+                            : "Back to Hub"}
+                        </motion.button>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Mastery prompt */}
+                {showMasteryPrompt && (
+                  <motion.div
+                    key="mastery-prompt"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="rounded-xl p-5 text-center"
+                    style={{
+                      background: `linear-gradient(135deg, ${currentTheme.accentColor}20, ${currentTheme.primaryColor}15)`,
+                      border: `1px solid ${currentTheme.accentColor}40`,
+                    }}
+                  >
+                    <Trophy className="w-10 h-10 mx-auto mb-3" style={{ color: currentTheme.accentColor }} />
+                    <p className="font-serif text-xl font-semibold text-foreground mb-2">
+                      Do you think you've mastered this line?
+                    </p>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      You've completed it {lineProgress ? lineProgress.correctAttempts + 1 : MASTERY_PROMPT_THRESHOLD} times correctly.
+                    </p>
+                    <div className="flex gap-2 justify-center">
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => handleMasteryResponse(false)}
+                        className="px-5 py-2.5 rounded-lg text-sm font-medium border border-border/50 text-foreground/70 hover:bg-accent transition-colors"
+                      >
+                        Not yet, keep practicing
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => handleMasteryResponse(true)}
+                        className="px-5 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                        style={{
+                          background: currentTheme.accentColor,
+                          color: "hsl(var(--background))",
+                        }}
+                      >
+                        Yes, I've mastered it!
+                      </motion.button>
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Normal feedback */}
+                {feedback && !lineCompleted && !showMasteryPrompt && (
                   <FeedbackBanner
                     key={`${feedback.type}-${moveCount}`}
                     type={feedback.type}
@@ -500,7 +654,6 @@ export default function Study() {
                     suggestedMove={feedback.suggestedMove}
                     onSwitch={() => {
                       if (feedback.detectedOpening) {
-                        // Navigate to the detected opening
                         navigate(`/study/${feedback.detectedOpening.id}`);
                       } else {
                         setFeedback({
@@ -524,6 +677,42 @@ export default function Study() {
           <div className="w-full lg:w-72 space-y-4">
             <MoveHistory moves={moveHistory} />
 
+            {/* Line progress card */}
+            {currentLine && lineProgress && (
+              <motion.div
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-xl p-4"
+                style={{ background: "hsl(var(--card))" }}
+              >
+                <h4 className="text-xs uppercase tracking-wider text-muted-foreground mb-2 font-medium">
+                  Line Progress
+                </h4>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1">
+                    <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                      <span>{lineProgress.correctAttempts} correct</span>
+                      <span>{lineProgress.attempts} total</span>
+                    </div>
+                    <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: "hsl(var(--muted))" }}>
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{
+                          width: `${Math.min(100, (lineProgress.correctAttempts / MASTERY_PROMPT_THRESHOLD) * 100)}%`,
+                          background: lineProgress.mastered
+                            ? currentTheme.accentColor
+                            : currentTheme.primaryColor,
+                        }}
+                      />
+                    </div>
+                  </div>
+                  {lineProgress.mastered && (
+                    <Trophy className="w-4 h-4 flex-shrink-0" style={{ color: currentTheme.accentColor }} />
+                  )}
+                </div>
+              </motion.div>
+            )}
+
             {/* Opening info card */}
             <motion.div
               key={currentVariation?.name || "base"}
@@ -542,7 +731,7 @@ export default function Study() {
             </motion.div>
 
             {/* Available lines — only show on player's turn */}
-            {currentNodes.length > 0 && !isComputerTurn && chess.turn() === playerColor && (
+            {currentNodes.length > 0 && !isComputerTurn && chess.turn() === playerColor && !lineCompleted && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}

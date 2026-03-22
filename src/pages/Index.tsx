@@ -51,7 +51,6 @@ export default function Index() {
             <OpeningCard
               key={opening.id}
               opening={opening}
-              progress={opening.id === "italian-game" ? 0.15 : 0}
               onClick={() => navigate(`/study/${opening.id}`)}
               index={i}
             />
