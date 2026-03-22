@@ -198,12 +198,27 @@ const translations = {
 
   // ==================== Chess Family Names ====================
   familyName: {
-    "Open Games": { en: "Open Games", zh: "开放性开局" },
-    "Semi-Open Games": { en: "Semi-Open Games", zh: "半开放性开局" },
-    "Closed Games": { en: "Closed Games", zh: "封闭性开局" },
-    "Indian Defenses": { en: "Indian Defenses", zh: "印度防御体系" },
-    "Flank Openings": { en: "Flank Openings", zh: "侧翼开局" },
-    "Hypermodern": { en: "Hypermodern", zh: "超现代开局" },
+    "Italian": { en: "Italian", zh: "意大利" },
+    "Sicilian": { en: "Sicilian", zh: "西西里" },
+    "Queen's Gambit": { en: "Queen's Gambit", zh: "后翼弃兵" },
+    "King's Indian": { en: "King's Indian", zh: "王翼印度" },
+    "French": { en: "French", zh: "法兰西" },
+    "Caro-Kann": { en: "Caro-Kann", zh: "卡罗-卡恩" },
+    "Ruy López": { en: "Ruy López", zh: "西班牙" },
+    "London": { en: "London", zh: "伦敦" },
+    "Scotch": { en: "Scotch", zh: "苏格兰" },
+    "Dutch": { en: "Dutch", zh: "荷兰" },
+    "Pirc": { en: "Pirc", zh: "皮尔茨" },
+    "Scandinavian": { en: "Scandinavian", zh: "斯堪的纳维亚" },
+    "English": { en: "English", zh: "英格兰" },
+    "Nimzo-Indian": { en: "Nimzo-Indian", zh: "尼姆佐-印度" },
+    "Grünfeld": { en: "Grünfeld", zh: "格林菲尔德" },
+    "Alekhine": { en: "Alekhine", zh: "阿廖欣" },
+    "Vienna": { en: "Vienna", zh: "维也纳" },
+    "Catalan": { en: "Catalan", zh: "卡塔兰" },
+    "Benoni": { en: "Benoni", zh: "贝诺尼" },
+    "Philidor": { en: "Philidor", zh: "菲利多尔" },
+    "Réti": { en: "Réti", zh: "列季" },
   } as Record<string, { en: string; zh: string }>,
 } as const;
 
