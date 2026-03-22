@@ -2403,8 +2403,8 @@ export const openings: Opening[] = [
     themeId: "nimzoindian", startingFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     primarySide: "b", tree: nimzoIndianTree, totalVariations: 3,
     variations: [
-      { id: "classical-nimzo", name: "Classical Nimzo", description: "Qc2 avoids doubled pawns — the main line.", startingMoves: "1.d4 Nf6 2.c4 e6 3.Nc3 Bb4 4.Qc2", tree: nimzoIndianTree, depth: 8 },
-      { id: "rubinstein-nimzo", name: "Rubinstein Nimzo", description: "e3 — solid and positional.", startingMoves: "1.d4 Nf6 2.c4 e6 3.Nc3 Bb4 4.e3", tree: nimzoIndianTree, depth: 8 },
+      { id: "classical-nimzo", name: "Classical Nimzo", description: "Qc2 avoids doubled pawns — the main line.", plan: "As White, play Qc2 to prevent doubled c-pawns after Bxc3. Aim for a strong center with e4 and develop harmoniously. As Black, seek counterplay with c5, d5, and active piece play. A deep, strategic battle.", startingMoves: "1.d4 Nf6 2.c4 e6 3.Nc3 Bb4 4.Qc2", tree: nimzoIndianTree, depth: 8 },
+      { id: "rubinstein-nimzo", name: "Rubinstein Nimzo", description: "e3 — solid and positional.", plan: "As White, play e3 and develop the bishop to d3. Accept doubled pawns if Black takes on c3 — the bishop pair compensates. As Black, maintain pressure on the center and exploit the doubled pawns. A classic positional struggle.", startingMoves: "1.d4 Nf6 2.c4 e6 3.Nc3 Bb4 4.e3", tree: nimzoIndianTree, depth: 8 },
     ]
   },
   {
