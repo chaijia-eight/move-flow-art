@@ -332,8 +332,13 @@ export default function Study() {
         setHadMistake(true);
         return;
       }
+      // If this move is on the preferred study path, treat it as main_line
+      const totalMovesPlayed = newHistory.length;
+      const isOnPreferredPath = preferredMoves && (totalMovesPlayed - 1) < preferredMoves.length && 
+        san === preferredMoves[totalMovesPlayed - 1];
+      const effectiveCategory = isOnPreferredPath ? "main_line" : matchedNode.category;
 
-      switch (matchedNode.category) {
+      switch (effectiveCategory) {
         case "main_line": {
           // Don't announce variation name if it matches what we're already studying
           const isAlreadyStudying = matchedNode.variationName && variationParam && 
