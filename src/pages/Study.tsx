@@ -394,12 +394,24 @@ export default function Study() {
           setMoveResults(prev => [...prev, "correct"]);
           const isAlreadyStudying = matchedNode.variationName && variationParam && 
             matchedNode.variationName.toLowerCase().replace(/\s+/g, '-') === variationParam;
-          setFeedback({
-            type: "main_line",
-            message: matchedNode.variationName && !isAlreadyStudying
-              ? tf<(n: string) => string>("goodThisIs")(matchedNode.variationName)
-              : t("goodContinue"),
-          });
+          
+          // Check if this player move is the crucial moment
+          const cm = currentLine?.crucialMoment;
+          const justPlayedIndex = newHistory.length - 1;
+          if (cm && cm.isPlayerMove && justPlayedIndex === cm.moveIndex && !crucialMomentShown) {
+            setCrucialMomentShown(true);
+            setFeedback({
+              type: "main_line",
+              message: `⚡ Key moment! Here you play ${cm.moveNumber}${cm.isWhiteMove ? "." : "..."}${cm.move} — this is what makes this line unique.`,
+            });
+          } else {
+            setFeedback({
+              type: "main_line",
+              message: matchedNode.variationName && !isAlreadyStudying
+                ? tf<(n: string) => string>("goodThisIs")(matchedNode.variationName)
+                : t("goodContinue"),
+            });
+          }
           if (matchedNode.variationName) {
             setCurrentVariation({
               name: matchedNode.variationName,
