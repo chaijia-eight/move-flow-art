@@ -60,6 +60,7 @@ export type Database = {
           id: string
           line_index: number
           move_index: number
+          move_san: string
           opening_id: string
           updated_at: string
           variation_id: string
@@ -70,6 +71,7 @@ export type Database = {
           id?: string
           line_index?: number
           move_index: number
+          move_san?: string
           opening_id: string
           updated_at?: string
           variation_id: string
@@ -80,6 +82,7 @@ export type Database = {
           id?: string
           line_index?: number
           move_index?: number
+          move_san?: string
           opening_id?: string
           updated_at?: string
           variation_id?: string
