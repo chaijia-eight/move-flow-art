@@ -268,7 +268,7 @@ export default function StudySidebar({
 
           {/* Show only the latest player move explanation */}
           {(() => {
-            if (lineCompleted || showMasteryPrompt || moveHistory.length === 0) return null;
+            if (lineCompleted || showMasteryPrompt || moveHistory.length === 0 || isChallengeMode) return null;
             // Find the latest player move
             let showIdx = -1;
             for (let i = moveHistory.length - 1; i >= 0; i--) {
