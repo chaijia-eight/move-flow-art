@@ -683,7 +683,7 @@ export default function Study() {
                 className="rounded-lg px-4 py-2 text-sm font-medium"
                 style={{ background: "hsl(45, 100%, 50%, 0.1)", color: "hsl(45, 100%, 55%)" }}
               >
-                Play the move indicated by the green arrow
+                Play from memory — no hints!
               </motion.div>
             )}
 
