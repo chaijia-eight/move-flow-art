@@ -450,9 +450,18 @@ export default function StudyHub() {
                                     )}
                                   </div>
                                 </div>
-                                <p className="text-[11px] text-muted-foreground/60 mt-0.5 pl-5.5 font-mono truncate">
-                                  {line.moves.join(" ")}
-                                </p>
+                                {line.crucialMoment ? (
+                                  <p className="text-[11px] mt-0.5 pl-5.5 truncate" style={{ color: `${theme.accentColor}cc` }}>
+                                    <span className="font-medium">
+                                      {line.crucialMoment.isPlayerMove ? "⚡" : "🛡️"}
+                                    </span>
+                                    {" "}{line.crucialMoment.description}
+                                  </p>
+                                ) : (
+                                  <p className="text-[11px] text-muted-foreground/60 mt-0.5 pl-5.5 font-mono truncate">
+                                    {line.moves.join(" ")}
+                                  </p>
+                                )}
                               </motion.button>
                             );
                           })}
