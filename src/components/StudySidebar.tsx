@@ -229,6 +229,7 @@ export default function StudySidebar({
         variation_id: variationId,
         line_index: lineIndex,
         move_index: moveIndex,
+        move_san: allMoves[moveIndex] || "",
         explanation: editText,
       });
     }
