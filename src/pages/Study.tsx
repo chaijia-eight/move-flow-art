@@ -472,33 +472,6 @@ export default function Study() {
     [chess, currentNodes, isComputerTurn, moveHistory, autoPlayComputerMove, lineCompleted, findInOtherOpenings, opening, preferredMoves, variationParam]
   );
 
-  // Save custom line to database
-  const handleSaveCustomLine = async () => {
-    if (!user || !opening || moveHistory.length < MIN_CUSTOM_MOVES) return;
-    setCustomLineSaved(true);
-    try {
-      const tempChess = new Chess();
-      const moves: string[] = [];
-      const fens: string[] = [];
-      for (const move of moveHistory) {
-        tempChess.move(move.san);
-        moves.push(move.san);
-        fens.push(tempChess.fen());
-      }
-      await supabase.from("custom_lines").insert({
-        user_id: user.id,
-        name: `${opening.name} Custom`,
-        moves,
-        fens,
-        side: playerColor,
-        move_count: moves.length,
-        opening_id: opening.id,
-      } as any);
-    } catch (err) {
-      console.error("Save error:", err);
-      setCustomLineSaved(false);
-    }
-  };
 
   const handleReset = () => {
     initialAutoPlayed.current = false;
