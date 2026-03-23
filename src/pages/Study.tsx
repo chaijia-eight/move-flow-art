@@ -101,6 +101,7 @@ export default function Study() {
   const [resetCounter, setResetCounter] = useState(0);
   const [currentVariation, setCurrentVariation] = useState<{ name: string; description: string } | null>(null);
   const [hadMistake, setHadMistake] = useState(false);
+  const [crucialMomentShown, setCrucialMomentShown] = useState(false);
 
   // Mastery prompt state
   const [showMasteryPrompt, setShowMasteryPrompt] = useState(false);
@@ -303,13 +304,26 @@ export default function Study() {
           }
           setUndoStack((prev) => [...prev, snapBefore]);
           setRedoStack([]);
+          
+          // Check if this computer move is the crucial moment
+          const cm = currentLine?.crucialMoment;
+          const compMoveIndex = moveHistory.length; // index of the move just played
+          if (cm && !cm.isPlayerMove && compMoveIndex === cm.moveIndex && !crucialMomentShown) {
+            setCrucialMomentShown(true);
+            setFeedback({
+              type: "main_line",
+              message: `🛡️ Key moment! Opponent plays ${cm.moveNumber}${cm.isWhiteMove ? "." : "..."}${cm.move} — this defines this line.`,
+            });
+          } else {
+            setFeedback(null);
+          }
+          
           checkLineCompletion(chosen.children);
         }
       } catch {}
       setIsComputerTurn(false);
-      setFeedback(null);
     }, 800);
-  }, [chess, moveHistory, moveCount, currentVariation, checkLineCompletion]);
+  }, [chess, moveHistory, moveCount, currentVariation, checkLineCompletion, currentLine, crucialMomentShown]);
 
 
   const handleMove = useCallback(
@@ -393,12 +407,24 @@ export default function Study() {
           setMoveResults(prev => [...prev, "correct"]);
           const isAlreadyStudying = matchedNode.variationName && variationParam && 
             matchedNode.variationName.toLowerCase().replace(/\s+/g, '-') === variationParam;
-          setFeedback({
-            type: "main_line",
-            message: matchedNode.variationName && !isAlreadyStudying
-              ? tf<(n: string) => string>("goodThisIs")(matchedNode.variationName)
-              : t("goodContinue"),
-          });
+          
+          // Check if this player move is the crucial moment
+          const cm = currentLine?.crucialMoment;
+          const justPlayedIndex = newHistory.length - 1;
+          if (cm && cm.isPlayerMove && justPlayedIndex === cm.moveIndex && !crucialMomentShown) {
+            setCrucialMomentShown(true);
+            setFeedback({
+              type: "main_line",
+              message: `⚡ Key moment! Here you play ${cm.moveNumber}${cm.isWhiteMove ? "." : "..."}${cm.move} — this is what makes this line unique.`,
+            });
+          } else {
+            setFeedback({
+              type: "main_line",
+              message: matchedNode.variationName && !isAlreadyStudying
+                ? tf<(n: string) => string>("goodThisIs")(matchedNode.variationName)
+                : t("goodContinue"),
+            });
+          }
           if (matchedNode.variationName) {
             setCurrentVariation({
               name: matchedNode.variationName,
@@ -487,6 +513,7 @@ export default function Study() {
     setUndoStack([]);
     setRedoStack([]);
     setHadMistake(false);
+    setCrucialMomentShown(false);
     setLineCompleted(false);
     setShowMasteryPrompt(false);
     setMoveResults([]);
@@ -710,7 +737,12 @@ export default function Study() {
             {/* Good move feedback */}
             {feedback && feedback.type === "main_line" && !lineCompleted && (
               <motion.div key="good" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                className="text-sm font-medium" style={{ color: "hsl(140, 65%, 45%)" }}
+                className={`text-sm font-medium ${crucialMomentShown && feedback.message.startsWith("⚡") || feedback.message.startsWith("🛡️") ? "rounded-lg px-4 py-2" : ""}`}
+                style={
+                  feedback.message.startsWith("⚡") || feedback.message.startsWith("🛡️")
+                    ? { color: currentTheme.accentColor, background: `${currentTheme.accentColor}15`, border: `1px solid ${currentTheme.accentColor}30` }
+                    : { color: "hsl(140, 65%, 45%)" }
+                }
               >
                 {feedback.message}
               </motion.div>
