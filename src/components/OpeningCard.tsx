@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { motion } from "framer-motion";
+import { Star } from "lucide-react";
 import { themes, type Opening } from "@/data/openings";
 import { extractAllLines } from "@/lib/lineExtractor";
 import { getOpeningProgress } from "@/lib/progressStore";
@@ -9,11 +10,14 @@ interface OpeningCardProps {
   opening: Opening;
   onClick: () => void;
   index: number;
+  focused?: boolean;
+  onToggleFocus?: (e: React.MouseEvent) => void;
+  compact?: boolean;
 }
 
-export default function OpeningCard({ opening, onClick, index }: OpeningCardProps) {
+export default function OpeningCard({ opening, onClick, index, focused, onToggleFocus, compact }: OpeningCardProps) {
   const theme = themes[opening.themeId];
-  const isAvailable = true;
+  const isWhite = opening.primarySide === "w";
 
   const { totalLines, progress } = useMemo(() => {
     const lines = extractAllLines(opening);
@@ -27,80 +31,175 @@ export default function OpeningCard({ opening, onClick, index }: OpeningCardProp
   const openingName = tn("openingName", opening.id);
   const familyName = tn("familyName", opening.family);
 
+  const cardBg = isWhite
+    ? "hsl(40 15% 95%)"
+    : "hsl(0 0% 12%)";
+  const cardText = isWhite
+    ? "hsl(0 0% 10%)"
+    : "hsl(0 0% 92%)";
+  const cardMuted = isWhite
+    ? "hsl(0 0% 45%)"
+    : "hsl(0 0% 55%)";
+  const sideBadgeBg = isWhite
+    ? "hsl(0 0% 100%)"
+    : "hsl(0 0% 5%)";
+  const sideBadgeBorder = isWhite
+    ? "hsl(0 0% 80%)"
+    : "hsl(0 0% 30%)";
+
+  if (compact) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, x: -10 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.3, delay: index * 0.05 }}
+        whileHover={{ y: -2, transition: { duration: 0.2 } }}
+        whileTap={{ scale: 0.98 }}
+        onClick={onClick}
+        className="relative cursor-pointer rounded-lg overflow-hidden flex items-center gap-3 px-4 py-3"
+        style={{
+          background: cardBg,
+          border: `1px solid ${sideBadgeBorder}`,
+        }}
+      >
+        <div
+          className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-medium flex-shrink-0"
+          style={{
+            background: sideBadgeBg,
+            border: `1.5px solid ${sideBadgeBorder}`,
+            color: cardMuted,
+          }}
+        >
+          {isWhite ? "W" : "B"}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium truncate" style={{ color: cardText }}>{openingName}</p>
+          <p className="text-[11px] truncate" style={{ color: cardMuted }}>
+            {Math.round(progress * 100)}% · {totalLines} {t("lines")}
+          </p>
+        </div>
+        {onToggleFocus && (
+          <button
+            onClick={onToggleFocus}
+            className="p-1 rounded hover:bg-black/10 transition-colors flex-shrink-0"
+          >
+            <Star className="w-3.5 h-3.5" style={{ color: cardMuted }} fill="currentColor" />
+          </button>
+        )}
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
-      whileHover={isAvailable ? { 
-        y: -4, 
-        boxShadow: `0 20px 40px -15px ${theme.primaryColor}50`,
-        transition: { duration: 0.3 } 
-      } : {}}
-      whileTap={isAvailable ? { scale: 0.98 } : {}}
-      onClick={isAvailable ? onClick : undefined}
-      className={`relative group rounded-xl overflow-hidden ${isAvailable ? 'cursor-pointer' : 'cursor-default opacity-60'}`}
+      transition={{ duration: 0.4, delay: index * 0.06, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{
+        y: -3,
+        transition: { duration: 0.2 },
+      }}
+      whileTap={{ scale: 0.98 }}
+      onClick={onClick}
+      className="relative group rounded-xl overflow-hidden cursor-pointer"
       style={{
-        background: `linear-gradient(145deg, hsl(var(--card)), hsl(var(--card)) 80%)`,
-        border: `1px solid ${theme.primaryColor}30`,
+        background: cardBg,
+        border: `1px solid ${sideBadgeBorder}`,
       }}
     >
-      <div 
-        className="h-1.5"
+      {/* Accent bar */}
+      <div
+        className="h-1"
         style={{ background: `linear-gradient(90deg, ${theme.primaryColor}, ${theme.accentColor})` }}
       />
 
-      <div 
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
-        style={{
-          backgroundImage: `radial-gradient(ellipse at 30% 20%, ${theme.boardLight}, transparent 70%)`,
-        }}
-      />
-
-      <div className="p-5 relative">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex-1">
-            <h3 className="font-serif text-xl font-semibold text-foreground group-hover:text-foreground transition-colors">
-              {openingName}
-            </h3>
-            <p className="text-xs text-muted-foreground mt-0.5 font-mono uppercase tracking-wider">
-              {familyName} {t("family")}
+      <div className="p-4 relative">
+        {/* Header row */}
+        <div className="flex items-start justify-between mb-2.5">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-0.5">
+              {/* Side badge */}
+              <div
+                className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-medium flex-shrink-0"
+                style={{
+                  background: sideBadgeBg,
+                  border: `1.5px solid ${sideBadgeBorder}`,
+                  color: cardMuted,
+                }}
+              >
+                {isWhite ? "W" : "B"}
+              </div>
+              <h3
+                className="text-base font-semibold truncate leading-tight"
+                style={{ color: cardText }}
+              >
+                {openingName}
+              </h3>
+            </div>
+            <p className="text-[11px] uppercase tracking-wider ml-7" style={{ color: cardMuted }}>
+              {familyName}
             </p>
           </div>
 
-          <div className="relative w-11 h-11 flex-shrink-0">
+          {/* Progress ring */}
+          <div className="relative w-10 h-10 flex-shrink-0">
             <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-              <circle cx="18" cy="18" r="15" fill="none" stroke="hsl(var(--muted))" strokeWidth="2.5" />
+              <circle
+                cx="18" cy="18" r="15" fill="none"
+                stroke={isWhite ? "hsl(0 0% 85%)" : "hsl(0 0% 22%)"}
+                strokeWidth="2.5"
+              />
               <circle
                 cx="18" cy="18" r="15" fill="none" stroke={theme.accentColor} strokeWidth="2.5"
                 strokeDasharray={`${progress * 94.25} 94.25`} strokeLinecap="round"
                 className="transition-all duration-700 ease-out"
               />
             </svg>
-            <span className="absolute inset-0 flex items-center justify-center text-[0.6rem] font-mono text-muted-foreground">
+            <span
+              className="absolute inset-0 flex items-center justify-center text-[0.55rem] font-mono"
+              style={{ color: cardMuted }}
+            >
               {Math.round(progress * 100)}%
             </span>
           </div>
         </div>
 
-        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+        {/* Side label */}
+        <p className="text-[11px] font-medium mb-2 ml-7" style={{ color: cardMuted }}>
+          {isWhite ? "Playing as White" : "Playing as Black"}
+        </p>
+
+        {/* Description */}
+        <p className="text-xs leading-relaxed line-clamp-2 ml-7" style={{ color: cardMuted }}>
           {tDesc(opening.id, opening.description)}
         </p>
 
-        <div className="flex items-center justify-between mt-4 pt-3 border-t border-border/50">
-          <span className="text-xs text-muted-foreground">
+        {/* Footer */}
+        <div className="flex items-center justify-between mt-3 pt-2.5 ml-7" style={{ borderTop: `1px solid ${sideBadgeBorder}` }}>
+          <span className="text-[11px]" style={{ color: cardMuted }}>
             {opening.variations.length} {t("variations")} · {totalLines} {t("lines")}
           </span>
-          {isAvailable ? (
-            <span 
-              className="text-xs font-medium transition-colors duration-300"
+          <div className="flex items-center gap-2">
+            {onToggleFocus && (
+              <button
+                onClick={onToggleFocus}
+                className="p-1 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+                title={focused ? "Remove from focus" : "Add to focus"}
+              >
+                <Star
+                  className="w-3.5 h-3.5 transition-colors"
+                  style={{ color: focused ? theme.accentColor : cardMuted }}
+                  fill={focused ? "currentColor" : "none"}
+                />
+              </button>
+            )}
+            <span
+              className="text-[11px] font-medium transition-colors duration-300"
               style={{ color: theme.accentColor }}
             >
               {progress > 0 ? t("continuePracticing") : t("beginStudy")}
             </span>
-          ) : (
-            <span className="text-xs text-muted-foreground italic">{t("comingSoon")}</span>
-          )}
+          </div>
         </div>
       </div>
     </motion.div>
