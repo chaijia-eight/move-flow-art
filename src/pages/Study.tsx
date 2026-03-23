@@ -676,14 +676,6 @@ export default function Study() {
         {/* Feedback message area */}
         <div className="min-h-[52px] flex items-center justify-center text-center px-2 py-2">
           <AnimatePresence mode="wait">
-            {evaluatingEngine && (
-              <motion.div key="eval" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="flex items-center gap-2"
-              >
-                <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">Evaluating move…</span>
-              </motion.div>
-            )}
 
             {/* Challenge mode instruction */}
             {isChallengeMode && !lineCompleted && !feedback && !evaluatingEngine && (
