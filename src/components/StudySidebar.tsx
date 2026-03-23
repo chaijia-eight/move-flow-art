@@ -292,7 +292,7 @@ export default function StudySidebar({
                 className="flex items-start gap-2.5"
               >
                 <div className="flex-shrink-0 mt-1">
-                  <img src={kingIcon} alt={isPlayerMove ? "You" : "Opponent"} className="w-5 h-5" />
+                  <img src={kingIcon} alt="You" className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
                   {editingIndex === latestIdx ? (
