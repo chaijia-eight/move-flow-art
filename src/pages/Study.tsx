@@ -737,7 +737,12 @@ export default function Study() {
             {/* Good move feedback */}
             {feedback && feedback.type === "main_line" && !lineCompleted && (
               <motion.div key="good" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                className="text-sm font-medium" style={{ color: "hsl(140, 65%, 45%)" }}
+                className={`text-sm font-medium ${crucialMomentShown && feedback.message.startsWith("⚡") || feedback.message.startsWith("🛡️") ? "rounded-lg px-4 py-2" : ""}`}
+                style={
+                  feedback.message.startsWith("⚡") || feedback.message.startsWith("🛡️")
+                    ? { color: currentTheme.accentColor, background: `${currentTheme.accentColor}15`, border: `1px solid ${currentTheme.accentColor}30` }
+                    : { color: "hsl(140, 65%, 45%)" }
+                }
               >
                 {feedback.message}
               </motion.div>
