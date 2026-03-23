@@ -698,7 +698,7 @@ export default function Study() {
             )}
 
             {/* Waiting for user (no arrow) */}
-            {!feedback && !lineCompleted && !evaluatingEngine && !arrowTarget && !isComputerTurn && (
+            {!feedback && !lineCompleted && !arrowTarget && !isComputerTurn && (
               <motion.div key="your-turn" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 className="text-sm text-muted-foreground"
               >
