@@ -767,25 +767,6 @@ export default function Study() {
               </motion.div>
             )}
 
-            {/* Custom branch completed */}
-            {isCustomBranch && lineCompleted && !customLineSaved && (
-              <motion.div key="custom-done" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                className="text-center"
-              >
-                <Trophy className="w-6 h-6 mx-auto mb-1" style={{ color: "hsl(140, 50%, 50%)" }} />
-                <p className="text-sm font-semibold text-foreground">{t("lineRecorded")}</p>
-                <p className="text-xs text-muted-foreground">{t("saveCustomLineDesc")}</p>
-              </motion.div>
-            )}
-
-            {customLineSaved && (
-              <motion.div key="saved" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-                className="text-center"
-              >
-                <Trophy className="w-6 h-6 mx-auto mb-1" style={{ color: "hsl(140, 50%, 50%)" }} />
-                <p className="text-sm font-semibold text-foreground">{t("lineSaved")}</p>
-              </motion.div>
-            )}
 
             {/* Mastery prompt */}
             {showMasteryPrompt && (
