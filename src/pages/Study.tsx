@@ -46,6 +46,7 @@ export default function Study() {
   const navigate = useNavigate();
   const { setTheme, currentTheme } = useTheme();
   const { user } = useAuth();
+  const isMobile = useIsMobile();
 
   const opening = openings.find((o) => o.id === openingId);
   const colorParam = searchParams.get("color") as "w" | "b" | null;
