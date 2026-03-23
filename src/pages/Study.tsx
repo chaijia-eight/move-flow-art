@@ -43,6 +43,74 @@ interface HistorySnapshot {
   currentVariation: { name: string; description: string } | null;
 }
 
+type VerboseMove = {
+  from: string;
+  to: string;
+  san: string;
+  flags: string;
+  piece: string;
+  captured?: string;
+  promotion?: string;
+};
+
+const PIECE_VALUES: Record<string, number> = {
+  p: 100,
+  n: 320,
+  b: 330,
+  r: 500,
+  q: 900,
+  k: 0,
+};
+
+const CORE_CENTER = new Set(["d4", "e4", "d5", "e5"]);
+const WIDE_CENTER = new Set([
+  "c3", "d3", "e3", "f3",
+  "c4", "f4",
+  "c5", "f5",
+  "c6", "d6", "e6", "f6",
+]);
+const EARLY_DEVELOPMENT_SQUARES = new Set(["b1", "g1", "b8", "g8", "c1", "f1", "c8", "f8"]);
+
+function scoreSensibleMove(move: VerboseMove, ply: number): number {
+  let score = 0;
+
+  if (move.captured) score += (PIECE_VALUES[move.captured] ?? 100) * 1.35;
+  if (move.promotion) score += PIECE_VALUES[move.promotion] ?? 700;
+  if (move.flags.includes("k") || move.flags.includes("q")) score += 85;
+
+  if (CORE_CENTER.has(move.to)) score += 32;
+  else if (WIDE_CENTER.has(move.to)) score += 14;
+
+  if ((move.piece === "n" || move.piece === "b") && EARLY_DEVELOPMENT_SQUARES.has(move.from)) {
+    score += 24;
+  }
+
+  if (move.piece === "p" && (move.to[1] === "4" || move.to[1] === "5")) score += 7;
+
+  if (move.piece === "q" && ply <= 12) score -= 36;
+  if (move.piece === "k" && !(move.flags.includes("k") || move.flags.includes("q")) && ply <= 16) score -= 55;
+  if (move.piece === "r" && ply <= 10 && !move.captured) score -= 12;
+
+  return score;
+}
+
+function pickSensibleMove(chess: Chess, preferredSan?: string): VerboseMove | null {
+  const legalMoves = chess.moves({ verbose: true }) as unknown as VerboseMove[];
+  if (!legalMoves.length) return null;
+
+  if (preferredSan) {
+    const preferred = legalMoves.find((m) => m.san === preferredSan);
+    if (preferred) return preferred;
+  }
+
+  const fullMoveNumber = chess.moveNumber();
+  const ply = Math.max(1, (fullMoveNumber - 1) * 2 + (chess.turn() === "w" ? 1 : 2));
+
+  return legalMoves
+    .map((move) => ({ move, score: scoreSensibleMove(move, ply) }))
+    .sort((a, b) => b.score - a.score)[0]?.move ?? legalMoves[0];
+}
+
 export default function Study() {
   const { openingId } = useParams();
   const [searchParams] = useSearchParams();
@@ -348,31 +416,45 @@ export default function Study() {
       const engine = getEngine();
       const evaluation = await withEngineTimeout(engine.evaluate(chess.fen(), 12));
       const bestMoveUci = evaluation.bestMove;
-      if (!bestMoveUci || bestMoveUci === "(none)") {
-        setIsComputerTurn(false);
+
+      let result = null;
+      if (bestMoveUci && bestMoveUci !== "(none)") {
+        const from = bestMoveUci.slice(0, 2);
+        const to = bestMoveUci.slice(2, 4);
+        const promotion = bestMoveUci.length > 4 ? bestMoveUci[4] : undefined;
+        result = chess.move({ from, to, promotion });
+      }
+
+      // If engine returns no/invalid move, pick a sensible fallback instead of first legal move.
+      if (!result) {
+        const fallbackMove = pickSensibleMove(chess);
+        if (fallbackMove) {
+          result = chess.move({
+            from: fallbackMove.from,
+            to: fallbackMove.to,
+            promotion: fallbackMove.promotion,
+          });
+        }
+      }
+
+      if (!result) {
         setLineCompleted(true);
         playLineCompleteSound();
         return;
       }
 
-      const from = bestMoveUci.slice(0, 2);
-      const to = bestMoveUci.slice(2, 4);
-      const promotion = bestMoveUci.length > 4 ? bestMoveUci[4] : undefined;
-      const result = chess.move({ from, to, promotion });
-      if (result) {
-        const newFen = chess.fen();
-        setFen(newFen);
-        const isW = chess.turn() === "b";
-        const mn = Math.ceil(chess.moveNumber());
-        setMoveHistory((prev) => [
-          ...prev,
-          { san: result.san, moveNumber: isW ? mn : mn - 1, isWhite: isW },
-        ]);
-        setFeedback(null);
-      }
+      const newFen = chess.fen();
+      setFen(newFen);
+      const isW = chess.turn() === "b";
+      const mn = Math.ceil(chess.moveNumber());
+      setMoveHistory((prev) => [
+        ...prev,
+        { san: result.san, moveNumber: isW ? mn : mn - 1, isWhite: isW },
+      ]);
+      setFeedback(null);
     } catch {
-      // Engine fallback: play a legal move so the study flow never gets stuck on opponent turn
-      const fallbackMove = chess.moves({ verbose: true })[0];
+      // Engine fallback: play a sensible move so the study flow never gets stuck on opponent turn
+      const fallbackMove = pickSensibleMove(chess);
       if (fallbackMove) {
         const result = chess.move({
           from: fallbackMove.from,
@@ -749,13 +831,19 @@ export default function Study() {
 
   // Compute arrow: show the recommended move arrow on the board
   const arrowTarget = useMemo(() => {
-    if (!opening || isCustomBranch || lineCompleted || isComputerTurn) return null;
+    if (!opening || lineCompleted || isComputerTurn) return null;
     // Check challenge mode inline to avoid forward reference
     const lp = currentLine ? getLineProgress(currentLine.id) : null;
     const isChallenge = !!(lp && !lp.mastered && lp.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1);
     if (isChallenge) return null;
     const tempChess = new Chess(fen);
     if (tempChess.turn() !== playerColor) return null;
+
+    if (isCustomBranch) {
+      const fallbackHint = pickSensibleMove(tempChess);
+      if (!fallbackHint) return null;
+      return { from: fallbackHint.from, to: fallbackHint.to };
+    }
 
     const totalMoves = moveHistory.length;
     let expectedSan: string | null = null;
