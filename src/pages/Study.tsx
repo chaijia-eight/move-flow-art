@@ -847,11 +847,6 @@ export default function Study() {
                           // We still have tree nodes: auto-play from tree
                           setFeedback({ type: "main_line", message: t("goodContinue") });
                           autoPlayComputerMove(currentNodes, moveHistory.length);
-                        } else {
-                          // Truly off-tree: enter custom branch with engine
-                          setIsCustomBranch(true);
-                          setFeedback({ type: "main_line", message: t("customBranchStarted") });
-                          playEngineComputerMove(moveHistory);
                         }
                       },
                       onStay: () => {
