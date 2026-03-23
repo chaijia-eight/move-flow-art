@@ -6,6 +6,8 @@ import Chessboard from "@/components/Chessboard";
 import MoveHistory from "@/components/MoveHistory";
 import ProgressDots from "@/components/ProgressDots";
 import SwitchConfirmModal from "@/components/SwitchConfirmModal";
+import StudySidebar from "@/components/StudySidebar";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { type OpeningNode, type MoveCategory } from "@/data/openings";
