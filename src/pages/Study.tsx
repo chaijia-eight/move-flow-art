@@ -743,7 +743,7 @@ export default function Study() {
             )}
 
             {/* Line completed - challenge mode message */}
-            {lineCompleted && isChallengeMode && !showMasteryPrompt && !isCustomBranch && (
+            {lineCompleted && isChallengeMode && !showMasteryPrompt && (
               <motion.div key="challenge-done" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                 className="rounded-lg px-4 py-3 text-sm font-medium"
                 style={{ background: "hsl(140, 65%, 45%, 0.12)", color: "hsl(140, 65%, 45%)" }}
