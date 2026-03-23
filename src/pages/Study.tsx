@@ -469,7 +469,7 @@ export default function Study() {
           break;
       }
     },
-    [chess, currentNodes, isComputerTurn, moveHistory, autoPlayComputerMove, lineCompleted, findInOtherOpenings, isCustomBranch, evaluatingEngine, playEngineComputerMove, opening, preferredMoves, variationParam, withEngineTimeout]
+    [chess, currentNodes, isComputerTurn, moveHistory, autoPlayComputerMove, lineCompleted, findInOtherOpenings, opening, preferredMoves, variationParam]
   );
 
   // Save custom line to database
