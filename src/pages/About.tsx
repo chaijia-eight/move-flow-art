@@ -66,64 +66,7 @@ export default function About() {
           </p>
         </motion.div>
 
-        {/* Principles */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-16 space-y-8"
-        >
-          <h2
-            className="text-2xl font-semibold tracking-tight"
-            style={{ fontFamily: "var(--font-serif)" }}
-          >
-            Design Principles
-          </h2>
 
-          <div className="grid gap-6">
-            {[
-              {
-                icon: Heart,
-                title: "Zero Pressure",
-                description:
-                  "No daily goals, no punishments for missing a day. Your progress waits patiently for you.",
-              },
-              {
-                icon: Compass,
-                title: "Organic Exploration",
-                description:
-                  "Play a move the app doesn't expect? It'll tell you what opening you've stumbled into and offer to explore it.",
-              },
-              {
-                icon: BookOpen,
-                title: "Deep, Not Wide",
-                description:
-                  "Each opening is a rich tree with 10+ lines covering main theory, common alternatives, and instructive mistakes.",
-              },
-              {
-                icon: Sparkles,
-                title: "Beautiful by Default",
-                description:
-                  "Every opening has its own colour theme, typography, and atmosphere. Learning should be a sensory pleasure.",
-              },
-            ].map(({ icon: Icon, title, description }) => (
-              <div
-                key={title}
-                className="flex gap-4 items-start p-4 rounded-xl bg-card border border-border/50"
-              >
-                <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
-                  <Icon className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="font-medium text-foreground mb-1">{title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
 
         {/* CTA */}
         <motion.div
