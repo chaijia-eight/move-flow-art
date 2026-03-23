@@ -65,11 +65,7 @@ export default function StudySidebar({
   const isDeveloper = user?.email === DEVELOPER_EMAIL;
 
   const [explanations, setExplanations] = useState<Record<number, string>>({});
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [editText, setEditText] = useState("");
-  const [saving, setSaving] = useState(false);
   const [generating, setGenerating] = useState(false);
-  const [loaded, setLoaded] = useState(false);
 
   // Fetch explanations
   const fetchExplanations = useCallback(async () => {
@@ -188,9 +184,8 @@ export default function StudySidebar({
 
   useEffect(() => {
     fetchExplanations().then((count) => {
-      setLoaded(true);
-      // Auto-generate if no explanations exist
-      if (count === 0 && allMoves.length > 0) {
+      // Auto-generate only for developer
+      if (isDeveloper && count === 0 && allMoves.length > 0) {
         generateExplanations();
       }
     });
@@ -207,8 +202,7 @@ export default function StudySidebar({
     }
   }, [moveHistory.length, lineCompleted]);
 
-  const handleSave = async (moveIndex: number) => {
-    setSaving(true);
+  const handleSave = async (moveIndex: number, text: string) => {
     const { data: existing } = await supabase
       .from("move_explanations")
       .select("id")
@@ -221,7 +215,7 @@ export default function StudySidebar({
     if (existing) {
       await supabase
         .from("move_explanations")
-        .update({ explanation: editText, updated_at: new Date().toISOString() })
+        .update({ explanation: text, updated_at: new Date().toISOString() })
         .eq("id", existing.id);
     } else {
       await supabase.from("move_explanations").insert({
@@ -230,18 +224,11 @@ export default function StudySidebar({
         line_index: lineIndex,
         move_index: moveIndex,
         move_san: allMoves[moveIndex] || "",
-        explanation: editText,
+        explanation: text,
       });
     }
 
-    setExplanations((prev) => ({ ...prev, [moveIndex]: editText }));
-    setEditingIndex(null);
-    setSaving(false);
-  };
-
-  const handleStartEdit = (moveIndex: number) => {
-    setEditingIndex(moveIndex);
-    setEditText(explanations[moveIndex] || "");
+    setExplanations((prev) => ({ ...prev, [moveIndex]: text }));
   };
 
   return (
@@ -277,7 +264,7 @@ export default function StudySidebar({
       {/* Current explanation */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-3 flex flex-col justify-center">
         {/* Generating indicator */}
-        {generating && Object.keys(explanations).length === 0 && (
+        {isDeveloper && generating && Object.keys(explanations).length === 0 && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground py-4">
             <Loader2 className="w-4 h-4 animate-spin" />
             <span>Generating explanations...</span>
@@ -339,58 +326,21 @@ export default function StudySidebar({
                   <img src={kingIcon} alt="You" className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  {editingIndex === showIdx ? (
-                    <div className="space-y-2">
-                      <textarea
-                        value={editText}
-                        onChange={(e) => setEditText(e.target.value)}
-                        className="w-full rounded-lg bg-muted/50 border border-border/50 px-3 py-2 text-sm text-foreground resize-none focus:outline-none focus:ring-1 focus:ring-primary/50"
-                        rows={3}
-                        autoFocus
-                      />
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleSave(showIdx)}
-                          disabled={saving}
-                          className="px-3 py-1 rounded-md text-xs font-medium bg-primary text-primary-foreground"
-                        >
-                          {saving ? "..." : "Save"}
-                        </button>
-                        <button
-                          onClick={() => setEditingIndex(null)}
-                          className="px-3 py-1 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div
-                      className={`rounded-lg px-3 py-2.5 text-sm leading-relaxed ${
-                        isDeveloper ? "cursor-pointer hover:ring-1 hover:ring-primary/30 transition-all" : ""
-                      }`}
-                      style={{
-                        background: "hsl(var(--card))",
-                        color: "hsl(var(--card-foreground))",
-                      }}
-                      onClick={() => isDeveloper && handleStartEdit(showIdx)}
-                      title={isDeveloper ? "Click to edit" : undefined}
-                    >
-                      {explanation ? (
-                        <span>{explanation}</span>
-                      ) : (
-                        <span className="text-muted-foreground">
-                          {isDeveloper ? (
-                            <span className="italic">Click to add explanation...</span>
-                          ) : (
-                            <span className="font-mono">
-                              {latestMove.moveNumber}{latestMove.isWhite ? "." : "..."} {latestMove.san}
-                            </span>
-                          )}
-                        </span>
-                      )}
-                    </div>
-                  )}
+                  <div
+                    className="rounded-lg px-3 py-2.5 text-sm leading-relaxed"
+                    style={{
+                      background: "hsl(var(--card))",
+                      color: "hsl(var(--card-foreground))",
+                    }}
+                  >
+                    {explanation ? (
+                      <span>{explanation}</span>
+                    ) : (
+                      <span className="text-muted-foreground font-mono">
+                        {latestMove.moveNumber}{latestMove.isWhite ? "." : "..."} {latestMove.san}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             );
