@@ -49,11 +49,7 @@ export default function About() {
             <em>learning should feel like reading a beautiful book, not grinding a treadmill.</em>
           </p>
 
-          <p>
-            There are no streaks to maintain, no hearts to lose, no leagues to climb.
-            Just you, the board, and the elegant logic of opening theory — explored
-            at your own pace, in your own time.
-          </p>
+
 
           <p>
             Each opening is presented as a living tree of ideas. You play through the
