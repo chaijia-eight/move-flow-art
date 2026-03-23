@@ -488,6 +488,7 @@ export default function Study() {
     setUndoStack([]);
     setRedoStack([]);
     setHadMistake(false);
+    setCrucialMomentShown(false);
     setLineCompleted(false);
     setShowMasteryPrompt(false);
     setMoveResults([]);
