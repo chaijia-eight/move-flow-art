@@ -64,7 +64,7 @@ export default function StudyHub() {
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(ellipse at 30% 0%, ${theme.primaryColor}12, transparent 60%), radial-gradient(ellipse at 70% 100%, ${theme.accentColor}08, transparent 50%)`,
+          background: `radial-gradient(ellipse at 30% 0%, ${theme.primaryColor}30, transparent 55%), radial-gradient(ellipse at 80% 100%, ${theme.accentColor}20, transparent 50%), radial-gradient(circle at 50% 50%, ${theme.primaryColor}08, transparent 70%)`,
         }}
       />
 
