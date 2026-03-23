@@ -665,8 +665,8 @@ export default function Study() {
         <Chessboard
           fen={fen}
           onMove={handleMove}
-          moveHints={isChallengeMode || isCustomBranch ? new Map() : moveHints}
-          disabled={isComputerTurn || lineCompleted || evaluatingEngine || (feedback?.type === "legit_alternative" && !!feedback?.suggestedMove)}
+          moveHints={isChallengeMode ? new Map() : moveHints}
+          disabled={isComputerTurn || lineCompleted || (feedback?.type === "legit_alternative" && !!feedback?.suggestedMove)}
           flipped={playerColor === "b"}
           playerColor={playerColor}
           arrowFrom={arrowTarget?.from}
