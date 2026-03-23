@@ -2439,7 +2439,7 @@ const kingsIndianTree: OpeningNode[] = [
                                         ]
                                       }
                                     ]
-                                  }
+                                  },
                                   {
                                     fen: "rnbqk2r/ppp1ppbp/3p1np1/8/2PPP3/2N2P2/PP4PP/R1BQKBNR b KQkq - 0 5",
                                     move: "f3", category: "legit_alternative", variationName: "Samisch Variation",
@@ -3690,7 +3690,7 @@ const caroKannTree: OpeningNode[] = [
                                     ]
                                   }
                                 ]
-                              }
+                              },
                               {
                                 fen: "r1bqkbnr/pp1npppp/2p5/8/3PN3/8/PPP2PPP/R1BQKBNR w KQkq - 1 5",
                                 move: "Nd7", category: "legit_alternative", variationName: "Caro-Kann Modern",
@@ -6018,7 +6018,7 @@ const scotchGameTree: OpeningNode[] = [
                                 explanation: "d6 is passive. Challenge with Bc5 or Nf6 for active play.",
                                 suggestedMove: "Bc5",
                                 children: []
-                              }
+                              },
                               {
                                 fen: "r1bqkbnr/ppp2ppp/2np4/8/3NP3/8/PPP2PPP/RNBQKB1R w KQkq - 0 5",
                                 move: "d6", category: "legit_alternative", variationName: "Scotch Steinitz",
@@ -7679,7 +7679,7 @@ const pircDefenseTree: OpeningNode[] = [
                                 ]
                               }
                             ]
-                          }
+                          },
                           {
                             fen: "rnbqkb1r/ppp1pp1p/3p1np1/8/3PP3/2N1B3/PPP2PPP/R2QKBNR b KQkq - 1 4",
                             move: "Be3", category: "legit_alternative", variationName: "150 Attack",
@@ -9030,7 +9030,7 @@ const englishOpeningTree: OpeningNode[] = [
                                 ]
                               }
                             ]
-                          }
+                          },
                           {
                             fen: "r1bqkb1r/pppp1ppp/2n2n2/4p3/2PP4/2N2N2/PP2PPPP/R1BQKB1R b KQkq - 0 4",
                             move: "d4", category: "legit_alternative", variationName: "English Central Break",
@@ -10246,7 +10246,7 @@ const nimzoIndianTree: OpeningNode[] = [
                                 ]
                               }
                             ]
-                          }
+                          },
                           {
                             fen: "rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N5/PPQ1PPPP/R1B1KBNR b KQkq - 3 4",
                             move: "Qc2", category: "legit_alternative", variationName: "Nimzo Classical Qc2",
@@ -13108,7 +13108,7 @@ const catalanOpeningTree: OpeningNode[] = [
                                                     ]
                                                   }
                                                 ]
-                                              }
+                                              },
                                               {
                                                 fen: "rnbq1rk1/pp2bppp/2p1pn2/3p4/2PP4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 7",
                                                 move: "c6", category: "legit_alternative", variationName: "Closed Catalan",
@@ -13963,7 +13963,7 @@ const benoniDefenseTree: OpeningNode[] = [
                                                 ]
                                               }
                                             ]
-                                          }
+                                          },
                                           {
                                             fen: "rnbqkb1r/pp3ppp/3p1n2/2pP4/8/2N2N2/PP2PPPP/R1BQKB1R b KQkq - 1 6",
                                             move: "Nf3", category: "legit_alternative", variationName: "Benoni Classical Nf3",
