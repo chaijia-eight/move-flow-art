@@ -11,6 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { type OpeningNode, type MoveCategory } from "@/data/openings";
 import { openings } from "@/data/openingTrees";
 import { extractLinesForVariation, type Line } from "@/lib/lineExtractor";
+import { lineConclusions } from "@/data/lineConclusions";
 import {
   getLineProgress,
   recordAttempt,
