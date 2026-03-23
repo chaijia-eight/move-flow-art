@@ -688,7 +688,7 @@ export default function Study() {
             )}
 
             {/* Default: show "Play the move indicated by the green arrow" */}
-            {!isChallengeMode && !feedback && !lineCompleted && !evaluatingEngine && arrowTarget && (
+            {!isChallengeMode && !feedback && !lineCompleted && arrowTarget && (
               <motion.div key="play-hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 className="rounded-lg px-4 py-2.5 text-sm text-muted-foreground"
                 style={{ background: "hsl(var(--muted) / 0.5)" }}
