@@ -304,11 +304,24 @@ export default function Study() {
           }
           setUndoStack((prev) => [...prev, snapBefore]);
           setRedoStack([]);
+          
+          // Check if this computer move is the crucial moment
+          const cm = currentLine?.crucialMoment;
+          const compMoveIndex = moveHistory.length; // index of the move just played
+          if (cm && !cm.isPlayerMove && compMoveIndex === cm.moveIndex && !crucialMomentShown) {
+            setCrucialMomentShown(true);
+            setFeedback({
+              type: "main_line",
+              message: `🛡️ Key moment! Opponent plays ${cm.moveNumber}${cm.isWhiteMove ? "." : "..."}${cm.move} — this defines this line.`,
+            });
+          } else {
+            setFeedback(null);
+          }
+          
           checkLineCompletion(chosen.children);
         }
       } catch {}
       setIsComputerTurn(false);
-      setFeedback(null);
     }, 800);
   }, [chess, moveHistory, moveCount, currentVariation, checkLineCompletion]);
 
