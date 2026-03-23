@@ -661,27 +661,6 @@ export default function Study() {
 
       {/* Main content - mobile-first stacked layout */}
       <div className="flex-1 flex flex-col max-w-lg mx-auto w-full px-3 pt-2">
-        {/* Eval display */}
-        {currentEval !== null && (
-          <div className="px-1 py-1.5">
-            <span className="text-sm font-mono text-muted-foreground">
-              Evaluation: <span className="font-semibold text-foreground">{formatEval(currentEval)}</span>
-            </span>
-          </div>
-        )}
-
-        {/* Feedback scores when comparing moves */}
-        {feedback && feedback.type === "legit_alternative" && feedback.suggestedMove && !lineCompleted && (
-          <div className="flex justify-between px-1 py-1.5">
-            <span className="text-sm font-mono text-muted-foreground">
-              Saved move: <span className="font-semibold text-foreground">{formatEval(currentEval)}</span>
-            </span>
-            <span className="text-sm font-mono text-muted-foreground">
-              Your move: <span className="font-semibold text-foreground">{formatEval(currentEval)}</span>
-            </span>
-          </div>
-        )}
-
         {/* Board */}
         <Chessboard
           fen={fen}
