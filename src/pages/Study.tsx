@@ -361,59 +361,18 @@ export default function Study() {
           return;
         }
 
-        // Evaluate off-tree move with Stockfish
-        setEvaluatingEngine(true);
-        try {
-          chess.undo();
-          const preFen = chess.fen();
-          const moveUci = from + to;
-          const engine = getEngine();
-          const evaluation = await withEngineTimeout(engine.evaluateMove(preFen, moveUci, san, 12));
-          chess.move({ from, to });
-
-          if (evaluation.isGood) {
-            // Good off-tree move — offer to switch to custom branch
-            const recommendedSan = getSuggestedMoveForCurrentPly(evaluation.bestMoveSan);
-            setFeedback({
-              type: "legit_alternative",
-              message: tf<(s: string) => string>("moveIsValidAlt")(san),
-              suggestedMove: recommendedSan,
-            });
-            setCurrentNodes([]);
-          } else {
-            // Bad move — reject
-            chess.undo();
-            setFen(chess.fen());
-            setMoveHistory((prev) => prev.slice(0, -1));
-            setUndoStack((prev) => prev.slice(0, -1));
-            setHadMistake(true);
-            setFeedback({
-              type: "mistake",
-              message: evaluation.explanation,
-              suggestedMove: evaluation.bestMoveSan,
-            });
-          }
-        } catch {
-          // Engine failed: ensure chess state stays synced with the board after player's move
-          try {
-            chess.load(newFen);
-          } catch {
-            // ignore load failures and keep current state
-          }
-          setFen(newFen);
-
-          // Still surface switch controls so the user can continue
-          const suggestedFallback = getSuggestedMoveForCurrentPly();
-
-          setFeedback({
-            type: "legit_alternative",
-            message: tf<(s: string) => string>("moveIsValidAlt")(san),
-            suggestedMove: suggestedFallback,
-          });
-          setCurrentNodes([]);
-        } finally {
-          setEvaluatingEngine(false);
-        }
+        // Off-tree move with no transposition — treat as mistake
+        chess.undo();
+        setFen(chess.fen());
+        setMoveHistory((prev) => prev.slice(0, -1));
+        setUndoStack((prev) => prev.slice(0, -1));
+        setHadMistake(true);
+        const recommendedSan = getSuggestedMoveForCurrentPly();
+        setFeedback({
+          type: "mistake",
+          message: t("notBestMove"),
+          suggestedMove: recommendedSan,
+        });
         return;
       }
 
