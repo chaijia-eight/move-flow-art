@@ -956,6 +956,8 @@ export default function Study() {
               lineIndex={lineParam !== null ? parseInt(lineParam, 10) : 0}
               openingName={tn("openingName", opening.id)}
               lineName={displayName}
+              playerSide={playerColor}
+              allMoves={currentLine?.moves || []}
               moveHistory={moveHistory}
               lineCompleted={lineCompleted}
               hadMistake={hadMistake}
