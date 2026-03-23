@@ -753,7 +753,7 @@ export default function Study() {
             )}
 
             {/* Line completed - normal */}
-            {lineCompleted && !isChallengeMode && !showMasteryPrompt && !isCustomBranch && (
+            {lineCompleted && !isChallengeMode && !showMasteryPrompt && (
               <motion.div key="done" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                 className="text-center"
               >
