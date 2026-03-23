@@ -329,7 +329,7 @@ export default function StudySidebar({
                         background: "hsl(var(--card))",
                         color: "hsl(var(--card-foreground))",
                       }}
-                      onClick={() => isDeveloper && handleStartEdit(latestIdx)}
+                      onClick={() => isDeveloper && handleStartEdit(showIdx)}
                       title={isDeveloper ? "Click to edit" : undefined}
                     >
                       {explanation ? (
