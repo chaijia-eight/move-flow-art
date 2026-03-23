@@ -678,7 +678,7 @@ export default function Study() {
           <AnimatePresence mode="wait">
 
             {/* Challenge mode instruction */}
-            {isChallengeMode && !lineCompleted && !feedback && !evaluatingEngine && (
+            {isChallengeMode && !lineCompleted && !feedback && (
               <motion.div key="challenge-hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 className="rounded-lg px-4 py-2 text-sm font-medium"
                 style={{ background: "hsl(45, 100%, 50%, 0.1)", color: "hsl(45, 100%, 55%)" }}
