@@ -242,12 +242,11 @@ export default function Index() {
           <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-3">
             {t("progress")}
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {[
               { label: t("linesMastered"), value: `${stats.masteredLines}/${stats.totalLines}`, icon: Trophy },
               { label: t("openingsStarted"), value: `${stats.openingsStarted}/${stats.totalOpenings}`, icon: BookOpen },
               { label: t("totalAttempts"), value: String(stats.totalAttempts), icon: Target },
-              { label: t("customLines"), value: String(stats.customLines), icon: Sprout },
             ].map(({ label, value, icon: Icon }) => (
               <div key={label} className="rounded-lg border border-border bg-card p-4">
                 <Icon className="w-4 h-4 text-muted-foreground mb-2" />
