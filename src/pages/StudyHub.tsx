@@ -68,7 +68,7 @@ export default function StudyHub() {
         }}
       />
 
-      <header className="relative z-10 px-6 py-5 border-b border-border/30">
+      <header className="relative z-10 px-6 py-5 border-b" style={{ borderColor: `${theme.accentColor}25` }}>
         <div className="max-w-4xl mx-auto flex items-center gap-4">
           <motion.button
             whileHover={{ scale: 1.05 }}
