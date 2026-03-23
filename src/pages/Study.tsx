@@ -626,17 +626,6 @@ export default function Study() {
         </div>
 
         <div className="flex items-center gap-1">
-          {isCustomBranch && (
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold mr-2"
-              style={{
-                background: "hsl(140, 50%, 45%, 0.15)",
-                color: "hsl(140, 50%, 50%)",
-                border: "1px solid hsl(140, 50%, 45%, 0.25)",
-              }}
-            >
-              Custom
-            </span>
-          )}
           <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
             onClick={handleUndo} disabled={undoStack.length === 0 || isComputerTurn}
             className="p-2 rounded-lg hover:bg-accent transition-colors disabled:opacity-30" title="Undo"
