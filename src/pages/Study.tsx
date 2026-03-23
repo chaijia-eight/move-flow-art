@@ -653,7 +653,7 @@ export default function Study() {
               {sideLabel}
               {isChallengeMode && !lineCompleted && (
                 <span className="ml-2 inline-flex items-center gap-0.5 text-[10px] font-bold" style={{ color: "hsl(45, 100%, 60%)" }}>
-                  <Zap className="w-3 h-3" /> Challenge
+                  <Zap className="w-3 h-3" /> {isPracticeMode ? "Practice" : "Challenge"}
                 </span>
               )}
             </p>
