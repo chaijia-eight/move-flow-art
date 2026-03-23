@@ -661,6 +661,15 @@ export default function Study() {
         </div>
 
         <div className="flex items-center gap-1">
+          {isPracticeMode && !lineCompleted && !isComputerTurn && (
+            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+              onClick={() => setHintVisible(v => !v)}
+              className={`p-2 rounded-lg transition-colors ${hintVisible ? 'bg-accent' : 'hover:bg-accent'}`}
+              title="Show hint"
+            >
+              <Eye className="w-4 h-4" style={{ color: hintVisible ? "hsl(45, 100%, 55%)" : undefined }} />
+            </motion.button>
+          )}
           <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
             onClick={handleUndo} disabled={undoStack.length === 0 || isComputerTurn}
             className="p-2 rounded-lg hover:bg-accent transition-colors disabled:opacity-30" title="Undo"
