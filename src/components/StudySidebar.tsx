@@ -295,7 +295,7 @@ export default function StudySidebar({
                   <img src={kingIcon} alt="You" className="w-5 h-5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  {editingIndex === latestIdx ? (
+                  {editingIndex === showIdx ? (
                     <div className="space-y-2">
                       <textarea
                         value={editText}
