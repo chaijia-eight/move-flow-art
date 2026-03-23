@@ -323,7 +323,7 @@ export default function Study() {
       } catch {}
       setIsComputerTurn(false);
     }, 800);
-  }, [chess, moveHistory, moveCount, currentVariation, checkLineCompletion]);
+  }, [chess, moveHistory, moveCount, currentVariation, checkLineCompletion, currentLine, crucialMomentShown]);
 
 
   const handleMove = useCallback(
