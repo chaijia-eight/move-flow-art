@@ -596,13 +596,6 @@ export default function Study() {
   const lineProgress = currentLine ? getLineProgress(currentLine.id) : null;
   const isChallengeMode = !!(lineProgress && !lineProgress.mastered && lineProgress.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1);
 
-  const canSaveCustomLine = isCustomBranch && user && moveHistory.length >= MIN_CUSTOM_MOVES && !customLineSaved;
-
-  const formatEval = (cp: number | null) => {
-    if (cp === null) return "";
-    const sign = cp >= 0 ? "+" : "";
-    return `${sign}${(cp / 100).toFixed(2)}`;
-  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
