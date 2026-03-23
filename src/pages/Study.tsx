@@ -907,57 +907,6 @@ export default function Study() {
               </motion.div>
             )}
 
-            {/* Custom branch completed */}
-            {isCustomBranch && lineCompleted && !customLineSaved && (
-              <motion.div key="custom-btns" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
-                className="flex gap-3"
-              >
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleReset}
-                  className="flex-1 py-3.5 rounded-xl text-sm font-semibold border border-border/50 text-foreground transition-colors"
-                >
-                  {t("discard")}
-                </motion.button>
-                {user && moveHistory.length >= MIN_CUSTOM_MOVES && (
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={handleSaveCustomLine}
-                    className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-background flex items-center justify-center gap-1.5 transition-colors"
-                    style={{ background: "hsl(140, 50%, 45%)" }}
-                  >
-                    <Save className="w-4 h-4" />
-                    {t("saveCustomLine")}
-                  </motion.button>
-                )}
-              </motion.div>
-            )}
-
-            {customLineSaved && (
-              <motion.div key="saved-btns" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
-                className="flex gap-3"
-              >
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleReset}
-                  className="flex-1 py-3.5 rounded-xl text-sm font-semibold border border-border/50 text-foreground transition-colors"
-                >
-                  {t("practiceAgain")}
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => navigate(`/study/${openingId}`)}
-                  className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-background transition-colors"
-                  style={{ background: currentTheme.accentColor }}
-                >
-                  {t("backToHub")}
-                </motion.button>
-              </motion.div>
-            )}
 
             {/* Mastery prompt buttons */}
             {showMasteryPrompt && (
