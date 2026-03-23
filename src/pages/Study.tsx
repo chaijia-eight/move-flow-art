@@ -525,6 +525,7 @@ export default function Study() {
     setShowSwitchConfirm(false);
     setPendingSwitchData(null);
     setResetCounter((c) => c + 1);
+    setHintVisible(false);
   };
 
   const handleColorSwitch = (color: "w" | "b") => {
