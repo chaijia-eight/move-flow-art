@@ -109,8 +109,14 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
     >
       {/* Accent bar */}
       <div
-        className="h-1"
+        className="h-1.5"
         style={{ background: `linear-gradient(90deg, ${theme.primaryColor}, ${theme.accentColor})` }}
+      />
+
+      {/* Theme color wash */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.07]"
+        style={{ background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.accentColor})` }}
       />
 
       <div className="p-4 relative">
@@ -129,9 +135,9 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
               >
                 {isWhite ? "W" : "B"}
               </div>
-              <h3
+            <h3
                 className="text-base font-semibold truncate leading-tight"
-                style={{ color: cardText }}
+                style={{ color: theme.accentColor }}
               >
                 {openingName}
               </h3>
@@ -165,7 +171,7 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
         </div>
 
         {/* Side label */}
-        <p className="text-[11px] font-medium mb-2 ml-7" style={{ color: cardMuted }}>
+        <p className="text-[11px] font-medium mb-2 ml-7" style={{ color: theme.accentColor }}>
           {isWhite ? "Playing as White" : "Playing as Black"}
         </p>
 

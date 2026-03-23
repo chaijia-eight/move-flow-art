@@ -64,11 +64,11 @@ export default function StudyHub() {
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(ellipse at 30% 0%, ${theme.primaryColor}12, transparent 60%), radial-gradient(ellipse at 70% 100%, ${theme.accentColor}08, transparent 50%)`,
+          background: `radial-gradient(ellipse at 30% 0%, ${theme.primaryColor}30, transparent 55%), radial-gradient(ellipse at 80% 100%, ${theme.accentColor}20, transparent 50%), radial-gradient(circle at 50% 50%, ${theme.primaryColor}08, transparent 70%)`,
         }}
       />
 
-      <header className="relative z-10 px-6 py-5 border-b border-border/30">
+      <header className="relative z-10 px-6 py-5 border-b" style={{ borderColor: `${theme.accentColor}25` }}>
         <div className="max-w-4xl mx-auto flex items-center gap-4">
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -93,7 +93,7 @@ export default function StudyHub() {
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="mb-10"
         >
-          <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground tracking-tight mb-3">
+          <h1 className="font-serif text-4xl md:text-5xl font-bold tracking-tight mb-3" style={{ color: theme.accentColor }}>
             {openingName}
           </h1>
           <p className="text-muted-foreground text-lg leading-relaxed max-w-2xl">
