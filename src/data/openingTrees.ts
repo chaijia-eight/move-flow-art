@@ -5877,6 +5877,77 @@ const scotchGameTree: OpeningNode[] = [
                                 suggestedMove: "Bc5",
                                 children: []
                               }
+                              {
+                                fen: "r1bqkbnr/ppp2ppp/2np4/8/3NP3/8/PPP2PPP/RNBQKB1R w KQkq - 0 5",
+                                move: "d6", category: "legit_alternative", variationName: "Scotch Steinitz",
+                                children: [
+                                  {
+                                    fen: "r1bqkbnr/ppp2ppp/2np4/8/3NP3/2N5/PPP2PPP/R1BQKB1R b KQkq - 1 5",
+                                    move: "Nc3", category: "legit_alternative",
+                                    children: [
+                                      {
+                                        fen: "r1bqkb1r/ppp2ppp/2np1n2/8/3NP3/2N5/PPP2PPP/R1BQKB1R w KQkq - 2 6",
+                                        move: "Nf6", category: "legit_alternative",
+                                        children: [
+                                          {
+                                            fen: "r1bqkb1r/ppp2ppp/2np1n2/8/3NP3/2N5/PPP1BPPP/R1BQK2R b KQkq - 3 6",
+                                            move: "Be2", category: "legit_alternative",
+                                            children: [
+                                              {
+                                                fen: "r1bqk2r/ppp1bppp/2np1n2/8/3NP3/2N5/PPP1BPPP/R1BQK2R w KQkq - 4 7",
+                                                move: "Be7", category: "legit_alternative",
+                                                children: [
+                                                  {
+                                                    fen: "r1bqk2r/ppp1bppp/2np1n2/8/3NP3/2N5/PPP1BPPP/R1BQ1RK1 b kq - 5 7",
+                                                    move: "O-O", category: "legit_alternative",
+                                                    children: [
+                                                      {
+                                                        fen: "r1bq1rk1/ppp1bppp/2np1n2/8/3NP3/2N5/PPP1BPPP/R1BQ1RK1 w - - 6 8",
+                                                        move: "O-O", category: "legit_alternative",
+                                                        children: [
+                                                          {
+                                                            fen: "r1bq1rk1/ppp1bppp/2np1n2/8/3NP3/2N1B3/PPP1BPPP/R2Q1RK1 b - - 7 8",
+                                                            move: "Be3", category: "legit_alternative",
+                                                            children: [
+                                                              {
+                                                                fen: "r1bqr1k1/ppp1bppp/2np1n2/8/3NP3/2N1B3/PPP1BPPP/R2Q1RK1 w - - 8 9",
+                                                                move: "Re8", category: "legit_alternative",
+                                                                children: [
+                                                                  {
+                                                                    fen: "r1bqr1k1/ppp1bppp/2np1n2/8/3NP3/2N1BP2/PPP1B1PP/R2Q1RK1 b - - 0 9",
+                                                                    move: "f3", category: "legit_alternative",
+                                                                    children: [
+                                                                      {
+                                                                        fen: "r1bqrbk1/ppp2ppp/2np1n2/8/3NP3/2N1BP2/PPP1B1PP/R2Q1RK1 w - - 1 10",
+                                                                        move: "Bf8", category: "legit_alternative",
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r1bqrbk1/ppp2ppp/2np1n2/8/3NP3/2N1BP2/PPPQB1PP/R4RK1 b - - 2 10",
+                                                                            move: "Qd2", category: "legit_alternative",
+                                                                            children: []
+                                                                          },
+                                                                        ]
+                                                                      },
+                                                                    ]
+                                                                  },
+                                                                ]
+                                                              },
+                                                            ]
+                                                          },
+                                                        ]
+                                                      },
+                                                    ]
+                                                  },
+                                                ]
+                                              },
+                                            ]
+                                          },
+                                        ]
+                                      },
+                                    ]
+                                  },
+                                ]
+                              },
                             ]
                           },
                           {
@@ -7467,6 +7538,148 @@ const pircDefenseTree: OpeningNode[] = [
                               }
                             ]
                           }
+                          {
+                            fen: "rnbqkb1r/ppp1pp1p/3p1np1/8/3PP3/2N1B3/PPP2PPP/R2QKBNR b KQkq - 1 4",
+                            move: "Be3", category: "legit_alternative", variationName: "150 Attack",
+                            children: [
+                              {
+                                fen: "rnbqk2r/ppp1ppbp/3p1np1/8/3PP3/2N1B3/PPP2PPP/R2QKBNR w KQkq - 2 5",
+                                move: "Bg7", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rnbqk2r/ppp1ppbp/3p1np1/8/3PP3/2N1B3/PPPQ1PPP/R3KBNR b KQkq - 3 5",
+                                    move: "Qd2", category: "legit_alternative",
+                                    children: [
+                                      {
+                                        fen: "rnbq1rk1/ppp1ppbp/3p1np1/8/3PP3/2N1B3/PPPQ1PPP/R3KBNR w KQ - 4 6",
+                                        move: "O-O", category: "legit_alternative",
+                                        children: [
+                                          {
+                                            fen: "rnbq1rk1/ppp1ppbp/3p1np1/8/3PP3/2N1B3/PPPQ1PPP/2KR1BNR b - - 5 6",
+                                            move: "O-O-O", category: "legit_alternative",
+                                            children: [
+                                              {
+                                                fen: "r1bq1rk1/ppp1ppbp/2np1np1/8/3PP3/2N1B3/PPPQ1PPP/2KR1BNR w - - 6 7",
+                                                move: "Nc6", category: "legit_alternative",
+                                                children: [
+                                                  {
+                                                    fen: "r1bq1rk1/ppp1ppbp/2np1np1/8/3PP3/2N1BP2/PPPQ2PP/2KR1BNR b - - 0 7",
+                                                    move: "f3", category: "legit_alternative",
+                                                    children: [
+                                                      {
+                                                        fen: "r1bq1rk1/1pp1ppbp/p1np1np1/8/3PP3/2N1BP2/PPPQ2PP/2KR1BNR w - - 0 8",
+                                                        move: "a6", category: "legit_alternative",
+                                                        children: [
+                                                          {
+                                                            fen: "r1bq1rk1/1pp1ppbp/p1np1np1/8/3PP1P1/2N1BP2/PPPQ3P/2KR1BNR b - - 0 8",
+                                                            move: "g4", category: "legit_alternative",
+                                                            children: [
+                                                              {
+                                                                fen: "r1bq1rk1/2p1ppbp/p1np1np1/1p6/3PP1P1/2N1BP2/PPPQ3P/2KR1BNR w - - 0 9",
+                                                                move: "b5", category: "legit_alternative",
+                                                                children: [
+                                                                  {
+                                                                    fen: "r1bq1rk1/2p1ppbp/p1np1np1/1p6/3PP1PP/2N1BP2/PPPQ4/2KR1BNR b - - 0 9",
+                                                                    move: "h4", category: "legit_alternative",
+                                                                    children: [
+                                                                      {
+                                                                        fen: "r2q1rk1/1bp1ppbp/p1np1np1/1p6/3PP1PP/2N1BP2/PPPQ4/2KR1BNR w - - 1 10",
+                                                                        move: "Bb7", category: "legit_alternative",
+                                                                        children: []
+                                                                      },
+                                                                    ]
+                                                                  },
+                                                                ]
+                                                              },
+                                                            ]
+                                                          },
+                                                        ]
+                                                      },
+                                                    ]
+                                                  },
+                                                ]
+                                              },
+                                            ]
+                                          },
+                                        ]
+                                      },
+                                    ]
+                                  },
+                                ]
+                              },
+                            ]
+                          },
+                          {
+                            fen: "rnbqkb1r/ppp1pp1p/3p1np1/6B1/3PP3/2N5/PPP2PPP/R2QKBNR b KQkq - 1 4",
+                            move: "Bg5", category: "legit_alternative", variationName: "Byrne Variation",
+                            children: [
+                              {
+                                fen: "rnbqk2r/ppp1ppbp/3p1np1/6B1/3PP3/2N5/PPP2PPP/R2QKBNR w KQkq - 2 5",
+                                move: "Bg7", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rnbqk2r/ppp1ppbp/3p1np1/6B1/3PP3/2N5/PPPQ1PPP/R3KBNR b KQkq - 3 5",
+                                    move: "Qd2", category: "legit_alternative",
+                                    children: [
+                                      {
+                                        fen: "rnbq1rk1/ppp1ppbp/3p1np1/6B1/3PP3/2N5/PPPQ1PPP/R3KBNR w KQ - 4 6",
+                                        move: "O-O", category: "legit_alternative",
+                                        children: [
+                                          {
+                                            fen: "rnbq1rk1/ppp1ppbp/3p1np1/6B1/3PP3/2N5/PPPQ1PPP/2KR1BNR b - - 5 6",
+                                            move: "O-O-O", category: "legit_alternative",
+                                            children: [
+                                              {
+                                                fen: "rnbq1rk1/pp2ppbp/2pp1np1/6B1/3PP3/2N5/PPPQ1PPP/2KR1BNR w - - 0 7",
+                                                move: "c6", category: "legit_alternative",
+                                                children: [
+                                                  {
+                                                    fen: "rnbq1rk1/pp2ppbp/2pp1np1/6B1/3PP3/2N2P2/PPPQ2PP/2KR1BNR b - - 0 7",
+                                                    move: "f3", category: "legit_alternative",
+                                                    children: [
+                                                      {
+                                                        fen: "rnbq1rk1/p3ppbp/2pp1np1/1p4B1/3PP3/2N2P2/PPPQ2PP/2KR1BNR w - - 0 8",
+                                                        move: "b5", category: "legit_alternative",
+                                                        children: [
+                                                          {
+                                                            fen: "rnbq1rk1/p3ppbp/2pp1np1/1p4B1/3PP2P/2N2P2/PPPQ2P1/2KR1BNR b - - 0 8",
+                                                            move: "h4", category: "legit_alternative",
+                                                            children: [
+                                                              {
+                                                                fen: "rnb2rk1/p3ppbp/2pp1np1/qp4B1/3PP2P/2N2P2/PPPQ2P1/2KR1BNR w - - 1 9",
+                                                                move: "Qa5", category: "legit_alternative",
+                                                                children: [
+                                                                  {
+                                                                    fen: "rnb2rk1/p3ppbp/2pp1np1/qp4B1/3PP2P/2N2P2/PPPQ2P1/1K1R1BNR b - - 2 9",
+                                                                    move: "Kb1", category: "legit_alternative",
+                                                                    children: [
+                                                                      {
+                                                                        fen: "rnb2rk1/p3ppbp/2pp1np1/q5B1/1p1PP2P/2N2P2/PPPQ2P1/1K1R1BNR w - - 0 10",
+                                                                        move: "b4", category: "legit_alternative",
+                                                                        children: []
+                                                                      },
+                                                                    ]
+                                                                  },
+                                                                ]
+                                                              },
+                                                            ]
+                                                          },
+                                                        ]
+                                                      },
+                                                    ]
+                                                  },
+                                                ]
+                                              },
+                                            ]
+                                          },
+                                        ]
+                                      },
+                                    ]
+                                  },
+                                ]
+                              },
+                            ]
+                          },
                         ]
                       }
                     ]
@@ -12470,6 +12683,148 @@ const catalanOpeningTree: OpeningNode[] = [
                                                   }
                                                 ]
                                               }
+                                              {
+                                                fen: "rnbq1rk1/pp2bppp/2p1pn2/3p4/2PP4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 7",
+                                                move: "c6", category: "legit_alternative", variationName: "Closed Catalan",
+                                                children: [
+                                                  {
+                                                    fen: "rnbq1rk1/pp2bppp/2p1pn2/3p4/2PP4/5NP1/PPQ1PPBP/RNB2RK1 b - - 1 7",
+                                                    move: "Qc2", category: "legit_alternative",
+                                                    children: [
+                                                      {
+                                                        fen: "rnbq1rk1/p3bppp/1pp1pn2/3p4/2PP4/5NP1/PPQ1PPBP/RNB2RK1 w - - 0 8",
+                                                        move: "b6", category: "legit_alternative",
+                                                        children: [
+                                                          {
+                                                            fen: "rnbq1rk1/p3bppp/1pp1pn2/3p4/2PP1B2/5NP1/PPQ1PPBP/RN3RK1 b - - 1 8",
+                                                            move: "Bf4", category: "legit_alternative",
+                                                            children: [
+                                                              {
+                                                                fen: "rn1q1rk1/p3bppp/bpp1pn2/3p4/2PP1B2/5NP1/PPQ1PPBP/RN3RK1 w - - 2 9",
+                                                                move: "Ba6", category: "legit_alternative",
+                                                                children: [
+                                                                  {
+                                                                    fen: "rn1q1rk1/p3bppp/bpp1pn2/3p4/2PP1B2/5NP1/PPQNPPBP/R4RK1 b - - 3 9",
+                                                                    move: "Nbd2", category: "legit_alternative",
+                                                                    children: [
+                                                                      {
+                                                                        fen: "r2q1rk1/p2nbppp/bpp1pn2/3p4/2PP1B2/5NP1/PPQNPPBP/R4RK1 w - - 4 10",
+                                                                        move: "Nbd7", category: "legit_alternative",
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r2q1rk1/p2nbppp/bpp1pn2/3p4/2PPPB2/5NP1/PPQN1PBP/R4RK1 b - - 0 10",
+                                                                            move: "e4", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2q1rk1/p2nbppp/bpp1pn2/8/2PPpB2/5NP1/PPQN1PBP/R4RK1 w - - 0 11",
+                                                                                move: "dxe4", category: "legit_alternative",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/p2nbppp/bpp1pn2/8/2PPNB2/5NP1/PPQ2PBP/R4RK1 b - - 0 11",
+                                                                                    move: "Nxe4", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/p2nbppp/bpp1p3/8/2PPnB2/5NP1/PPQ2PBP/R4RK1 w - - 0 12",
+                                                                                        move: "Nxe4", category: "legit_alternative",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r2q1rk1/p2nbppp/bpp1p3/8/2PPQB2/5NP1/PP3PBP/R4RK1 b - - 0 12",
+                                                                                            move: "Qxe4", category: "legit_alternative",
+                                                                                            children: []
+                                                                                          },
+                                                                                        ]
+                                                                                      },
+                                                                                    ]
+                                                                                  },
+                                                                                ]
+                                                                              },
+                                                                            ]
+                                                                          },
+                                                                        ]
+                                                                      },
+                                                                    ]
+                                                                  },
+                                                                ]
+                                                              },
+                                                            ]
+                                                          },
+                                                        ]
+                                                      },
+                                                    ]
+                                                  },
+                                                ]
+                                              },
+                                              {
+                                                fen: "rnbq1rk1/p1p1bppp/4pn2/1p1p4/2PP4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 7",
+                                                move: "b5", category: "legit_alternative", variationName: "Catalan Pawn Grab",
+                                                children: [
+                                                  {
+                                                    fen: "rnbq1rk1/p1p1bppp/4pn2/1P1p4/3P4/5NP1/PP2PPBP/RNBQ1RK1 b - - 0 7",
+                                                    move: "cxb5", category: "legit_alternative",
+                                                    children: [
+                                                      {
+                                                        fen: "rnbq1rk1/2p1bppp/p3pn2/1P1p4/3P4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 8",
+                                                        move: "a6", category: "legit_alternative",
+                                                        children: [
+                                                          {
+                                                            fen: "rnbq1rk1/2p1bppp/P3pn2/3p4/3P4/5NP1/PP2PPBP/RNBQ1RK1 b - - 0 8",
+                                                            move: "bxa6", category: "legit_alternative",
+                                                            children: [
+                                                              {
+                                                                fen: "rn1q1rk1/2p1bppp/b3pn2/3p4/3P4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 9",
+                                                                move: "Bxa6", category: "legit_alternative",
+                                                                children: [
+                                                                  {
+                                                                    fen: "rn1q1rk1/2p1bppp/b3pn2/3p4/3P4/5NP1/PP2PPBP/RNBQR1K1 b - - 1 9",
+                                                                    move: "Re1", category: "legit_alternative",
+                                                                    children: [
+                                                                      {
+                                                                        fen: "rn1q1rk1/1bp1bppp/4pn2/3p4/3P4/5NP1/PP2PPBP/RNBQR1K1 w - - 2 10",
+                                                                        move: "Bb7", category: "legit_alternative",
+                                                                        children: [
+                                                                          {
+                                                                            fen: "rn1q1rk1/1bp1bppp/4pn2/3p4/3P4/2N2NP1/PP2PPBP/R1BQR1K1 b - - 3 10",
+                                                                            move: "Nc3", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2q1rk1/1bpnbppp/4pn2/3p4/3P4/2N2NP1/PP2PPBP/R1BQR1K1 w - - 4 11",
+                                                                                move: "Nbd7", category: "legit_alternative",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/1bpnbppp/4pn2/3p4/3PP3/2N2NP1/PP3PBP/R1BQR1K1 b - - 0 11",
+                                                                                    move: "e4", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/1bpnbppp/4pn2/8/3Pp3/2N2NP1/PP3PBP/R1BQR1K1 w - - 0 12",
+                                                                                        move: "dxe4", category: "legit_alternative",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r2q1rk1/1bpnbppp/4pn2/8/3PN3/5NP1/PP3PBP/R1BQR1K1 b - - 0 12",
+                                                                                            move: "Nxe4", category: "legit_alternative",
+                                                                                            children: []
+                                                                                          },
+                                                                                        ]
+                                                                                      },
+                                                                                    ]
+                                                                                  },
+                                                                                ]
+                                                                              },
+                                                                            ]
+                                                                          },
+                                                                        ]
+                                                                      },
+                                                                    ]
+                                                                  },
+                                                                ]
+                                                              },
+                                                            ]
+                                                          },
+                                                        ]
+                                                      },
+                                                    ]
+                                                  },
+                                                ]
+                                              },
                                             ]
                                           }
                                         ]
