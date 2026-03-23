@@ -292,7 +292,7 @@ export default function StudySidebar({
                 className="rounded-lg px-3 py-2 text-sm leading-relaxed"
                 style={{ background: "hsl(var(--card))", color: "hsl(var(--card-foreground))" }}
               >
-                Let's learn the <strong>{lineName}</strong>. Make your first move!
+                Play the move indicated by the arrow.
               </div>
             </motion.div>
           )}
