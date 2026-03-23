@@ -546,11 +546,6 @@ export default function Study() {
     const tempChess = new Chess(fen);
     if (tempChess.turn() !== playerColor) return null;
 
-    if (isCustomBranch) {
-      const fallbackHint = pickSensibleMove(tempChess);
-      if (!fallbackHint) return null;
-      return { from: fallbackHint.from, to: fallbackHint.to };
-    }
 
     const totalMoves = moveHistory.length;
     let expectedSan: string | null = null;
