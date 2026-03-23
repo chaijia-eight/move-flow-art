@@ -109,13 +109,7 @@ export default function Study() {
   const [undoStack, setUndoStack] = useState<HistorySnapshot[]>([]);
   const [redoStack, setRedoStack] = useState<HistorySnapshot[]>([]);
 
-  // Custom branch state (off-tree engine-guided)
-  const [isCustomBranch, setIsCustomBranch] = useState(false);
-  const [evaluatingEngine, setEvaluatingEngine] = useState(false);
-  const [customLineSaved, setCustomLineSaved] = useState(false);
-
-  // Eval & progress tracking
-  const [currentEval, setCurrentEval] = useState<number | null>(null);
+  // Progress tracking
   const [moveResults, setMoveResults] = useState<("correct" | "alternative" | "mistake" | "pending")[]>([]);
 
   // Switch confirmation modal state
@@ -130,19 +124,6 @@ export default function Study() {
   } | null>(null);
 
   const chess = chessRef.current;
-
-  const withEngineTimeout = useCallback(async <T,>(promise: Promise<T>, timeoutMs = ENGINE_EVAL_TIMEOUT_MS): Promise<T> => {
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
-    const timeoutPromise = new Promise<never>((_, reject) => {
-      timeoutId = setTimeout(() => reject(new Error("ENGINE_TIMEOUT")), timeoutMs);
-    });
-
-    try {
-      return await Promise.race([promise, timeoutPromise]);
-    } finally {
-      if (timeoutId) clearTimeout(timeoutId);
-    }
-  }, []);
 
   const saveSnapshot = (): HistorySnapshot => ({
     fen,
