@@ -2,50 +2,21 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
-import { useAuth } from "@/contexts/AuthContext";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { openings } from "@/data/openingTrees";
 import { themes } from "@/data/openings";
 import { extractLinesForVariation, extractAllLines, type Line } from "@/lib/lineExtractor";
 import { getLineProgress, isLineUnlocked, getOpeningProgress } from "@/lib/progressStore";
-import { ArrowLeft, ChevronRight, Crown, Shield, ChevronDown, Lock, Check, BookOpen, RotateCcw, Play, Trash2, Sprout } from "lucide-react";
+import { ArrowLeft, ChevronRight, Crown, Shield, ChevronDown, Lock, Check, BookOpen, RotateCcw } from "lucide-react";
 import { t, tn, tDesc, tVar } from "@/lib/i18n";
-import { useQueryClient } from "@tanstack/react-query";
 
 export default function StudyHub() {
   const { openingId } = useParams();
   const navigate = useNavigate();
   const { setTheme, currentTheme } = useTheme();
-  const { user } = useAuth();
-  const queryClient = useQueryClient();
   const [showAgainstVariations, setShowAgainstVariations] = useState(false);
   const [expandedVariation, setExpandedVariation] = useState<string | null>(null);
 
   const opening = openings.find((o) => o.id === openingId);
-
-  // Fetch custom lines for this opening
-  const { data: customLines = [] } = useQuery({
-    queryKey: ["custom-lines", user?.id, openingId],
-    queryFn: async () => {
-      if (!user || !openingId) return [];
-      const { data, error } = await supabase
-        .from("custom_lines")
-        .select("*")
-        .eq("opening_id", openingId)
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data ?? [];
-    },
-    enabled: !!user && !!openingId,
-  });
-
-  const handleDeleteCustomLine = async (lineId: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!confirm("Delete this custom line?")) return;
-    await supabase.from("custom_lines").delete().eq("id", lineId);
-    queryClient.invalidateQueries({ queryKey: ["custom-lines", user?.id, openingId] });
-  };
 
 
   useEffect(() => {
