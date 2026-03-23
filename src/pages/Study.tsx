@@ -313,10 +313,10 @@ export default function Study() {
 
   const handleMove = useCallback(
     async (from: string, to: string, san: string) => {
-      if (isComputerTurn || lineCompleted || evaluatingEngine) return;
+      if (isComputerTurn || lineCompleted) return;
 
       const snapshot = saveSnapshot();
-      const matchedNode = isCustomBranch ? null : currentNodes.find((node) => node.move === san);
+      const matchedNode = currentNodes.find((node) => node.move === san);
 
       try {
         chess.move({ from, to });
@@ -342,58 +342,6 @@ export default function Study() {
         fallback ||
         currentNodes[0]?.move ||
         san;
-
-      // Custom branch: evaluate every move with engine
-      if (isCustomBranch) {
-        if (newHistory.length >= MAX_CUSTOM_MOVES) {
-          setLineCompleted(true);
-          playLineCompleteSound();
-          return;
-        }
-
-        setEvaluatingEngine(true);
-        try {
-          chess.undo();
-          const preFen = chess.fen();
-          const moveUci = from + to;
-          const engine = getEngine();
-          const evaluation = await withEngineTimeout(engine.evaluateMove(preFen, moveUci, san, 12));
-          chess.move({ from, to });
-
-          if (evaluation.isGood) {
-            setFeedback({
-              type: "main_line",
-              message: t("goodContinue"),
-            });
-            // Computer responds
-            await playEngineComputerMove(newHistory);
-          } else {
-            // Bad move - reject
-            chess.undo();
-            setFen(chess.fen());
-            setMoveHistory((prev) => prev.slice(0, -1));
-            setUndoStack((prev) => prev.slice(0, -1));
-            setHadMistake(true);
-            setFeedback({
-              type: "mistake",
-              message: evaluation.explanation,
-              suggestedMove: evaluation.bestMoveSan,
-            });
-          }
-        } catch {
-          // Engine failed: keep the just-played move on board, then continue with fallback response
-          try {
-            chess.load(newFen);
-          } catch {
-            // ignore load failures and keep current state
-          }
-          setFen(newFen);
-          await playEngineComputerMove(newHistory);
-        } finally {
-          setEvaluatingEngine(false);
-        }
-        return;
-      }
 
       if (!matchedNode) {
         // Check cross-opening transposition first
