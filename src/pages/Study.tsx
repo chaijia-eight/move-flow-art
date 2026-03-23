@@ -23,7 +23,7 @@ import {
 } from "@/lib/progressStore";
 import { playLineCompleteSound, playMasterySound } from "@/lib/chessSounds";
 import { squareToCoords } from "@/data/pieceUnicode";
-import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap } from "lucide-react";
+import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap, Eye } from "lucide-react";
 import { t, tf, tn, tDesc, tVar } from "@/lib/i18n";
 
 interface MoveRecord {
