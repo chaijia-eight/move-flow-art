@@ -746,10 +746,18 @@ export default function Study() {
             {/* Line completed - challenge mode message */}
             {lineCompleted && isChallengeMode && !showMasteryPrompt && (
               <motion.div key="challenge-done" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                className="rounded-lg px-4 py-3 text-sm font-medium"
-                style={{ background: "hsl(140, 65%, 45%, 0.12)", color: "hsl(140, 65%, 45%)" }}
+                className="text-center"
               >
-                Now try to play the line correctly without guidance.
+                <div className="rounded-lg px-4 py-3 text-sm font-medium mb-3"
+                  style={{ background: "hsl(140, 65%, 45%, 0.12)", color: "hsl(140, 65%, 45%)" }}
+                >
+                  Now try to play the line correctly without guidance.
+                </div>
+                {currentLine && lineConclusions[currentLine.id] && (
+                  <p className="text-xs text-muted-foreground leading-relaxed px-2">
+                    {lineConclusions[currentLine.id]}
+                  </p>
+                )}
               </motion.div>
             )}
 
@@ -762,9 +770,14 @@ export default function Study() {
                 <p className="text-sm font-semibold text-foreground">
                   {hadMistake ? t("lineCompleted") : t("perfectRun")}
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground mb-2">
                   {hadMistake ? t("hadMistakesMsg") : tf<(c: number) => string>("greatJob")(lineProgress ? lineProgress.correctAttempts + 1 : 1)}
                 </p>
+                {currentLine && lineConclusions[currentLine.id] && (
+                  <p className="text-xs text-muted-foreground/80 leading-relaxed px-2 border-t border-border/30 pt-2 mt-1">
+                    {lineConclusions[currentLine.id]}
+                  </p>
+                )}
               </motion.div>
             )}
 
