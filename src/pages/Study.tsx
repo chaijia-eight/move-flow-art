@@ -352,6 +352,7 @@ export default function Study() {
       const newHistory = [...moveHistory, { san, moveNumber: isWhite ? moveNum : moveNum - 1, isWhite }];
       setMoveHistory(newHistory);
       setMoveCount((c) => c + 1);
+      setHintVisible(false);
       setUndoStack((prev) => [...prev, snapshot]);
       setRedoStack([]);
 
