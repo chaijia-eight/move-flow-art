@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Trophy } from "lucide-react";
+import { Trophy, RefreshCw, Loader2 } from "lucide-react";
 import { t, tf, tn } from "@/lib/i18n";
 
 const DEVELOPER_EMAIL = "xinya.vivian@me.com";
@@ -20,6 +20,8 @@ interface StudySidebarProps {
   lineIndex: number;
   openingName: string;
   lineName: string;
+  playerSide: "w" | "b";
+  allMoves: string[]; // full line moves for generation
   moveHistory: MoveRecord[];
   lineCompleted: boolean;
   hadMistake: boolean;
@@ -41,6 +43,8 @@ export default function StudySidebar({
   lineIndex,
   openingName,
   lineName,
+  playerSide,
+  allMoves,
   moveHistory,
   lineCompleted,
   hadMistake,
@@ -60,37 +64,103 @@ export default function StudySidebar({
   const scrollRef = useRef<HTMLDivElement>(null);
   const isDeveloper = user?.email === DEVELOPER_EMAIL;
 
-  // Explanations from DB
   const [explanations, setExplanations] = useState<Record<number, string>>({});
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editText, setEditText] = useState("");
   const [saving, setSaving] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   // Fetch explanations
-  useEffect(() => {
-    const fetchExplanations = async () => {
-      const { data } = await supabase
+  const fetchExplanations = useCallback(async () => {
+    const { data } = await supabase
+      .from("move_explanations")
+      .select("move_index, explanation")
+      .eq("opening_id", openingId)
+      .eq("variation_id", variationId)
+      .eq("line_index", lineIndex);
+
+    if (data) {
+      const map: Record<number, string> = {};
+      data.forEach((row: any) => {
+        map[row.move_index] = row.explanation;
+      });
+      setExplanations(map);
+      return data.length;
+    }
+    return 0;
+  }, [openingId, variationId, lineIndex]);
+
+  // Generate explanations via edge function
+  const generateExplanations = useCallback(async () => {
+    if (generating || allMoves.length === 0) return;
+    setGenerating(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke("generate-explanations", {
+        body: {
+          openingName,
+          variationName: lineName,
+          lineName,
+          moves: allMoves,
+          playerSide,
+        },
+      });
+
+      if (error) throw error;
+      if (!data?.explanations) throw new Error("No explanations returned");
+
+      const explanationsList: string[] = data.explanations;
+
+      // Upsert into DB
+      const rows = explanationsList.map((exp, idx) => ({
+        opening_id: openingId,
+        variation_id: variationId,
+        line_index: lineIndex,
+        move_index: idx,
+        explanation: exp,
+      }));
+
+      // Delete existing then insert
+      await supabase
         .from("move_explanations")
-        .select("move_index, explanation")
+        .delete()
         .eq("opening_id", openingId)
         .eq("variation_id", variationId)
         .eq("line_index", lineIndex);
 
-      if (data) {
-        const map: Record<number, string> = {};
-        data.forEach((row: any) => {
-          map[row.move_index] = row.explanation;
-        });
-        setExplanations(map);
+      await supabase.from("move_explanations").insert(rows);
+
+      const map: Record<number, string> = {};
+      explanationsList.forEach((exp, idx) => {
+        map[idx] = exp;
+      });
+      setExplanations(map);
+    } catch (err) {
+      console.error("Failed to generate explanations:", err);
+    } finally {
+      setGenerating(false);
+    }
+  }, [generating, allMoves, openingName, lineName, playerSide, openingId, variationId, lineIndex]);
+
+  useEffect(() => {
+    fetchExplanations().then((count) => {
+      setLoaded(true);
+      // Auto-generate if no explanations exist
+      if (count === 0 && allMoves.length > 0) {
+        generateExplanations();
       }
-    };
-    fetchExplanations();
+    });
   }, [openingId, variationId, lineIndex]);
 
   // Auto-scroll to bottom on new moves
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      setTimeout(() => {
+        if (scrollRef.current) {
+          scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        }
+      }, 100);
     }
   }, [moveHistory.length, lineCompleted]);
 
@@ -138,19 +208,60 @@ export default function StudySidebar({
           <div className="flex items-center gap-2">
             <span className="text-base">📖</span>
             <span className="text-sm font-semibold text-foreground">Learn</span>
-            <span className="text-sm text-muted-foreground">{openingName}</span>
+            <span className="text-sm text-muted-foreground truncate max-w-[140px]">{openingName}</span>
           </div>
-          <span className="text-xs text-muted-foreground">#{lineIndex + 1}</span>
+          <div className="flex items-center gap-2">
+            {isDeveloper && (
+              <button
+                onClick={generateExplanations}
+                disabled={generating}
+                className="p-1 rounded hover:bg-accent transition-colors text-muted-foreground hover:text-foreground"
+                title="Regenerate explanations"
+              >
+                {generating ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <RefreshCw className="w-3.5 h-3.5" />
+                )}
+              </button>
+            )}
+            <span className="text-xs text-muted-foreground">#{lineIndex + 1}</span>
+          </div>
         </div>
       </div>
 
       {/* Scrollable move explanations */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-3 space-y-4">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+        {/* Generating indicator */}
+        {generating && Object.keys(explanations).length === 0 && (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground py-4">
+            <Loader2 className="w-4 h-4 animate-spin" />
+            <span>Generating explanations...</span>
+          </div>
+        )}
+
+        {/* Empty state at start - always show intro */}
+        {moveHistory.length === 0 && !lineCompleted && (
+          <div className="flex items-start gap-2.5">
+            <div className="flex-shrink-0 mt-1">
+              <img
+                src={playerSide === "w" ? "/pieces/wK.svg" : "/pieces/bK.svg"}
+                alt="Guide"
+                className="w-5 h-5"
+              />
+            </div>
+            <div
+              className="rounded-lg px-3 py-2 text-sm leading-relaxed"
+              style={{ background: "hsl(var(--card))", color: "hsl(var(--card-foreground))" }}
+            >
+              Let's learn the <strong>{lineName}</strong>. Make your first move!
+            </div>
+          </div>
+        )}
+
         <AnimatePresence initial={false}>
           {moveHistory.map((move, idx) => {
             const explanation = explanations[idx];
-            const pieceIcon = move.isWhite ? "/pieces/wP.svg" : "/pieces/bP.svg";
-            // Use king icon for the piece indicator
             const kingIcon = move.isWhite ? "/pieces/wK.svg" : "/pieces/bK.svg";
 
             return (
@@ -161,12 +272,10 @@ export default function StudySidebar({
                 transition={{ duration: 0.3, delay: 0.05 }}
                 className="flex items-start gap-2.5"
               >
-                {/* Piece icon */}
-                <div className="flex-shrink-0 mt-0.5">
+                <div className="flex-shrink-0 mt-1">
                   <img src={kingIcon} alt={move.isWhite ? "White" : "Black"} className="w-5 h-5" />
                 </div>
 
-                {/* Explanation bubble */}
                 <div className="flex-1 min-w-0">
                   {editingIndex === idx ? (
                     <div className="space-y-2">
@@ -196,7 +305,7 @@ export default function StudySidebar({
                   ) : (
                     <div
                       className={`rounded-lg px-3 py-2 text-sm leading-relaxed ${
-                        isDeveloper ? "cursor-pointer hover:ring-1 hover:ring-primary/30" : ""
+                        isDeveloper ? "cursor-pointer hover:ring-1 hover:ring-primary/30 transition-all" : ""
                       }`}
                       style={{
                         background: "hsl(var(--card))",
@@ -205,16 +314,22 @@ export default function StudySidebar({
                       onClick={() => isDeveloper && handleStartEdit(idx)}
                       title={isDeveloper ? "Click to edit" : undefined}
                     >
-                      {explanation || (
-                        <span className="text-muted-foreground italic">
-                          {isDeveloper
-                            ? "Click to add explanation..."
-                            : `${move.moveNumber}${move.isWhite ? "." : "..."} ${move.san}`}
-                        </span>
-                      )}
-                      {explanation && (
-                        <span className="block text-xs text-muted-foreground mt-1">
-                          {move.moveNumber}{move.isWhite ? "." : "..."} {move.san}
+                      {explanation ? (
+                        <>
+                          <span>{explanation}</span>
+                          <span className="block text-xs text-muted-foreground mt-1 font-mono">
+                            {move.moveNumber}{move.isWhite ? "." : "..."} {move.san}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-muted-foreground">
+                          {isDeveloper ? (
+                            <span className="italic">Click to add explanation...</span>
+                          ) : (
+                            <span className="font-mono">
+                              {move.moveNumber}{move.isWhite ? "." : "..."} {move.san}
+                            </span>
+                          )}
                         </span>
                       )}
                     </div>
@@ -246,7 +361,6 @@ export default function StudySidebar({
                 )}
               </div>
 
-              {/* Action buttons */}
               <div className="flex gap-2">
                 <button
                   onClick={onReset}
@@ -305,25 +419,6 @@ export default function StudySidebar({
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Empty state at start */}
-        {moveHistory.length === 0 && !lineCompleted && (
-          <div className="flex items-start gap-2.5">
-            <div className="flex-shrink-0 mt-0.5">
-              <img src="/pieces/wK.svg" alt="Guide" className="w-5 h-5" />
-            </div>
-            <div
-              className="rounded-lg px-3 py-2 text-sm leading-relaxed"
-              style={{ background: "hsl(var(--card))", color: "hsl(var(--card-foreground))" }}
-            >
-              {explanations[-1] || (
-                <span>
-                  Let's learn the <strong>{lineName}</strong>. Make your first move!
-                </span>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
