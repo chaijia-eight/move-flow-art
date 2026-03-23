@@ -881,7 +881,7 @@ export default function Study() {
             )}
 
             {/* Line completed actions */}
-            {lineCompleted && !showMasteryPrompt && !isCustomBranch && (
+            {lineCompleted && !showMasteryPrompt && (
               <motion.div key="complete-btn" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
                 className="flex gap-3"
               >
