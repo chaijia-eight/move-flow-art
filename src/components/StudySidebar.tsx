@@ -202,8 +202,7 @@ export default function StudySidebar({
     }
   }, [moveHistory.length, lineCompleted]);
 
-  const handleSave = async (moveIndex: number) => {
-    setSaving(true);
+  const handleSave = async (moveIndex: number, text: string) => {
     const { data: existing } = await supabase
       .from("move_explanations")
       .select("id")
@@ -216,7 +215,7 @@ export default function StudySidebar({
     if (existing) {
       await supabase
         .from("move_explanations")
-        .update({ explanation: editText, updated_at: new Date().toISOString() })
+        .update({ explanation: text, updated_at: new Date().toISOString() })
         .eq("id", existing.id);
     } else {
       await supabase.from("move_explanations").insert({
@@ -225,18 +224,11 @@ export default function StudySidebar({
         line_index: lineIndex,
         move_index: moveIndex,
         move_san: allMoves[moveIndex] || "",
-        explanation: editText,
+        explanation: text,
       });
     }
 
-    setExplanations((prev) => ({ ...prev, [moveIndex]: editText }));
-    setEditingIndex(null);
-    setSaving(false);
-  };
-
-  const handleStartEdit = (moveIndex: number) => {
-    setEditingIndex(moveIndex);
-    setEditText(explanations[moveIndex] || "");
+    setExplanations((prev) => ({ ...prev, [moveIndex]: text }));
   };
 
   return (
