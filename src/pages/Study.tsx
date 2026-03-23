@@ -8,7 +8,6 @@ import ProgressDots from "@/components/ProgressDots";
 import SwitchConfirmModal from "@/components/SwitchConfirmModal";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
 import { type OpeningNode, type MoveCategory } from "@/data/openings";
 import { openings } from "@/data/openingTrees";
 import { extractLinesForVariation, type Line } from "@/lib/lineExtractor";
@@ -19,15 +18,10 @@ import {
   isLineUnlocked,
   MASTERY_PROMPT_THRESHOLD,
 } from "@/lib/progressStore";
-import { getEngine } from "@/lib/stockfishEngine";
 import { playLineCompleteSound, playMasterySound } from "@/lib/chessSounds";
 import { squareToCoords } from "@/data/pieceUnicode";
-import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap, Loader2, Save, Search } from "lucide-react";
+import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap } from "lucide-react";
 import { t, tf, tn, tDesc, tVar } from "@/lib/i18n";
-
-const MIN_CUSTOM_MOVES = 9;
-const MAX_CUSTOM_MOVES = 16;
-const ENGINE_EVAL_TIMEOUT_MS = 5500;
 
 interface MoveRecord {
   san: string;
