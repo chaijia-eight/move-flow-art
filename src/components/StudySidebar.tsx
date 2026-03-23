@@ -73,23 +73,34 @@ export default function StudySidebar({
 
   // Fetch explanations
   const fetchExplanations = useCallback(async () => {
+    // Fetch ALL explanations for this opening (across all lines/variations)
     const { data } = await supabase
       .from("move_explanations")
-      .select("move_index, explanation")
-      .eq("opening_id", openingId)
-      .eq("variation_id", variationId)
-      .eq("line_index", lineIndex);
+      .select("move_index, move_san, explanation, variation_id, line_index")
+      .eq("opening_id", openingId);
 
     if (data) {
       const map: Record<number, string> = {};
+      // First pass: collect explanations from any line that shares the same move
       data.forEach((row: any) => {
-        map[row.move_index] = row.explanation;
+        const idx = row.move_index as number;
+        const san = row.move_san as string;
+        // Only use if the move SAN matches our line's move at this index
+        if (idx < allMoves.length && san === allMoves[idx] && !map[idx]) {
+          map[idx] = row.explanation;
+        }
+      });
+      // Second pass: override with line-specific explanations (higher priority)
+      data.forEach((row: any) => {
+        if (row.variation_id === variationId && row.line_index === lineIndex) {
+          map[row.move_index] = row.explanation;
+        }
       });
       setExplanations(map);
-      return data.length;
+      return Object.keys(map).length;
     }
     return 0;
-  }, [openingId, variationId, lineIndex]);
+  }, [openingId, variationId, lineIndex, allMoves]);
 
   // Generate explanations via edge function
   const generateExplanations = useCallback(async () => {
@@ -97,45 +108,77 @@ export default function StudySidebar({
     setGenerating(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke("generate-explanations", {
-        body: {
-          openingName,
-          variationName: lineName,
-          lineName,
-          moves: allMoves,
-          playerSide,
-        },
-      });
-
-      if (error) throw error;
-      if (!data?.explanations) throw new Error("No explanations returned");
-
-      const explanationsList: string[] = data.explanations;
-
-      // Upsert into DB
-      const rows = explanationsList.map((exp, idx) => ({
-        opening_id: openingId,
-        variation_id: variationId,
-        line_index: lineIndex,
-        move_index: idx,
-        explanation: exp,
-      }));
-
-      // Delete existing then insert
-      await supabase
+      // First, check which moves already have explanations from other lines
+      const { data: existing } = await supabase
         .from("move_explanations")
-        .delete()
-        .eq("opening_id", openingId)
-        .eq("variation_id", variationId)
-        .eq("line_index", lineIndex);
+        .select("move_index, move_san, explanation")
+        .eq("opening_id", openingId);
 
-      await supabase.from("move_explanations").insert(rows);
+      const existingMap: Record<number, string> = {};
+      if (existing) {
+        existing.forEach((row: any) => {
+          const idx = row.move_index as number;
+          if (idx < allMoves.length && row.move_san === allMoves[idx]) {
+            existingMap[idx] = row.explanation;
+          }
+        });
+      }
 
-      const map: Record<number, string> = {};
-      explanationsList.forEach((exp, idx) => {
-        map[idx] = exp;
-      });
-      setExplanations(map);
+      // Find which moves still need explanations
+      const missingIndices = allMoves.map((_, i) => i).filter(i => !existingMap[i]);
+
+      let newExplanations: Record<number, string> = { ...existingMap };
+
+      if (missingIndices.length > 0) {
+        const missingMoves = missingIndices.map(i => allMoves[i]);
+        const { data, error } = await supabase.functions.invoke("generate-explanations", {
+          body: {
+            openingName,
+            variationName: lineName,
+            lineName,
+            moves: allMoves,
+            playerSide,
+            onlyIndices: missingIndices,
+          },
+        });
+
+        if (error) throw error;
+        if (!data?.explanations) throw new Error("No explanations returned");
+
+        const explanationsList: string[] = data.explanations;
+        // Map generated explanations back to their indices
+        if (explanationsList.length === allMoves.length) {
+          // Full generation
+          missingIndices.forEach(i => {
+            newExplanations[i] = explanationsList[i];
+          });
+        } else {
+          // Partial generation matching missingIndices
+          missingIndices.forEach((moveIdx, arrIdx) => {
+            if (arrIdx < explanationsList.length) {
+              newExplanations[moveIdx] = explanationsList[arrIdx];
+            }
+          });
+        }
+
+        // Save only the new explanations
+        const rows = missingIndices
+          .filter(i => newExplanations[i])
+          .map(i => ({
+            opening_id: openingId,
+            variation_id: variationId,
+            line_index: lineIndex,
+            move_index: i,
+            move_san: allMoves[i],
+            explanation: newExplanations[i],
+          }));
+
+        if (rows.length > 0) {
+          await supabase.from("move_explanations").insert(rows);
+        }
+      }
+
+      setExplanations(newExplanations);
     } catch (err) {
       console.error("Failed to generate explanations:", err);
     } finally {
@@ -186,6 +229,7 @@ export default function StudySidebar({
         variation_id: variationId,
         line_index: lineIndex,
         move_index: moveIndex,
+        move_san: allMoves[moveIndex] || "",
         explanation: editText,
       });
     }

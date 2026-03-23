@@ -1,0 +1,1 @@
+ALTER TABLE public.move_explanations ADD COLUMN move_san TEXT NOT NULL DEFAULT '';
