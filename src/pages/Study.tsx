@@ -574,8 +574,8 @@ export default function Study() {
     if (!opening || lineCompleted || isComputerTurn) return null;
     // Check challenge mode inline to avoid forward reference
     const lp = currentLine ? getLineProgress(currentLine.id) : null;
-    const isChallenge = !!(lp && !lp.mastered && lp.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1);
-    if (isChallenge) return null;
+    const isChallenge = isPracticeMode || !!(lp && !lp.mastered && lp.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1);
+    if (isChallenge && !hintVisible) return null;
     const tempChess = new Chess(fen);
     if (tempChess.turn() !== playerColor) return null;
 
@@ -594,7 +594,7 @@ export default function Study() {
     const match = legalMoves.find(m => m.san === expectedSan);
     if (!match) return null;
     return { from: match.from, to: match.to };
-  }, [opening, fen, playerColor, moveHistory.length, preferredMoves, currentNodes, currentLine, lineCompleted, isComputerTurn]);
+  }, [opening, fen, playerColor, moveHistory.length, preferredMoves, currentNodes, currentLine, lineCompleted, isComputerTurn, isPracticeMode, hintVisible]);
 
   const totalPlayerMoves = useMemo(() => {
     if (!currentLine) return 0;
