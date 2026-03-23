@@ -101,6 +101,7 @@ export default function Study() {
   const [resetCounter, setResetCounter] = useState(0);
   const [currentVariation, setCurrentVariation] = useState<{ name: string; description: string } | null>(null);
   const [hadMistake, setHadMistake] = useState(false);
+  const [crucialMomentShown, setCrucialMomentShown] = useState(false);
 
   // Mastery prompt state
   const [showMasteryPrompt, setShowMasteryPrompt] = useState(false);
