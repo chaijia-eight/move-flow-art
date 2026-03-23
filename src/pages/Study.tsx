@@ -6,6 +6,8 @@ import Chessboard from "@/components/Chessboard";
 import MoveHistory from "@/components/MoveHistory";
 import ProgressDots from "@/components/ProgressDots";
 import SwitchConfirmModal from "@/components/SwitchConfirmModal";
+import StudySidebar from "@/components/StudySidebar";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { type OpeningNode, type MoveCategory } from "@/data/openings";
@@ -44,6 +46,7 @@ export default function Study() {
   const navigate = useNavigate();
   const { setTheme, currentTheme } = useTheme();
   const { user } = useAuth();
+  const isMobile = useIsMobile();
 
   const opening = openings.find((o) => o.id === openingId);
   const colorParam = searchParams.get("color") as "w" | "b" | null;
@@ -687,299 +690,288 @@ export default function Study() {
         />
       </div>
 
-      {/* Main content - mobile-first stacked layout */}
-      <div className="flex-1 flex flex-col max-w-lg mx-auto w-full px-3 pt-2">
-        {/* Board */}
-        <Chessboard
-          fen={fen}
-          onMove={handleMove}
-          moveHints={isChallengeMode ? new Map() : moveHints}
-          disabled={isComputerTurn || lineCompleted || (feedback?.type === "legit_alternative" && !!feedback?.suggestedMove)}
-          flipped={playerColor === "b"}
-          playerColor={playerColor}
-          arrowFrom={arrowTarget?.from}
-          arrowTo={arrowTarget?.to}
-        />
-
-        {/* Feedback message area */}
-        <div className="min-h-[52px] max-h-[180px] overflow-y-auto flex items-center justify-center text-center px-2 py-2">
-          <AnimatePresence mode="wait">
-
-            {/* Challenge mode instruction */}
-            {isChallengeMode && !lineCompleted && !feedback && (
-              <motion.div key="challenge-hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="rounded-lg px-4 py-2 text-sm font-medium"
-                style={{ background: "hsl(45, 100%, 50%, 0.1)", color: "hsl(45, 100%, 55%)" }}
-              >
-                Play from memory — no hints!
-              </motion.div>
-            )}
-
-            {/* Default: show "Play the move indicated by the green arrow" */}
-            {!isChallengeMode && !feedback && !lineCompleted && arrowTarget && (
-              <motion.div key="play-hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="rounded-lg px-4 py-2.5 text-sm text-muted-foreground"
-                style={{ background: "hsl(var(--muted) / 0.5)" }}
-              >
-                Play the move indicated by the green arrow
-              </motion.div>
-            )}
-
-            {/* Waiting for user (no arrow) */}
-            {!feedback && !lineCompleted && !arrowTarget && !isComputerTurn && (
-              <motion.div key="your-turn" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="text-sm text-muted-foreground"
-              >
-                Your turn
-              </motion.div>
-            )}
-
-            {/* Good move feedback */}
-            {feedback && feedback.type === "main_line" && !lineCompleted && (
-              <motion.div key="good" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                className={`text-sm font-medium ${crucialMomentShown && feedback.message.startsWith("⚡") || feedback.message.startsWith("🛡️") ? "rounded-lg px-4 py-2" : ""}`}
-                style={
-                  feedback.message.startsWith("⚡") || feedback.message.startsWith("🛡️")
-                    ? { color: currentTheme.accentColor, background: `${currentTheme.accentColor}15`, border: `1px solid ${currentTheme.accentColor}30` }
-                    : { color: "hsl(140, 65%, 45%)" }
-                }
-              >
-                {feedback.message}
-              </motion.div>
-            )}
-
-            {/* Alternative move feedback */}
-            {feedback && feedback.type === "legit_alternative" && !lineCompleted && (
-              <motion.div key="alt" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                className="text-sm text-foreground"
-              >
-                We recommend <span className="font-bold" style={{ color: currentTheme.accentColor }}>{feedback.suggestedMove}</span>.{" "}
-                <span className="font-bold" style={{ color: "hsl(140, 50%, 50%)" }}>
-                  {moveHistory[moveHistory.length - 1]?.san}
-                </span>{" "}
-                is a good move – do you want to switch?
-              </motion.div>
-            )}
-
-            {/* Mistake feedback */}
-            {feedback && feedback.type === "mistake" && !lineCompleted && (
-              <motion.div key="mistake" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                className="text-sm text-foreground"
-              >
-                <span className="font-bold" style={{ color: "hsl(0, 65%, 50%)" }}>{feedback.message}</span>
-                {feedback.suggestedMove && (
-                  <span className="ml-1">
-                    You should play <span className="font-bold" style={{ color: currentTheme.accentColor }}>{feedback.suggestedMove}</span> instead.
-                  </span>
-                )}
-              </motion.div>
-            )}
-
-            {/* Line completed - challenge mode message */}
-            {lineCompleted && isChallengeMode && !showMasteryPrompt && (
-              <motion.div key="challenge-done" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                className="text-center"
-              >
-                <div className="rounded-lg px-4 py-3 text-sm font-medium mb-3"
-                  style={{ background: "hsl(140, 65%, 45%, 0.12)", color: "hsl(140, 65%, 45%)" }}
-                >
-                  Now try to play the line correctly without guidance.
-                </div>
-                {currentLine && lineConclusions[currentLine.id] && (
-                  <p className="text-xs text-muted-foreground leading-relaxed px-2">
-                    {lineConclusions[currentLine.id]}
-                  </p>
-                )}
-              </motion.div>
-            )}
-
-            {/* Line completed - normal */}
-            {lineCompleted && !isChallengeMode && !showMasteryPrompt && (
-              <motion.div key="done" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                className="text-center"
-              >
-                <Trophy className="w-6 h-6 mx-auto mb-1" style={{ color: currentTheme.accentColor }} />
-                <p className="text-sm font-semibold text-foreground">
-                  {hadMistake ? t("lineCompleted") : t("perfectRun")}
-                </p>
-                <p className="text-xs text-muted-foreground mb-2">
-                  {hadMistake ? t("hadMistakesMsg") : tf<(c: number) => string>("greatJob")(lineProgress ? lineProgress.correctAttempts + 1 : 1)}
-                </p>
-                {currentLine && lineConclusions[currentLine.id] && (
-                  <p className="text-xs text-muted-foreground/80 leading-relaxed px-2 border-t border-border/30 pt-2 mt-1">
-                    {lineConclusions[currentLine.id]}
-                  </p>
-                )}
-              </motion.div>
-            )}
-
-
-            {/* Mastery prompt */}
-            {showMasteryPrompt && (
-              <motion.div key="mastery" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-                className="text-center"
-              >
-                <Trophy className="w-8 h-8 mx-auto mb-2" style={{ color: currentTheme.accentColor }} />
-                <p className="font-serif text-lg font-semibold text-foreground mb-1">{t("masteryQuestion")}</p>
-                <p className="text-xs text-muted-foreground">
-                  {tf<(c: number) => string>("completedCorrectly")(lineProgress ? lineProgress.correctAttempts + 1 : MASTERY_PROMPT_THRESHOLD)}
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* Progress dots */}
-        {totalPlayerMoves > 0 && (
-          <ProgressDots
-            total={totalPlayerMoves}
-            current={playerMovesCompleted}
-            results={moveResults}
+      {/* Main content - two column on desktop */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Board column */}
+        <div className="flex-1 flex flex-col max-w-lg mx-auto w-full px-3 pt-2">
+          {/* Board */}
+          <Chessboard
+            fen={fen}
+            onMove={handleMove}
+            moveHints={isChallengeMode ? new Map() : moveHints}
+            disabled={isComputerTurn || lineCompleted || (feedback?.type === "legit_alternative" && !!feedback?.suggestedMove)}
+            flipped={playerColor === "b"}
+            playerColor={playerColor}
+            arrowFrom={arrowTarget?.from}
+            arrowTo={arrowTarget?.to}
           />
-        )}
 
-        {/* Spacer */}
-        <div className="flex-1" />
+          {/* Feedback message area - only on mobile or when no sidebar */}
+          {isMobile && (
+            <div className="min-h-[52px] max-h-[180px] overflow-y-auto flex items-center justify-center text-center px-2 py-2">
+              <AnimatePresence mode="wait">
+                {isChallengeMode && !lineCompleted && !feedback && (
+                  <motion.div key="challenge-hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                    className="rounded-lg px-4 py-2 text-sm font-medium"
+                    style={{ background: "hsl(45, 100%, 50%, 0.1)", color: "hsl(45, 100%, 55%)" }}
+                  >
+                    Play from memory — no hints!
+                  </motion.div>
+                )}
+                {!isChallengeMode && !feedback && !lineCompleted && arrowTarget && (
+                  <motion.div key="play-hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                    className="rounded-lg px-4 py-2.5 text-sm text-muted-foreground"
+                    style={{ background: "hsl(var(--muted) / 0.5)" }}
+                  >
+                    Play the move indicated by the green arrow
+                  </motion.div>
+                )}
+                {!feedback && !lineCompleted && !arrowTarget && !isComputerTurn && (
+                  <motion.div key="your-turn" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                    className="text-sm text-muted-foreground"
+                  >
+                    Your turn
+                  </motion.div>
+                )}
+                {feedback && feedback.type === "main_line" && !lineCompleted && (
+                  <motion.div key="good" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                    className={`text-sm font-medium ${crucialMomentShown && feedback.message.startsWith("⚡") || feedback.message.startsWith("🛡️") ? "rounded-lg px-4 py-2" : ""}`}
+                    style={
+                      feedback.message.startsWith("⚡") || feedback.message.startsWith("🛡️")
+                        ? { color: currentTheme.accentColor, background: `${currentTheme.accentColor}15`, border: `1px solid ${currentTheme.accentColor}30` }
+                        : { color: "hsl(140, 65%, 45%)" }
+                    }
+                  >
+                    {feedback.message}
+                  </motion.div>
+                )}
+                {feedback && feedback.type === "legit_alternative" && !lineCompleted && (
+                  <motion.div key="alt" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                    className="text-sm text-foreground"
+                  >
+                    We recommend <span className="font-bold" style={{ color: currentTheme.accentColor }}>{feedback.suggestedMove}</span>.{" "}
+                    <span className="font-bold" style={{ color: "hsl(140, 50%, 50%)" }}>
+                      {moveHistory[moveHistory.length - 1]?.san}
+                    </span>{" "}
+                    is a good move – do you want to switch?
+                  </motion.div>
+                )}
+                {feedback && feedback.type === "mistake" && !lineCompleted && (
+                  <motion.div key="mistake" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                    className="text-sm text-foreground"
+                  >
+                    <span className="font-bold" style={{ color: "hsl(0, 65%, 50%)" }}>{feedback.message}</span>
+                    {feedback.suggestedMove && (
+                      <span className="ml-1">
+                        You should play <span className="font-bold" style={{ color: currentTheme.accentColor }}>{feedback.suggestedMove}</span> instead.
+                      </span>
+                    )}
+                  </motion.div>
+                )}
+                {lineCompleted && isChallengeMode && !showMasteryPrompt && (
+                  <motion.div key="challenge-done" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                    className="text-center"
+                  >
+                    <div className="rounded-lg px-4 py-3 text-sm font-medium mb-3"
+                      style={{ background: "hsl(140, 65%, 45%, 0.12)", color: "hsl(140, 65%, 45%)" }}
+                    >
+                      Now try to play the line correctly without guidance.
+                    </div>
+                  </motion.div>
+                )}
+                {lineCompleted && !isChallengeMode && !showMasteryPrompt && (
+                  <motion.div key="done" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                    className="text-center"
+                  >
+                    <Trophy className="w-6 h-6 mx-auto mb-1" style={{ color: currentTheme.accentColor }} />
+                    <p className="text-sm font-semibold text-foreground">
+                      {hadMistake ? t("lineCompleted") : t("perfectRun")}
+                    </p>
+                  </motion.div>
+                )}
+                {showMasteryPrompt && (
+                  <motion.div key="mastery" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+                    className="text-center"
+                  >
+                    <Trophy className="w-8 h-8 mx-auto mb-2" style={{ color: currentTheme.accentColor }} />
+                    <p className="font-serif text-lg font-semibold text-foreground mb-1">{t("masteryQuestion")}</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
 
-        {/* Bottom action bar */}
-        <div className="pb-6 pt-2">
-          <AnimatePresence mode="wait">
-            {/* Alternative: show two move buttons */}
-            {feedback && feedback.type === "legit_alternative" && feedback.suggestedMove && !lineCompleted && (
-              <motion.div key="alt-buttons" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
-                className="flex gap-3 items-center"
-              >
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => {
-                    setFeedback(null);
-                    handleUndo();
-                  }}
-                  className="flex-1 py-3.5 rounded-xl text-sm font-semibold border border-border/50 text-foreground hover:bg-accent transition-colors"
-                >
-                  {feedback.suggestedMove}
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => {
-                    // Show confirmation modal
-                    setShowSwitchConfirm(true);
-                    setPendingSwitchData({
-                      playerMoveScore: null,
-                      masterMoveScore: null,
-                      playerMoveSan: moveHistory[moveHistory.length - 1]?.san || "",
-                      masterMoveSan: feedback.suggestedMove || "",
-                      onAdopt: () => {
-                        setShowSwitchConfirm(false);
-                        setPendingSwitchData(null);
-                        // Switch to detected variation/opening, or continue tree, or custom branch
-                        if (feedback.detectedOpening) {
-                          setFeedback(null);
-                          navigate(`/study/${feedback.detectedOpening.id}/play?color=${playerColor}`);
-                          window.location.reload();
-                        } else if (feedback.detectedVariation) {
-                          navigate(
-                            `/study/${openingId}/play?color=${colorParam || opening.primarySide}&variation=${feedback.detectedVariation.variationId}&line=${feedback.detectedVariation.lineIndex}`,
-                          );
-                          window.location.reload();
-                        } else if (feedback.alternativeNode && feedback.alternativeNode.children.length > 0) {
-                          // In-tree alternative: continue with tree-based play
-                          setFeedback({ type: "main_line", message: t("goodContinue") });
-                          setCurrentNodes(feedback.alternativeNode.children);
-                          autoPlayComputerMove(feedback.alternativeNode.children, moveHistory.length);
-                        } else if (currentNodes.length > 0) {
-                          // We still have tree nodes: auto-play from tree
-                          setFeedback({ type: "main_line", message: t("goodContinue") });
-                          autoPlayComputerMove(currentNodes, moveHistory.length);
-                        }
-                      },
-                      onStay: () => {
-                        setShowSwitchConfirm(false);
-                        setPendingSwitchData(null);
-                        setFeedback(null);
-                        handleUndo();
-                      },
-                    });
-                  }}
-                  className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-background transition-colors"
-                  style={{ background: currentTheme.accentColor }}
-                >
-                  {moveHistory[moveHistory.length - 1]?.san}
-                </motion.button>
-              </motion.div>
-            )}
+          {/* Progress dots */}
+          {totalPlayerMoves > 0 && (
+            <ProgressDots
+              total={totalPlayerMoves}
+              current={playerMovesCompleted}
+              results={moveResults}
+            />
+          )}
 
-            {/* Mistake: retry button */}
-            {feedback && feedback.type === "mistake" && !lineCompleted && (
-              <motion.div key="mistake-btn" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setFeedback(null)}
-                  className="w-full py-3.5 rounded-xl text-sm font-semibold text-white transition-colors"
-                  style={{ background: "hsl(0, 65%, 50%)" }}
-                >
-                  {t("tryAgain")}
-                </motion.button>
-              </motion.div>
-            )}
+          {/* Spacer */}
+          <div className="flex-1" />
 
-            {/* Line completed actions */}
-            {lineCompleted && !showMasteryPrompt && (
-              <motion.div key="complete-btn" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
-                className="flex gap-3"
-              >
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleReset}
-                  className="flex-1 py-3.5 rounded-xl text-sm font-semibold border border-border/50 text-foreground hover:bg-accent transition-colors"
+          {/* Bottom action bar */}
+          <div className="pb-6 pt-2">
+            <AnimatePresence mode="wait">
+              {feedback && feedback.type === "legit_alternative" && feedback.suggestedMove && !lineCompleted && (
+                <motion.div key="alt-buttons" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
+                  className="flex gap-3 items-center"
                 >
-                  {t("practiceAgain")}
-                </motion.button>
-                {allVariationLines.length > 0 && currentLine && (
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={goToNextLine}
-                    className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-background flex items-center justify-center gap-1.5 transition-colors"
+                    onClick={() => {
+                      setFeedback(null);
+                      handleUndo();
+                    }}
+                    className="flex-1 py-3.5 rounded-xl text-sm font-semibold border border-border/50 text-foreground hover:bg-accent transition-colors"
+                  >
+                    {feedback.suggestedMove}
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                      setShowSwitchConfirm(true);
+                      setPendingSwitchData({
+                        playerMoveScore: null,
+                        masterMoveScore: null,
+                        playerMoveSan: moveHistory[moveHistory.length - 1]?.san || "",
+                        masterMoveSan: feedback.suggestedMove || "",
+                        onAdopt: () => {
+                          setShowSwitchConfirm(false);
+                          setPendingSwitchData(null);
+                          if (feedback.detectedOpening) {
+                            setFeedback(null);
+                            navigate(`/study/${feedback.detectedOpening.id}/play?color=${playerColor}`);
+                            window.location.reload();
+                          } else if (feedback.detectedVariation) {
+                            navigate(
+                              `/study/${openingId}/play?color=${colorParam || opening.primarySide}&variation=${feedback.detectedVariation.variationId}&line=${feedback.detectedVariation.lineIndex}`,
+                            );
+                            window.location.reload();
+                          } else if (feedback.alternativeNode && feedback.alternativeNode.children.length > 0) {
+                            setFeedback({ type: "main_line", message: t("goodContinue") });
+                            setCurrentNodes(feedback.alternativeNode.children);
+                            autoPlayComputerMove(feedback.alternativeNode.children, moveHistory.length);
+                          } else if (currentNodes.length > 0) {
+                            setFeedback({ type: "main_line", message: t("goodContinue") });
+                            autoPlayComputerMove(currentNodes, moveHistory.length);
+                          }
+                        },
+                        onStay: () => {
+                          setShowSwitchConfirm(false);
+                          setPendingSwitchData(null);
+                          setFeedback(null);
+                          handleUndo();
+                        },
+                      });
+                    }}
+                    className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-background transition-colors"
                     style={{ background: currentTheme.accentColor }}
                   >
-                    Continue
+                    {moveHistory[moveHistory.length - 1]?.san}
                   </motion.button>
-                )}
-              </motion.div>
-            )}
+                </motion.div>
+              )}
 
+              {feedback && feedback.type === "mistake" && !lineCompleted && (
+                <motion.div key="mistake-btn" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setFeedback(null)}
+                    className="w-full py-3.5 rounded-xl text-sm font-semibold text-white transition-colors"
+                    style={{ background: "hsl(0, 65%, 50%)" }}
+                  >
+                    {t("tryAgain")}
+                  </motion.button>
+                </motion.div>
+              )}
 
-            {/* Mastery prompt buttons */}
-            {showMasteryPrompt && (
-              <motion.div key="mastery-btns" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
-                className="flex gap-3"
-              >
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => handleMasteryResponse(false)}
-                  className="flex-1 py-3.5 rounded-xl text-sm font-semibold border border-border/50 text-foreground transition-colors"
+              {/* Line completed actions - only on mobile */}
+              {isMobile && lineCompleted && !showMasteryPrompt && (
+                <motion.div key="complete-btn" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
+                  className="flex gap-3"
                 >
-                  {t("notYet")}
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => handleMasteryResponse(true)}
-                  className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-background transition-colors"
-                  style={{ background: currentTheme.accentColor }}
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleReset}
+                    className="flex-1 py-3.5 rounded-xl text-sm font-semibold border border-border/50 text-foreground hover:bg-accent transition-colors"
+                  >
+                    {t("practiceAgain")}
+                  </motion.button>
+                  {allVariationLines.length > 0 && currentLine && (
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={goToNextLine}
+                      className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-background flex items-center justify-center gap-1.5 transition-colors"
+                      style={{ background: currentTheme.accentColor }}
+                    >
+                      Continue
+                    </motion.button>
+                  )}
+                </motion.div>
+              )}
+
+              {/* Mastery prompt buttons - only on mobile */}
+              {isMobile && showMasteryPrompt && (
+                <motion.div key="mastery-btns" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
+                  className="flex gap-3"
                 >
-                  {t("yesMastered")}
-                </motion.button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handleMasteryResponse(false)}
+                    className="flex-1 py-3.5 rounded-xl text-sm font-semibold border border-border/50 text-foreground transition-colors"
+                  >
+                    {t("notYet")}
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handleMasteryResponse(true)}
+                    className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-background transition-colors"
+                    style={{ background: currentTheme.accentColor }}
+                  >
+                    {t("yesMastered")}
+                  </motion.button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
+
+        {/* Sidebar - desktop only */}
+        {!isMobile && variationParam && (
+          <div className="w-80 flex-shrink-0">
+            <StudySidebar
+              openingId={opening.id}
+              variationId={variationParam}
+              lineIndex={lineParam !== null ? parseInt(lineParam, 10) : 0}
+              openingName={tn("openingName", opening.id)}
+              lineName={displayName}
+              moveHistory={moveHistory}
+              lineCompleted={lineCompleted}
+              hadMistake={hadMistake}
+              isChallengeMode={isChallengeMode}
+              showMasteryPrompt={showMasteryPrompt}
+              lineProgress={lineProgress}
+              totalPlayerMoves={totalPlayerMoves}
+              playerMovesCompleted={playerMovesCompleted}
+              onReset={handleReset}
+              onNextLine={goToNextLine}
+              onMasteryResponse={handleMasteryResponse}
+              hasNextLine={allVariationLines.length > 0 && !!currentLine && allVariationLines.findIndex(l => l.id === currentLine.id) < allVariationLines.length - 1}
+              conclusionText={currentLine ? lineConclusions[currentLine.id] : undefined}
+            />
+          </div>
+        )}
       </div>
 
       {/* Switch confirmation modal */}

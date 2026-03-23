@@ -53,6 +53,39 @@ export type Database = {
         }
         Relationships: []
       }
+      move_explanations: {
+        Row: {
+          created_at: string
+          explanation: string
+          id: string
+          line_index: number
+          move_index: number
+          opening_id: string
+          updated_at: string
+          variation_id: string
+        }
+        Insert: {
+          created_at?: string
+          explanation?: string
+          id?: string
+          line_index?: number
+          move_index: number
+          opening_id: string
+          updated_at?: string
+          variation_id: string
+        }
+        Update: {
+          created_at?: string
+          explanation?: string
+          id?: string
+          line_index?: number
+          move_index?: number
+          opening_id?: string
+          updated_at?: string
+          variation_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
