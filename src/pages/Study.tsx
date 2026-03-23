@@ -27,6 +27,7 @@ import { t, tf, tn, tDesc, tVar } from "@/lib/i18n";
 
 const MIN_CUSTOM_MOVES = 9;
 const MAX_CUSTOM_MOVES = 16;
+const ENGINE_EVAL_TIMEOUT_MS = 5500;
 
 interface MoveRecord {
   san: string;
@@ -135,6 +136,19 @@ export default function Study() {
   } | null>(null);
 
   const chess = chessRef.current;
+
+  const withEngineTimeout = useCallback(async <T,>(promise: Promise<T>, timeoutMs = ENGINE_EVAL_TIMEOUT_MS): Promise<T> => {
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      timeoutId = setTimeout(() => reject(new Error("ENGINE_TIMEOUT")), timeoutMs);
+    });
+
+    try {
+      return await Promise.race([promise, timeoutPromise]);
+    } finally {
+      if (timeoutId) clearTimeout(timeoutId);
+    }
+  }, []);
 
   const saveSnapshot = (): HistorySnapshot => ({
     fen,
@@ -332,7 +346,7 @@ export default function Study() {
     setIsComputerTurn(true);
     try {
       const engine = getEngine();
-      const evaluation = await engine.evaluate(chess.fen(), 12);
+      const evaluation = await withEngineTimeout(engine.evaluate(chess.fen(), 12));
       const bestMoveUci = evaluation.bestMove;
       if (!bestMoveUci || bestMoveUci === "(none)") {
         setIsComputerTurn(false);
@@ -382,7 +396,7 @@ export default function Study() {
       }
     }
     setIsComputerTurn(false);
-  }, [chess]);
+  }, [chess, withEngineTimeout]);
 
   const handleMove = useCallback(
     async (from: string, to: string, san: string) => {
@@ -430,7 +444,7 @@ export default function Study() {
           const preFen = chess.fen();
           const moveUci = from + to;
           const engine = getEngine();
-          const evaluation = await engine.evaluateMove(preFen, moveUci, san, 12);
+          const evaluation = await withEngineTimeout(engine.evaluateMove(preFen, moveUci, san, 12));
           chess.move({ from, to });
 
           if (evaluation.isGood) {
@@ -493,7 +507,7 @@ export default function Study() {
           const preFen = chess.fen();
           const moveUci = from + to;
           const engine = getEngine();
-          const evaluation = await engine.evaluateMove(preFen, moveUci, san, 12);
+          const evaluation = await withEngineTimeout(engine.evaluateMove(preFen, moveUci, san, 12));
           chess.move({ from, to });
 
           if (evaluation.isGood) {
@@ -635,7 +649,7 @@ export default function Study() {
           break;
       }
     },
-    [chess, currentNodes, isComputerTurn, moveHistory, autoPlayComputerMove, lineCompleted, findInOtherOpenings, isCustomBranch, evaluatingEngine, playEngineComputerMove, opening, preferredMoves, variationParam]
+    [chess, currentNodes, isComputerTurn, moveHistory, autoPlayComputerMove, lineCompleted, findInOtherOpenings, isCustomBranch, evaluatingEngine, playEngineComputerMove, opening, preferredMoves, variationParam, withEngineTimeout]
   );
 
   // Save custom line to database
@@ -941,7 +955,7 @@ export default function Study() {
             )}
 
             {/* Waiting for user (no arrow) */}
-            {!feedback && !lineCompleted && !evaluatingEngine && !arrowTarget && !isComputerTurn && currentNodes.length > 0 && (
+            {!feedback && !lineCompleted && !evaluatingEngine && !arrowTarget && !isComputerTurn && (
               <motion.div key="your-turn" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 className="text-sm text-muted-foreground"
               >

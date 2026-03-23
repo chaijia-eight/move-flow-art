@@ -34,7 +34,10 @@ class StockfishEngine {
     this.initPromise = new Promise<void>((resolve, reject) => {
       try {
         // Use single-thread build so engine works in environments without SharedArrayBuffer.
-        this.worker = new Worker("/stockfish/stockfish-single.js");
+        // Explicitly pin wasm path via hash so the worker doesn't guess a missing stockfish-single.wasm file.
+        this.worker = new Worker(
+          `/stockfish/stockfish-single.js#${encodeURIComponent("/stockfish/stockfish.wasm")}`,
+        );
         
         this.worker.onmessage = (e) => {
           const line = typeof e.data === "string" ? e.data : e.data?.toString?.() ?? "";
@@ -73,7 +76,7 @@ class StockfishEngine {
     this.worker?.postMessage(command);
   }
 
-  private waitFor(token: string, timeout = 10000): Promise<string[]> {
+  private waitFor(token: string, timeout = 5000): Promise<string[]> {
     return new Promise((resolve, reject) => {
       const lines: string[] = [];
       const timer = setTimeout(() => {
@@ -98,7 +101,7 @@ class StockfishEngine {
     });
   }
 
-  private async sendAndWait(command: string, token: string, timeout = 10000): Promise<string[]> {
+  private async sendAndWait(command: string, token: string, timeout = 5000): Promise<string[]> {
     const promise = this.waitFor(token, timeout);
     this.send(command);
     return promise;
