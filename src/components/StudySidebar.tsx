@@ -184,9 +184,8 @@ export default function StudySidebar({
 
   useEffect(() => {
     fetchExplanations().then((count) => {
-      setLoaded(true);
-      // Auto-generate if no explanations exist
-      if (count === 0 && allMoves.length > 0) {
+      // Auto-generate only for developer
+      if (isDeveloper && count === 0 && allMoves.length > 0) {
         generateExplanations();
       }
     });
