@@ -65,11 +65,7 @@ export default function StudySidebar({
   const isDeveloper = user?.email === DEVELOPER_EMAIL;
 
   const [explanations, setExplanations] = useState<Record<number, string>>({});
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [editText, setEditText] = useState("");
-  const [saving, setSaving] = useState(false);
   const [generating, setGenerating] = useState(false);
-  const [loaded, setLoaded] = useState(false);
 
   // Fetch explanations
   const fetchExplanations = useCallback(async () => {
