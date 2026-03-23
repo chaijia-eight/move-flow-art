@@ -93,7 +93,7 @@ export default function StudyHub() {
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="mb-10"
         >
-          <h1 className="font-serif text-4xl md:text-5xl font-bold text-foreground tracking-tight mb-3">
+          <h1 className="font-serif text-4xl md:text-5xl font-bold tracking-tight mb-3" style={{ color: theme.accentColor }}>
             {openingName}
           </h1>
           <p className="text-muted-foreground text-lg leading-relaxed max-w-2xl">

@@ -135,9 +135,9 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
               >
                 {isWhite ? "W" : "B"}
               </div>
-              <h3
+            <h3
                 className="text-base font-semibold truncate leading-tight"
-                style={{ color: cardText }}
+                style={{ color: theme.accentColor }}
               >
                 {openingName}
               </h3>
