@@ -23,7 +23,7 @@ import {
 } from "@/lib/progressStore";
 import { playLineCompleteSound, playMasterySound } from "@/lib/chessSounds";
 import { squareToCoords } from "@/data/pieceUnicode";
-import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap } from "lucide-react";
+import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap, Eye } from "lucide-react";
 import { t, tf, tn, tDesc, tVar } from "@/lib/i18n";
 
 interface MoveRecord {
@@ -53,6 +53,7 @@ export default function Study() {
   const variationParam = searchParams.get("variation");
   const lineParam = searchParams.get("line");
   const isReview = searchParams.get("review") === "1";
+  const isPracticeMode = searchParams.get("practice") === "1";
 
   // Resolve current line
   const { currentLine, allVariationLines } = useMemo(() => {
@@ -105,6 +106,7 @@ export default function Study() {
   const [currentVariation, setCurrentVariation] = useState<{ name: string; description: string } | null>(null);
   const [hadMistake, setHadMistake] = useState(false);
   const [crucialMomentShown, setCrucialMomentShown] = useState(false);
+  const [hintVisible, setHintVisible] = useState(false);
 
   // Mastery prompt state
   const [showMasteryPrompt, setShowMasteryPrompt] = useState(false);
@@ -350,6 +352,7 @@ export default function Study() {
       const newHistory = [...moveHistory, { san, moveNumber: isWhite ? moveNum : moveNum - 1, isWhite }];
       setMoveHistory(newHistory);
       setMoveCount((c) => c + 1);
+      setHintVisible(false);
       setUndoStack((prev) => [...prev, snapshot]);
       setRedoStack([]);
 
@@ -523,6 +526,7 @@ export default function Study() {
     setShowSwitchConfirm(false);
     setPendingSwitchData(null);
     setResetCounter((c) => c + 1);
+    setHintVisible(false);
   };
 
   const handleColorSwitch = (color: "w" | "b") => {
@@ -572,8 +576,8 @@ export default function Study() {
     if (!opening || lineCompleted || isComputerTurn) return null;
     // Check challenge mode inline to avoid forward reference
     const lp = currentLine ? getLineProgress(currentLine.id) : null;
-    const isChallenge = !!(lp && !lp.mastered && lp.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1);
-    if (isChallenge) return null;
+    const isChallenge = isPracticeMode || !!(lp && !lp.mastered && lp.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1);
+    if (isChallenge && !hintVisible) return null;
     const tempChess = new Chess(fen);
     if (tempChess.turn() !== playerColor) return null;
 
@@ -592,7 +596,7 @@ export default function Study() {
     const match = legalMoves.find(m => m.san === expectedSan);
     if (!match) return null;
     return { from: match.from, to: match.to };
-  }, [opening, fen, playerColor, moveHistory.length, preferredMoves, currentNodes, currentLine, lineCompleted, isComputerTurn]);
+  }, [opening, fen, playerColor, moveHistory.length, preferredMoves, currentNodes, currentLine, lineCompleted, isComputerTurn, isPracticeMode, hintVisible]);
 
   const totalPlayerMoves = useMemo(() => {
     if (!currentLine) return 0;
@@ -625,7 +629,7 @@ export default function Study() {
     : tn("openingName", opening.id);
 
   const lineProgress = currentLine ? getLineProgress(currentLine.id) : null;
-  const isChallengeMode = !!(lineProgress && !lineProgress.mastered && lineProgress.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1);
+  const isChallengeMode = isPracticeMode || !!(lineProgress && !lineProgress.mastered && lineProgress.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1);
 
 
   return (
@@ -649,7 +653,7 @@ export default function Study() {
               {sideLabel}
               {isChallengeMode && !lineCompleted && (
                 <span className="ml-2 inline-flex items-center gap-0.5 text-[10px] font-bold" style={{ color: "hsl(45, 100%, 60%)" }}>
-                  <Zap className="w-3 h-3" /> Challenge
+                  <Zap className="w-3 h-3" /> {isPracticeMode ? "Practice" : "Challenge"}
                 </span>
               )}
             </p>
@@ -657,6 +661,15 @@ export default function Study() {
         </div>
 
         <div className="flex items-center gap-1">
+          {isPracticeMode && !lineCompleted && !isComputerTurn && (
+            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+              onClick={() => setHintVisible(v => !v)}
+              className={`p-2 rounded-lg transition-colors ${hintVisible ? 'bg-accent' : 'hover:bg-accent'}`}
+              title="Show hint"
+            >
+              <Eye className="w-4 h-4" style={{ color: hintVisible ? "hsl(45, 100%, 55%)" : undefined }} />
+            </motion.button>
+          )}
           <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
             onClick={handleUndo} disabled={undoStack.length === 0 || isComputerTurn}
             className="p-2 rounded-lg hover:bg-accent transition-colors disabled:opacity-30" title="Undo"
