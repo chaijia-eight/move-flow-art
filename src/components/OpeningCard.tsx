@@ -109,8 +109,14 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
     >
       {/* Accent bar */}
       <div
-        className="h-1"
+        className="h-1.5"
         style={{ background: `linear-gradient(90deg, ${theme.primaryColor}, ${theme.accentColor})` }}
+      />
+
+      {/* Theme color wash */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.07]"
+        style={{ background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.accentColor})` }}
       />
 
       <div className="p-4 relative">
