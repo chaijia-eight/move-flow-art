@@ -675,7 +675,7 @@ export default function Study() {
         />
 
         {/* Feedback message area */}
-        <div className="min-h-[52px] flex items-center justify-center text-center px-2 py-2">
+        <div className="min-h-[52px] max-h-[180px] overflow-y-auto flex items-center justify-center text-center px-2 py-2">
           <AnimatePresence mode="wait">
 
             {/* Challenge mode instruction */}
