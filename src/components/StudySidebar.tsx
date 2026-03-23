@@ -306,7 +306,7 @@ export default function StudySidebar({
                       />
                       <div className="flex gap-2">
                         <button
-                          onClick={() => handleSave(latestIdx)}
+                          onClick={() => handleSave(showIdx)}
                           disabled={saving}
                           className="px-3 py-1 rounded-md text-xs font-medium bg-primary text-primary-foreground"
                         >
