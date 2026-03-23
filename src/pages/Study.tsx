@@ -8,7 +8,6 @@ import ProgressDots from "@/components/ProgressDots";
 import SwitchConfirmModal from "@/components/SwitchConfirmModal";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
 import { type OpeningNode, type MoveCategory } from "@/data/openings";
 import { openings } from "@/data/openingTrees";
 import { extractLinesForVariation, type Line } from "@/lib/lineExtractor";
@@ -19,15 +18,10 @@ import {
   isLineUnlocked,
   MASTERY_PROMPT_THRESHOLD,
 } from "@/lib/progressStore";
-import { getEngine } from "@/lib/stockfishEngine";
 import { playLineCompleteSound, playMasterySound } from "@/lib/chessSounds";
 import { squareToCoords } from "@/data/pieceUnicode";
-import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap, Loader2, Save, Search } from "lucide-react";
+import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap } from "lucide-react";
 import { t, tf, tn, tDesc, tVar } from "@/lib/i18n";
-
-const MIN_CUSTOM_MOVES = 9;
-const MAX_CUSTOM_MOVES = 16;
-const ENGINE_EVAL_TIMEOUT_MS = 5500;
 
 interface MoveRecord {
   san: string;
@@ -41,74 +35,6 @@ interface HistorySnapshot {
   moveHistory: MoveRecord[];
   moveCount: number;
   currentVariation: { name: string; description: string } | null;
-}
-
-type VerboseMove = {
-  from: string;
-  to: string;
-  san: string;
-  flags: string;
-  piece: string;
-  captured?: string;
-  promotion?: string;
-};
-
-const PIECE_VALUES: Record<string, number> = {
-  p: 100,
-  n: 320,
-  b: 330,
-  r: 500,
-  q: 900,
-  k: 0,
-};
-
-const CORE_CENTER = new Set(["d4", "e4", "d5", "e5"]);
-const WIDE_CENTER = new Set([
-  "c3", "d3", "e3", "f3",
-  "c4", "f4",
-  "c5", "f5",
-  "c6", "d6", "e6", "f6",
-]);
-const EARLY_DEVELOPMENT_SQUARES = new Set(["b1", "g1", "b8", "g8", "c1", "f1", "c8", "f8"]);
-
-function scoreSensibleMove(move: VerboseMove, ply: number): number {
-  let score = 0;
-
-  if (move.captured) score += (PIECE_VALUES[move.captured] ?? 100) * 1.35;
-  if (move.promotion) score += PIECE_VALUES[move.promotion] ?? 700;
-  if (move.flags.includes("k") || move.flags.includes("q")) score += 85;
-
-  if (CORE_CENTER.has(move.to)) score += 32;
-  else if (WIDE_CENTER.has(move.to)) score += 14;
-
-  if ((move.piece === "n" || move.piece === "b") && EARLY_DEVELOPMENT_SQUARES.has(move.from)) {
-    score += 24;
-  }
-
-  if (move.piece === "p" && (move.to[1] === "4" || move.to[1] === "5")) score += 7;
-
-  if (move.piece === "q" && ply <= 12) score -= 36;
-  if (move.piece === "k" && !(move.flags.includes("k") || move.flags.includes("q")) && ply <= 16) score -= 55;
-  if (move.piece === "r" && ply <= 10 && !move.captured) score -= 12;
-
-  return score;
-}
-
-function pickSensibleMove(chess: Chess, preferredSan?: string): VerboseMove | null {
-  const legalMoves = chess.moves({ verbose: true }) as unknown as VerboseMove[];
-  if (!legalMoves.length) return null;
-
-  if (preferredSan) {
-    const preferred = legalMoves.find((m) => m.san === preferredSan);
-    if (preferred) return preferred;
-  }
-
-  const fullMoveNumber = chess.moveNumber();
-  const ply = Math.max(1, (fullMoveNumber - 1) * 2 + (chess.turn() === "w" ? 1 : 2));
-
-  return legalMoves
-    .map((move) => ({ move, score: scoreSensibleMove(move, ply) }))
-    .sort((a, b) => b.score - a.score)[0]?.move ?? legalMoves[0];
 }
 
 export default function Study() {
@@ -183,13 +109,7 @@ export default function Study() {
   const [undoStack, setUndoStack] = useState<HistorySnapshot[]>([]);
   const [redoStack, setRedoStack] = useState<HistorySnapshot[]>([]);
 
-  // Custom branch state (off-tree engine-guided)
-  const [isCustomBranch, setIsCustomBranch] = useState(false);
-  const [evaluatingEngine, setEvaluatingEngine] = useState(false);
-  const [customLineSaved, setCustomLineSaved] = useState(false);
-
-  // Eval & progress tracking
-  const [currentEval, setCurrentEval] = useState<number | null>(null);
+  // Progress tracking
   const [moveResults, setMoveResults] = useState<("correct" | "alternative" | "mistake" | "pending")[]>([]);
 
   // Switch confirmation modal state
@@ -204,19 +124,6 @@ export default function Study() {
   } | null>(null);
 
   const chess = chessRef.current;
-
-  const withEngineTimeout = useCallback(async <T,>(promise: Promise<T>, timeoutMs = ENGINE_EVAL_TIMEOUT_MS): Promise<T> => {
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
-    const timeoutPromise = new Promise<never>((_, reject) => {
-      timeoutId = setTimeout(() => reject(new Error("ENGINE_TIMEOUT")), timeoutMs);
-    });
-
-    try {
-      return await Promise.race([promise, timeoutPromise]);
-    } finally {
-      if (timeoutId) clearTimeout(timeoutId);
-    }
-  }, []);
 
   const saveSnapshot = (): HistorySnapshot => ({
     fen,
@@ -403,89 +310,13 @@ export default function Study() {
     }, 800);
   }, [chess, moveHistory, moveCount, currentVariation, checkLineCompletion]);
 
-  // Engine-based computer move for custom branch
-  const playEngineComputerMove = useCallback(async (currentMoveHistory: MoveRecord[]) => {
-    if (currentMoveHistory.length >= MAX_CUSTOM_MOVES) {
-      setLineCompleted(true);
-      playLineCompleteSound();
-      return;
-    }
-
-    setIsComputerTurn(true);
-    try {
-      const engine = getEngine();
-      const evaluation = await withEngineTimeout(engine.evaluate(chess.fen(), 12));
-      const bestMoveUci = evaluation.bestMove;
-
-      let result = null;
-      if (bestMoveUci && bestMoveUci !== "(none)") {
-        const from = bestMoveUci.slice(0, 2);
-        const to = bestMoveUci.slice(2, 4);
-        const promotion = bestMoveUci.length > 4 ? bestMoveUci[4] : undefined;
-        result = chess.move({ from, to, promotion });
-      }
-
-      // If engine returns no/invalid move, pick a sensible fallback instead of first legal move.
-      if (!result) {
-        const fallbackMove = pickSensibleMove(chess);
-        if (fallbackMove) {
-          result = chess.move({
-            from: fallbackMove.from,
-            to: fallbackMove.to,
-            promotion: fallbackMove.promotion,
-          });
-        }
-      }
-
-      if (!result) {
-        setLineCompleted(true);
-        playLineCompleteSound();
-        return;
-      }
-
-      const newFen = chess.fen();
-      setFen(newFen);
-      const isW = chess.turn() === "b";
-      const mn = Math.ceil(chess.moveNumber());
-      setMoveHistory((prev) => [
-        ...prev,
-        { san: result.san, moveNumber: isW ? mn : mn - 1, isWhite: isW },
-      ]);
-      setFeedback(null);
-    } catch {
-      // Engine fallback: play a sensible move so the study flow never gets stuck on opponent turn
-      const fallbackMove = pickSensibleMove(chess);
-      if (fallbackMove) {
-        const result = chess.move({
-          from: fallbackMove.from,
-          to: fallbackMove.to,
-          promotion: fallbackMove.promotion,
-        });
-        if (result) {
-          const newFen = chess.fen();
-          setFen(newFen);
-          const isW = chess.turn() === "b";
-          const mn = Math.ceil(chess.moveNumber());
-          setMoveHistory((prev) => [
-            ...prev,
-            { san: result.san, moveNumber: isW ? mn : mn - 1, isWhite: isW },
-          ]);
-          setFeedback(null);
-        }
-      } else {
-        setLineCompleted(true);
-        playLineCompleteSound();
-      }
-    }
-    setIsComputerTurn(false);
-  }, [chess, withEngineTimeout]);
 
   const handleMove = useCallback(
     async (from: string, to: string, san: string) => {
-      if (isComputerTurn || lineCompleted || evaluatingEngine) return;
+      if (isComputerTurn || lineCompleted) return;
 
       const snapshot = saveSnapshot();
-      const matchedNode = isCustomBranch ? null : currentNodes.find((node) => node.move === san);
+      const matchedNode = currentNodes.find((node) => node.move === san);
 
       try {
         chess.move({ from, to });
@@ -512,58 +343,6 @@ export default function Study() {
         currentNodes[0]?.move ||
         san;
 
-      // Custom branch: evaluate every move with engine
-      if (isCustomBranch) {
-        if (newHistory.length >= MAX_CUSTOM_MOVES) {
-          setLineCompleted(true);
-          playLineCompleteSound();
-          return;
-        }
-
-        setEvaluatingEngine(true);
-        try {
-          chess.undo();
-          const preFen = chess.fen();
-          const moveUci = from + to;
-          const engine = getEngine();
-          const evaluation = await withEngineTimeout(engine.evaluateMove(preFen, moveUci, san, 12));
-          chess.move({ from, to });
-
-          if (evaluation.isGood) {
-            setFeedback({
-              type: "main_line",
-              message: t("goodContinue"),
-            });
-            // Computer responds
-            await playEngineComputerMove(newHistory);
-          } else {
-            // Bad move - reject
-            chess.undo();
-            setFen(chess.fen());
-            setMoveHistory((prev) => prev.slice(0, -1));
-            setUndoStack((prev) => prev.slice(0, -1));
-            setHadMistake(true);
-            setFeedback({
-              type: "mistake",
-              message: evaluation.explanation,
-              suggestedMove: evaluation.bestMoveSan,
-            });
-          }
-        } catch {
-          // Engine failed: keep the just-played move on board, then continue with fallback response
-          try {
-            chess.load(newFen);
-          } catch {
-            // ignore load failures and keep current state
-          }
-          setFen(newFen);
-          await playEngineComputerMove(newHistory);
-        } finally {
-          setEvaluatingEngine(false);
-        }
-        return;
-      }
-
       if (!matchedNode) {
         // Check cross-opening transposition first
         const allSans = newHistory.map((m) => m.san);
@@ -582,59 +361,18 @@ export default function Study() {
           return;
         }
 
-        // Evaluate off-tree move with Stockfish
-        setEvaluatingEngine(true);
-        try {
-          chess.undo();
-          const preFen = chess.fen();
-          const moveUci = from + to;
-          const engine = getEngine();
-          const evaluation = await withEngineTimeout(engine.evaluateMove(preFen, moveUci, san, 12));
-          chess.move({ from, to });
-
-          if (evaluation.isGood) {
-            // Good off-tree move — offer to switch to custom branch
-            const recommendedSan = getSuggestedMoveForCurrentPly(evaluation.bestMoveSan);
-            setFeedback({
-              type: "legit_alternative",
-              message: tf<(s: string) => string>("moveIsValidAlt")(san),
-              suggestedMove: recommendedSan,
-            });
-            setCurrentNodes([]);
-          } else {
-            // Bad move — reject
-            chess.undo();
-            setFen(chess.fen());
-            setMoveHistory((prev) => prev.slice(0, -1));
-            setUndoStack((prev) => prev.slice(0, -1));
-            setHadMistake(true);
-            setFeedback({
-              type: "mistake",
-              message: evaluation.explanation,
-              suggestedMove: evaluation.bestMoveSan,
-            });
-          }
-        } catch {
-          // Engine failed: ensure chess state stays synced with the board after player's move
-          try {
-            chess.load(newFen);
-          } catch {
-            // ignore load failures and keep current state
-          }
-          setFen(newFen);
-
-          // Still surface switch controls so the user can continue
-          const suggestedFallback = getSuggestedMoveForCurrentPly();
-
-          setFeedback({
-            type: "legit_alternative",
-            message: tf<(s: string) => string>("moveIsValidAlt")(san),
-            suggestedMove: suggestedFallback,
-          });
-          setCurrentNodes([]);
-        } finally {
-          setEvaluatingEngine(false);
-        }
+        // Off-tree move with no transposition — treat as mistake
+        chess.undo();
+        setFen(chess.fen());
+        setMoveHistory((prev) => prev.slice(0, -1));
+        setUndoStack((prev) => prev.slice(0, -1));
+        setHadMistake(true);
+        const recommendedSan = getSuggestedMoveForCurrentPly();
+        setFeedback({
+          type: "mistake",
+          message: t("notBestMove"),
+          suggestedMove: recommendedSan,
+        });
         return;
       }
 
@@ -731,36 +469,9 @@ export default function Study() {
           break;
       }
     },
-    [chess, currentNodes, isComputerTurn, moveHistory, autoPlayComputerMove, lineCompleted, findInOtherOpenings, isCustomBranch, evaluatingEngine, playEngineComputerMove, opening, preferredMoves, variationParam, withEngineTimeout]
+    [chess, currentNodes, isComputerTurn, moveHistory, autoPlayComputerMove, lineCompleted, findInOtherOpenings, opening, preferredMoves, variationParam]
   );
 
-  // Save custom line to database
-  const handleSaveCustomLine = async () => {
-    if (!user || !opening || moveHistory.length < MIN_CUSTOM_MOVES) return;
-    setCustomLineSaved(true);
-    try {
-      const tempChess = new Chess();
-      const moves: string[] = [];
-      const fens: string[] = [];
-      for (const move of moveHistory) {
-        tempChess.move(move.san);
-        moves.push(move.san);
-        fens.push(tempChess.fen());
-      }
-      await supabase.from("custom_lines").insert({
-        user_id: user.id,
-        name: `${opening.name} Custom`,
-        moves,
-        fens,
-        side: playerColor,
-        move_count: moves.length,
-        opening_id: opening.id,
-      } as any);
-    } catch (err) {
-      console.error("Save error:", err);
-      setCustomLineSaved(false);
-    }
-  };
 
   const handleReset = () => {
     initialAutoPlayed.current = false;
@@ -777,10 +488,6 @@ export default function Study() {
     setHadMistake(false);
     setLineCompleted(false);
     setShowMasteryPrompt(false);
-    setIsCustomBranch(false);
-    setEvaluatingEngine(false);
-    setCustomLineSaved(false);
-    setCurrentEval(null);
     setMoveResults([]);
     setShowSwitchConfirm(false);
     setPendingSwitchData(null);
@@ -839,11 +546,6 @@ export default function Study() {
     const tempChess = new Chess(fen);
     if (tempChess.turn() !== playerColor) return null;
 
-    if (isCustomBranch) {
-      const fallbackHint = pickSensibleMove(tempChess);
-      if (!fallbackHint) return null;
-      return { from: fallbackHint.from, to: fallbackHint.to };
-    }
 
     const totalMoves = moveHistory.length;
     let expectedSan: string | null = null;
@@ -859,7 +561,7 @@ export default function Study() {
     const match = legalMoves.find(m => m.san === expectedSan);
     if (!match) return null;
     return { from: match.from, to: match.to };
-  }, [opening, fen, playerColor, moveHistory.length, preferredMoves, currentNodes, currentLine, isCustomBranch, lineCompleted, isComputerTurn]);
+  }, [opening, fen, playerColor, moveHistory.length, preferredMoves, currentNodes, currentLine, lineCompleted, isComputerTurn]);
 
   const totalPlayerMoves = useMemo(() => {
     if (!currentLine) return 0;
@@ -894,13 +596,6 @@ export default function Study() {
   const lineProgress = currentLine ? getLineProgress(currentLine.id) : null;
   const isChallengeMode = !!(lineProgress && !lineProgress.mastered && lineProgress.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1);
 
-  const canSaveCustomLine = isCustomBranch && user && moveHistory.length >= MIN_CUSTOM_MOVES && !customLineSaved;
-
-  const formatEval = (cp: number | null) => {
-    if (cp === null) return "";
-    const sign = cp >= 0 ? "+" : "";
-    return `${sign}${(cp / 100).toFixed(2)}`;
-  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -931,17 +626,6 @@ export default function Study() {
         </div>
 
         <div className="flex items-center gap-1">
-          {isCustomBranch && (
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold mr-2"
-              style={{
-                background: "hsl(140, 50%, 45%, 0.15)",
-                color: "hsl(140, 50%, 50%)",
-                border: "1px solid hsl(140, 50%, 45%, 0.25)",
-              }}
-            >
-              Custom
-            </span>
-          )}
           <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
             onClick={handleUndo} disabled={undoStack.length === 0 || isComputerTurn}
             className="p-2 rounded-lg hover:bg-accent transition-colors disabled:opacity-30" title="Undo"
@@ -977,33 +661,12 @@ export default function Study() {
 
       {/* Main content - mobile-first stacked layout */}
       <div className="flex-1 flex flex-col max-w-lg mx-auto w-full px-3 pt-2">
-        {/* Eval display */}
-        {currentEval !== null && (
-          <div className="px-1 py-1.5">
-            <span className="text-sm font-mono text-muted-foreground">
-              Evaluation: <span className="font-semibold text-foreground">{formatEval(currentEval)}</span>
-            </span>
-          </div>
-        )}
-
-        {/* Feedback scores when comparing moves */}
-        {feedback && feedback.type === "legit_alternative" && feedback.suggestedMove && !lineCompleted && (
-          <div className="flex justify-between px-1 py-1.5">
-            <span className="text-sm font-mono text-muted-foreground">
-              Saved move: <span className="font-semibold text-foreground">{formatEval(currentEval)}</span>
-            </span>
-            <span className="text-sm font-mono text-muted-foreground">
-              Your move: <span className="font-semibold text-foreground">{formatEval(currentEval)}</span>
-            </span>
-          </div>
-        )}
-
         {/* Board */}
         <Chessboard
           fen={fen}
           onMove={handleMove}
-          moveHints={isChallengeMode || isCustomBranch ? new Map() : moveHints}
-          disabled={isComputerTurn || lineCompleted || evaluatingEngine || (feedback?.type === "legit_alternative" && !!feedback?.suggestedMove)}
+          moveHints={isChallengeMode ? new Map() : moveHints}
+          disabled={isComputerTurn || lineCompleted || (feedback?.type === "legit_alternative" && !!feedback?.suggestedMove)}
           flipped={playerColor === "b"}
           playerColor={playerColor}
           arrowFrom={arrowTarget?.from}
@@ -1013,17 +676,9 @@ export default function Study() {
         {/* Feedback message area */}
         <div className="min-h-[52px] flex items-center justify-center text-center px-2 py-2">
           <AnimatePresence mode="wait">
-            {evaluatingEngine && (
-              <motion.div key="eval" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                className="flex items-center gap-2"
-              >
-                <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">Evaluating move…</span>
-              </motion.div>
-            )}
 
             {/* Challenge mode instruction */}
-            {isChallengeMode && !lineCompleted && !feedback && !evaluatingEngine && (
+            {isChallengeMode && !lineCompleted && !feedback && (
               <motion.div key="challenge-hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 className="rounded-lg px-4 py-2 text-sm font-medium"
                 style={{ background: "hsl(45, 100%, 50%, 0.1)", color: "hsl(45, 100%, 55%)" }}
@@ -1033,7 +688,7 @@ export default function Study() {
             )}
 
             {/* Default: show "Play the move indicated by the green arrow" */}
-            {!isChallengeMode && !feedback && !lineCompleted && !evaluatingEngine && arrowTarget && (
+            {!isChallengeMode && !feedback && !lineCompleted && arrowTarget && (
               <motion.div key="play-hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 className="rounded-lg px-4 py-2.5 text-sm text-muted-foreground"
                 style={{ background: "hsl(var(--muted) / 0.5)" }}
@@ -1043,7 +698,7 @@ export default function Study() {
             )}
 
             {/* Waiting for user (no arrow) */}
-            {!feedback && !lineCompleted && !evaluatingEngine && !arrowTarget && !isComputerTurn && (
+            {!feedback && !lineCompleted && !arrowTarget && !isComputerTurn && (
               <motion.div key="your-turn" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 className="text-sm text-muted-foreground"
               >
@@ -1088,7 +743,7 @@ export default function Study() {
             )}
 
             {/* Line completed - challenge mode message */}
-            {lineCompleted && isChallengeMode && !showMasteryPrompt && !isCustomBranch && (
+            {lineCompleted && isChallengeMode && !showMasteryPrompt && (
               <motion.div key="challenge-done" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                 className="rounded-lg px-4 py-3 text-sm font-medium"
                 style={{ background: "hsl(140, 65%, 45%, 0.12)", color: "hsl(140, 65%, 45%)" }}
@@ -1098,7 +753,7 @@ export default function Study() {
             )}
 
             {/* Line completed - normal */}
-            {lineCompleted && !isChallengeMode && !showMasteryPrompt && !isCustomBranch && (
+            {lineCompleted && !isChallengeMode && !showMasteryPrompt && (
               <motion.div key="done" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                 className="text-center"
               >
@@ -1112,25 +767,6 @@ export default function Study() {
               </motion.div>
             )}
 
-            {/* Custom branch completed */}
-            {isCustomBranch && lineCompleted && !customLineSaved && (
-              <motion.div key="custom-done" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                className="text-center"
-              >
-                <Trophy className="w-6 h-6 mx-auto mb-1" style={{ color: "hsl(140, 50%, 50%)" }} />
-                <p className="text-sm font-semibold text-foreground">{t("lineRecorded")}</p>
-                <p className="text-xs text-muted-foreground">{t("saveCustomLineDesc")}</p>
-              </motion.div>
-            )}
-
-            {customLineSaved && (
-              <motion.div key="saved" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-                className="text-center"
-              >
-                <Trophy className="w-6 h-6 mx-auto mb-1" style={{ color: "hsl(140, 50%, 50%)" }} />
-                <p className="text-sm font-semibold text-foreground">{t("lineSaved")}</p>
-              </motion.div>
-            )}
 
             {/* Mastery prompt */}
             {showMasteryPrompt && (
@@ -1185,8 +821,8 @@ export default function Study() {
                     // Show confirmation modal
                     setShowSwitchConfirm(true);
                     setPendingSwitchData({
-                      playerMoveScore: currentEval,
-                      masterMoveScore: currentEval,
+                      playerMoveScore: null,
+                      masterMoveScore: null,
                       playerMoveSan: moveHistory[moveHistory.length - 1]?.san || "",
                       masterMoveSan: feedback.suggestedMove || "",
                       onAdopt: () => {
@@ -1211,11 +847,6 @@ export default function Study() {
                           // We still have tree nodes: auto-play from tree
                           setFeedback({ type: "main_line", message: t("goodContinue") });
                           autoPlayComputerMove(currentNodes, moveHistory.length);
-                        } else {
-                          // Truly off-tree: enter custom branch with engine
-                          setIsCustomBranch(true);
-                          setFeedback({ type: "main_line", message: t("customBranchStarted") });
-                          playEngineComputerMove(moveHistory);
                         }
                       },
                       onStay: () => {
@@ -1250,7 +881,7 @@ export default function Study() {
             )}
 
             {/* Line completed actions */}
-            {lineCompleted && !showMasteryPrompt && !isCustomBranch && (
+            {lineCompleted && !showMasteryPrompt && (
               <motion.div key="complete-btn" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
                 className="flex gap-3"
               >
@@ -1276,57 +907,6 @@ export default function Study() {
               </motion.div>
             )}
 
-            {/* Custom branch completed */}
-            {isCustomBranch && lineCompleted && !customLineSaved && (
-              <motion.div key="custom-btns" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
-                className="flex gap-3"
-              >
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleReset}
-                  className="flex-1 py-3.5 rounded-xl text-sm font-semibold border border-border/50 text-foreground transition-colors"
-                >
-                  {t("discard")}
-                </motion.button>
-                {user && moveHistory.length >= MIN_CUSTOM_MOVES && (
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={handleSaveCustomLine}
-                    className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-background flex items-center justify-center gap-1.5 transition-colors"
-                    style={{ background: "hsl(140, 50%, 45%)" }}
-                  >
-                    <Save className="w-4 h-4" />
-                    {t("saveCustomLine")}
-                  </motion.button>
-                )}
-              </motion.div>
-            )}
-
-            {customLineSaved && (
-              <motion.div key="saved-btns" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
-                className="flex gap-3"
-              >
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleReset}
-                  className="flex-1 py-3.5 rounded-xl text-sm font-semibold border border-border/50 text-foreground transition-colors"
-                >
-                  {t("practiceAgain")}
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => navigate(`/study/${openingId}`)}
-                  className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-background transition-colors"
-                  style={{ background: currentTheme.accentColor }}
-                >
-                  {t("backToHub")}
-                </motion.button>
-              </motion.div>
-            )}
 
             {/* Mastery prompt buttons */}
             {showMasteryPrompt && (
