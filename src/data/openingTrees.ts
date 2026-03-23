@@ -16060,7 +16060,7 @@ export const openings: Opening[] = [
     variations: [
       { id: "classical-scotch", name: "Classical Scotch", description: "Bc5 against the knight — principled development.", plan: "As White, dominate the center after the early d4 exchange. As Black, challenge with Bc5 and aim for piece activity.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.d4 exd4 4.Nxd4 Bc5", tree: scotchGameTree, depth: 8 },
       { id: "scotch-four-knights", name: "Scotch Four Knights", description: "Nf6 leads to four knights territory.", plan: "Both sides develop knights actively. White aims for a slight central advantage.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.d4 exd4 4.Nxd4 Nf6", tree: scotchGameTree, depth: 6 },
-      { id: "scotch-steinitz", name: "Scotch Steinitz", description: "d6 — a solid and underrated response.", plan: "As Black, play d6 for solid development. Aim for Be7, O-O and piece activity.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.d4 exd4 4.Nxd4 d6", tree: scotchGameTree, depth: 10 },,
+      { id: "scotch-steinitz", name: "Scotch Steinitz", description: "d6 — a solid and underrated response.", plan: "As Black, play d6 for solid development. Aim for Be7, O-O and piece activity.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.d4 exd4 4.Nxd4 d6", tree: scotchGameTree, depth: 10 },
     ]
   },
   {
@@ -16083,7 +16083,7 @@ export const openings: Opening[] = [
       { id: "classical-pirc", name: "Classical Pirc", description: "Nf3 + Be2 — restrained but potent.", plan: "As Black, develop flexibly with g6, Bg7, d6, and Nf6. Let White overextend, then strike with c5 or e5.", startingMoves: "1.e4 d6 2.d4 Nf6 3.Nc3 g6 4.Nf3", tree: pircDefenseTree, depth: 8 },
       { id: "austrian-attack", name: "Austrian Attack", description: "f4 — White plays aggressively.", plan: "As White, build a massive center with f4 and e5. As Black, survive and counterattack.", startingMoves: "1.e4 d6 2.d4 Nf6 3.Nc3 g6 4.f4", tree: pircDefenseTree, depth: 7 },
       { id: "pirc-150-attack", name: "150 Attack", description: "Be3 + Qd2 — dangerous attacking setup.", plan: "As White, castle queenside and launch a kingside pawn storm. As Black, counter on the queenside.", startingMoves: "1.e4 d6 2.d4 Nf6 3.Nc3 g6 4.Be3", tree: pircDefenseTree, depth: 10 },
-      { id: "pirc-byrne", name: "Byrne Variation", description: "Bg5 pins the knight — positional pressure.", plan: "As White, apply pressure with the bishop and prepare a central advance.", startingMoves: "1.e4 d6 2.d4 Nf6 3.Nc3 g6 4.Bg5", tree: pircDefenseTree, depth: 10 },,
+      { id: "pirc-byrne", name: "Byrne Variation", description: "Bg5 pins the knight — positional pressure.", plan: "As White, apply pressure with the bishop and prepare a central advance.", startingMoves: "1.e4 d6 2.d4 Nf6 3.Nc3 g6 4.Bg5", tree: pircDefenseTree, depth: 10 },
     ]
   },
   {
@@ -16114,7 +16114,7 @@ export const openings: Opening[] = [
     variations: [
       { id: "classical-nimzo", name: "Classical Nimzo", description: "Qc2 avoids doubled pawns — the main line.", plan: "As White, play Qc2 to prevent doubled c-pawns after Bxc3. Aim for a strong center with e4.", startingMoves: "1.d4 Nf6 2.c4 e6 3.Nc3 Bb4 4.Qc2", tree: nimzoIndianTree, depth: 8 },
       { id: "rubinstein-nimzo", name: "Rubinstein Nimzo", description: "e3 — solid and positional.", plan: "As White, play e3 and develop to d3. Accept doubled pawns if Black takes on c3.", startingMoves: "1.d4 Nf6 2.c4 e6 3.Nc3 Bb4 4.e3", tree: nimzoIndianTree, depth: 8 },
-      { id: "kmoch-nimzo", name: "Kmoch Variation", description: "f3 — ambitious and complex.", plan: "As White, prepare e4 with f3 support. As Black, exploit the weakened king position.", startingMoves: "1.d4 Nf6 2.c4 e6 3.Nc3 Bb4 4.f3", tree: nimzoIndianTree, depth: 10 },,
+      { id: "kmoch-nimzo", name: "Kmoch Variation", description: "f3 — ambitious and complex.", plan: "As White, prepare e4 with f3 support. As Black, exploit the weakened king position.", startingMoves: "1.d4 Nf6 2.c4 e6 3.Nc3 Bb4 4.f3", tree: nimzoIndianTree, depth: 10 },
     ]
   },
   {
@@ -16157,7 +16157,7 @@ export const openings: Opening[] = [
       { id: "open-catalan", name: "Open Catalan", description: "Black takes on c4 — White's Bg2 pressures the queenside.", plan: "As White, let Black take c4 and recover it with Bg2's long diagonal pressure.", startingMoves: "1.d4 Nf6 2.c4 e6 3.g3 d5 4.Bg2 Be7 5.Nf3 O-O 6.O-O dxc4", tree: catalanOpeningTree, depth: 14 },
       { id: "closed-catalan", name: "Closed Catalan", description: "Black keeps the center closed with Nbd7.", plan: "As White, build pressure on the queenside with Bg2 and prepare e4 or b3.", startingMoves: "1.d4 Nf6 2.c4 e6 3.g3 d5 4.Bg2 Be7 5.Nf3 O-O 6.O-O Nbd7", tree: catalanOpeningTree, depth: 12 },
       { id: "catalan-c6", name: "Catalan c6 System", description: "Black plays c6 to bolster d5 — a solid, flexible setup.", plan: "As Black, keep the center closed and develop the queenside naturally with b6, Ba6.", startingMoves: "1.d4 Nf6 2.c4 e6 3.g3 d5 4.Bg2 Be7 5.Nf3 O-O 6.O-O c6", tree: catalanOpeningTree, depth: 12 },
-      { id: "catalan-b5", name: "Catalan Pawn Grab", description: "Black grabs the b5 pawn — ambitious and sharp.", plan: "As Black, take the b-pawn and try to hold it. White gets long-term pressure on the long diagonal.", startingMoves: "1.d4 Nf6 2.c4 e6 3.g3 d5 4.Bg2 Be7 5.Nf3 O-O 6.O-O b5", tree: catalanOpeningTree, depth: 12 },,
+      { id: "catalan-b5", name: "Catalan Pawn Grab", description: "Black grabs the b5 pawn — ambitious and sharp.", plan: "As Black, take the b-pawn and try to hold it. White gets long-term pressure on the long diagonal.", startingMoves: "1.d4 Nf6 2.c4 e6 3.g3 d5 4.Bg2 Be7 5.Nf3 O-O 6.O-O b5", tree: catalanOpeningTree, depth: 12 },
     ]
   },
   {
@@ -16168,7 +16168,7 @@ export const openings: Opening[] = [
     variations: [
       { id: "modern-benoni", name: "Modern Benoni", description: "e4 — the critical test with a strong center vs Black's activity.", plan: "As Black, accept space disadvantage for queenside counterplay with a6, b5.", startingMoves: "1.d4 Nf6 2.c4 c5 3.d5 e6 4.Nc3 exd5 5.cxd5 d6 6.e4", tree: benoniDefenseTree, depth: 14 },
       { id: "fianchetto-benoni", name: "Fianchetto Benoni", description: "g3 — a quieter approach with long-term pressure.", plan: "As White, fianchetto and maintain a flexible center.", startingMoves: "1.d4 Nf6 2.c4 c5 3.d5 e6 4.Nc3 exd5 5.cxd5 d6 6.g3", tree: benoniDefenseTree, depth: 14 },
-      { id: "classical-benoni", name: "Classical Benoni", description: "Nf3 — natural development before committing the center.", plan: "As White, develop with Nf3, Be2, O-O. As Black, prepare Re8 and b5 queenside expansion.", startingMoves: "1.d4 Nf6 2.c4 c5 3.d5 e6 4.Nc3 exd5 5.cxd5 d6 6.Nf3", tree: benoniDefenseTree, depth: 12 },,
+      { id: "classical-benoni", name: "Classical Benoni", description: "Nf3 — natural development before committing the center.", plan: "As White, develop with Nf3, Be2, O-O. As Black, prepare Re8 and b5 queenside expansion.", startingMoves: "1.d4 Nf6 2.c4 c5 3.d5 e6 4.Nc3 exd5 5.cxd5 d6 6.Nf3", tree: benoniDefenseTree, depth: 12 },
     ]
   },
   {
