@@ -171,7 +171,7 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
         </div>
 
         {/* Side label */}
-        <p className="text-[11px] font-medium mb-2 ml-7" style={{ color: cardMuted }}>
+        <p className="text-[11px] font-medium mb-2 ml-7" style={{ color: theme.accentColor }}>
           {isWhite ? "Playing as White" : "Playing as Black"}
         </p>
 
