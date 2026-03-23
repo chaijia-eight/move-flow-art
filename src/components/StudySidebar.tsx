@@ -230,8 +230,8 @@ export default function StudySidebar({
         </div>
       </div>
 
-      {/* Scrollable move explanations */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+      {/* Current explanation */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-3 flex flex-col justify-center">
         {/* Generating indicator */}
         {generating && Object.keys(explanations).length === 0 && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground py-4">
@@ -240,44 +240,61 @@ export default function StudySidebar({
           </div>
         )}
 
-        {/* Empty state at start - always show intro */}
-        {moveHistory.length === 0 && !lineCompleted && (
-          <div className="flex items-start gap-2.5">
-            <div className="flex-shrink-0 mt-1">
-              <img
-                src={playerSide === "w" ? "/pieces/wK.svg" : "/pieces/bK.svg"}
-                alt="Guide"
-                className="w-5 h-5"
-              />
-            </div>
-            <div
-              className="rounded-lg px-3 py-2 text-sm leading-relaxed"
-              style={{ background: "hsl(var(--card))", color: "hsl(var(--card-foreground))" }}
+        <AnimatePresence mode="wait">
+          {/* Empty state at start */}
+          {moveHistory.length === 0 && !lineCompleted && !showMasteryPrompt && (
+            <motion.div
+              key="intro"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="flex items-start gap-2.5"
             >
-              Let's learn the <strong>{lineName}</strong>. Make your first move!
-            </div>
-          </div>
-        )}
+              <div className="flex-shrink-0 mt-1">
+                <img
+                  src={playerSide === "w" ? "/pieces/wK.svg" : "/pieces/bK.svg"}
+                  alt="Guide"
+                  className="w-5 h-5"
+                />
+              </div>
+              <div
+                className="rounded-lg px-3 py-2 text-sm leading-relaxed"
+                style={{ background: "hsl(var(--card))", color: "hsl(var(--card-foreground))" }}
+              >
+                Let's learn the <strong>{lineName}</strong>. Make your first move!
+              </div>
+            </motion.div>
+          )}
 
-        <AnimatePresence initial={false}>
-          {moveHistory.map((move, idx) => {
-            const explanation = explanations[idx];
-            const kingIcon = move.isWhite ? "/pieces/wK.svg" : "/pieces/bK.svg";
+          {/* Show only the latest player move explanation */}
+          {(() => {
+            if (lineCompleted || showMasteryPrompt || moveHistory.length === 0) return null;
+            // Find the latest move that has an explanation (prefer latest player move)
+            const latestIdx = moveHistory.length - 1;
+            const latestMove = moveHistory[latestIdx];
+            const explanation = explanations[latestIdx];
+            const isPlayerMove = playerSide === "w" ? latestMove.isWhite : !latestMove.isWhite;
+            const kingIcon = isPlayerMove
+              ? (playerSide === "w" ? "/pieces/wK.svg" : "/pieces/bK.svg")
+              : (playerSide === "w" ? "/pieces/bK.svg" : "/pieces/wK.svg");
+
+            // Only show for player moves, or if it's an opponent move with an explanation
+            if (!isPlayerMove && !explanation) return null;
 
             return (
               <motion.div
-                key={`move-${idx}`}
+                key={`move-${latestIdx}`}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.05 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
                 className="flex items-start gap-2.5"
               >
                 <div className="flex-shrink-0 mt-1">
-                  <img src={kingIcon} alt={move.isWhite ? "White" : "Black"} className="w-5 h-5" />
+                  <img src={kingIcon} alt={isPlayerMove ? "You" : "Opponent"} className="w-5 h-5" />
                 </div>
-
                 <div className="flex-1 min-w-0">
-                  {editingIndex === idx ? (
+                  {editingIndex === latestIdx ? (
                     <div className="space-y-2">
                       <textarea
                         value={editText}
@@ -288,7 +305,7 @@ export default function StudySidebar({
                       />
                       <div className="flex gap-2">
                         <button
-                          onClick={() => handleSave(idx)}
+                          onClick={() => handleSave(latestIdx)}
                           disabled={saving}
                           className="px-3 py-1 rounded-md text-xs font-medium bg-primary text-primary-foreground"
                         >
@@ -304,30 +321,25 @@ export default function StudySidebar({
                     </div>
                   ) : (
                     <div
-                      className={`rounded-lg px-3 py-2 text-sm leading-relaxed ${
+                      className={`rounded-lg px-3 py-2.5 text-sm leading-relaxed ${
                         isDeveloper ? "cursor-pointer hover:ring-1 hover:ring-primary/30 transition-all" : ""
                       }`}
                       style={{
                         background: "hsl(var(--card))",
                         color: "hsl(var(--card-foreground))",
                       }}
-                      onClick={() => isDeveloper && handleStartEdit(idx)}
+                      onClick={() => isDeveloper && handleStartEdit(latestIdx)}
                       title={isDeveloper ? "Click to edit" : undefined}
                     >
                       {explanation ? (
-                        <>
-                          <span>{explanation}</span>
-                          <span className="block text-xs text-muted-foreground mt-1 font-mono">
-                            {move.moveNumber}{move.isWhite ? "." : "..."} {move.san}
-                          </span>
-                        </>
+                        <span>{explanation}</span>
                       ) : (
                         <span className="text-muted-foreground">
                           {isDeveloper ? (
                             <span className="italic">Click to add explanation...</span>
                           ) : (
                             <span className="font-mono">
-                              {move.moveNumber}{move.isWhite ? "." : "..."} {move.san}
+                              {latestMove.moveNumber}{latestMove.isWhite ? "." : "..."} {latestMove.san}
                             </span>
                           )}
                         </span>
@@ -337,7 +349,7 @@ export default function StudySidebar({
                 </div>
               </motion.div>
             );
-          })}
+          })()}
 
           {/* Line completed state */}
           {lineCompleted && !showMasteryPrompt && (
