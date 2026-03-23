@@ -57,14 +57,14 @@ Example format:
       throw new Error("LOVABLE_API_KEY not configured");
     }
 
-    const response = await fetch("https://api.lovable.dev/api/v2/chat", {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${LOVABLE_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: "google/gemini-3-flash-preview",
         messages: [
           { role: "user", content: prompt },
         ],
