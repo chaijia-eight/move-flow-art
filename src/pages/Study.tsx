@@ -821,8 +821,8 @@ export default function Study() {
                     // Show confirmation modal
                     setShowSwitchConfirm(true);
                     setPendingSwitchData({
-                      playerMoveScore: currentEval,
-                      masterMoveScore: currentEval,
+                      playerMoveScore: null,
+                      masterMoveScore: null,
                       playerMoveSan: moveHistory[moveHistory.length - 1]?.san || "",
                       masterMoveSan: feedback.suggestedMove || "",
                       onAdopt: () => {
