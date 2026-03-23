@@ -269,17 +269,18 @@ export default function StudySidebar({
           {/* Show only the latest player move explanation */}
           {(() => {
             if (lineCompleted || showMasteryPrompt || moveHistory.length === 0) return null;
-            // Find the latest move that has an explanation (prefer latest player move)
-            const latestIdx = moveHistory.length - 1;
-            const latestMove = moveHistory[latestIdx];
-            const explanation = explanations[latestIdx];
-            const isPlayerMove = playerSide === "w" ? latestMove.isWhite : !latestMove.isWhite;
-            const kingIcon = isPlayerMove
-              ? (playerSide === "w" ? "/pieces/wK.svg" : "/pieces/bK.svg")
-              : (playerSide === "w" ? "/pieces/bK.svg" : "/pieces/wK.svg");
+            // Find the latest player move
+            let showIdx = -1;
+            for (let i = moveHistory.length - 1; i >= 0; i--) {
+              const m = moveHistory[i];
+              const isPlayer = playerSide === "w" ? m.isWhite : !m.isWhite;
+              if (isPlayer) { showIdx = i; break; }
+            }
+            if (showIdx === -1) return null;
 
-            // Only show for player moves, or if it's an opponent move with an explanation
-            if (!isPlayerMove && !explanation) return null;
+            const latestMove = moveHistory[showIdx];
+            const explanation = explanations[showIdx];
+            const kingIcon = playerSide === "w" ? "/pieces/wK.svg" : "/pieces/bK.svg";
 
             return (
               <motion.div
