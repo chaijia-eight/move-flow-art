@@ -1,29 +1,35 @@
 import type { OpeningNode, Opening, VariationInfo } from "@/data/openings";
 
+export interface CrucialMoment {
+  moveIndex: number;       // 0-based index in the line's moves array
+  move: string;            // the SAN of the diverging move
+  moveNumber: number;      // chess move number (1-based)
+  isWhiteMove: boolean;    // true if it's white's move
+  isPlayerMove: boolean;   // true if it's the studying player's move
+  description: string;     // human-readable summary
+}
+
 export interface Line {
-  id: string; // e.g. "italian-game/giuoco-piano/line-0"
+  id: string;
   variationId: string;
   openingId: string;
-  name: string; // e.g. "Line 1" or a specific variation name from the tree
-  moves: string[]; // SAN sequence for this line
+  name: string;
+  moves: string[];
   nodeCount: number;
+  crucialMoment?: CrucialMoment;
 }
 
 /**
  * Extract lines from a variation's tree.
  * A "line" = one complete root-to-leaf path through the tree.
- * At branching points (where multiple non-mistake children exist), 
- * each branch becomes a separate line.
  */
 function extractPaths(
   nodes: OpeningNode[],
   currentPath: string[] = []
 ): string[][] {
-  // Filter out mistake nodes — they're not real lines
   const validNodes = nodes.filter((n) => n.category !== "mistake");
   
   if (validNodes.length === 0) {
-    // Leaf reached — return the accumulated path
     return currentPath.length > 0 ? [currentPath] : [];
   }
 
@@ -32,7 +38,6 @@ function extractPaths(
     const newPath = [...currentPath, node.move];
     const childPaths = extractPaths(node.children, newPath);
     if (childPaths.length === 0) {
-      // This node is a leaf
       paths.push(newPath);
     } else {
       paths.push(...childPaths);
@@ -41,11 +46,6 @@ function extractPaths(
   return paths;
 }
 
-/**
- * Given a variation, walk the tree following the variation's startingMoves
- * to find the subtree, then extract all lines from there.
- * The line includes the starting moves + subtree paths.
- */
 function getVariationSubtree(
   tree: OpeningNode[],
   startingMoves: string[]
@@ -63,11 +63,39 @@ function getVariationSubtree(
   return { subtree: nodes, prefix };
 }
 
+/**
+ * Find the crucial moment where a line diverges from the main line.
+ */
+function findCrucialMoment(
+  mainMoves: string[],
+  lineMoves: string[],
+  primarySide: "w" | "b"
+): CrucialMoment | undefined {
+  for (let i = 0; i < lineMoves.length; i++) {
+    if (i >= mainMoves.length || lineMoves[i] !== mainMoves[i]) {
+      const isWhiteMove = i % 2 === 0; // move 0 = white's 1st move
+      const moveNumber = Math.floor(i / 2) + 1;
+      const isPlayerMove = (primarySide === "w") === isWhiteMove;
+      const who = isPlayerMove ? "You play" : "Opponent plays";
+      const moveLabel = `${moveNumber}${isWhiteMove ? "." : "..."}${lineMoves[i]}`;
+      
+      return {
+        moveIndex: i,
+        move: lineMoves[i],
+        moveNumber,
+        isWhiteMove,
+        isPlayerMove,
+        description: `${who} ${moveLabel} instead of ${i < mainMoves.length ? mainMoves[i] : "continuing"}`,
+      };
+    }
+  }
+  return undefined;
+}
+
 export function extractLinesForVariation(
   opening: Opening,
   variation: VariationInfo
 ): Line[] {
-  // Parse starting moves
   const startingSans = variation.startingMoves
     .replace(/\d+\./g, "")
     .trim()
@@ -75,13 +103,9 @@ export function extractLinesForVariation(
     .filter(Boolean);
 
   const { subtree, prefix } = getVariationSubtree(variation.tree, startingSans);
-
-  // The prefix itself is always the first line (the base line)
-  // Then each path through the subtree becomes an extension
   const subPaths = extractPaths(subtree);
 
   if (subPaths.length === 0) {
-    // Only the base line exists
     return [{
       id: `${opening.id}/${variation.id}/line-0`,
       variationId: variation.id,
@@ -92,16 +116,26 @@ export function extractLinesForVariation(
     }];
   }
 
-  return subPaths.map((subPath, i) => ({
-    id: `${opening.id}/${variation.id}/line-${i}`,
-    variationId: variation.id,
-    openingId: opening.id,
-    name: i === 0
-      ? `${variation.name} — Main Line`
-      : `${variation.name} — Line ${i + 1}`,
-    moves: [...prefix, ...subPath],
-    nodeCount: prefix.length + subPath.length,
-  }));
+  const mainMoves = [...prefix, ...subPaths[0]];
+
+  return subPaths.map((subPath, i) => {
+    const fullMoves = [...prefix, ...subPath];
+    const crucialMoment = i === 0
+      ? undefined // main line has no divergence
+      : findCrucialMoment(mainMoves, fullMoves, opening.primarySide);
+
+    return {
+      id: `${opening.id}/${variation.id}/line-${i}`,
+      variationId: variation.id,
+      openingId: opening.id,
+      name: i === 0
+        ? `${variation.name} — Main Line`
+        : `${variation.name} — Line ${i + 1}`,
+      moves: fullMoves,
+      nodeCount: fullMoves.length,
+      crucialMoment,
+    };
+  });
 }
 
 export function extractAllLines(opening: Opening): Line[] {
