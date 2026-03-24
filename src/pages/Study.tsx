@@ -750,7 +750,8 @@ export default function Study() {
                   >
                     {feedback.message}
                   </motion.div>
-                )
+                )}
+
                 {feedback && feedback.type === "mistake" && !lineCompleted && (
                   <motion.div key="mistake" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                     className="text-sm text-foreground"
