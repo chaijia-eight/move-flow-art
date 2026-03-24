@@ -373,16 +373,26 @@ export default function Study() {
         const allSans = newHistory.map((m) => m.san);
         const detected = findInOtherOpenings(allSans);
         if (detected) {
-          const recommendedSan = getSuggestedMoveForCurrentPly();
-          setFeedback({
-            type: "legit_alternative",
-            message: tf<(n: string) => string>("thatsThe")(detected.name),
-            variationName: detected.name,
-            suggestedMove: recommendedSan,
-            detectedOpening: detected,
-          });
-          setCurrentNodes(detected.nodes);
+          // Cross-opening transposition — treat as mistake, undo the move
+          chess.undo();
+          setFen(chess.fen());
+          setMoveHistory((prev) => prev.slice(0, -1));
+          setUndoStack((prev) => prev.slice(0, -1));
           setHadMistake(true);
+          const recommendedSan = getSuggestedMoveForCurrentPly();
+          if (isChallengeMode) {
+            setHintVisible(true);
+            setFeedback({
+              type: "mistake",
+              message: "Play the move indicated by the green arrow.",
+            });
+          } else {
+            setFeedback({
+              type: "mistake",
+              message: t("notBestMove"),
+              suggestedMove: recommendedSan,
+            });
+          }
           return;
         }
 
