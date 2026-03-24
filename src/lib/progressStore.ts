@@ -139,7 +139,7 @@ export async function syncProgressFromCloud(): Promise<void> {
     .maybeSingle();
 
   const local = load();
-  const cloud = (row?.data as ProgressData) || {};
+  const cloud = (row?.data as unknown as ProgressData) || {};
   const merged = mergeProgress(local, cloud);
 
   // Save merged data locally and to cloud
