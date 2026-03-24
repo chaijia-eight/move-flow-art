@@ -466,11 +466,20 @@ export default function Study() {
           setMoveHistory((prev) => prev.slice(0, -1));
           setUndoStack((prev) => prev.slice(0, -1));
           setHadMistake(true);
-          setFeedback({
-            type: "mistake",
-            message: matchedNode.explanation || t("notBestMove"),
-            suggestedMove: matchedNode.suggestedMove,
-          });
+          if (isChallengeMode) {
+            // In challenge mode, reveal the correct move arrow and prompt to play it
+            setHintVisible(true);
+            setFeedback({
+              type: "mistake",
+              message: "Play the move indicated by the green arrow.",
+            });
+          } else {
+            setFeedback({
+              type: "mistake",
+              message: matchedNode.explanation || t("notBestMove"),
+              suggestedMove: matchedNode.suggestedMove,
+            });
+          }
           break;
       }
     },
