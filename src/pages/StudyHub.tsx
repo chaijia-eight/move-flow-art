@@ -152,7 +152,10 @@ export default function StudyHub() {
               whileHover={{ y: -2, boxShadow: `0 10px 30px -10px ${theme.primaryColor}40` }}
               whileTap={{ scale: 0.98 }}
               onClick={() => {
-                const randomLine = allLines[Math.floor(Math.random() * allLines.length)];
+                // Only pick from lines that have been attempted at least once
+                const attemptedLines = allLines.filter(l => getLineProgress(l.id).attempts >= 1);
+                const pool = attemptedLines.length > 0 ? attemptedLines : allLines;
+                const randomLine = pool[Math.floor(Math.random() * pool.length)];
                 if (randomLine) {
                   const variation = opening.variations.find(v => v.id === randomLine.variationId);
                   if (variation) {

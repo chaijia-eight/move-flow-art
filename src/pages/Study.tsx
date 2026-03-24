@@ -335,6 +335,10 @@ export default function Study() {
     async (from: string, to: string, san: string) => {
       if (isComputerTurn || lineCompleted) return;
 
+      // Compute challenge mode inside callback to ensure fresh value
+      const lp = currentLine ? getLineProgress(currentLine.id) : null;
+      const isChallengeMode = isPracticeMode || !!(lp && !lp.mastered && lp.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1);
+
       const snapshot = saveSnapshot();
       const matchedNode = currentNodes.find((node) => node.move === san);
 
@@ -369,16 +373,26 @@ export default function Study() {
         const allSans = newHistory.map((m) => m.san);
         const detected = findInOtherOpenings(allSans);
         if (detected) {
-          const recommendedSan = getSuggestedMoveForCurrentPly();
-          setFeedback({
-            type: "legit_alternative",
-            message: tf<(n: string) => string>("thatsThe")(detected.name),
-            variationName: detected.name,
-            suggestedMove: recommendedSan,
-            detectedOpening: detected,
-          });
-          setCurrentNodes(detected.nodes);
+          // Cross-opening transposition — treat as mistake, undo the move
+          chess.undo();
+          setFen(chess.fen());
+          setMoveHistory((prev) => prev.slice(0, -1));
+          setUndoStack((prev) => prev.slice(0, -1));
           setHadMistake(true);
+          const recommendedSan = getSuggestedMoveForCurrentPly();
+          if (isChallengeMode) {
+            setHintVisible(true);
+            setFeedback({
+              type: "mistake",
+              message: "Play the move indicated by the green arrow.",
+            });
+          } else {
+            setFeedback({
+              type: "mistake",
+              message: t("notBestMove"),
+              suggestedMove: recommendedSan,
+            });
+          }
           return;
         }
 
@@ -389,11 +403,19 @@ export default function Study() {
         setUndoStack((prev) => prev.slice(0, -1));
         setHadMistake(true);
         const recommendedSan = getSuggestedMoveForCurrentPly();
-        setFeedback({
-          type: "mistake",
-          message: t("notBestMove"),
-          suggestedMove: recommendedSan,
-        });
+        if (isChallengeMode) {
+          setHintVisible(true);
+          setFeedback({
+            type: "mistake",
+            message: "Play the move indicated by the green arrow.",
+          });
+        } else {
+          setFeedback({
+            type: "mistake",
+            message: t("notBestMove"),
+            suggestedMove: recommendedSan,
+          });
+        }
         return;
       }
 
@@ -443,46 +465,18 @@ export default function Study() {
         }
 
         case "legit_alternative": {
+          // When studying a specific line, treat alternatives as mistakes — undo and retry
           setMoveResults(prev => [...prev, "alternative"]);
-          let detectedVar: { variationId: string; lineIndex: number } | undefined;
-          if (opening && matchedNode.variationName) {
-            const altName = matchedNode.variationName.toLowerCase().replace(/\s+/g, '-');
-            const matchingVariation = opening.variations.find(
-              (v) => v.id === altName || v.name === matchedNode.variationName
-            );
-            if (matchingVariation) {
-              const varLines = extractLinesForVariation(opening, matchingVariation);
-              const allSans = newHistory.map((m) => m.san);
-              let bestLineIdx = 0;
-              let bestMatch = 0;
-              varLines.forEach((line, idx) => {
-                let matchCount = 0;
-                for (let i = 0; i < Math.min(allSans.length, line.moves.length); i++) {
-                  if (allSans[i] === line.moves[i]) matchCount++;
-                  else break;
-                }
-                if (matchCount > bestMatch) {
-                  bestMatch = matchCount;
-                  bestLineIdx = idx;
-                }
-              });
-              detectedVar = { variationId: matchingVariation.id, lineIndex: bestLineIdx };
-            }
-          }
-          // Find the recommended move (preferred path move) to show as suggestion
+          chess.undo();
+          setFen(chess.fen());
+          setMoveHistory((prev) => prev.slice(0, -1));
+          setUndoStack((prev) => prev.slice(0, -1));
+          setHadMistake(true);
           const recommendedSan = getSuggestedMoveForCurrentPly(matchedNode.suggestedMove);
           setFeedback({
-            type: "legit_alternative",
-            message: tf<(n: string) => string>("alsoGood")(matchedNode.variationName || "Alternative Line"),
-            variationName: matchedNode.variationName,
+            type: "mistake",
+            message: t("notBestMove"),
             suggestedMove: recommendedSan,
-            alternativeNode: matchedNode,
-            detectedVariation: detectedVar,
-          });
-          setCurrentNodes(matchedNode.children);
-          setCurrentVariation({
-            name: matchedNode.variationName || "Alternative Line",
-            description: tf<(n: string) => string>("nowExploring")(matchedNode.variationName || "Alternative Line"),
           });
           break;
         }
@@ -494,11 +488,20 @@ export default function Study() {
           setMoveHistory((prev) => prev.slice(0, -1));
           setUndoStack((prev) => prev.slice(0, -1));
           setHadMistake(true);
-          setFeedback({
-            type: "mistake",
-            message: matchedNode.explanation || t("notBestMove"),
-            suggestedMove: matchedNode.suggestedMove,
-          });
+          if (isChallengeMode) {
+            // In challenge mode, reveal the correct move arrow and prompt to play it
+            setHintVisible(true);
+            setFeedback({
+              type: "mistake",
+              message: "Play the move indicated by the green arrow.",
+            });
+          } else {
+            setFeedback({
+              type: "mistake",
+              message: matchedNode.explanation || t("notBestMove"),
+              suggestedMove: matchedNode.suggestedMove,
+            });
+          }
           break;
       }
     },
@@ -712,7 +715,7 @@ export default function Study() {
             fen={fen}
             onMove={handleMove}
             moveHints={isChallengeMode ? new Map() : moveHints}
-            disabled={isComputerTurn || lineCompleted || (feedback?.type === "legit_alternative" && !!feedback?.suggestedMove)}
+            disabled={isComputerTurn || lineCompleted}
             flipped={playerColor === "b"}
             playerColor={playerColor}
             arrowFrom={arrowTarget?.from}
@@ -758,17 +761,7 @@ export default function Study() {
                     {feedback.message}
                   </motion.div>
                 )}
-                {feedback && feedback.type === "legit_alternative" && !lineCompleted && (
-                  <motion.div key="alt" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                    className="text-sm text-foreground"
-                  >
-                    We recommend <span className="font-bold" style={{ color: currentTheme.accentColor }}>{feedback.suggestedMove}</span>.{" "}
-                    <span className="font-bold" style={{ color: "hsl(140, 50%, 50%)" }}>
-                      {moveHistory[moveHistory.length - 1]?.san}
-                    </span>{" "}
-                    is a good move – do you want to switch?
-                  </motion.div>
-                )}
+
                 {feedback && feedback.type === "mistake" && !lineCompleted && (
                   <motion.div key="mistake" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                     className="text-sm text-foreground"
@@ -829,68 +822,6 @@ export default function Study() {
           {/* Bottom action bar */}
           <div className="pb-6 pt-2">
             <AnimatePresence mode="wait">
-              {feedback && feedback.type === "legit_alternative" && feedback.suggestedMove && !lineCompleted && (
-                <motion.div key="alt-buttons" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
-                  className="flex gap-3 items-center"
-                >
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => {
-                      setFeedback(null);
-                      handleUndo();
-                    }}
-                    className="flex-1 py-3.5 rounded-xl text-sm font-semibold border border-border/50 text-foreground hover:bg-accent transition-colors"
-                  >
-                    {feedback.suggestedMove}
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => {
-                      setShowSwitchConfirm(true);
-                      setPendingSwitchData({
-                        playerMoveScore: null,
-                        masterMoveScore: null,
-                        playerMoveSan: moveHistory[moveHistory.length - 1]?.san || "",
-                        masterMoveSan: feedback.suggestedMove || "",
-                        onAdopt: () => {
-                          setShowSwitchConfirm(false);
-                          setPendingSwitchData(null);
-                          if (feedback.detectedOpening) {
-                            setFeedback(null);
-                            navigate(`/study/${feedback.detectedOpening.id}/play?color=${playerColor}`);
-                            window.location.reload();
-                          } else if (feedback.detectedVariation) {
-                            navigate(
-                              `/study/${openingId}/play?color=${colorParam || opening.primarySide}&variation=${feedback.detectedVariation.variationId}&line=${feedback.detectedVariation.lineIndex}`,
-                            );
-                            window.location.reload();
-                          } else if (feedback.alternativeNode && feedback.alternativeNode.children.length > 0) {
-                            setFeedback({ type: "main_line", message: t("goodContinue") });
-                            setCurrentNodes(feedback.alternativeNode.children);
-                            autoPlayComputerMove(feedback.alternativeNode.children, moveHistory.length);
-                          } else if (currentNodes.length > 0) {
-                            setFeedback({ type: "main_line", message: t("goodContinue") });
-                            autoPlayComputerMove(currentNodes, moveHistory.length);
-                          }
-                        },
-                        onStay: () => {
-                          setShowSwitchConfirm(false);
-                          setPendingSwitchData(null);
-                          setFeedback(null);
-                          handleUndo();
-                        },
-                      });
-                    }}
-                    className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-background transition-colors"
-                    style={{ background: currentTheme.accentColor }}
-                  >
-                    {moveHistory[moveHistory.length - 1]?.san}
-                  </motion.button>
-                </motion.div>
-              )}
-
               {feedback && feedback.type === "mistake" && !lineCompleted && (
                 <motion.div key="mistake-btn" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}>
                   <motion.button
