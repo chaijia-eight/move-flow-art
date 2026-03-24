@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
+import { syncProgressFromCloud } from "@/lib/progressStore";
+import { syncFocusFromCloud } from "@/lib/focusStore";
 
 interface AuthContextType {
   user: User | null;
@@ -30,6 +32,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+
+      // Sync progress from cloud on sign-in
+      if (session?.user) {
+        setTimeout(() => {
+          syncProgressFromCloud();
+          syncFocusFromCloud();
+        }, 0);
+      }
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
