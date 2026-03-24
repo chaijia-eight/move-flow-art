@@ -389,11 +389,19 @@ export default function Study() {
         setUndoStack((prev) => prev.slice(0, -1));
         setHadMistake(true);
         const recommendedSan = getSuggestedMoveForCurrentPly();
-        setFeedback({
-          type: "mistake",
-          message: t("notBestMove"),
-          suggestedMove: recommendedSan,
-        });
+        if (isChallengeMode) {
+          setHintVisible(true);
+          setFeedback({
+            type: "mistake",
+            message: "Play the move indicated by the green arrow.",
+          });
+        } else {
+          setFeedback({
+            type: "mistake",
+            message: t("notBestMove"),
+            suggestedMove: recommendedSan,
+          });
+        }
         return;
       }
 
