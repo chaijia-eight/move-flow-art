@@ -811,68 +811,6 @@ export default function Study() {
           {/* Bottom action bar */}
           <div className="pb-6 pt-2">
             <AnimatePresence mode="wait">
-              {feedback && feedback.type === "legit_alternative" && feedback.suggestedMove && !lineCompleted && (
-                <motion.div key="alt-buttons" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
-                  className="flex gap-3 items-center"
-                >
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => {
-                      setFeedback(null);
-                      handleUndo();
-                    }}
-                    className="flex-1 py-3.5 rounded-xl text-sm font-semibold border border-border/50 text-foreground hover:bg-accent transition-colors"
-                  >
-                    {feedback.suggestedMove}
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => {
-                      setShowSwitchConfirm(true);
-                      setPendingSwitchData({
-                        playerMoveScore: null,
-                        masterMoveScore: null,
-                        playerMoveSan: moveHistory[moveHistory.length - 1]?.san || "",
-                        masterMoveSan: feedback.suggestedMove || "",
-                        onAdopt: () => {
-                          setShowSwitchConfirm(false);
-                          setPendingSwitchData(null);
-                          if (feedback.detectedOpening) {
-                            setFeedback(null);
-                            navigate(`/study/${feedback.detectedOpening.id}/play?color=${playerColor}`);
-                            window.location.reload();
-                          } else if (feedback.detectedVariation) {
-                            navigate(
-                              `/study/${openingId}/play?color=${colorParam || opening.primarySide}&variation=${feedback.detectedVariation.variationId}&line=${feedback.detectedVariation.lineIndex}`,
-                            );
-                            window.location.reload();
-                          } else if (feedback.alternativeNode && feedback.alternativeNode.children.length > 0) {
-                            setFeedback({ type: "main_line", message: t("goodContinue") });
-                            setCurrentNodes(feedback.alternativeNode.children);
-                            autoPlayComputerMove(feedback.alternativeNode.children, moveHistory.length);
-                          } else if (currentNodes.length > 0) {
-                            setFeedback({ type: "main_line", message: t("goodContinue") });
-                            autoPlayComputerMove(currentNodes, moveHistory.length);
-                          }
-                        },
-                        onStay: () => {
-                          setShowSwitchConfirm(false);
-                          setPendingSwitchData(null);
-                          setFeedback(null);
-                          handleUndo();
-                        },
-                      });
-                    }}
-                    className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-background transition-colors"
-                    style={{ background: currentTheme.accentColor }}
-                  >
-                    {moveHistory[moveHistory.length - 1]?.san}
-                  </motion.button>
-                </motion.div>
-              )}
-
               {feedback && feedback.type === "mistake" && !lineCompleted && (
                 <motion.div key="mistake-btn" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}>
                   <motion.button
