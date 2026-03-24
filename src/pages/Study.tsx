@@ -335,6 +335,10 @@ export default function Study() {
     async (from: string, to: string, san: string) => {
       if (isComputerTurn || lineCompleted) return;
 
+      // Compute challenge mode inside callback to ensure fresh value
+      const lp = currentLine ? getLineProgress(currentLine.id) : null;
+      const isChallengeMode = isPracticeMode || !!(lp && !lp.mastered && lp.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1);
+
       const snapshot = saveSnapshot();
       const matchedNode = currentNodes.find((node) => node.move === san);
 
