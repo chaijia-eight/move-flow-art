@@ -750,18 +750,7 @@ export default function Study() {
                   >
                     {feedback.message}
                   </motion.div>
-                )}
-                {feedback && feedback.type === "legit_alternative" && !lineCompleted && (
-                  <motion.div key="alt" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                    className="text-sm text-foreground"
-                  >
-                    We recommend <span className="font-bold" style={{ color: currentTheme.accentColor }}>{feedback.suggestedMove}</span>.{" "}
-                    <span className="font-bold" style={{ color: "hsl(140, 50%, 50%)" }}>
-                      {moveHistory[moveHistory.length - 1]?.san}
-                    </span>{" "}
-                    is a good move – do you want to switch?
-                  </motion.div>
-                )}
+                )
                 {feedback && feedback.type === "mistake" && !lineCompleted && (
                   <motion.div key="mistake" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                     className="text-sm text-foreground"
