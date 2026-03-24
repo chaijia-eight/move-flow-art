@@ -705,7 +705,7 @@ export default function Study() {
             fen={fen}
             onMove={handleMove}
             moveHints={isChallengeMode ? new Map() : moveHints}
-            disabled={isComputerTurn || lineCompleted || (feedback?.type === "legit_alternative" && !!feedback?.suggestedMove)}
+            disabled={isComputerTurn || lineCompleted}
             flipped={playerColor === "b"}
             playerColor={playerColor}
             arrowFrom={arrowTarget?.from}
