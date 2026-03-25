@@ -148,48 +148,57 @@ export default function StudyHub() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {/* Practice button */}
-            <motion.button
-              whileHover={{ y: -2, boxShadow: `0 10px 30px -10px ${theme.primaryColor}40` }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => {
-                // Only pick from lines that have been attempted at least once
-                const attemptedLines = allLines.filter(l => getLineProgress(l.id).attempts >= 1);
-                const pool = attemptedLines.length > 0 ? attemptedLines : allLines;
-                const randomLine = pool[Math.floor(Math.random() * pool.length)];
-                if (randomLine) {
-                  const variation = opening.variations.find(v => v.id === randomLine.variationId);
-                  if (variation) {
-                    const lines = extractLinesForVariation(opening, variation);
-                    const lineIdx = lines.findIndex(l => l.id === randomLine.id);
-                    navigate(
-                      `/study/${opening.id}/play?color=${opening.primarySide}&variation=${randomLine.variationId}&line=${lineIdx >= 0 ? lineIdx : 0}&practice=1`
-                    );
-                  }
-                }
-              }}
-              className="text-left rounded-xl p-5 border transition-all duration-300"
-              style={{
-                background: `linear-gradient(135deg, hsl(45, 100%, 50%, 0.1), hsl(45, 100%, 60%, 0.05))`,
-                borderColor: `hsl(45, 100%, 50%, 0.3)`,
-              }}
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center"
-                  style={{ background: "hsl(45, 100%, 50%)" }}
+            {(() => {
+              const attemptedLines = allLines.filter(l => getLineProgress(l.id).attempts >= 1);
+              const hasAttempted = attemptedLines.length > 0;
+              return (
+                <motion.button
+                  whileHover={hasAttempted ? { y: -2, boxShadow: `0 10px 30px -10px ${theme.primaryColor}40` } : {}}
+                  whileTap={hasAttempted ? { scale: 0.98 } : {}}
+                  disabled={!hasAttempted}
+                  onClick={() => {
+                    if (!hasAttempted) return;
+                    const randomLine = attemptedLines[Math.floor(Math.random() * attemptedLines.length)];
+                    if (randomLine) {
+                      const variation = opening.variations.find(v => v.id === randomLine.variationId);
+                      if (variation) {
+                        const lines = extractLinesForVariation(opening, variation);
+                        const lineIdx = lines.findIndex(l => l.id === randomLine.id);
+                        navigate(
+                          `/study/${opening.id}/play?color=${opening.primarySide}&variation=${randomLine.variationId}&line=${lineIdx >= 0 ? lineIdx : 0}&practice=1`
+                        );
+                      }
+                    }
+                  }}
+                  className={`text-left rounded-xl p-5 border transition-all duration-300 ${!hasAttempted ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  style={{
+                    background: hasAttempted
+                      ? `linear-gradient(135deg, hsl(45, 100%, 50%, 0.1), hsl(45, 100%, 60%, 0.05))`
+                      : `hsl(var(--muted))`,
+                    borderColor: hasAttempted
+                      ? `hsl(45, 100%, 50%, 0.3)`
+                      : `hsl(var(--border))`,
+                  }}
                 >
-                  <Shuffle className="w-5 h-5" style={{ color: "hsl(var(--background))" }} />
-                </div>
-                <div>
-                  <p className="font-serif text-lg font-semibold text-foreground">
-                    Practice
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Random line, play from memory
-                  </p>
-                </div>
-              </div>
-            </motion.button>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div
+                      className="w-10 h-10 rounded-full flex items-center justify-center"
+                      style={{ background: hasAttempted ? "hsl(45, 100%, 50%)" : "hsl(var(--muted-foreground) / 0.3)" }}
+                    >
+                      <Shuffle className="w-5 h-5" style={{ color: hasAttempted ? "hsl(var(--background))" : "hsl(var(--muted-foreground))" }} />
+                    </div>
+                    <div>
+                      <p className={`font-serif text-lg font-semibold ${hasAttempted ? 'text-foreground' : 'text-muted-foreground'}`}>
+                        Practice
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {hasAttempted ? "Random line, play from memory" : "Fully learn a line first!"}
+                      </p>
+                    </div>
+                  </div>
+                </motion.button>
+              );
+            })()}
             <motion.button
               whileHover={{ y: -2, boxShadow: `0 10px 30px -10px ${theme.primaryColor}40` }}
               whileTap={{ scale: 0.98 }}
