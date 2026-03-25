@@ -118,24 +118,31 @@ export function extractLinesForVariation(
 
   const mainMoves = [...prefix, ...subPaths[0]];
 
-  return subPaths.map((subPath, i) => {
+  // Build all lines with crucial moments, then filter out player-move branches
+  const allCandidates = subPaths.map((subPath, i) => {
     const fullMoves = [...prefix, ...subPath];
     const crucialMoment = i === 0
-      ? undefined // main line has no divergence
+      ? undefined
       : findCrucialMoment(mainMoves, fullMoves, opening.primarySide);
-
-    return {
-      id: `${opening.id}/${variation.id}/line-${i}`,
-      variationId: variation.id,
-      openingId: opening.id,
-      name: i === 0
-        ? `${variation.name} — Main Line`
-        : `${variation.name} — Line ${i + 1}`,
-      moves: fullMoves,
-      nodeCount: fullMoves.length,
-      crucialMoment,
-    };
+    return { fullMoves, crucialMoment };
   });
+
+  // Keep main line + lines that diverge on the OPPONENT's move only
+  const filtered = allCandidates.filter(
+    (c) => !c.crucialMoment || !c.crucialMoment.isPlayerMove
+  );
+
+  return filtered.map((c, i) => ({
+    id: `${opening.id}/${variation.id}/line-${i}`,
+    variationId: variation.id,
+    openingId: opening.id,
+    name: i === 0
+      ? `${variation.name} — Main Line`
+      : `${variation.name} — Line ${i + 1}`,
+    moves: c.fullMoves,
+    nodeCount: c.fullMoves.length,
+    crucialMoment: c.crucialMoment,
+  }));
 }
 
 export function extractAllLines(opening: Opening): Line[] {
