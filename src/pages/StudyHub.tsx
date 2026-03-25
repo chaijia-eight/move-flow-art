@@ -146,7 +146,7 @@ export default function StudyHub() {
           <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-4">
             {t("studyModes")}
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {/* Practice button */}
             {(() => {
               const attemptedLines = allLines.filter(l => getLineProgress(l.id).attempts >= 1);
