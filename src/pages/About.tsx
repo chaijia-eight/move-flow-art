@@ -1,7 +1,46 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, BookOpen, Sparkles, Heart, Compass } from "lucide-react";
+import { ArrowLeft, BookOpen, Star, Shuffle, Shield, Eye, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+
+const steps = [
+  {
+    icon: BookOpen,
+    title: "Pick an opening",
+    description:
+      "From the home screen, choose an opening you'd like to learn. Each card shows your progress and how many lines it contains.",
+  },
+  {
+    icon: Eye,
+    title: "Study the lines",
+    description:
+      "Play through each line move by move. The board shows you the correct moves; if you make a mistake, you'll see the right answer and can try again.",
+  },
+  {
+    icon: Star,
+    title: "Focus on what matters",
+    description:
+      "Tap the ★ on any opening card to add it to your Focus list — a shortcut on the home screen so you can jump straight in.",
+  },
+  {
+    icon: Shuffle,
+    title: "Practice from memory",
+    description:
+      "Once you've studied at least one line, the Practice mode picks a random line for you to play without hints. A great way to test yourself.",
+  },
+  {
+    icon: Shield,
+    title: "Play against it",
+    description:
+      "Switch sides and face the opening as the opponent. The computer plays the moves you've been studying — can you find the best responses?",
+  },
+  {
+    icon: Trophy,
+    title: "Master every line",
+    description:
+      "A line is mastered after several correct attempts in a row. Track your mastery across all openings from the stats on the home screen.",
+  },
+];
 
 export default function About() {
   const navigate = useNavigate();
@@ -9,7 +48,6 @@ export default function About() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="max-w-2xl mx-auto px-6 py-12">
-        {/* Header */}
         <Button
           variant="ghost"
           size="sm"
@@ -28,52 +66,46 @@ export default function About() {
             className="text-4xl md:text-5xl font-bold mb-4 tracking-tight"
             style={{ fontFamily: "var(--font-serif)" }}
           >
-            About BookChess
+            How to use BookChess
           </h1>
-
           <p className="text-lg text-muted-foreground mb-12 leading-relaxed">
-            A different way to learn chess openings.
+            A step-by-step guide to learning chess openings with BookChess.
           </p>
         </motion.div>
 
-        {/* Main description */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.15 }}
-          className="space-y-6 text-foreground/85 leading-relaxed text-[1.05rem]"
-          style={{ fontFamily: "var(--font-serif)" }}
-        >
-          <p>
-            BookChess is a chess opening trainer built around one idea:{" "}
-            <em>learning should feel like reading a beautiful book, not grinding a treadmill.</em>
-          </p>
+        <div className="space-y-6">
+          {steps.map((step, i) => {
+            const Icon = step.icon;
+            return (
+              <motion.div
+                key={step.title}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.1 + i * 0.07 }}
+                className="flex gap-4 items-start rounded-xl border border-border bg-card p-5"
+              >
+                <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Icon className="w-4.5 h-4.5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground mb-1">
+                    <span className="text-muted-foreground mr-1.5">{i + 1}.</span>
+                    {step.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {step.description}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
 
-
-
-          <p>
-            Each opening is presented as a living tree of ideas. You play through the
-            main lines move by move, receiving gentle feedback when you stray and
-            encouragement when you find the right path. The app recognises transpositions,
-            suggests alternatives, and lets you wander between variations organically —
-            the way a curious player naturally would.
-          </p>
-
-          <p>
-            When you're ready, challenge yourself to play a line from memory.
-            Mark it as mastered when it feels second nature. Your garden of openings
-            grows quietly in the background, a personal map of everything you've learned.
-          </p>
-        </motion.div>
-
-
-
-        {/* CTA */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.45 }}
-          className="mt-16 text-center"
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="mt-14 text-center"
         >
           <Button
             onClick={() => navigate("/")}
