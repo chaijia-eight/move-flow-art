@@ -199,34 +199,6 @@ export default function StudyHub() {
                 </motion.button>
               );
             })()}
-            <motion.button
-              whileHover={{ y: -2, boxShadow: `0 10px 30px -10px ${theme.primaryColor}40` }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => navigate(`/study/${opening.id}/play?color=${opening.primarySide}`)}
-              className="text-left rounded-xl p-5 border transition-all duration-300"
-              style={{
-                background: `linear-gradient(135deg, ${theme.primaryColor}15, ${theme.accentColor}08)`,
-                borderColor: `${theme.accentColor}30`,
-              }}
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center"
-                  style={{ background: theme.accentColor }}
-                >
-                  <Crown className="w-5 h-5" style={{ color: "hsl(var(--background))" }} />
-                </div>
-                <div>
-                  <p className="font-serif text-lg font-semibold text-foreground">
-                    {t("playThe")} {openingName}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {isWhiteOpening ? t("asWhiteLearn") : t("asBlackLearn")}
-                  </p>
-                </div>
-              </div>
-            </motion.button>
-
             <div className="flex flex-col">
               <motion.button
                 whileHover={{ y: -2, boxShadow: `0 10px 30px -10px ${theme.primaryColor}40` }}
