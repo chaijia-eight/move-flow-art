@@ -185,17 +185,19 @@ export default function Study() {
   // Handle line completion
   const handleLineComplete = useCallback((wasCorrect: boolean) => {
     if (!currentLine) return;
-    const progress = recordAttempt(currentLine.id, wasCorrect);
     setLineCompleted(true);
     playLineCompleteSound();
 
+    if (isAgainstMode) return; // No progress tracking in against mode
+
+    const progress = recordAttempt(currentLine.id, wasCorrect);
     if (wasCorrect && !progress.mastered && progress.correctAttempts >= MASTERY_PROMPT_THRESHOLD) {
       setTimeout(() => {
         playMasterySound();
         setShowMasteryPrompt(true);
       }, 800);
     }
-  }, [currentLine]);
+  }, [currentLine, isAgainstMode]);
 
   // Check if the line is complete (no more nodes + all moves played)
   const checkLineCompletion = useCallback((nodes: OpeningNode[]) => {
