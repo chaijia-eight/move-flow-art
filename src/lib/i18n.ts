@@ -14,8 +14,8 @@ const translations = {
 
   // ==================== Index / Home ====================
   appTagline: {
-    en: "Explore chess openings at your own pace. No pressure, no streaks — just beautiful learning.",
-    zh: "按自己的节奏探索国际象棋开局。没有压力，没有连续打卡——只有美好的学习体验。",
+    en: "Learn chess openings at your own pace.",
+    zh: "按自己的节奏学习国际象棋开局。",
   },
   recommendedNextStep: { en: "Recommended Next Step", zh: "推荐下一步" },
   openingProgress: { en: "Opening progress", zh: "开局进度" },
