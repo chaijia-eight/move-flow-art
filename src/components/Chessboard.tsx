@@ -77,9 +77,14 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
       if (fromSquare && toSquare) {
         setAnimMove({ from: fromSquare, to: toSquare, isCapture: wasCapture, id: ++animIdCounter });
         setLastMove({ from: fromSquare, to: toSquare });
-        // Play sound
+        // Detect castling: king moves 2 squares horizontally
+        const fromCol = fromSquare.charCodeAt(0);
+        const toCol = toSquare.charCodeAt(0);
+        const isCastle = prevBoard[squareToCoords(fromSquare).row][squareToCoords(fromSquare).col]?.toLowerCase() === 'k' && Math.abs(fromCol - toCol) === 2;
         if (wasCapture) {
           playCaptureSound();
+        } else if (isCastle) {
+          playCastleSound();
         } else {
           playMoveSound();
         }
