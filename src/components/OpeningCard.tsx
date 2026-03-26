@@ -34,21 +34,33 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
   const openingName = tn("openingName", opening.id);
   const familyName = tn("familyName", opening.family);
 
-  const cardBg = isWhite
-    ? "hsl(40 15% 95%)"
-    : "hsl(0 0% 12%)";
-  const cardText = isWhite
-    ? "hsl(0 0% 10%)"
-    : "hsl(0 0% 92%)";
-  const cardMuted = isWhite
-    ? "hsl(0 0% 45%)"
-    : "hsl(0 0% 55%)";
-  const sideBadgeBg = isWhite
+  const mastered = progress >= 1;
+
+  const cardBg = mastered
+    ? theme.primaryColor
+    : isWhite
+      ? "hsl(40 15% 95%)"
+      : "hsl(0 0% 12%)";
+  const cardText = mastered
     ? "hsl(0 0% 100%)"
-    : "hsl(0 0% 5%)";
-  const sideBadgeBorder = isWhite
-    ? "hsl(0 0% 80%)"
-    : "hsl(0 0% 30%)";
+    : isWhite
+      ? "hsl(0 0% 10%)"
+      : "hsl(0 0% 92%)";
+  const cardMuted = mastered
+    ? "hsla(0, 0%, 100%, 0.7)"
+    : isWhite
+      ? "hsl(0 0% 45%)"
+      : "hsl(0 0% 55%)";
+  const sideBadgeBg = mastered
+    ? "hsla(0, 0%, 100%, 0.15)"
+    : isWhite
+      ? "hsl(0 0% 100%)"
+      : "hsl(0 0% 5%)";
+  const sideBadgeBorder = mastered
+    ? "hsla(0, 0%, 100%, 0.25)"
+    : isWhite
+      ? "hsl(0 0% 80%)"
+      : "hsl(0 0% 30%)";
 
   if (compact) {
     return (
@@ -118,8 +130,13 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
 
       {/* Theme color wash */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.07]"
-        style={{ background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.accentColor})` }}
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: mastered
+            ? `linear-gradient(135deg, ${theme.primaryColor}, ${theme.accentColor})`
+            : `linear-gradient(135deg, ${theme.primaryColor}, ${theme.accentColor})`,
+          opacity: mastered ? 0.35 : 0.07,
+        }}
       />
 
       <div className="p-4 relative">
@@ -151,7 +168,7 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
                   </div>
                   <h3
                     className="text-sm font-semibold truncate leading-tight"
-                    style={{ color: theme.accentColor }}
+                    style={{ color: mastered ? "hsl(0 0% 100%)" : theme.accentColor }}
                   >
                     {openingName}
                   </h3>
@@ -166,11 +183,13 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
                 <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
                   <circle
                     cx="18" cy="18" r="15" fill="none"
-                    stroke={isWhite ? "hsl(0 0% 85%)" : "hsl(0 0% 22%)"}
+                    stroke={mastered ? "hsla(0,0%,100%,0.25)" : isWhite ? "hsl(0 0% 85%)" : "hsl(0 0% 22%)"}
                     strokeWidth="2.5"
                   />
                   <circle
-                    cx="18" cy="18" r="15" fill="none" stroke={theme.accentColor} strokeWidth="2.5"
+                    cx="18" cy="18" r="15" fill="none"
+                    stroke={mastered ? "hsl(0 0% 100%)" : theme.accentColor}
+                    strokeWidth="2.5"
                     strokeDasharray={`${progress * 94.25} 94.25`} strokeLinecap="round"
                     className="transition-all duration-700 ease-out"
                   />
@@ -205,16 +224,16 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
               >
                 <Star
                   className="w-3.5 h-3.5 transition-colors"
-                  style={{ color: focused ? theme.accentColor : cardMuted }}
+                  style={{ color: mastered ? "hsl(0 0% 100%)" : focused ? theme.accentColor : cardMuted }}
                   fill={focused ? "currentColor" : "none"}
                 />
               </button>
             )}
             <span
               className="text-[11px] font-medium transition-colors duration-300"
-              style={{ color: theme.accentColor }}
+              style={{ color: mastered ? "hsla(0,0%,100%,0.9)" : theme.accentColor }}
             >
-              {progress > 0 ? t("continuePracticing") : t("beginStudy")}
+              {mastered ? "✓ " + t("mastered") : progress > 0 ? t("continuePracticing") : t("beginStudy")}
             </span>
           </div>
         </div>

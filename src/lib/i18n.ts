@@ -54,6 +54,7 @@ const translations = {
   depth: { en: "Depth", zh: "深度" },
   continuePracticing: { en: "Continue →", zh: "继续 →" },
   beginStudy: { en: "Begin →", zh: "开始 →" },
+  mastered: { en: "Mastered", zh: "已精通" },
   continueReason: {
     en: (correct: number, total: number) => `Continue practicing — ${correct}/${total} correct`,
     zh: (correct: number, total: number) => `继续练习 — ${correct}/${total} 正确`,
