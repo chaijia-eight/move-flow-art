@@ -35,6 +35,7 @@ interface StudySidebarProps {
   onMasteryResponse: (mastered: boolean) => void;
   hasNextLine: boolean;
   conclusionText?: string;
+  crucialMomentMessage?: string | null;
 }
 
 export default function StudySidebar({
@@ -58,6 +59,7 @@ export default function StudySidebar({
   onMasteryResponse,
   hasNextLine,
   conclusionText,
+  crucialMomentMessage,
 }: StudySidebarProps) {
   const { currentTheme } = useTheme();
   const { user } = useAuth();
@@ -291,9 +293,50 @@ export default function StudySidebar({
             </motion.div>
           )}
 
-          {/* Show only the latest player move explanation */}
+          {/* Crucial moment message */}
+          {crucialMomentMessage && !lineCompleted && !showMasteryPrompt && moveHistory.length > 0 && !isChallengeMode && (() => {
+            // Check if the last move was an opponent move (the crucial one)
+            const lastMove = moveHistory[moveHistory.length - 1];
+            const isOpponentMove = playerSide === "w" ? !lastMove.isWhite : lastMove.isWhite;
+            if (!isOpponentMove) return null;
+            const opponentIcon = playerSide === "w" ? "/pieces/bK.svg" : "/pieces/wK.svg";
+            return (
+              <motion.div
+                key="crucial-moment"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className="flex items-start gap-2.5"
+              >
+                <div className="flex-shrink-0 mt-1">
+                  <img src={opponentIcon} alt="Opponent" className="w-5 h-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div
+                    className="rounded-lg px-3 py-2.5 text-sm leading-relaxed font-medium"
+                    style={{
+                      background: "hsl(45, 100%, 50%, 0.12)",
+                      color: "hsl(45, 100%, 45%)",
+                      border: "1px solid hsl(45, 100%, 50%, 0.25)",
+                    }}
+                  >
+                    🛡️ {crucialMomentMessage}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })()}
+
+          {/* Show only the latest player move explanation (skip if crucial moment is showing) */}
           {(() => {
             if (lineCompleted || showMasteryPrompt || moveHistory.length === 0 || isChallengeMode) return null;
+            // Don't show player explanation while crucial moment message is visible
+            if (crucialMomentMessage && moveHistory.length > 0) {
+              const lastMove = moveHistory[moveHistory.length - 1];
+              const isOpponentMove = playerSide === "w" ? !lastMove.isWhite : lastMove.isWhite;
+              if (isOpponentMove) return null;
+            }
             // Find the latest player move
             let showIdx = -1;
             for (let i = moveHistory.length - 1; i >= 0; i--) {

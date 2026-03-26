@@ -17,6 +17,7 @@ interface ChessboardProps {
   playerColor?: "w" | "b";
   arrowFrom?: string;
   arrowTo?: string;
+  highlightSquare?: string | null;
 }
 
 interface AnimMove {
@@ -28,7 +29,7 @@ interface AnimMove {
 
 let animIdCounter = 0;
 
-export default function Chessboard({ fen, onMove, moveHints, disabled, flipped = false, playerColor, arrowFrom, arrowTo }: ChessboardProps) {
+export default function Chessboard({ fen, onMove, moveHints, disabled, flipped = false, playerColor, arrowFrom, arrowTo, highlightSquare }: ChessboardProps) {
   const { currentTheme } = useTheme();
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
   const [lastMove, setLastMove] = useState<{ from: string; to: string } | null>(null);
@@ -215,6 +216,7 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
                 const isTarget = targetCategory !== undefined;
                 const isAnimTo = animMove?.to === square;
                 const isCaptureSquare = animMove?.isCapture && animMove?.to === square;
+                const isCrucialHighlight = highlightSquare === square;
 
                 const slideOffset = isAnimTo && animMove
                   ? getSlideOffset(animMove.from, animMove.to)
@@ -241,6 +243,20 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
                         className="absolute inset-0 opacity-10 pointer-events-none"
                         style={{
                           backgroundImage: `radial-gradient(ellipse at ${30 + boardCol * 10}% ${20 + boardRow * 10}%, rgba(0,0,0,0.08), transparent 60%)`,
+                        }}
+                      />
+                    )}
+
+                    {/* Crucial moment highlight glow */}
+                    {isCrucialHighlight && (
+                      <motion.div
+                        className="absolute inset-0 z-[5] pointer-events-none"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [0.4, 0.8, 0.4] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                        style={{
+                          background: "radial-gradient(circle, hsl(45, 100%, 60%) 0%, hsl(45, 100%, 50%) 40%, transparent 70%)",
+                          boxShadow: "inset 0 0 20px hsl(45, 100%, 55%), 0 0 15px hsl(45, 100%, 55%)",
                         }}
                       />
                     )}

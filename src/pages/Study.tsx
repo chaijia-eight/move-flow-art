@@ -106,6 +106,8 @@ export default function Study() {
   const [currentVariation, setCurrentVariation] = useState<{ name: string; description: string } | null>(null);
   const [hadMistake, setHadMistake] = useState(false);
   const [crucialMomentShown, setCrucialMomentShown] = useState(false);
+  const [crucialSquare, setCrucialSquare] = useState<string | null>(null);
+  const [crucialMomentMessage, setCrucialMomentMessage] = useState<string | null>(null);
   const [hintVisible, setHintVisible] = useState(false);
 
   // Mastery prompt state
@@ -315,9 +317,20 @@ export default function Study() {
           const compMoveIndex = moveHistory.length; // index of the move just played
           if (cm && !cm.isPlayerMove && compMoveIndex === cm.moveIndex && !crucialMomentShown) {
             setCrucialMomentShown(true);
+            if (result) {
+              setCrucialSquare(result.to);
+            }
+            const mainLineRef = allVariationLines[0];
+            const insteadOf = mainLineRef && cm.moveIndex < mainLineRef.moves.length
+              ? mainLineRef.moves[cm.moveIndex]
+              : null;
+            const msg = insteadOf
+              ? `The opponent played ${cm.move} instead of ${insteadOf} — that's different!`
+              : `The opponent played ${cm.move} — that's different!`;
+            setCrucialMomentMessage(msg);
             setFeedback({
               type: "main_line",
-              message: `🛡️ Key moment! Opponent plays ${cm.moveNumber}${cm.isWhiteMove ? "." : "..."}${cm.move} — this defines this line.`,
+              message: `🛡️ ${msg}`,
             });
           } else {
             setFeedback(null);
@@ -328,7 +341,7 @@ export default function Study() {
       } catch {}
       setIsComputerTurn(false);
     }, 800);
-  }, [chess, moveHistory, moveCount, currentVariation, checkLineCompletion, currentLine, crucialMomentShown]);
+  }, [chess, moveHistory, moveCount, currentVariation, checkLineCompletion, currentLine, crucialMomentShown, allVariationLines]);
 
 
   const handleMove = useCallback(
@@ -357,6 +370,7 @@ export default function Study() {
       setMoveHistory(newHistory);
       setMoveCount((c) => c + 1);
       setHintVisible(false);
+      setCrucialSquare(null); // Clear highlight after player moves
       setUndoStack((prev) => [...prev, snapshot]);
       setRedoStack([]);
 
@@ -523,6 +537,8 @@ export default function Study() {
     setRedoStack([]);
     setHadMistake(false);
     setCrucialMomentShown(false);
+    setCrucialSquare(null);
+    setCrucialMomentMessage(null);
     setLineCompleted(false);
     setShowMasteryPrompt(false);
     setMoveResults([]);
@@ -720,6 +736,7 @@ export default function Study() {
             playerColor={playerColor}
             arrowFrom={arrowTarget?.from}
             arrowTo={arrowTarget?.to}
+            highlightSquare={crucialSquare}
           />
 
           {/* Feedback message area - only on mobile or when no sidebar */}
@@ -915,6 +932,7 @@ export default function Study() {
               onMasteryResponse={handleMasteryResponse}
               hasNextLine={allVariationLines.length > 0 && !!currentLine && allVariationLines.findIndex(l => l.id === currentLine.id) < allVariationLines.length - 1}
               conclusionText={currentLine ? lineConclusions[currentLine.id] : undefined}
+              crucialMomentMessage={crucialMomentMessage}
             />
           </div>
         )}
