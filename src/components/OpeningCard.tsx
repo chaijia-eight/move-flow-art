@@ -34,21 +34,33 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
   const openingName = tn("openingName", opening.id);
   const familyName = tn("familyName", opening.family);
 
-  const cardBg = isWhite
-    ? "hsl(40 15% 95%)"
-    : "hsl(0 0% 12%)";
-  const cardText = isWhite
-    ? "hsl(0 0% 10%)"
-    : "hsl(0 0% 92%)";
-  const cardMuted = isWhite
-    ? "hsl(0 0% 45%)"
-    : "hsl(0 0% 55%)";
-  const sideBadgeBg = isWhite
+  const mastered = progress >= 1;
+
+  const cardBg = mastered
+    ? theme.primaryColor
+    : isWhite
+      ? "hsl(40 15% 95%)"
+      : "hsl(0 0% 12%)";
+  const cardText = mastered
     ? "hsl(0 0% 100%)"
-    : "hsl(0 0% 5%)";
-  const sideBadgeBorder = isWhite
-    ? "hsl(0 0% 80%)"
-    : "hsl(0 0% 30%)";
+    : isWhite
+      ? "hsl(0 0% 10%)"
+      : "hsl(0 0% 92%)";
+  const cardMuted = mastered
+    ? "hsla(0, 0%, 100%, 0.7)"
+    : isWhite
+      ? "hsl(0 0% 45%)"
+      : "hsl(0 0% 55%)";
+  const sideBadgeBg = mastered
+    ? "hsla(0, 0%, 100%, 0.15)"
+    : isWhite
+      ? "hsl(0 0% 100%)"
+      : "hsl(0 0% 5%)";
+  const sideBadgeBorder = mastered
+    ? "hsla(0, 0%, 100%, 0.25)"
+    : isWhite
+      ? "hsl(0 0% 80%)"
+      : "hsl(0 0% 30%)";
 
   if (compact) {
     return (
