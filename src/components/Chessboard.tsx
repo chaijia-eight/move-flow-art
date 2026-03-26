@@ -17,6 +17,7 @@ interface ChessboardProps {
   playerColor?: "w" | "b";
   arrowFrom?: string;
   arrowTo?: string;
+  highlightSquare?: string | null;
 }
 
 interface AnimMove {
