@@ -146,149 +146,142 @@ export default function StudyHub() {
           <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-4">
             {t("studyModes")}
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {/* Practice button */}
-            {(() => {
-              const attemptedLines = allLines.filter(l => getLineProgress(l.id).attempts >= 1);
-              const hasAttempted = attemptedLines.length > 0;
-              return (
-                <motion.button
-                  whileHover={hasAttempted ? { y: -2, boxShadow: `0 10px 30px -10px ${theme.primaryColor}40` } : {}}
-                  whileTap={hasAttempted ? { scale: 0.98 } : {}}
-                  disabled={!hasAttempted}
-                  onClick={() => {
-                    if (!hasAttempted) return;
-                    const randomLine = attemptedLines[Math.floor(Math.random() * attemptedLines.length)];
-                    if (randomLine) {
-                      const variation = opening.variations.find(v => v.id === randomLine.variationId);
-                      if (variation) {
-                        const lines = extractLinesForVariation(opening, variation);
-                        const lineIdx = lines.findIndex(l => l.id === randomLine.id);
-                        navigate(
-                          `/study/${opening.id}/play?color=${opening.primarySide}&variation=${randomLine.variationId}&line=${lineIdx >= 0 ? lineIdx : 0}&practice=1`
-                        );
-                      }
-                    }
-                  }}
-                  className={`text-left rounded-xl p-5 border transition-all duration-300 ${!hasAttempted ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  style={{
-                    background: hasAttempted
-                      ? `linear-gradient(135deg, hsl(45, 100%, 50%, 0.1), hsl(45, 100%, 60%, 0.05))`
-                      : `hsl(var(--muted))`,
-                    borderColor: hasAttempted
-                      ? `hsl(45, 100%, 50%, 0.3)`
-                      : `hsl(var(--border))`,
-                  }}
+
+          {/* Play Against It — compact, above Practice */}
+          <div className="mb-3">
+            <motion.button
+              whileHover={{ backgroundColor: `${theme.accentColor}12` }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => {
+                if (opening.variations.length <= 1) {
+                  navigate(`/study/${opening.id}/play?color=${againstColor}&against=1`);
+                } else {
+                  setShowAgainstVariations((v) => !v);
+                }
+              }}
+              className="w-full text-left rounded-lg px-4 py-3 border transition-all duration-300 group"
+              style={{
+                background: "hsl(var(--card))",
+                borderColor: showAgainstVariations ? `${theme.accentColor}40` : "hsl(var(--border) / 0.4)",
+              }}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <Shield className="w-4 h-4" style={{ color: theme.accentColor }} />
+                  <span className="text-sm font-medium text-foreground">
+                    {t("playAgainstIt")}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    — {isWhiteOpening ? t("asBlackChoose") : t("asWhiteChoose")}
+                  </span>
+                </div>
+                {opening.variations.length > 1 && (
+                  <motion.div
+                    animate={{ rotate: showAgainstVariations ? 180 : 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ChevronDown className="w-4 h-4 text-muted-foreground/40" />
+                  </motion.div>
+                )}
+              </div>
+            </motion.button>
+
+            <AnimatePresence>
+              {showAgainstVariations && opening.variations.length > 1 && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                  className="overflow-hidden"
                 >
-                  <div className="flex items-center gap-3 mb-2">
-                    <div
-                      className="w-10 h-10 rounded-full flex items-center justify-center"
-                      style={{ background: hasAttempted ? "hsl(45, 100%, 50%)" : "hsl(var(--muted-foreground) / 0.3)" }}
-                    >
-                      <Shuffle className="w-5 h-5" style={{ color: hasAttempted ? "hsl(var(--background))" : "hsl(var(--muted-foreground))" }} />
-                    </div>
-                    <div>
-                      <p className={`font-serif text-lg font-semibold ${hasAttempted ? 'text-foreground' : 'text-muted-foreground'}`}>
-                        Practice
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {hasAttempted ? "Random line, play from memory" : "Fully learn a line first!"}
-                      </p>
-                    </div>
+                  <div className="pt-1.5 pl-2 space-y-1">
+                    {opening.variations.map((variation, i) => (
+                      <motion.button
+                        key={variation.id}
+                        initial={{ opacity: 0, x: -6 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.15, delay: i * 0.03 }}
+                        whileHover={{ x: 4, backgroundColor: `${theme.accentColor}10` }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() =>
+                          navigate(`/study/${opening.id}/play?color=${againstColor}&variation=${variation.id}&against=1`)
+                        }
+                        className="w-full text-left rounded-lg px-3 py-2 border border-border/20 transition-all duration-200 group"
+                        style={{ background: "hsl(var(--card))" }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <div
+                              className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                              style={{ background: theme.accentColor }}
+                            />
+                            <span className="text-sm text-foreground truncate">
+                              {t("vs")} {tVar(variation.id, "name", variation.name)}
+                            </span>
+                          </div>
+                          <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-foreground/50 transition-colors flex-shrink-0 ml-2" />
+                        </div>
+                      </motion.button>
+                    ))}
                   </div>
-                </motion.button>
-              );
-            })()}
-            <div className="flex flex-col">
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Practice — full width, prominent */}
+          {(() => {
+            const attemptedLines = allLines.filter(l => getLineProgress(l.id).attempts >= 1);
+            const hasAttempted = attemptedLines.length > 0;
+            return (
               <motion.button
-                whileHover={{ y: -2, boxShadow: `0 10px 30px -10px ${theme.primaryColor}40` }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={hasAttempted ? { y: -2, boxShadow: `0 10px 30px -10px ${theme.primaryColor}40` } : {}}
+                whileTap={hasAttempted ? { scale: 0.98 } : {}}
+                disabled={!hasAttempted}
                 onClick={() => {
-                  if (opening.variations.length <= 1) {
-                    navigate(`/study/${opening.id}/play?color=${againstColor}`);
-                  } else {
-                    setShowAgainstVariations((v) => !v);
+                  if (!hasAttempted) return;
+                  const randomLine = attemptedLines[Math.floor(Math.random() * attemptedLines.length)];
+                  if (randomLine) {
+                    const variation = opening.variations.find(v => v.id === randomLine.variationId);
+                    if (variation) {
+                      const lines = extractLinesForVariation(opening, variation);
+                      const lineIdx = lines.findIndex(l => l.id === randomLine.id);
+                      navigate(
+                        `/study/${opening.id}/play?color=${opening.primarySide}&variation=${randomLine.variationId}&line=${lineIdx >= 0 ? lineIdx : 0}&practice=1`
+                      );
+                    }
                   }
                 }}
-                className="text-left rounded-xl p-5 border transition-all duration-300"
+                className={`w-full text-left rounded-xl p-5 border transition-all duration-300 ${!hasAttempted ? 'opacity-50 cursor-not-allowed' : ''}`}
                 style={{
-                  background: "hsl(var(--card))",
-                  borderColor: showAgainstVariations ? `${theme.accentColor}50` : "hsl(var(--border) / 0.5)",
+                  background: hasAttempted
+                    ? `linear-gradient(135deg, hsl(45, 100%, 50%, 0.1), hsl(45, 100%, 60%, 0.05))`
+                    : `hsl(var(--muted))`,
+                  borderColor: hasAttempted
+                    ? `hsl(45, 100%, 50%, 0.3)`
+                    : `hsl(var(--border))`,
                 }}
               >
                 <div className="flex items-center gap-3">
                   <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center border"
-                    style={{ borderColor: `${theme.accentColor}50` }}
+                    className="w-10 h-10 rounded-full flex items-center justify-center"
+                    style={{ background: hasAttempted ? "hsl(45, 100%, 50%)" : "hsl(var(--muted-foreground) / 0.3)" }}
                   >
-                    <Shield className="w-5 h-5" style={{ color: theme.accentColor }} />
+                    <Shuffle className="w-5 h-5" style={{ color: hasAttempted ? "hsl(var(--background))" : "hsl(var(--muted-foreground))" }} />
                   </div>
-                  <div className="flex-1">
-                    <p className="font-serif text-lg font-semibold text-foreground">
-                      {t("playAgainstIt")}
+                  <div>
+                    <p className={`font-serif text-lg font-semibold ${hasAttempted ? 'text-foreground' : 'text-muted-foreground'}`}>
+                      Practice
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {isWhiteOpening ? t("asBlackChoose") : t("asWhiteChoose")}
+                      {hasAttempted ? "Random line, play from memory" : "Fully learn a line first!"}
                     </p>
                   </div>
-                  {opening.variations.length > 1 && (
-                    <motion.div
-                      animate={{ rotate: showAgainstVariations ? 180 : 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <ChevronDown className="w-5 h-5 text-muted-foreground/50" />
-                    </motion.div>
-                  )}
                 </div>
               </motion.button>
-
-              <AnimatePresence>
-                {showAgainstVariations && opening.variations.length > 1 && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="overflow-hidden"
-                  >
-                    <div className="pt-2 space-y-1.5">
-                      {opening.variations.map((variation, i) => (
-                        <motion.button
-                          key={variation.id}
-                          initial={{ opacity: 0, x: -8 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.2, delay: i * 0.04 }}
-                          whileHover={{ x: 4, backgroundColor: `${theme.accentColor}12` }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={() =>
-                            navigate(`/study/${opening.id}/play?color=${againstColor}&variation=${variation.id}`)
-                          }
-                          className="w-full text-left rounded-lg p-3 border border-border/30 transition-all duration-200 group"
-                          style={{ background: "hsl(var(--card))" }}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2 min-w-0">
-                              <div
-                                className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                                style={{ background: theme.accentColor }}
-                              />
-                              <span className="text-sm font-medium text-foreground truncate">
-                                {t("vs")} {tVar(variation.id, "name", variation.name)}
-                              </span>
-                            </div>
-                            <ChevronRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-foreground/50 transition-colors flex-shrink-0 ml-2" />
-                          </div>
-                          <p className="text-xs text-muted-foreground mt-1 pl-3.5 line-clamp-1">
-                            {tVar(variation.id, "description", variation.description)}
-                          </p>
-                        </motion.button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
+            );
+          })()}
         </motion.div>
 
         {/* Variations & Lines */}

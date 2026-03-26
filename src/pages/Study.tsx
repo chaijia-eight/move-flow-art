@@ -54,6 +54,7 @@ export default function Study() {
   const lineParam = searchParams.get("line");
   const isReview = searchParams.get("review") === "1";
   const isPracticeMode = searchParams.get("practice") === "1";
+  const isAgainstMode = searchParams.get("against") === "1";
 
   // Resolve current line
   const { currentLine, allVariationLines } = useMemo(() => {
@@ -184,17 +185,19 @@ export default function Study() {
   // Handle line completion
   const handleLineComplete = useCallback((wasCorrect: boolean) => {
     if (!currentLine) return;
-    const progress = recordAttempt(currentLine.id, wasCorrect);
     setLineCompleted(true);
     playLineCompleteSound();
 
+    if (isAgainstMode) return; // No progress tracking in against mode
+
+    const progress = recordAttempt(currentLine.id, wasCorrect);
     if (wasCorrect && !progress.mastered && progress.correctAttempts >= MASTERY_PROMPT_THRESHOLD) {
       setTimeout(() => {
         playMasterySound();
         setShowMasteryPrompt(true);
       }, 800);
     }
-  }, [currentLine]);
+  }, [currentLine, isAgainstMode]);
 
   // Check if the line is complete (no more nodes + all moves played)
   const checkLineCompletion = useCallback((nodes: OpeningNode[]) => {
@@ -350,7 +353,7 @@ export default function Study() {
 
       // Compute challenge mode inside callback to ensure fresh value
       const lp = currentLine ? getLineProgress(currentLine.id) : null;
-      const isChallengeMode = isPracticeMode || !!(lp && !lp.mastered && lp.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1);
+      const isChallengeMode = !isAgainstMode && (isPracticeMode || !!(lp && !lp.mastered && lp.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1));
 
       const snapshot = saveSnapshot();
       const matchedNode = currentNodes.find((node) => node.move === san);
@@ -649,7 +652,7 @@ export default function Study() {
     : tn("openingName", opening.id);
 
   const lineProgress = currentLine ? getLineProgress(currentLine.id) : null;
-  const isChallengeMode = isPracticeMode || !!(lineProgress && !lineProgress.mastered && lineProgress.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1);
+  const isChallengeMode = !isAgainstMode && (isPracticeMode || !!(lineProgress && !lineProgress.mastered && lineProgress.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1));
 
 
   return (
