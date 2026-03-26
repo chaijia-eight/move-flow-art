@@ -168,7 +168,7 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
                   </div>
                   <h3
                     className="text-sm font-semibold truncate leading-tight"
-                    style={{ color: theme.accentColor }}
+                    style={{ color: mastered ? "hsl(0 0% 100%)" : theme.accentColor }}
                   >
                     {openingName}
                   </h3>
