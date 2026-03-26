@@ -21,12 +21,13 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
   const theme = themes[opening.themeId];
   const isWhite = opening.primarySide === "w";
 
-  const { totalLines, progress } = useMemo(() => {
+  const { totalLines, progress, openingFen } = useMemo(() => {
     const lines = extractAllLines(opening);
     const lineIds = lines.map((l) => l.id);
     return {
       totalLines: lines.length,
       progress: getOpeningProgress(lineIds),
+      openingFen: getOpeningFen(opening),
     };
   }, [opening]);
 
