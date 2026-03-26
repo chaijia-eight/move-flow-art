@@ -216,6 +216,7 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
                 const isTarget = targetCategory !== undefined;
                 const isAnimTo = animMove?.to === square;
                 const isCaptureSquare = animMove?.isCapture && animMove?.to === square;
+                const isCrucialHighlight = highlightSquare === square;
 
                 const slideOffset = isAnimTo && animMove
                   ? getSlideOffset(animMove.from, animMove.to)
