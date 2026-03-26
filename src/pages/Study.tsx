@@ -370,6 +370,7 @@ export default function Study() {
       setMoveHistory(newHistory);
       setMoveCount((c) => c + 1);
       setHintVisible(false);
+      setCrucialSquare(null); // Clear highlight after player moves
       setUndoStack((prev) => [...prev, snapshot]);
       setRedoStack([]);
 
