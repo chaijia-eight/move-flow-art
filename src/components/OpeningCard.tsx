@@ -123,65 +123,73 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
       />
 
       <div className="p-4 relative">
-        {/* Header row */}
-        <div className="flex items-start justify-between mb-2.5">
+        <div className="flex gap-3">
+          {/* Mini board */}
+          <div className="w-20 h-20 flex-shrink-0 rounded overflow-hidden shadow-sm" style={{ border: `1px solid ${sideBadgeBorder}` }}>
+            <MiniBoard
+              fen={openingFen}
+              theme={theme}
+              flipped={opening.primarySide === "b"}
+            />
+          </div>
+
+          {/* Info */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-0.5">
-              {/* Side badge */}
-              <div
-                className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-medium flex-shrink-0"
-                style={{
-                  background: sideBadgeBg,
-                  border: `1.5px solid ${sideBadgeBorder}`,
-                  color: cardMuted,
-                }}
-              >
-                {isWhite ? "W" : "B"}
+            {/* Header row */}
+            <div className="flex items-start justify-between">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5 mb-0.5">
+                  <div
+                    className="w-4.5 h-4.5 rounded-full flex items-center justify-center text-[8px] font-medium flex-shrink-0"
+                    style={{
+                      background: sideBadgeBg,
+                      border: `1.5px solid ${sideBadgeBorder}`,
+                      color: cardMuted,
+                    }}
+                  >
+                    {isWhite ? "W" : "B"}
+                  </div>
+                  <h3
+                    className="text-sm font-semibold truncate leading-tight"
+                    style={{ color: theme.accentColor }}
+                  >
+                    {openingName}
+                  </h3>
+                </div>
+                <p className="text-[10px] uppercase tracking-wider ml-6" style={{ color: cardMuted }}>
+                  {familyName}
+                </p>
               </div>
-            <h3
-                className="text-base font-semibold truncate leading-tight"
-                style={{ color: theme.accentColor }}
-              >
-                {openingName}
-              </h3>
+
+              {/* Progress ring */}
+              <div className="relative w-9 h-9 flex-shrink-0">
+                <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
+                  <circle
+                    cx="18" cy="18" r="15" fill="none"
+                    stroke={isWhite ? "hsl(0 0% 85%)" : "hsl(0 0% 22%)"}
+                    strokeWidth="2.5"
+                  />
+                  <circle
+                    cx="18" cy="18" r="15" fill="none" stroke={theme.accentColor} strokeWidth="2.5"
+                    strokeDasharray={`${progress * 94.25} 94.25`} strokeLinecap="round"
+                    className="transition-all duration-700 ease-out"
+                  />
+                </svg>
+                <span
+                  className="absolute inset-0 flex items-center justify-center text-[0.5rem] font-mono"
+                  style={{ color: cardMuted }}
+                >
+                  {Math.round(progress * 100)}%
+                </span>
+              </div>
             </div>
-            <p className="text-[11px] uppercase tracking-wider ml-7" style={{ color: cardMuted }}>
-              {familyName}
+
+            {/* Description */}
+            <p className="text-[11px] leading-relaxed line-clamp-2 mt-1 ml-6" style={{ color: cardMuted }}>
+              {tDesc(opening.id, opening.description)}
             </p>
           </div>
-
-          {/* Progress ring */}
-          <div className="relative w-10 h-10 flex-shrink-0">
-            <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-              <circle
-                cx="18" cy="18" r="15" fill="none"
-                stroke={isWhite ? "hsl(0 0% 85%)" : "hsl(0 0% 22%)"}
-                strokeWidth="2.5"
-              />
-              <circle
-                cx="18" cy="18" r="15" fill="none" stroke={theme.accentColor} strokeWidth="2.5"
-                strokeDasharray={`${progress * 94.25} 94.25`} strokeLinecap="round"
-                className="transition-all duration-700 ease-out"
-              />
-            </svg>
-            <span
-              className="absolute inset-0 flex items-center justify-center text-[0.55rem] font-mono"
-              style={{ color: cardMuted }}
-            >
-              {Math.round(progress * 100)}%
-            </span>
-          </div>
         </div>
-
-        {/* Side label */}
-        <p className="text-[11px] font-medium mb-2 ml-7" style={{ color: theme.accentColor }}>
-          {isWhite ? "Playing as White" : "Playing as Black"}
-        </p>
-
-        {/* Description */}
-        <p className="text-xs leading-relaxed line-clamp-2 ml-7" style={{ color: cardMuted }}>
-          {tDesc(opening.id, opening.description)}
-        </p>
 
         {/* Footer */}
         <div className="flex items-center justify-between mt-3 pt-2.5 ml-7" style={{ borderTop: `1px solid ${sideBadgeBorder}` }}>
