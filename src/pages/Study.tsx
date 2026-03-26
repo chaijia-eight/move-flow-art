@@ -314,7 +314,7 @@ export default function Study() {
           
           // Check if this computer move is the crucial moment
           const cm = currentLine?.crucialMoment;
-          const compMoveIndex = moveHistory.length; // index of the move just played
+          const compMoveIndex = moveIndex; // use the parameter, not stale moveHistory closure
           if (cm && !cm.isPlayerMove && compMoveIndex === cm.moveIndex && !crucialMomentShown) {
             setCrucialMomentShown(true);
             if (result) {
