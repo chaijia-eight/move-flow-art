@@ -650,7 +650,7 @@ export default function Study() {
     : tn("openingName", opening.id);
 
   const lineProgress = currentLine ? getLineProgress(currentLine.id) : null;
-  const isChallengeMode = isPracticeMode || !!(lineProgress && !lineProgress.mastered && lineProgress.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1);
+  const isChallengeMode = !isAgainstMode && (isPracticeMode || !!(lineProgress && !lineProgress.mastered && lineProgress.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1));
 
 
   return (
