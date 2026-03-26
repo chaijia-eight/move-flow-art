@@ -328,9 +328,15 @@ export default function StudySidebar({
             );
           })()}
 
-          {/* Show only the latest player move explanation */}
+          {/* Show only the latest player move explanation (skip if crucial moment is showing) */}
           {(() => {
             if (lineCompleted || showMasteryPrompt || moveHistory.length === 0 || isChallengeMode) return null;
+            // Don't show player explanation while crucial moment message is visible
+            if (crucialMomentMessage && moveHistory.length > 0) {
+              const lastMove = moveHistory[moveHistory.length - 1];
+              const isOpponentMove = playerSide === "w" ? !lastMove.isWhite : lastMove.isWhite;
+              if (isOpponentMove) return null;
+            }
             // Find the latest player move
             let showIdx = -1;
             for (let i = moveHistory.length - 1; i >= 0; i--) {
