@@ -47,22 +47,20 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
       let fromSquare: string | null = null;
       let toSquare: string | null = null;
       let wasCapture = false;
+      let changedCount = 0;
 
       for (let r = 0; r < 8; r++) {
         for (let c = 0; c < 8; c++) {
           const prev = prevBoard[r][c];
           const curr = board[r][c];
           if (prev !== curr) {
+            changedCount++;
             const sq = coordsToSquare(r, c);
             if (prev && !curr) {
-              // Piece left this square
               fromSquare = sq;
             } else if (curr && !prev) {
-              // Piece arrived at empty square
               toSquare = sq;
             } else if (prev && curr && prev !== curr) {
-              // Piece replaced another (capture)
-              // Could be "to" if a piece landed here, or castling
               if (!toSquare) {
                 toSquare = sq;
                 wasCapture = true;
@@ -74,14 +72,12 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
         }
       }
 
+      // Castling changes 4 squares (king + rook each move)
+      const isCastle = changedCount === 4;
+
       if (fromSquare && toSquare) {
         setAnimMove({ from: fromSquare, to: toSquare, isCapture: wasCapture, id: ++animIdCounter });
         setLastMove({ from: fromSquare, to: toSquare });
-        // Detect castling: king moves 2 squares horizontally
-        const fromCol = fromSquare.charCodeAt(0);
-        const toCol = toSquare.charCodeAt(0);
-        const [fRow, fCol] = squareToCoords(fromSquare);
-        const isCastle = prevBoard[fRow][fCol]?.toLowerCase() === 'k' && Math.abs(fromCol - toCol) === 2;
         if (wasCapture) {
           playCaptureSound();
         } else if (isCastle) {
