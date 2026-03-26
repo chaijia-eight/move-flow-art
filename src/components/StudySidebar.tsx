@@ -35,6 +35,7 @@ interface StudySidebarProps {
   onMasteryResponse: (mastered: boolean) => void;
   hasNextLine: boolean;
   conclusionText?: string;
+  crucialMomentMessage?: string | null;
 }
 
 export default function StudySidebar({
