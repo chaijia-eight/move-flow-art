@@ -66,10 +66,10 @@ export default function About() {
             className="text-4xl md:text-5xl font-bold mb-4 tracking-tight"
             style={{ fontFamily: "var(--font-serif)" }}
           >
-            How to use BookChess
+            How to use ArcChess
           </h1>
           <p className="text-lg text-muted-foreground mb-12 leading-relaxed">
-            A step-by-step guide to learning chess openings with BookChess.
+            A step-by-step guide to learning chess openings with ArcChess.
           </p>
         </motion.div>
 
