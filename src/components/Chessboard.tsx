@@ -80,7 +80,8 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
         // Detect castling: king moves 2 squares horizontally
         const fromCol = fromSquare.charCodeAt(0);
         const toCol = toSquare.charCodeAt(0);
-        const isCastle = prevBoard[squareToCoords(fromSquare).row][squareToCoords(fromSquare).col]?.toLowerCase() === 'k' && Math.abs(fromCol - toCol) === 2;
+        const [fRow, fCol] = squareToCoords(fromSquare);
+        const isCastle = prevBoard[fRow][fCol]?.toLowerCase() === 'k' && Math.abs(fromCol - toCol) === 2;
         if (wasCapture) {
           playCaptureSound();
         } else if (isCastle) {
