@@ -247,6 +247,20 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
                       />
                     )}
 
+                    {/* Crucial moment highlight glow */}
+                    {isCrucialHighlight && (
+                      <motion.div
+                        className="absolute inset-0 z-[5] pointer-events-none"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [0.4, 0.8, 0.4] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                        style={{
+                          background: "radial-gradient(circle, hsl(45, 100%, 60%) 0%, hsl(45, 100%, 50%) 40%, transparent 70%)",
+                          boxShadow: "inset 0 0 20px hsl(45, 100%, 55%), 0 0 15px hsl(45, 100%, 55%)",
+                        }}
+                      />
+                    )}
+
                     {/* Capture burst effect */}
                     <CaptureEffect active={!!isCaptureSquare} />
 

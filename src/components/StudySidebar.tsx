@@ -59,6 +59,7 @@ export default function StudySidebar({
   onMasteryResponse,
   hasNextLine,
   conclusionText,
+  crucialMomentMessage,
 }: StudySidebarProps) {
   const { currentTheme } = useTheme();
   const { user } = useAuth();

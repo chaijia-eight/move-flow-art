@@ -317,9 +317,20 @@ export default function Study() {
           const compMoveIndex = moveHistory.length; // index of the move just played
           if (cm && !cm.isPlayerMove && compMoveIndex === cm.moveIndex && !crucialMomentShown) {
             setCrucialMomentShown(true);
+            if (result) {
+              setCrucialSquare(result.to);
+            }
+            const mainLineRef = allVariationLines[0];
+            const insteadOf = mainLineRef && cm.moveIndex < mainLineRef.moves.length
+              ? mainLineRef.moves[cm.moveIndex]
+              : null;
+            const msg = insteadOf
+              ? `The opponent played ${cm.move} instead of ${insteadOf} — that's different!`
+              : `The opponent played ${cm.move} — that's different!`;
+            setCrucialMomentMessage(msg);
             setFeedback({
               type: "main_line",
-              message: `🛡️ Key moment! Opponent plays ${cm.moveNumber}${cm.isWhiteMove ? "." : "..."}${cm.move} — this defines this line.`,
+              message: `🛡️ ${msg}`,
             });
           } else {
             setFeedback(null);
