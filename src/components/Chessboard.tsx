@@ -5,7 +5,7 @@ import { Chess } from "chess.js";
 import { fenToBoard, PIECE_IMAGES, coordsToSquare, squareToCoords } from "@/data/pieceUnicode";
 import { useTheme } from "@/contexts/ThemeContext";
 import CaptureEffect from "@/components/CaptureEffect";
-import { playMoveSound, playCaptureSound } from "@/lib/chessSounds";
+import { playMoveSound, playCaptureSound, playCastleSound } from "@/lib/chessSounds";
 import type { MoveCategory } from "@/data/openings";
 
 interface ChessboardProps {
@@ -77,9 +77,15 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
       if (fromSquare && toSquare) {
         setAnimMove({ from: fromSquare, to: toSquare, isCapture: wasCapture, id: ++animIdCounter });
         setLastMove({ from: fromSquare, to: toSquare });
-        // Play sound
+        // Detect castling: king moves 2 squares horizontally
+        const fromCol = fromSquare.charCodeAt(0);
+        const toCol = toSquare.charCodeAt(0);
+        const [fRow, fCol] = squareToCoords(fromSquare);
+        const isCastle = prevBoard[fRow][fCol]?.toLowerCase() === 'k' && Math.abs(fromCol - toCol) === 2;
         if (wasCapture) {
           playCaptureSound();
+        } else if (isCastle) {
+          playCastleSound();
         } else {
           playMoveSound();
         }
