@@ -54,6 +54,7 @@ export default function Study() {
   const lineParam = searchParams.get("line");
   const isReview = searchParams.get("review") === "1";
   const isPracticeMode = searchParams.get("practice") === "1";
+  const isAgainstMode = searchParams.get("against") === "1";
 
   // Resolve current line
   const { currentLine, allVariationLines } = useMemo(() => {
