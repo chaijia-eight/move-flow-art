@@ -183,11 +183,13 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
                 <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
                   <circle
                     cx="18" cy="18" r="15" fill="none"
-                    stroke={isWhite ? "hsl(0 0% 85%)" : "hsl(0 0% 22%)"}
+                    stroke={mastered ? "hsla(0,0%,100%,0.25)" : isWhite ? "hsl(0 0% 85%)" : "hsl(0 0% 22%)"}
                     strokeWidth="2.5"
                   />
                   <circle
-                    cx="18" cy="18" r="15" fill="none" stroke={theme.accentColor} strokeWidth="2.5"
+                    cx="18" cy="18" r="15" fill="none"
+                    stroke={mastered ? "hsl(0 0% 100%)" : theme.accentColor}
+                    strokeWidth="2.5"
                     strokeDasharray={`${progress * 94.25} 94.25`} strokeLinecap="round"
                     className="transition-all duration-700 ease-out"
                   />
