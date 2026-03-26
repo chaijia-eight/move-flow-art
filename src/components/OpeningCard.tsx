@@ -4,6 +4,8 @@ import { Star } from "lucide-react";
 import { themes, type Opening } from "@/data/openings";
 import { extractAllLines } from "@/lib/lineExtractor";
 import { getOpeningProgress } from "@/lib/progressStore";
+import { getOpeningFen } from "@/lib/openingFen";
+import MiniBoard from "@/components/MiniBoard";
 import { t, tn, tDesc } from "@/lib/i18n";
 
 interface OpeningCardProps {
