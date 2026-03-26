@@ -5,7 +5,7 @@ import { Chess } from "chess.js";
 import { fenToBoard, PIECE_IMAGES, coordsToSquare, squareToCoords } from "@/data/pieceUnicode";
 import { useTheme } from "@/contexts/ThemeContext";
 import CaptureEffect from "@/components/CaptureEffect";
-import { playMoveSound, playCaptureSound } from "@/lib/chessSounds";
+import { playMoveSound, playCaptureSound, playCastleSound } from "@/lib/chessSounds";
 import type { MoveCategory } from "@/data/openings";
 
 interface ChessboardProps {
