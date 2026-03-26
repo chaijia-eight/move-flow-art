@@ -231,9 +231,9 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
             )}
             <span
               className="text-[11px] font-medium transition-colors duration-300"
-              style={{ color: theme.accentColor }}
+              style={{ color: mastered ? "hsla(0,0%,100%,0.9)" : theme.accentColor }}
             >
-              {progress > 0 ? t("continuePracticing") : t("beginStudy")}
+              {mastered ? "✓ " + t("mastered") : progress > 0 ? t("continuePracticing") : t("beginStudy")}
             </span>
           </div>
         </div>
