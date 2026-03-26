@@ -130,8 +130,13 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
 
       {/* Theme color wash */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.07]"
-        style={{ background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.accentColor})` }}
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: mastered
+            ? `linear-gradient(135deg, ${theme.primaryColor}, ${theme.accentColor})`
+            : `linear-gradient(135deg, ${theme.primaryColor}, ${theme.accentColor})`,
+          opacity: mastered ? 0.35 : 0.07,
+        }}
       />
 
       <div className="p-4 relative">
