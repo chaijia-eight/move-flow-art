@@ -224,7 +224,7 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
               >
                 <Star
                   className="w-3.5 h-3.5 transition-colors"
-                  style={{ color: focused ? theme.accentColor : cardMuted }}
+                  style={{ color: mastered ? "hsl(0 0% 100%)" : focused ? theme.accentColor : cardMuted }}
                   fill={focused ? "currentColor" : "none"}
                 />
               </button>
