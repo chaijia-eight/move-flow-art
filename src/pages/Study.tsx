@@ -722,6 +722,7 @@ export default function Study() {
             playerColor={playerColor}
             arrowFrom={arrowTarget?.from}
             arrowTo={arrowTarget?.to}
+            highlightSquare={crucialSquare}
           />
 
           {/* Feedback message area - only on mobile or when no sidebar */}
