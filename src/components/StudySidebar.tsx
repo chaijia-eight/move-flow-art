@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Trophy } from "lucide-react";
+import { useSubscription } from "@/contexts/SubscriptionContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { Trophy, ExternalLink, Crown } from "lucide-react";
 import { t, tf } from "@/lib/i18n";
 
 interface MoveRecord {
