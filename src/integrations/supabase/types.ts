@@ -116,6 +116,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_entitlements: {
+        Row: {
+          created_at: string
+          entitlement: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          entitlement?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          entitlement?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_focus: {
         Row: {
           data: Json

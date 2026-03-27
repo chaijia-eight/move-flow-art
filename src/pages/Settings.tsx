@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Volume2, VolumeX, Sun, Moon, Trash2, LogIn, LogOut, UserPlus, Mail, Globe, Crown, CreditCard } from "lucide-react";
+import { ArrowLeft, Volume2, VolumeX, Sun, Moon, Trash2, LogIn, LogOut, UserPlus, Mail, Globe, Crown, CreditCard, KeyRound } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -164,6 +165,74 @@ function SubscriptionCard() {
   );
 }
 
+function DeveloperCodeCard() {
+  const { user } = useAuth();
+  const { isPro, refreshSubscription } = useSubscription();
+  const [code, setCode] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  if (!user || isPro) return null;
+
+  const handleRedeem = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!code.trim()) return;
+    setStatus("loading");
+    setErrorMsg("");
+    try {
+      const { data, error } = await supabase.functions.invoke("redeem-code", {
+        body: { code: code.trim() },
+      });
+      if (error) throw error;
+      if (data?.success) {
+        setStatus("success");
+        setCode("");
+        await refreshSubscription();
+      } else {
+        setStatus("error");
+        setErrorMsg(data?.error || t("invalidCode"));
+      }
+    } catch (e) {
+      setStatus("error");
+      setErrorMsg(t("invalidCode"));
+    }
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <KeyRound className="w-4 h-4" />
+          {t("developerCode")}
+        </CardTitle>
+        <CardDescription>{t("enterCodeDesc")}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleRedeem} className="flex gap-2">
+          <input
+            type="text"
+            placeholder={t("enterCode")}
+            value={code}
+            onChange={(e) => { setCode(e.target.value); setStatus("idle"); }}
+            maxLength={30}
+            className="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          />
+          <Button type="submit" disabled={status === "loading" || !code.trim()} className="gap-1.5">
+            <KeyRound className="w-3.5 h-3.5" />
+            {status === "loading" ? t("loading") : t("redeem")}
+          </Button>
+        </form>
+        {status === "success" && (
+          <p className="text-sm text-primary mt-2">✓ {t("codeRedeemed")}</p>
+        )}
+        {status === "error" && (
+          <p className="text-sm text-destructive mt-2">{errorMsg}</p>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function Settings() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -241,6 +310,11 @@ export default function Settings() {
         {/* Subscription */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
           <SubscriptionCard />
+        </motion.div>
+
+        {/* Developer Code */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.13 }}>
+          <DeveloperCodeCard />
         </motion.div>
 
         {/* Sound */}

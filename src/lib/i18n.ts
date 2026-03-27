@@ -232,6 +232,12 @@ const translations = {
   newLines: { en: "New lines", zh: "新变化" },
   practice: { en: "Practice", zh: "练习" },
   requiresAccount: { en: "Create an account to start learning", zh: "创建账号开始学习" },
+  developerCode: { en: "Developer Code", zh: "开发者代码" },
+  enterCodeDesc: { en: "Enter a code to unlock premium features", zh: "输入代码解锁高级功能" },
+  enterCode: { en: "Enter code", zh: "输入代码" },
+  redeem: { en: "Redeem", zh: "兑换" },
+  codeRedeemed: { en: "Code redeemed! You now have Pro access.", zh: "兑换成功！你已获得专业版权限。" },
+  invalidCode: { en: "Invalid code. Please try again.", zh: "无效代码，请重试。" },
 
   // ==================== 404 ====================
   pageNotFound: { en: "Oops! Page not found", zh: "哎呀！页面未找到" },
