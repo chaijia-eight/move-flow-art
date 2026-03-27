@@ -88,6 +88,26 @@ export default function Study() {
       .filter(Boolean);
   }, [currentLine, variationParam, opening]);
 
+  // Gate new lines for free tier
+  useEffect(() => {
+    if (!currentLine || lineGateChecked.current || isAgainstMode || isReview) return;
+    lineGateChecked.current = true;
+    const progress = getLineProgress(currentLine.id);
+    const isNewLine = progress.attempts === 0;
+    if (isNewLine && user && !canLearnNewLine) {
+      setUpgradeReason("lines");
+      setShowUpgradeModal(true);
+    } else if (isPracticeMode && user && !canPractice) {
+      setUpgradeReason("practice");
+      setShowUpgradeModal(true);
+    } else if (isNewLine && user && !isPro) {
+      // Record usage for free tier
+      recordLineLearn();
+    } else if (isPracticeMode && user && !isPro) {
+      recordPracticeUse();
+    }
+  }, [currentLine, user, canLearnNewLine, canPractice, isPro, isAgainstMode, isReview, isPracticeMode, recordLineLearn, recordPracticeUse]);
+
   useEffect(() => {
     if (opening) setTheme(opening.themeId);
   }, [opening, setTheme]);
