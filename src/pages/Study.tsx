@@ -59,6 +59,10 @@ export default function Study() {
   const opening = openings.find((o) => o.id === openingId);
   const colorParam = searchParams.get("color") as "w" | "b" | null;
   const variationParam = searchParams.get("variation");
+
+  // Resolve the active variation's tree (trap variations have their own tree)
+  const activeVariation = opening?.variations.find((v) => v.id === variationParam);
+  const activeTree = activeVariation?.tree || opening?.tree || [];
   const lineParam = searchParams.get("line");
   const isReview = searchParams.get("review") === "1";
   const isPracticeMode = searchParams.get("practice") === "1";
