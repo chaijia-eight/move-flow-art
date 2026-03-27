@@ -59,9 +59,23 @@ export default function StudySidebar({
   hasNextLine,
   conclusionText,
   crucialMomentMessage,
+  fen,
 }: StudySidebarProps) {
   const { currentTheme } = useTheme();
+  const { user } = useAuth();
+  const { isPro, canAnalyze, recordAnalysisUse } = useSubscription();
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const handleLichessAnalysis = () => {
+    // Record usage for free users
+    if (user && !isPro) {
+      recordAnalysisUse();
+    }
+    // Build Lichess analysis URL from FEN
+    const encodedFen = fen.replace(/ /g, "_");
+    const color = playerSide === "w" ? "white" : "black";
+    window.open(`https://lichess.org/analysis/${encodedFen}?color=${color}`, "_blank");
+  };
 
   // Auto-scroll to bottom on new moves
   useEffect(() => {
