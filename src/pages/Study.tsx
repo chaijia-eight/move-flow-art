@@ -48,7 +48,11 @@ export default function Study() {
   const navigate = useNavigate();
   const { setTheme, currentTheme } = useTheme();
   const { user } = useAuth();
+  const { canLearnNewLine, canPractice, recordLineLearn, recordPracticeUse, isPro } = useSubscription();
   const isMobile = useIsMobile();
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [upgradeReason, setUpgradeReason] = useState<"lines" | "practice">("lines");
+  const lineGateChecked = useRef(false);
 
   const opening = openings.find((o) => o.id === openingId);
   const colorParam = searchParams.get("color") as "w" | "b" | null;
