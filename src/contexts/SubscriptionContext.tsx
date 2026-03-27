@@ -63,9 +63,11 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     if (data) {
       setDailyLinesUsed(data.lines_learned);
       setPracticeUsedToday(data.practice_used);
+      setAnalysisUsedToday(data.analysis_used);
     } else {
       setDailyLinesUsed(0);
       setPracticeUsedToday(false);
+      setAnalysisUsedToday(false);
     }
   }, [user]);
 
