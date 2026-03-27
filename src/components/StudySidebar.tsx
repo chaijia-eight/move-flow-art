@@ -60,6 +60,7 @@ export default function StudySidebar({
   hasNextLine,
   conclusionText,
   crucialMomentMessage,
+  isTrap,
   fen,
 }: StudySidebarProps) {
   const { currentTheme } = useTheme();
