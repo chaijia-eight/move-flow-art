@@ -272,7 +272,7 @@ export default function Study() {
         setIsComputerTurn(false);
       }, 600);
     }
-  }, [opening, playerColor, chess, resetCounter]);
+  }, [opening, playerColor, chess, resetCounter, activeTree]);
 
   const findInOtherOpenings = useCallback((moveList: string[]): { id: string; name: string; nodes: OpeningNode[] } | null => {
     for (const op of openings) {
