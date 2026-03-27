@@ -12,9 +12,12 @@ interface SubscriptionState {
   canLearnNewLine: boolean;
   canPractice: boolean;
   canAnalyze: boolean;
+  canLearnTrap: boolean;
+  lastTrapLearnedAt: string | null;
   recordLineLearn: () => Promise<void>;
   recordPracticeUse: () => Promise<void>;
   recordAnalysisUse: () => Promise<void>;
+  recordTrapLearn: () => Promise<void>;
   refreshSubscription: () => Promise<void>;
   startCheckout: () => Promise<void>;
   openCustomerPortal: () => Promise<void>;
