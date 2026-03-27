@@ -42,19 +42,22 @@ serve(async (req) => {
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
 
-    // Check for developer entitlements first
+    // Check for entitlements (permanent or non-expired)
     const { data: entitlements } = await supabaseClient
       .from("user_entitlements")
-      .select("entitlement")
+      .select("entitlement, expires_at")
       .eq("user_id", user.id)
-      .eq("entitlement", "pro")
-      .limit(1);
+      .eq("entitlement", "pro");
 
-    if (entitlements && entitlements.length > 0) {
-      logStep("User has pro entitlement via code");
+    const activeEntitlement = entitlements?.find(
+      (e: any) => !e.expires_at || new Date(e.expires_at) > new Date()
+    );
+
+    if (activeEntitlement) {
+      logStep("User has pro entitlement", { expires_at: activeEntitlement.expires_at });
       return new Response(JSON.stringify({
         subscribed: true,
-        subscription_end: null,
+        subscription_end: activeEntitlement.expires_at ?? null,
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,

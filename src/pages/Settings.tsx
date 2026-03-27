@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Volume2, VolumeX, Sun, Moon, Trash2, LogIn, LogOut, UserPlus, Mail, Globe, Crown, CreditCard, KeyRound } from "lucide-react";
+import { ArrowLeft, Volume2, VolumeX, Sun, Moon, Trash2, LogIn, LogOut, UserPlus, Mail, Globe, Crown, CreditCard, KeyRound, Copy, Check, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -165,7 +165,64 @@ function SubscriptionCard() {
   );
 }
 
-function DeveloperCodeCard() {
+function GenerateCodeCard() {
+  const { user } = useAuth();
+  const [generatedCode, setGeneratedCode] = useState("");
+  const [generating, setGenerating] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  if (!user || user.email !== "xinya.vivian@me.com") return null;
+
+  const handleGenerate = async () => {
+    setGenerating(true);
+    setGeneratedCode("");
+    try {
+      const { data, error } = await supabase.functions.invoke("generate-redeem-code");
+      if (error) throw error;
+      if (data?.success) {
+        setGeneratedCode(data.code);
+      }
+    } catch (e) {
+      console.error("Generate code error:", e);
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(generatedCode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <Card className="border-primary/40">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Sparkles className="w-4 h-4" />
+          Generate Redeem Code
+        </CardTitle>
+        <CardDescription>Generate single-use codes that grant 1 month of Pro</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <Button onClick={handleGenerate} disabled={generating} className="gap-2">
+          <Sparkles className="w-4 h-4" />
+          {generating ? t("loading") : "Generate Code"}
+        </Button>
+        {generatedCode && (
+          <div className="flex items-center gap-2 p-3 rounded-lg bg-secondary">
+            <code className="flex-1 text-sm font-mono text-foreground select-all">{generatedCode}</code>
+            <Button variant="ghost" size="icon" onClick={handleCopy} className="shrink-0">
+              {copied ? <Check className="w-4 h-4 text-primary" /> : <Copy className="w-4 h-4" />}
+            </Button>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function RedeemCodeCard() {
   const { user } = useAuth();
   const { isPro, refreshSubscription } = useSubscription();
   const [code, setCode] = useState("");
@@ -203,7 +260,7 @@ function DeveloperCodeCard() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-lg">
           <KeyRound className="w-4 h-4" />
-          {t("developerCode")}
+          {t("redeemCode")}
         </CardTitle>
         <CardDescription>{t("enterCodeDesc")}</CardDescription>
       </CardHeader>
@@ -312,9 +369,14 @@ export default function Settings() {
           <SubscriptionCard />
         </motion.div>
 
-        {/* Developer Code */}
+        {/* Generate Code (dev only) */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.13 }}>
-          <DeveloperCodeCard />
+          <GenerateCodeCard />
+        </motion.div>
+
+        {/* Redeem Code */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14 }}>
+          <RedeemCodeCard />
         </motion.div>
 
         {/* Sound */}
