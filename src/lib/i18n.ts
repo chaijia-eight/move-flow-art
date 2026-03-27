@@ -233,6 +233,7 @@ const translations = {
   practice: { en: "Practice", zh: "练习" },
   requiresAccount: { en: "Create an account to start learning", zh: "创建账号开始学习" },
   developerCode: { en: "Developer Code", zh: "开发者代码" },
+  redeemCode: { en: "Redeem Code", zh: "兑换代码" },
   enterCodeDesc: { en: "Enter a code to unlock premium features", zh: "输入代码解锁高级功能" },
   enterCode: { en: "Enter code", zh: "输入代码" },
   redeem: { en: "Redeem", zh: "兑换" },
