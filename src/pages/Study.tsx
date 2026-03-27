@@ -1017,7 +1017,7 @@ export default function Study() {
               onNextLine={goToNextLine}
               onMasteryResponse={handleMasteryResponse}
               hasNextLine={allVariationLines.length > 0 && !!currentLine && allVariationLines.findIndex(l => l.id === currentLine.id) < allVariationLines.length - 1}
-              conclusionText={currentLine ? lineConclusions[currentLine.id] : undefined}
+              conclusionText={currentLine ? (lineOverrides[currentLine.id]?.conclusion_text || lineConclusions[currentLine.id]) : undefined}
               crucialMomentMessage={crucialMomentMessage}
               isTrap={activeVariation?.isTrap}
               fen={fen}
