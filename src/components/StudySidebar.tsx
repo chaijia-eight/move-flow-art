@@ -34,6 +34,8 @@ interface StudySidebarProps {
   hasNextLine: boolean;
   conclusionText?: string;
   crucialMomentMessage?: string | null;
+  fen: string;
+  moveHistory: MoveRecord[];
 }
 
 export default function StudySidebar({
