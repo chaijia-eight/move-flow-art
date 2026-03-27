@@ -596,8 +596,8 @@ export default function Study() {
     setPlayerColor(color);
     handleReset();
 
-    if (color !== "w" && opening && opening.tree.length > 0) {
-      const mainNode = pickComputerNode(opening.tree, 0) || opening.tree[0];
+    if (color !== "w" && activeTree.length > 0) {
+      const mainNode = pickComputerNode(activeTree, 0) || activeTree[0];
       initialAutoPlayed.current = true;
       setIsComputerTurn(true);
       setTimeout(() => {
