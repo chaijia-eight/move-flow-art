@@ -611,6 +611,10 @@ export default function Study() {
     if (currentLine) {
       markMastered(currentLine.id, mastered);
     }
+    if (mastered) {
+      playCelebrationSound();
+      setShowConfetti(true);
+    }
     setShowMasteryPrompt(false);
   };
 
