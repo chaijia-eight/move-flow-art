@@ -149,22 +149,52 @@ export type Database = {
         }
         Relationships: []
       }
+      redeem_codes: {
+        Row: {
+          code: string
+          created_at: string
+          created_by: string
+          id: string
+          redeemed_at: string | null
+          redeemed_by: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          created_by: string
+          id?: string
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+        }
+        Relationships: []
+      }
       user_entitlements: {
         Row: {
           created_at: string
           entitlement: string
+          expires_at: string | null
           id: string
           user_id: string
         }
         Insert: {
           created_at?: string
           entitlement?: string
+          expires_at?: string | null
           id?: string
           user_id: string
         }
         Update: {
           created_at?: string
           entitlement?: string
+          expires_at?: string | null
           id?: string
           user_id?: string
         }
