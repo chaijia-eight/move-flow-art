@@ -65,7 +65,26 @@ export default function Study() {
 
   // Resolve the active variation's tree (trap variations have their own tree)
   const activeVariation = opening?.variations.find((v) => v.id === variationParam);
-  const activeTree = activeVariation?.tree || opening?.tree || [];
+  const baseTree = activeVariation?.tree || opening?.tree || [];
+
+  // If the current line has override moves, build a synthetic linear tree
+  const activeTree = useMemo(() => {
+    if (!currentLine || !lineOverrides[currentLine.id]?.moves) return baseTree;
+    const overrideMoves = lineOverrides[currentLine.id].moves!;
+    // Build a linear tree from the override moves using chess.js for FENs
+    const chess = new Chess();
+    let nodes: OpeningNode[] = [];
+    const root: OpeningNode[] = [];
+    let parent: OpeningNode[] = root;
+    for (const san of overrideMoves) {
+      const fen = chess.fen();
+      try { chess.move(san); } catch { break; }
+      const node: OpeningNode = { fen, move: san, category: "main_line", children: [] };
+      parent.push(node);
+      parent = node.children;
+    }
+    return root.length > 0 ? root : baseTree;
+  }, [baseTree, currentLine, lineOverrides]);
   const lineParam = searchParams.get("line");
   const isReview = searchParams.get("review") === "1";
   const isPracticeMode = searchParams.get("practice") === "1";
