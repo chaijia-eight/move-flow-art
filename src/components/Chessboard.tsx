@@ -39,7 +39,7 @@ interface DragState {
 
 let animIdCounter = 0;
 
-export default function Chessboard({ fen, onMove, moveHints, disabled, flipped = false, playerColor, arrowFrom, arrowTo, highlightSquare }: ChessboardProps) {
+export default function Chessboard({ fen, onMove, moveHints, disabled, flipped = false, playerColor, arrowFrom, arrowTo, highlightSquare, highlightColor = "gold" }: ChessboardProps) {
   const { currentTheme } = useTheme();
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
   const [lastMove, setLastMove] = useState<{ from: string; to: string } | null>(null);
