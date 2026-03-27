@@ -88,7 +88,11 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
       const isCastle = changedCount === 4;
 
       if (fromSquare && toSquare) {
-        setAnimMove({ from: fromSquare, to: toSquare, isCapture: wasCapture, id: ++animIdCounter });
+        const skipAnim = skipNextAnimRef.current && !isCastle;
+        skipNextAnimRef.current = false;
+        if (!skipAnim) {
+          setAnimMove({ from: fromSquare, to: toSquare, isCapture: wasCapture, id: ++animIdCounter });
+        }
         setLastMove({ from: fromSquare, to: toSquare });
         if (wasCapture) {
           playCaptureSound();
