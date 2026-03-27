@@ -51,7 +51,7 @@ export default function DevEditPanel({ currentLine, moveHistory, primarySide, on
       try {
         const result = chess.move(sans[i]);
         if (!result) return { valid: false, moves: validMoves, error: `Invalid move at index ${i}: "${sans[i]}"` };
-        validMoves.push(result.san.replace(/[+#]/g, "")); // Normalize
+        validMoves.push(result.san);
       } catch {
         return { valid: false, moves: validMoves, error: `Illegal move at index ${i}: "${sans[i]}"` };
       }
