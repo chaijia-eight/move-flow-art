@@ -793,6 +793,7 @@ export default function Study() {
             arrowFrom={arrowTarget?.from}
             arrowTo={arrowTarget?.to}
             highlightSquare={crucialSquare}
+            highlightColor={activeVariation?.isTrap ? "red" : "gold"}
           />
 
           {/* Feedback message area */}

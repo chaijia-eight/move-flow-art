@@ -18,6 +18,7 @@ interface ChessboardProps {
   arrowFrom?: string;
   arrowTo?: string;
   highlightSquare?: string | null;
+  highlightColor?: "gold" | "red";
 }
 
 interface AnimMove {
@@ -38,7 +39,7 @@ interface DragState {
 
 let animIdCounter = 0;
 
-export default function Chessboard({ fen, onMove, moveHints, disabled, flipped = false, playerColor, arrowFrom, arrowTo, highlightSquare }: ChessboardProps) {
+export default function Chessboard({ fen, onMove, moveHints, disabled, flipped = false, playerColor, arrowFrom, arrowTo, highlightSquare, highlightColor = "gold" }: ChessboardProps) {
   const { currentTheme } = useTheme();
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
   const [lastMove, setLastMove] = useState<{ from: string; to: string } | null>(null);
@@ -386,18 +387,23 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
                     )}
 
                     {/* Crucial moment highlight glow */}
-                    {isCrucialHighlight && (
-                      <motion.div
-                        className="absolute inset-0 z-[5] pointer-events-none"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: [0.4, 0.8, 0.4] }}
-                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                        style={{
-                          background: "radial-gradient(circle, hsl(45, 100%, 60%) 0%, hsl(45, 100%, 50%) 40%, transparent 70%)",
-                          boxShadow: "inset 0 0 20px hsl(45, 100%, 55%), 0 0 15px hsl(45, 100%, 55%)",
-                        }}
-                      />
-                    )}
+                    {isCrucialHighlight && (() => {
+                      const hue = highlightColor === "red" ? "0, 72%, 50%" : "45, 100%, 60%";
+                      const hueMid = highlightColor === "red" ? "0, 72%, 45%" : "45, 100%, 50%";
+                      const hueShadow = highlightColor === "red" ? "0, 72%, 50%" : "45, 100%, 55%";
+                      return (
+                        <motion.div
+                          className="absolute inset-0 z-[5] pointer-events-none"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: [0.4, 0.8, 0.4] }}
+                          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                          style={{
+                            background: `radial-gradient(circle, hsl(${hue}) 0%, hsl(${hueMid}) 40%, transparent 70%)`,
+                            boxShadow: `inset 0 0 20px hsl(${hueShadow}), 0 0 15px hsl(${hueShadow})`,
+                          }}
+                        />
+                      );
+                    })()}
 
                     {/* Capture burst effect */}
                     <CaptureEffect active={!!isCaptureSquare} />
