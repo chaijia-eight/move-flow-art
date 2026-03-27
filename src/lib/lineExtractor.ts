@@ -106,14 +106,19 @@ export function extractLinesForVariation(
   const subPaths = extractPaths(subtree);
 
   if (subPaths.length === 0) {
-    return [{
+    const line: Line = {
       id: `${opening.id}/${variation.id}/line-0`,
       variationId: variation.id,
       openingId: opening.id,
       name: `${variation.name} — Main Line`,
       moves: prefix,
       nodeCount: prefix.length,
-    }];
+    };
+    // For trap variations with a single path, synthesize the crucial moment
+    if (variation.isTrap && variation.trapMoveIndex != null) {
+      line.crucialMoment = buildTrapCrucialMoment(prefix, variation.trapMoveIndex, opening.primarySide);
+    }
+    return [line];
   }
 
   const mainMoves = [...prefix, ...subPaths[0]];
@@ -132,17 +137,46 @@ export function extractLinesForVariation(
     (c) => !c.crucialMoment || !c.crucialMoment.isPlayerMove
   );
 
-  return filtered.map((c, i) => ({
-    id: `${opening.id}/${variation.id}/line-${i}`,
-    variationId: variation.id,
-    openingId: opening.id,
-    name: i === 0
-      ? `${variation.name} — Main Line`
-      : `${variation.name} — Line ${i + 1}`,
-    moves: c.fullMoves,
-    nodeCount: c.fullMoves.length,
-    crucialMoment: c.crucialMoment,
-  }));
+  return filtered.map((c, i) => {
+    const line: Line = {
+      id: `${opening.id}/${variation.id}/line-${i}`,
+      variationId: variation.id,
+      openingId: opening.id,
+      name: i === 0
+        ? `${variation.name} — Main Line`
+        : `${variation.name} — Line ${i + 1}`,
+      moves: c.fullMoves,
+      nodeCount: c.fullMoves.length,
+      crucialMoment: c.crucialMoment,
+    };
+    // For trap main line (i===0), synthesize crucial moment from trapMoveIndex
+    if (i === 0 && variation.isTrap && variation.trapMoveIndex != null && !line.crucialMoment) {
+      line.crucialMoment = buildTrapCrucialMoment(c.fullMoves, variation.trapMoveIndex, opening.primarySide);
+    }
+    return line;
+  });
+}
+
+function buildTrapCrucialMoment(
+  moves: string[],
+  trapMoveIndex: number,
+  primarySide: "w" | "b"
+): CrucialMoment | undefined {
+  if (trapMoveIndex >= moves.length) return undefined;
+  const isWhiteMove = trapMoveIndex % 2 === 0;
+  const moveNumber = Math.floor(trapMoveIndex / 2) + 1;
+  const isPlayerMove = (primarySide === "w") === isWhiteMove;
+  const moveLabel = `${moveNumber}${isWhiteMove ? "." : "..."}${moves[trapMoveIndex]}`;
+  const who = isPlayerMove ? "You play" : "Opponent plays";
+
+  return {
+    moveIndex: trapMoveIndex,
+    move: moves[trapMoveIndex],
+    moveNumber,
+    isWhiteMove,
+    isPlayerMove,
+    description: `${who} ${moveLabel} — the mistake!`,
+  };
 }
 
 export function extractAllLines(opening: Opening): Line[] {

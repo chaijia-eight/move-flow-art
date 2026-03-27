@@ -31,6 +31,7 @@ export interface VariationInfo {
   tree: OpeningNode[];
   depth: number;
   isTrap?: boolean; // Secret trap — punishes a common bad move
+  trapMoveIndex?: number; // 0-based index in the moves array where the opponent's mistake occurs
 }
 
 export interface Opening {

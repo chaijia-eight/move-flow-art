@@ -363,17 +363,23 @@ export default function Study() {
             if (result) {
               setCrucialSquare(result.to);
             }
-            const mainLineRef = allVariationLines[0];
-            const insteadOf = mainLineRef && cm.moveIndex < mainLineRef.moves.length
-              ? mainLineRef.moves[cm.moveIndex]
-              : null;
-            const msg = insteadOf
-              ? `The opponent played ${cm.move} instead of ${insteadOf} — that's different!`
-              : `The opponent played ${cm.move} — that's different!`;
+            const isTrapVar = activeVariation?.isTrap;
+            let msg: string;
+            if (isTrapVar) {
+              msg = `The opponent played ${cm.move} — that's the mistake!`;
+            } else {
+              const mainLineRef = allVariationLines[0];
+              const insteadOf = mainLineRef && cm.moveIndex < mainLineRef.moves.length
+                ? mainLineRef.moves[cm.moveIndex]
+                : null;
+              msg = insteadOf
+                ? `The opponent played ${cm.move} instead of ${insteadOf} — that's different!`
+                : `The opponent played ${cm.move} — that's different!`;
+            }
             setCrucialMomentMessage(msg);
             setFeedback({
               type: "main_line",
-              message: `🛡️ ${msg}`,
+              message: `${isTrapVar ? "⚠️" : "🛡️"} ${msg}`,
             });
           } else {
             setFeedback(null);
@@ -384,7 +390,7 @@ export default function Study() {
       } catch {}
       setIsComputerTurn(false);
     }, 800);
-  }, [chess, moveHistory, moveCount, currentVariation, checkLineCompletion, currentLine, crucialMomentShown, allVariationLines]);
+  }, [chess, moveHistory, moveCount, currentVariation, checkLineCompletion, currentLine, crucialMomentShown, allVariationLines, activeVariation]);
 
 
   const handleMove = useCallback(
