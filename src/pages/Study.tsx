@@ -8,6 +8,7 @@ import ProgressDots from "@/components/ProgressDots";
 import SwitchConfirmModal from "@/components/SwitchConfirmModal";
 import StudySidebar from "@/components/StudySidebar";
 import UpgradeModal from "@/components/UpgradeModal";
+import DevEditPanel from "@/components/DevEditPanel";
 import ConfettiBurst from "@/components/ConfettiBurst";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -15,8 +16,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { type OpeningNode, type MoveCategory } from "@/data/openings";
 import { openings } from "@/data/openingTrees";
-import { extractLinesForVariation, type Line } from "@/lib/lineExtractor";
+import { extractLinesForVariation, applyLineOverrides, type Line } from "@/lib/lineExtractor";
 import { lineConclusions } from "@/data/lineConclusions";
+import { useLineOverrides } from "@/hooks/useLineOverrides";
 import {
   getLineProgress,
   recordAttempt,
@@ -55,6 +57,7 @@ export default function Study() {
   const [upgradeReason, setUpgradeReason] = useState<"lines" | "practice">("lines");
   const [upgradeFromGate, setUpgradeFromGate] = useState(false);
   const lineGateChecked = useRef(false);
+  const { overrides: lineOverrides, reload: reloadOverrides } = useLineOverrides();
 
   const opening = openings.find((o) => o.id === openingId);
   const colorParam = searchParams.get("color") as "w" | "b" | null;
@@ -62,7 +65,7 @@ export default function Study() {
 
   // Resolve the active variation's tree (trap variations have their own tree)
   const activeVariation = opening?.variations.find((v) => v.id === variationParam);
-  const activeTree = activeVariation?.tree || opening?.tree || [];
+  const baseTree = activeVariation?.tree || opening?.tree || [];
   const lineParam = searchParams.get("line");
   const isReview = searchParams.get("review") === "1";
   const isPracticeMode = searchParams.get("practice") === "1";
@@ -73,13 +76,31 @@ export default function Study() {
     if (!opening || !variationParam) return { currentLine: null, allVariationLines: [] };
     const variation = opening.variations.find((v) => v.id === variationParam);
     if (!variation) return { currentLine: null, allVariationLines: [] };
-    const lines = extractLinesForVariation(opening, variation);
+    let lines = extractLinesForVariation(opening, variation);
+    lines = applyLineOverrides(lines, lineOverrides, opening.primarySide);
     const lineIdx = lineParam !== null ? parseInt(lineParam, 10) : 0;
     return {
       currentLine: lines[lineIdx] || null,
       allVariationLines: lines,
     };
-  }, [opening, variationParam, lineParam]);
+  }, [opening, variationParam, lineParam, lineOverrides]);
+
+  // If the current line has override moves, build a synthetic linear tree; otherwise use base tree
+  const activeTree = useMemo(() => {
+    if (!currentLine || !lineOverrides[currentLine.id]?.moves) return baseTree;
+    const overrideMoves = lineOverrides[currentLine.id].moves!;
+    const chess = new Chess();
+    const root: OpeningNode[] = [];
+    let parent: OpeningNode[] = root;
+    for (const san of overrideMoves) {
+      const fen = chess.fen();
+      try { chess.move(san); } catch { break; }
+      const node: OpeningNode = { fen, move: san, category: "main_line", children: [] };
+      parent.push(node);
+      parent = node.children;
+    }
+    return root.length > 0 ? root : baseTree;
+  }, [baseTree, currentLine, lineOverrides]);
 
   // Parse the preferred variation's starting moves into a SAN sequence
   const preferredMoves = useMemo(() => {
@@ -1013,7 +1034,7 @@ export default function Study() {
               onNextLine={goToNextLine}
               onMasteryResponse={handleMasteryResponse}
               hasNextLine={allVariationLines.length > 0 && !!currentLine && allVariationLines.findIndex(l => l.id === currentLine.id) < allVariationLines.length - 1}
-              conclusionText={currentLine ? lineConclusions[currentLine.id] : undefined}
+              conclusionText={currentLine ? (lineOverrides[currentLine.id]?.conclusion_text || lineConclusions[currentLine.id]) : undefined}
               crucialMomentMessage={crucialMomentMessage}
               isTrap={activeVariation?.isTrap}
               fen={fen}
@@ -1041,6 +1062,14 @@ export default function Study() {
         open={showUpgradeModal}
         onClose={() => { setShowUpgradeModal(false); if (upgradeFromGate) navigate(-1); setUpgradeFromGate(false); }}
         reason={upgradeReason}
+      />
+
+      {/* Developer editing panel */}
+      <DevEditPanel
+        currentLine={currentLine}
+        moveHistory={moveHistory}
+        primarySide={opening?.primarySide || "w"}
+        onOverrideApplied={reloadOverrides}
       />
     </div>
   );

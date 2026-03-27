@@ -86,6 +86,33 @@ export type Database = {
         }
         Relationships: []
       }
+      line_overrides: {
+        Row: {
+          conclusion_text: string | null
+          crucial_moment_index: number | null
+          id: string
+          line_id: string
+          moves: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          conclusion_text?: string | null
+          crucial_moment_index?: number | null
+          id?: string
+          line_id: string
+          moves?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          conclusion_text?: string | null
+          crucial_moment_index?: number | null
+          id?: string
+          line_id?: string
+          moves?: string[] | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       move_explanations: {
         Row: {
           created_at: string

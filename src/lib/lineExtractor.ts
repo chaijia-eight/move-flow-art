@@ -1,4 +1,5 @@
 import type { OpeningNode, Opening, VariationInfo } from "@/data/openings";
+import type { LineOverride } from "@/hooks/useLineOverrides";
 
 export interface CrucialMoment {
   moveIndex: number;       // 0-based index in the line's moves array
@@ -189,4 +190,34 @@ export function extractAllLines(opening: Opening): Line[] {
 
 export function countTotalLines(opening: Opening): number {
   return extractAllLines(opening).length;
+}
+
+/**
+ * Apply database overrides to extracted lines.
+ * Overrides can replace moves, set crucial moment index, and override conclusion text.
+ */
+export function applyLineOverrides(
+  lines: Line[],
+  overrides: Record<string, LineOverride>,
+  primarySide: "w" | "b"
+): Line[] {
+  return lines.map(line => {
+    const override = overrides[line.id];
+    if (!override) return line;
+
+    const result = { ...line };
+
+    // Apply moves override
+    if (override.moves && override.moves.length > 0) {
+      result.moves = override.moves;
+      result.nodeCount = override.moves.length;
+    }
+
+    // Apply crucial moment override
+    if (override.crucial_moment_index != null) {
+      result.crucialMoment = buildTrapCrucialMoment(result.moves, override.crucial_moment_index, primarySide);
+    }
+
+    return result;
+  });
 }
