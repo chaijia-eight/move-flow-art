@@ -1,4 +1,5 @@
 import type { OpeningNode, Opening, VariationInfo } from "@/data/openings";
+import type { LineOverride } from "@/hooks/useLineOverrides";
 
 export interface CrucialMoment {
   moveIndex: number;       // 0-based index in the line's moves array
