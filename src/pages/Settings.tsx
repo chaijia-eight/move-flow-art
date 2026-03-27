@@ -369,9 +369,14 @@ export default function Settings() {
           <SubscriptionCard />
         </motion.div>
 
-        {/* Developer Code */}
+        {/* Generate Code (dev only) */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.13 }}>
-          <DeveloperCodeCard />
+          <GenerateCodeCard />
+        </motion.div>
+
+        {/* Redeem Code */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14 }}>
+          <RedeemCodeCard />
         </motion.div>
 
         {/* Sound */}
