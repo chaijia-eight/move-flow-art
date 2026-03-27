@@ -5,6 +5,7 @@ const SOUND_URLS = {
   move: "https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3",
   capture: "https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/capture.mp3",
   castle: "https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/castle.mp3",
+  gameEnd: "https://images.chesscomfiles.com/chess-themes/sounds/_WEBM_/default/game-end.webm",
 };
 
 const audioCache: Record<string, HTMLAudioElement> = {};
