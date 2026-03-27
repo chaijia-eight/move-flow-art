@@ -34,6 +34,7 @@ interface StudySidebarProps {
   hasNextLine: boolean;
   conclusionText?: string;
   crucialMomentMessage?: string | null;
+  isTrap?: boolean;
   fen: string;
 }
 
@@ -59,6 +60,7 @@ export default function StudySidebar({
   hasNextLine,
   conclusionText,
   crucialMomentMessage,
+  isTrap,
   fen,
 }: StudySidebarProps) {
   const { currentTheme } = useTheme();
@@ -152,12 +154,12 @@ export default function StudySidebar({
                   <div
                     className="rounded-lg px-3 py-2.5 text-sm leading-relaxed font-medium"
                     style={{
-                      background: "hsl(45, 100%, 50%, 0.12)",
-                      color: "hsl(45, 100%, 45%)",
-                      border: "1px solid hsl(45, 100%, 50%, 0.25)",
+                      background: isTrap ? "hsl(0, 72%, 50%, 0.12)" : "hsl(45, 100%, 50%, 0.12)",
+                      color: isTrap ? "hsl(0, 72%, 45%)" : "hsl(45, 100%, 45%)",
+                      border: isTrap ? "1px solid hsl(0, 72%, 50%, 0.25)" : "1px solid hsl(45, 100%, 50%, 0.25)",
                     }}
                   >
-                    🛡️ {crucialMomentMessage}
+                    {isTrap ? "⚠️" : "🛡️"} {crucialMomentMessage}
                   </div>
                 </div>
               </motion.div>
