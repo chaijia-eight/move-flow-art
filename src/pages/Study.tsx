@@ -218,6 +218,8 @@ export default function Study() {
     if (!currentLine) return;
     setLineCompleted(true);
     playLineCompleteSound();
+    playCelebrationSound();
+    setShowConfetti(true);
 
     if (isAgainstMode) return; // No progress tracking in against mode
 
@@ -226,6 +228,7 @@ export default function Study() {
       setTimeout(() => {
         playMasterySound();
         setShowMasteryPrompt(true);
+        setShowConfetti(true);
       }, 800);
     }
   }, [currentLine, isAgainstMode]);
