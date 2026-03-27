@@ -52,6 +52,7 @@ export default function Study() {
   const isMobile = useIsMobile();
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeReason, setUpgradeReason] = useState<"lines" | "practice">("lines");
+  const [upgradeFromGate, setUpgradeFromGate] = useState(false);
   const lineGateChecked = useRef(false);
 
   const opening = openings.find((o) => o.id === openingId);
