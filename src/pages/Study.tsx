@@ -975,6 +975,7 @@ export default function Study() {
               hasNextLine={allVariationLines.length > 0 && !!currentLine && allVariationLines.findIndex(l => l.id === currentLine.id) < allVariationLines.length - 1}
               conclusionText={currentLine ? lineConclusions[currentLine.id] : undefined}
               crucialMomentMessage={crucialMomentMessage}
+              fen={fen}
             />
           </div>
         )}
