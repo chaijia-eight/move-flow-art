@@ -42,7 +42,7 @@ export function playCastleSound() {
 }
 
 export function playMasterySound() {
-  playSound("gameEnd");
+  playSound("notify");
 }
 
 export function playLineCompleteSound() {
