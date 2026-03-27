@@ -787,8 +787,7 @@ export default function Study() {
               <AnimatePresence mode="wait">
                 {isChallengeMode && !lineCompleted && !feedback && (
                   <motion.div key="challenge-hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                    className="rounded-lg px-4 py-2 text-sm font-medium"
-                    style={{ background: "hsl(45, 100%, 50%, 0.1)", color: "hsl(45, 100%, 55%)" }}
+                    className="rounded-lg px-4 py-2 text-sm font-medium bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400"
                   >
                     Play from memory — no hints!
                   </motion.div>
