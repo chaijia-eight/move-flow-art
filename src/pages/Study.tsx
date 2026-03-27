@@ -48,7 +48,7 @@ export default function Study() {
   const navigate = useNavigate();
   const { setTheme, currentTheme } = useTheme();
   const { user } = useAuth();
-  const { canLearnNewLine, canPractice, recordLineLearn, recordPracticeUse, isPro } = useSubscription();
+  const { canLearnNewLine, canPractice, canAnalyze, recordLineLearn, recordPracticeUse, recordAnalysisUse, isPro } = useSubscription();
   const isMobile = useIsMobile();
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeReason, setUpgradeReason] = useState<"lines" | "practice">("lines");
