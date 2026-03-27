@@ -228,6 +228,9 @@ const translations = {
     zh: (used: number, max: number) => `今日新变化 ${used}/${max}`,
   },
   unlimitedAccess: { en: "Unlimited", zh: "无限制" },
+  dailyLimits: { en: "Today's Limits", zh: "今日限额" },
+  newLines: { en: "New lines", zh: "新变化" },
+  practice: { en: "Practice", zh: "练习" },
   requiresAccount: { en: "Create an account to start learning", zh: "创建账号开始学习" },
 
   // ==================== 404 ====================
