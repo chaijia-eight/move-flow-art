@@ -215,7 +215,7 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
         {/* Footer */}
         <div className="flex items-center justify-between mt-3 pt-2.5" style={{ borderTop: `1px solid ${sideBadgeBorder}` }}>
           <span className="text-[11px]" style={{ color: cardMuted }}>
-            {opening.variations.length} {t("variations")} · {totalLines} {t("lines")}
+            {opening.variations.length} {t("variations")} · {totalLines} {t("lines")} · {totalMoves} {t("moves")}
           </span>
           <div className="flex items-center gap-2">
             {onToggleFocus && (
