@@ -8,10 +8,13 @@ interface SubscriptionState {
   loading: boolean;
   dailyLinesUsed: number;
   practiceUsedToday: boolean;
+  analysisUsedToday: boolean;
   canLearnNewLine: boolean;
   canPractice: boolean;
+  canAnalyze: boolean;
   recordLineLearn: () => Promise<void>;
   recordPracticeUse: () => Promise<void>;
+  recordAnalysisUse: () => Promise<void>;
   refreshSubscription: () => Promise<void>;
   startCheckout: () => Promise<void>;
   openCustomerPortal: () => Promise<void>;
