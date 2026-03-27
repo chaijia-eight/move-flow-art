@@ -76,13 +76,14 @@ export default function Study() {
     if (!opening || !variationParam) return { currentLine: null, allVariationLines: [] };
     const variation = opening.variations.find((v) => v.id === variationParam);
     if (!variation) return { currentLine: null, allVariationLines: [] };
-    const lines = extractLinesForVariation(opening, variation);
+    let lines = extractLinesForVariation(opening, variation);
+    lines = applyLineOverrides(lines, lineOverrides, opening.primarySide);
     const lineIdx = lineParam !== null ? parseInt(lineParam, 10) : 0;
     return {
       currentLine: lines[lineIdx] || null,
       allVariationLines: lines,
     };
-  }, [opening, variationParam, lineParam]);
+  }, [opening, variationParam, lineParam, lineOverrides]);
 
   // Parse the preferred variation's starting moves into a SAN sequence
   const preferredMoves = useMemo(() => {
