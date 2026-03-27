@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import Index from "./pages/Index.tsx";
 import StudyHub from "./pages/StudyHub.tsx";
 import Study from "./pages/Study.tsx";
@@ -20,6 +21,7 @@ const App = () => (
     <TooltipProvider>
       <ThemeProvider>
         <AuthProvider>
+          <SubscriptionProvider>
           <Toaster />
           <Sonner />
           <BrowserRouter>
@@ -34,6 +36,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
+          </SubscriptionProvider>
         </AuthProvider>
       </ThemeProvider>
     </TooltipProvider>

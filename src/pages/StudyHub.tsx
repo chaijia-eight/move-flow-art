@@ -2,19 +2,26 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 import { openings } from "@/data/openingTrees";
 import { themes } from "@/data/openings";
 import { extractLinesForVariation, extractAllLines, type Line } from "@/lib/lineExtractor";
 import { getLineProgress, isLineUnlocked, getOpeningProgress } from "@/lib/progressStore";
 import { ArrowLeft, ChevronRight, Crown, Shield, ChevronDown, Lock, Check, BookOpen, RotateCcw, Shuffle } from "lucide-react";
 import { t, tn, tDesc, tVar } from "@/lib/i18n";
+import UpgradeModal from "@/components/UpgradeModal";
 
 export default function StudyHub() {
   const { openingId } = useParams();
+  const { user } = useAuth();
+  const { canPractice, canLearnNewLine } = useSubscription();
   const navigate = useNavigate();
   const { setTheme, currentTheme } = useTheme();
   const [showAgainstVariations, setShowAgainstVariations] = useState(false);
   const [expandedVariation, setExpandedVariation] = useState<string | null>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [upgradeReason, setUpgradeReason] = useState<"lines" | "practice">("lines");
 
   const opening = openings.find((o) => o.id === openingId);
 
@@ -241,6 +248,11 @@ export default function StudyHub() {
                 disabled={!hasAttempted}
                 onClick={() => {
                   if (!hasAttempted) return;
+                  if (user && !canPractice) {
+                    setUpgradeReason("practice");
+                    setShowUpgradeModal(true);
+                    return;
+                  }
                   const randomLine = attemptedLines[Math.floor(Math.random() * attemptedLines.length)];
                   if (randomLine) {
                     const variation = opening.variations.find(v => v.id === randomLine.variationId);
@@ -464,6 +476,11 @@ export default function StudyHub() {
         </motion.div>
 
       </div>
+      <UpgradeModal
+        open={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        reason={upgradeReason}
+      />
     </div>
   );
 }

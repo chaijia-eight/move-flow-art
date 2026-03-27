@@ -209,6 +209,27 @@ const translations = {
   english: { en: "English", zh: "English" },
   chinese: { en: "中文", zh: "中文" },
 
+  // ==================== Subscription ====================
+  subscription: { en: "Subscription", zh: "订阅" },
+  freePlan: { en: "Free Plan", zh: "免费计划" },
+  proPlan: { en: "Pro Plan", zh: "专业计划" },
+  proPlanPrice: { en: "$5/month", zh: "$5/月" },
+  currentPlan: { en: "Current Plan", zh: "当前计划" },
+  upgradeToPro: { en: "Upgrade to Pro", zh: "升级到专业版" },
+  manageSubscription: { en: "Manage Subscription", zh: "管理订阅" },
+  freeFeatures: { en: "2 new lines/day · 1 practice/day · Cloud sync", zh: "每日2条新变化 · 每日1次练习 · 云同步" },
+  proFeatures: { en: "Unlimited lines · Unlimited practice · Cloud sync", zh: "无限变化 · 无限练习 · 云同步" },
+  dailyLimitReached: { en: "Daily limit reached", zh: "已达每日上限" },
+  upgradeToLearnMore: { en: "Upgrade to Pro for unlimited lines", zh: "升级到专业版解锁无限变化" },
+  practiceUsedToday: { en: "Practice used today", zh: "今日练习已用完" },
+  upgradeToPracticeMore: { en: "Upgrade to Pro for unlimited practice", zh: "升级到专业版解锁无限练习" },
+  linesUsedToday: {
+    en: (used: number, max: number) => `${used}/${max} new lines today`,
+    zh: (used: number, max: number) => `今日新变化 ${used}/${max}`,
+  },
+  unlimitedAccess: { en: "Unlimited", zh: "无限制" },
+  requiresAccount: { en: "Create an account to start learning", zh: "创建账号开始学习" },
+
   // ==================== 404 ====================
   pageNotFound: { en: "Oops! Page not found", zh: "哎呀！页面未找到" },
   returnHome: { en: "Return to Home", zh: "返回首页" },

@@ -7,9 +7,11 @@ import MoveHistory from "@/components/MoveHistory";
 import ProgressDots from "@/components/ProgressDots";
 import SwitchConfirmModal from "@/components/SwitchConfirmModal";
 import StudySidebar from "@/components/StudySidebar";
+import UpgradeModal from "@/components/UpgradeModal";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 import { type OpeningNode, type MoveCategory } from "@/data/openings";
 import { openings } from "@/data/openingTrees";
 import { extractLinesForVariation, type Line } from "@/lib/lineExtractor";
@@ -46,7 +48,11 @@ export default function Study() {
   const navigate = useNavigate();
   const { setTheme, currentTheme } = useTheme();
   const { user } = useAuth();
+  const { canLearnNewLine, canPractice, recordLineLearn, recordPracticeUse, isPro } = useSubscription();
   const isMobile = useIsMobile();
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [upgradeReason, setUpgradeReason] = useState<"lines" | "practice">("lines");
+  const lineGateChecked = useRef(false);
 
   const opening = openings.find((o) => o.id === openingId);
   const colorParam = searchParams.get("color") as "w" | "b" | null;
@@ -81,6 +87,26 @@ export default function Study() {
       .split(/\s+/)
       .filter(Boolean);
   }, [currentLine, variationParam, opening]);
+
+  // Gate new lines for free tier
+  useEffect(() => {
+    if (!currentLine || lineGateChecked.current || isAgainstMode || isReview) return;
+    lineGateChecked.current = true;
+    const progress = getLineProgress(currentLine.id);
+    const isNewLine = progress.attempts === 0;
+    if (isNewLine && user && !canLearnNewLine) {
+      setUpgradeReason("lines");
+      setShowUpgradeModal(true);
+    } else if (isPracticeMode && user && !canPractice) {
+      setUpgradeReason("practice");
+      setShowUpgradeModal(true);
+    } else if (isNewLine && user && !isPro) {
+      // Record usage for free tier
+      recordLineLearn();
+    } else if (isPracticeMode && user && !isPro) {
+      recordPracticeUse();
+    }
+  }, [currentLine, user, canLearnNewLine, canPractice, isPro, isAgainstMode, isReview, isPracticeMode, recordLineLearn, recordPracticeUse]);
 
   useEffect(() => {
     if (opening) setTheme(opening.themeId);
@@ -951,6 +977,13 @@ export default function Study() {
         masterMoveSan={pendingSwitchData?.masterMoveSan ?? ""}
         onAdopt={() => pendingSwitchData?.onAdopt()}
         onStay={() => pendingSwitchData?.onStay()}
+      />
+
+      {/* Upgrade modal */}
+      <UpgradeModal
+        open={showUpgradeModal}
+        onClose={() => { setShowUpgradeModal(false); navigate(-1); }}
+        reason={upgradeReason}
       />
     </div>
   );

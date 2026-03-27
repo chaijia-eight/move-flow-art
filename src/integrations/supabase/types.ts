@@ -53,6 +53,33 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_usage: {
+        Row: {
+          id: string
+          lines_learned: number
+          practice_used: boolean
+          updated_at: string
+          usage_date: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          lines_learned?: number
+          practice_used?: boolean
+          updated_at?: string
+          usage_date?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          lines_learned?: number
+          practice_used?: boolean
+          updated_at?: string
+          usage_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       move_explanations: {
         Row: {
           created_at: string
