@@ -27,6 +27,15 @@ interface AnimMove {
   id: number;
 }
 
+interface DragState {
+  square: string;
+  piece: string;
+  startX: number;
+  startY: number;
+  currentX: number;
+  currentY: number;
+}
+
 let animIdCounter = 0;
 
 export default function Chessboard({ fen, onMove, moveHints, disabled, flipped = false, playerColor, arrowFrom, arrowTo, highlightSquare }: ChessboardProps) {
@@ -34,8 +43,11 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
   const [lastMove, setLastMove] = useState<{ from: string; to: string } | null>(null);
   const [animMove, setAnimMove] = useState<AnimMove | null>(null);
+  const [dragState, setDragState] = useState<DragState | null>(null);
   const prevBoardRef = useRef<(string | null)[][] | null>(null);
   const prevFenRef = useRef<string>(fen);
+  const boardRef = useRef<HTMLDivElement>(null);
+  const isDraggingRef = useRef(false);
 
   const board = useMemo(() => fenToBoard(fen), [fen]);
   const chess = useMemo(() => new Chess(fen), [fen]);
@@ -44,7 +56,6 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
   useEffect(() => {
     const prevBoard = prevBoardRef.current;
     if (prevBoard && prevFenRef.current !== fen) {
-      // Find the from/to by diffing boards
       let fromSquare: string | null = null;
       let toSquare: string | null = null;
       let wasCapture = false;
@@ -73,7 +84,6 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
         }
       }
 
-      // Castling changes 4 squares (king + rook each move)
       const isCastle = changedCount === 4;
 
       if (fromSquare && toSquare) {
@@ -93,7 +103,6 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
     prevFenRef.current = fen;
   }, [fen, board]);
 
-  // Clear capture effect after animation
   useEffect(() => {
     if (animMove) {
       const t = setTimeout(() => setAnimMove(null), 500);
@@ -123,10 +132,35 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
     return [boardRow, boardCol];
   };
 
+  // Get square from pixel coordinates relative to board
+  const getSquareFromPoint = useCallback((clientX: number, clientY: number): string | null => {
+    const boardEl = boardRef.current;
+    if (!boardEl) return null;
+    const rect = boardEl.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    const displayCol = Math.floor((x / rect.width) * 8);
+    const displayRow = Math.floor((y / rect.height) * 8);
+    if (displayCol < 0 || displayCol > 7 || displayRow < 0 || displayRow > 7) return null;
+    const [boardRow, boardCol] = displayToBoard(displayRow, displayCol);
+    return coordsToSquare(boardRow, boardCol);
+  }, [flipped]);
+
+  const canInteract = useCallback(() => {
+    if (disabled) return false;
+    if (playerColor && chess.turn() !== playerColor) return false;
+    return true;
+  }, [disabled, playerColor, chess]);
+
+  const isOwnPiece = useCallback((piece: string) => {
+    return (chess.turn() === "w" && piece === piece.toUpperCase()) ||
+           (chess.turn() === "b" && piece === piece.toLowerCase());
+  }, [chess]);
+
+  // --- Click handling ---
   const handleSquareClick = (displayRow: number, displayCol: number) => {
-    if (disabled) return;
-    // Block interaction if it's not the player's turn
-    if (playerColor && chess.turn() !== playerColor) return;
+    if (!canInteract()) return;
+    if (isDraggingRef.current) return; // Don't fire click after drag
     const [row, col] = displayToBoard(displayRow, displayCol);
     const square = coordsToSquare(row, col);
     const piece = board[row][col];
@@ -134,7 +168,6 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
     if (selectedSquare) {
       const legalMoves = getLegalMoves(selectedSquare);
       const targetMove = legalMoves.find(m => m.to === square);
-      
       if (targetMove) {
         onMove(selectedSquare, square, targetMove.san);
         setSelectedSquare(null);
@@ -142,22 +175,78 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
       }
     }
 
-    if (piece && ((chess.turn() === "w" && piece === piece.toUpperCase()) || 
-                   (chess.turn() === "b" && piece === piece.toLowerCase()))) {
+    if (piece && isOwnPiece(piece)) {
       setSelectedSquare(square);
     } else {
       setSelectedSquare(null);
     }
   };
 
+  // --- Drag handling ---
+  const handleDragStart = useCallback((e: React.PointerEvent, square: string, piece: string) => {
+    if (!canInteract()) return;
+    if (!isOwnPiece(piece)) return;
+
+    e.preventDefault();
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    isDraggingRef.current = false;
+
+    setDragState({
+      square,
+      piece,
+      startX: e.clientX,
+      startY: e.clientY,
+      currentX: e.clientX,
+      currentY: e.clientY,
+    });
+    setSelectedSquare(square);
+  }, [canInteract, isOwnPiece]);
+
+  const handleDragMove = useCallback((e: React.PointerEvent) => {
+    if (!dragState) return;
+    e.preventDefault();
+
+    const dx = e.clientX - dragState.startX;
+    const dy = e.clientY - dragState.startY;
+    if (!isDraggingRef.current && (Math.abs(dx) > 3 || Math.abs(dy) > 3)) {
+      isDraggingRef.current = true;
+    }
+
+    setDragState(prev => prev ? { ...prev, currentX: e.clientX, currentY: e.clientY } : null);
+  }, [dragState]);
+
+  const handleDragEnd = useCallback((e: React.PointerEvent) => {
+    if (!dragState) return;
+    e.preventDefault();
+
+    if (isDraggingRef.current) {
+      const targetSquare = getSquareFromPoint(e.clientX, e.clientY);
+      if (targetSquare && targetSquare !== dragState.square) {
+        const legalMoves = getLegalMoves(dragState.square);
+        const targetMove = legalMoves.find(m => m.to === targetSquare);
+        if (targetMove) {
+          onMove(dragState.square, targetSquare, targetMove.san);
+          setSelectedSquare(null);
+        }
+      }
+      // Reset drag flag after a tick so click handler ignores this
+      setTimeout(() => { isDraggingRef.current = false; }, 0);
+    }
+
+    setDragState(null);
+  }, [dragState, getSquareFromPoint, getLegalMoves, onMove]);
+
+  // Show legal targets for both selected and dragged square
+  const activeSquare = dragState?.square ?? selectedSquare;
+
   const legalTargets = useMemo(() => {
-    if (!selectedSquare) return new Map<string, MoveCategory>();
-    const moves = getLegalMoves(selectedSquare);
+    if (!activeSquare) return new Map<string, MoveCategory>();
+    const moves = getLegalMoves(activeSquare);
     const targets = new Map<string, MoveCategory>();
     
     moves.forEach(m => {
       let category: MoveCategory = "mistake";
-      const hintForSquare = moveHints.get(selectedSquare);
+      const hintForSquare = moveHints.get(activeSquare);
       if (hintForSquare) {
         const bySan = hintForSquare.targets.get(m.san);
         const byTo = hintForSquare.targets.get(m.to);
@@ -168,7 +257,7 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
     });
     
     return targets;
-  }, [selectedSquare, moveHints, getLegalMoves]);
+  }, [activeSquare, moveHints, getLegalMoves]);
 
   const getMoveIndicatorColor = (category: MoveCategory) => {
     switch (category) {
@@ -178,7 +267,6 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
     }
   };
 
-  // Calculate slide offset in percentage (each square = 12.5%)
   const getSlideOffset = (from: string, to: string): { x: string; y: string } => {
     const [fromRow, fromCol] = squareToCoords(from);
     const [toRow, toCol] = squareToCoords(to);
@@ -188,6 +276,21 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
     const dy = (fromDispRow - toDispRow) * 100;
     return { x: `${dx}%`, y: `${dy}%` };
   };
+
+  // Compute drag ghost position
+  const dragGhost = useMemo(() => {
+    if (!dragState || !isDraggingRef.current) return null;
+    const boardEl = boardRef.current;
+    if (!boardEl) return null;
+    const rect = boardEl.getBoundingClientRect();
+    const squareSize = rect.width / 8;
+    return {
+      piece: dragState.piece,
+      x: dragState.currentX - rect.left - squareSize * 0.4,
+      y: dragState.currentY - rect.top - squareSize * 0.4,
+      size: squareSize * 0.8,
+    };
+  }, [dragState]);
 
   return (
     <div className="relative">
@@ -199,24 +302,51 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
         }}
       >
         <div className="p-1 rounded-lg" style={{ background: `${currentTheme.accentColor}30` }}>
-          <div className="grid grid-cols-8 rounded-md overflow-hidden relative" style={{ aspectRatio: "1" }}>
+          <div
+            ref={boardRef}
+            className="grid grid-cols-8 rounded-md overflow-hidden relative touch-none"
+            style={{ aspectRatio: "1" }}
+            onPointerMove={handleDragMove}
+            onPointerUp={handleDragEnd}
+          >
             {/* Move arrow overlay */}
             {arrowFrom && arrowTo && (
               <MoveArrow from={arrowFrom} to={arrowTo} flipped={flipped} />
             )}
+
+            {/* Drag ghost piece */}
+            {dragGhost && (
+              <img
+                src={PIECE_IMAGES[dragGhost.piece]}
+                alt=""
+                className="absolute z-50 pointer-events-none select-none opacity-90"
+                style={{
+                  left: dragGhost.x,
+                  top: dragGhost.y,
+                  width: dragGhost.size,
+                  height: dragGhost.size,
+                  filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.4))",
+                }}
+              />
+            )}
+
             {Array.from({ length: 8 }, (_, displayRow) =>
               Array.from({ length: 8 }, (_, displayCol) => {
                 const [boardRow, boardCol] = displayToBoard(displayRow, displayCol);
                 const square = coordsToSquare(boardRow, boardCol);
                 const piece = board[boardRow][boardCol];
                 const isLight = getSquareColor(boardRow, boardCol) === "light";
-                const isSelected = selectedSquare === square;
+                const isSelected = activeSquare === square;
                 const isLastMove = lastMove?.from === square || lastMove?.to === square;
                 const targetCategory = legalTargets.get(square);
                 const isTarget = targetCategory !== undefined;
                 const isAnimTo = animMove?.to === square;
                 const isCaptureSquare = animMove?.isCapture && animMove?.to === square;
                 const isCrucialHighlight = highlightSquare === square;
+                const isDragSource = dragState?.square === square && isDraggingRef.current;
+                const isDragOver = dragState && isDraggingRef.current
+                  ? getSquareFromPoint(dragState.currentX, dragState.currentY) === square
+                  : false;
 
                 const slideOffset = isAnimTo && animMove
                   ? getSlideOffset(animMove.from, animMove.to)
@@ -227,7 +357,9 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
                     key={square}
                     className="relative flex items-center justify-center cursor-pointer transition-colors duration-150"
                     style={{
-                      background: isSelected
+                      background: isDragOver
+                        ? `${currentTheme.accentColor}50`
+                        : isSelected
                         ? `${currentTheme.accentColor}60`
                         : isLastMove
                         ? `${currentTheme.accentColor}25`
@@ -319,7 +451,7 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
                       )}
                     </AnimatePresence>
 
-                    {/* Chess piece with slide animation */}
+                    {/* Chess piece */}
                     {piece && (
                       <motion.img
                         key={`${square}-${animMove?.id ?? 0}`}
@@ -327,12 +459,16 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
                         alt={piece}
                         draggable={false}
                         className="relative z-20 select-none w-[80%] h-[80%] object-contain"
-                        style={{ cursor: disabled ? "default" : "pointer" }}
+                        style={{
+                          cursor: disabled ? "default" : "grab",
+                          opacity: isDragSource ? 0.3 : 1,
+                        }}
                         initial={slideOffset ? { x: slideOffset.x, y: slideOffset.y } : false}
                         animate={{ x: 0, y: 0 }}
                         transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
                         whileHover={!disabled ? { scale: 1.1, transition: { duration: 0.15 } } : {}}
                         whileTap={!disabled ? { scale: 0.95 } : {}}
+                        onPointerDown={(e) => handleDragStart(e, square, piece)}
                       />
                     )}
 
