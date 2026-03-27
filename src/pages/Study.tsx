@@ -1017,6 +1017,9 @@ export default function Study() {
         onStay={() => pendingSwitchData?.onStay()}
       />
 
+      {/* Confetti celebration */}
+      <ConfettiBurst trigger={showConfetti} onComplete={() => setShowConfetti(false)} />
+
       {/* Upgrade modal */}
       <UpgradeModal
         open={showUpgradeModal}
