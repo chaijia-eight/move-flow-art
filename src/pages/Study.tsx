@@ -124,7 +124,7 @@ export default function Study() {
 
   const chessRef = useRef(new Chess());
   const [fen, setFen] = useState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-  const [currentNodes, setCurrentNodes] = useState<OpeningNode[]>(opening?.tree || []);
+  const [currentNodes, setCurrentNodes] = useState<OpeningNode[]>(activeTree);
   const [moveHistory, setMoveHistory] = useState<MoveRecord[]>([]);
   const [feedback, setFeedback] = useState<{
     type: MoveCategory;
