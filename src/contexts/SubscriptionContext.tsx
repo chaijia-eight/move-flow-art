@@ -112,6 +112,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
 
   const canLearnNewLine = isPro || dailyLinesUsed < FREE_DAILY_LINES;
   const canPractice = isPro || !practiceUsedToday;
+  const canAnalyze = isPro || !analysisUsedToday;
 
   const recordLineLearn = useCallback(async () => {
     if (!user || isPro) return;
