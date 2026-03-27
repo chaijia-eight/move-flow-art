@@ -262,7 +262,7 @@ export default function Study() {
           setCurrentNodes(mainNode.children);
           setUndoStack([{
             fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-            currentNodes: opening.tree,
+            currentNodes: activeTree,
             moveHistory: [],
             moveCount: 0,
             currentVariation: null,
