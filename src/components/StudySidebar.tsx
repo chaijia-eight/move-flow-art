@@ -159,7 +159,7 @@ export default function StudySidebar({
                       border: isTrap ? "1px solid hsl(0, 72%, 50%, 0.25)" : "1px solid hsl(45, 100%, 50%, 0.25)",
                     }}
                   >
-                    🛡️ {crucialMomentMessage}
+                    {isTrap ? "⚠️" : "🛡️"} {crucialMomentMessage}
                   </div>
                 </div>
               </motion.div>
