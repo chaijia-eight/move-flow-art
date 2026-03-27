@@ -15,7 +15,7 @@ import UpgradeModal from "@/components/UpgradeModal";
 export default function StudyHub() {
   const { openingId } = useParams();
   const { user } = useAuth();
-  const { canPractice, canLearnNewLine } = useSubscription();
+  const { canPractice, canLearnNewLine, canLearnTrap, isPro, lastTrapLearnedAt } = useSubscription();
   const navigate = useNavigate();
   const { setTheme, currentTheme } = useTheme();
   const [showAgainstVariations, setShowAgainstVariations] = useState(false);
