@@ -230,6 +230,7 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
         const legalMoves = getLegalMoves(dragState.square);
         const targetMove = legalMoves.find(m => m.to === targetSquare);
         if (targetMove) {
+          skipNextAnimRef.current = true;
           onMove(dragState.square, targetSquare, targetMove.san);
           setSelectedSquare(null);
         }
