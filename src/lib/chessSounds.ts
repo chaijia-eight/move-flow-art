@@ -49,3 +49,7 @@ export function playMasterySound() {
 export function playLineCompleteSound() {
   playSound("gameEnd");
 }
+
+export function playCelebrationSound() {
+  playSound("confirm");
+}
