@@ -80,101 +80,123 @@ const legals_mate_trap_tree: OpeningNode[] = [
   }
 ];
 
-const sicilian_bc4_trap_tree: OpeningNode[] = [
+const magnus_smith_trap_tree: OpeningNode[] = [
   {
-    fen: "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
+    fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
     move: "e4", category: "main_line",
-    children: [
-    {
-      fen: "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+    children: [{
+      fen: "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
       move: "c5", category: "main_line",
-      children: [
-      {
-        fen: "rnbqkbnr/pp1ppppp/8/2p5/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq - 1 2",
-        move: "Bc4", category: "main_line",
-        children: [
-        {
-          fen: "rnbqkbnr/pp1p1ppp/4p3/2p5/2B1P3/8/PPPP1PPP/RNBQK1NR w KQkq - 0 3",
-          move: "e6", category: "main_line",
-          children: [
-          {
-            fen: "rnbqkbnr/pp1p1ppp/4p3/2p5/2B1P3/2N5/PPPP1PPP/R1BQK1NR b KQkq - 1 3",
-            move: "Nc3", category: "main_line",
-            children: [
-            {
-              fen: "rnbqkbnr/1p1p1ppp/p3p3/2p5/2B1P3/2N5/PPPP1PPP/R1BQK1NR w KQkq - 0 4",
-              move: "a6", category: "main_line",
-              children: [
-              {
-                fen: "rnbqkbnr/1p1p1ppp/p3p3/2p5/2B1P3/2NP4/PPP2PPP/R1BQK1NR b KQkq - 0 4",
-                move: "d3", category: "main_line",
-                children: [
-                {
-                  fen: "rnbqkbnr/1p3ppp/p3p3/2pp4/2B1P3/2NP4/PPP2PPP/R1BQK1NR w KQkq - 0 5",
-                  move: "d5", category: "main_line",
-                  children: [
-                  {
-                    fen: "rnbqkbnr/1p3ppp/p3p3/2pP4/2B5/2NP4/PPP2PPP/R1BQK1NR b KQkq - 0 5",
-                    move: "exd5", category: "main_line",
-                    children: [
-                    {
-                      fen: "rnbqkbnr/1p3ppp/p7/2pp4/2B5/2NP4/PPP2PPP/R1BQK1NR w KQkq - 0 6",
-                      move: "exd5", category: "main_line",
-                      children: [
-                      {
-                        fen: "rnbqkbnr/1p3ppp/p7/2pp4/8/1BNP4/PPP2PPP/R1BQK1NR b KQkq - 1 6",
-                        move: "Bb3", category: "main_line",
-                        children: [
-                        {
-                          fen: "rnbqkb1r/1p3ppp/p4n2/2pp4/8/1BNP4/PPP2PPP/R1BQK1NR w KQkq - 2 7",
-                          move: "Nf6", category: "main_line",
-                          children: [
-                          {
-                            fen: "rnbqkb1r/1p3ppp/p4n2/2pp4/8/1BNP1N2/PPP2PPP/R1BQK2R b KQkq - 3 7",
-                            move: "Nf3", category: "main_line",
-                            children: [
-                            {
-                              fen: "rnbqk2r/1p3ppp/p2b1n2/2pp4/8/1BNP1N2/PPP2PPP/R1BQK2R w KQkq - 4 8",
-                              move: "Bd6", category: "main_line",
-                              children: [
-                              {
-                                fen: "rnbqk2r/1p3ppp/p2b1n2/2pp4/8/1BNP1N2/PPP2PPP/R1BQ1RK1 b kq - 5 8",
-                                move: "O-O", category: "main_line",
-                                children: [
-                                {
-                                  fen: "rnbq1rk1/1p3ppp/p2b1n2/2pp4/8/1BNP1N2/PPP2PPP/R1BQ1RK1 w - - 6 9",
+      children: [{
+        fen: "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+        move: "Nf3", category: "main_line",
+        children: [{
+          fen: "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2",
+          move: "d6", category: "main_line",
+          children: [{
+            fen: "rnbqkbnr/pp2pppp/3p4/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 3",
+            move: "d4", category: "main_line",
+            children: [{
+              fen: "rnbqkbnr/pp2pppp/3p4/2p5/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq - 0 3",
+              move: "cxd4", category: "main_line",
+              children: [{
+                fen: "rnbqkbnr/pp2pppp/3p4/8/3pP3/5N2/PPP2PPP/RNBQKB1R w KQkq - 0 4",
+                move: "Nxd4", category: "main_line",
+                children: [{
+                  fen: "rnbqkbnr/pp2pppp/3p4/8/3NP3/8/PPP2PPP/RNBQKB1R b KQkq - 0 4",
+                  move: "Nf6", category: "main_line",
+                  children: [{
+                    fen: "rnbqkb1r/pp2pppp/3p1n2/8/3NP3/8/PPP2PPP/RNBQKB1R w KQkq - 1 5",
+                    move: "Nc3", category: "main_line",
+                    children: [{
+                      fen: "rnbqkb1r/pp2pppp/3p1n2/8/3NP3/2N5/PPP2PPP/R1BQKB1R b KQkq - 2 5",
+                      move: "Nc6", category: "main_line",
+                      children: [{
+                        fen: "r1bqkb1r/pp2pppp/2np1n2/8/3NP3/2N5/PPP2PPP/R1BQKB1R w KQkq - 3 6",
+                        move: "Bc4", category: "main_line",
+                        children: [{
+                          fen: "r1bqkb1r/pp2pppp/2np1n2/8/2BNP3/2N5/PPP2PPP/R1BQK2R b KQkq - 4 6",
+                          move: "e6", category: "main_line",
+                          children: [{
+                            fen: "r1bqkb1r/pp3ppp/2nppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq - 0 7",
+                            move: "Be3", category: "main_line",
+                            children: [{
+                              fen: "r1bqkb1r/pp3ppp/2nppn2/8/2BNP3/2N1B3/PPP2PPP/R2QK2R b KQkq - 1 7",
+                              move: "Be7", category: "main_line",
+                              children: [{
+                                fen: "r1bqk2r/pp2bppp/2nppn2/8/2BNP3/2N1B3/PPP2PPP/R2QK2R w KQkq - 2 8",
+                                move: "Bb3", category: "main_line",
+                                children: [{
+                                  fen: "r1bqk2r/pp2bppp/2nppn2/8/3NP3/1BN1B3/PPP2PPP/R2QK2R b KQkq - 3 8",
                                   move: "O-O", category: "main_line",
-                                  children: []
-                                }
-                                ]
-                              }
-                              ]
-                            }
-                            ]
-                          }
-                          ]
-                        }
-                        ]
-                      }
-                      ]
-                    }
-                    ]
-                  }
-                  ]
-                }
-                ]
-              }
-              ]
-            }
-            ]
-          }
-          ]
-        }
-        ]
-      }
-      ]
-    }
-    ]
+                                  children: [{
+                                    fen: "r1bq1rk1/pp2bppp/2nppn2/8/3NP3/1BN1B3/PPP2PPP/R2QK2R w KQ - 4 9",
+                                    move: "f4", category: "main_line",
+                                    explanation: "White overextends with f4 — this is the mistake!",
+                                    children: [{
+                                      fen: "r1bq1rk1/pp2bppp/2nppn2/8/3NPP2/1BN1B3/PPP3PP/R2QK2R b KQ - 0 9",
+                                      move: "e5", category: "main_line",
+                                      explanation: "e5! strikes the center. The knight is attacked and f4 is hanging.",
+                                      children: [
+                                        {
+                                          fen: "r1bq1rk1/pp2bppp/2np1n2/4p3/3NPP2/1BN1B3/PPP3PP/R2QK2R w KQ - 0 10",
+                                          move: "fxe5", category: "main_line",
+                                          children: [{
+                                            fen: "r1bq1rk1/pp2bppp/2np1n2/4P3/3NP3/1BN1B3/PPP3PP/R2QK2R b KQ - 0 10",
+                                            move: "dxe5", category: "main_line",
+                                            children: [{
+                                              fen: "r1bq1rk1/pp2bppp/2n2n2/4p3/3NP3/1BN1B3/PPP3PP/R2QK2R w KQ - 0 11",
+                                              move: "Nf5", category: "main_line",
+                                              explanation: "White tries Nf5 but Black exchanges favorably.",
+                                              children: [{
+                                                fen: "r1bq1rk1/pp2bppp/2n2n2/4pN2/4P3/1BN1B3/PPP3PP/R2QK2R b KQ - 1 11",
+                                                move: "Bxf5", category: "main_line",
+                                                children: [{
+                                                  fen: "r2q1rk1/pp2bppp/2n2n2/4pb2/4P3/1BN1B3/PPP3PP/R2QK2R w KQ - 0 12",
+                                                  move: "exf5", category: "main_line",
+                                                  explanation: "Black has a dominant center and the bishop pair. White's position is compromised.",
+                                                  children: []
+                                                }]
+                                              }]
+                                            }]
+                                          }]
+                                        },
+                                        {
+                                          fen: "r1bq1rk1/pp2bppp/2np1n2/4p3/3NPP2/1BN1B3/PPP3PP/R2QK2R w KQ - 0 10",
+                                          move: "Nf5", category: "main_line",
+                                          children: [{
+                                            fen: "r1bq1rk1/pp2bppp/2np1n2/4pN2/4PP2/1BN1B3/PPP3PP/R2QK2R b KQ - 1 10",
+                                            move: "Bxf5", category: "main_line",
+                                            children: [{
+                                              fen: "r2q1rk1/pp2bppp/2np1n2/4pb2/4PP2/1BN1B3/PPP3PP/R2QK2R w KQ - 0 11",
+                                              move: "exf5", category: "main_line",
+                                              children: [{
+                                                fen: "r2q1rk1/pp2bppp/2np1n2/4pP2/5P2/1BN1B3/PPP3PP/R2QK2R b KQ - 0 11",
+                                                move: "exf4", category: "main_line",
+                                                explanation: "Black wins a pawn with a superior position.",
+                                                children: []
+                                              }]
+                                            }]
+                                          }]
+                                        }
+                                      ]
+                                    }]
+                                  }]
+                                }]
+                              }]
+                            }]
+                          }]
+                        }]
+                      }]
+                    }]
+                  }]
+                }]
+              }]
+            }]
+          }]
+        }]
+      }]
+    }]
   }
 ];
 
