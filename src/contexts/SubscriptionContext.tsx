@@ -206,6 +206,30 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     setAnalysisUsedToday(true);
   }, [user]);
 
+  const recordTrapLearn = useCallback(async () => {
+    if (!user || isPro) return;
+    const now = new Date().toISOString();
+    const today = todayStr();
+    const { data: existing } = await supabase
+      .from("daily_usage")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("usage_date", today)
+      .maybeSingle();
+
+    if (existing) {
+      await supabase
+        .from("daily_usage")
+        .update({ last_trap_learned_at: now, updated_at: now } as any)
+        .eq("id", existing.id);
+    } else {
+      await supabase
+        .from("daily_usage")
+        .insert({ user_id: user.id, usage_date: today, last_trap_learned_at: now } as any);
+    }
+    setLastTrapLearnedAt(now);
+  }, [user, isPro]);
+
   const startCheckout = useCallback(async () => {
     const { data, error } = await supabase.functions.invoke("create-checkout");
     if (error) throw error;
@@ -233,9 +257,12 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       canLearnNewLine,
       canPractice,
       canAnalyze,
+      canLearnTrap,
+      lastTrapLearnedAt,
       recordLineLearn,
       recordPracticeUse,
       recordAnalysisUse,
+      recordTrapLearn,
       refreshSubscription,
       startCheckout,
       openCustomerPortal,
