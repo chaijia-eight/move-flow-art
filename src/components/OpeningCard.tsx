@@ -21,11 +21,13 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
   const theme = themes[opening.themeId];
   const isWhite = opening.primarySide === "w";
 
-  const { totalLines, progress, openingFen } = useMemo(() => {
+  const { totalLines, totalMoves, progress, openingFen } = useMemo(() => {
     const lines = extractAllLines(opening);
     const lineIds = lines.map((l) => l.id);
+    const totalMoves = lines.reduce((sum, l) => sum + l.moves.length, 0);
     return {
       totalLines: lines.length,
+      totalMoves,
       progress: getOpeningProgress(lineIds),
       openingFen: getOpeningFen(opening),
     };
@@ -90,7 +92,7 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium truncate" style={{ color: cardText }}>{openingName}</p>
           <p className="text-[11px] truncate" style={{ color: cardMuted }}>
-            {Math.round(progress * 100)}% · {totalLines} {t("lines")}
+            {Math.round(progress * 100)}% · {totalLines} {t("lines")} · {totalMoves} {t("moves")}
           </p>
         </div>
         {onToggleFocus && (
@@ -213,7 +215,7 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
         {/* Footer */}
         <div className="flex items-center justify-between mt-3 pt-2.5" style={{ borderTop: `1px solid ${sideBadgeBorder}` }}>
           <span className="text-[11px]" style={{ color: cardMuted }}>
-            {opening.variations.length} {t("variations")} · {totalLines} {t("lines")}
+            {opening.variations.length} {t("variations")} · {totalLines} {t("lines")} · {totalMoves} {t("moves")}
           </span>
           <div className="flex items-center gap-2">
             {onToggleFocus && (
