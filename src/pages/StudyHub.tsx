@@ -306,7 +306,7 @@ export default function StudyHub() {
             {t("linesToLearn")}
           </h2>
           <div className="space-y-3">
-            {opening.variations.map((variation, vi) => {
+            {opening.variations.filter(v => !v.isTrap).map((variation, vi) => {
               const lines = linesByVariation.get(variation.id) || [];
               const masteredInVariation = lines.filter((l) => getLineProgress(l.id).mastered).length;
               const isExpanded = expandedVariation === variation.id;
@@ -474,6 +474,102 @@ export default function StudyHub() {
             })}
           </div>
         </motion.div>
+
+        {/* Secret Traps */}
+        {(() => {
+          const trapVariations = opening.variations.filter(v => v.isTrap);
+          if (trapVariations.length === 0) return null;
+
+          const daysUntilNextTrap = !canLearnTrap && lastTrapLearnedAt
+            ? Math.max(0, Math.ceil((7 * 24 * 60 * 60 * 1000 - (Date.now() - new Date(lastTrapLearnedAt).getTime())) / (24 * 60 * 60 * 1000)))
+            : 0;
+
+          return (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.35 }}
+              className="mt-10"
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <Flame className="w-4 h-4 text-orange-500" />
+                <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
+                  {t("secretTraps")}
+                </h2>
+                {!isPro && (
+                  <span className="text-[10px] px-2 py-0.5 rounded-full font-mono"
+                    style={{ background: "hsl(var(--muted))", color: "hsl(var(--muted-foreground))" }}
+                  >
+                    {t("onePerWeek")}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-3">
+                {trapVariations.map((variation, ti) => {
+                  const lines = linesByVariation.get(variation.id) || [];
+                  const trapLocked = !isPro && !canLearnTrap;
+
+                  return (
+                    <motion.div
+                      key={variation.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, delay: 0.4 + ti * 0.06 }}
+                    >
+                      <motion.button
+                        whileHover={!trapLocked ? { backgroundColor: "hsl(25 100% 50% / 0.08)" } : {}}
+                        whileTap={!trapLocked ? { scale: 0.98 } : {}}
+                        onClick={() => {
+                          if (trapLocked) {
+                            setUpgradeReason("lines");
+                            setShowUpgradeModal(true);
+                            return;
+                          }
+                          if (lines.length > 0) {
+                            navigate(
+                              `/study/${opening.id}/play?color=${opening.primarySide}&variation=${variation.id}&line=0`
+                            );
+                          }
+                        }}
+                        className={`w-full text-left rounded-xl p-4 border transition-all duration-300 group ${trapLocked ? 'opacity-60' : ''}`}
+                        style={{
+                          background: "hsl(var(--card))",
+                          borderColor: trapLocked ? "hsl(var(--border) / 0.3)" : "hsl(25 100% 50% / 0.3)",
+                        }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Flame className="w-4 h-4 text-orange-500 flex-shrink-0" />
+                              <h3 className="font-serif text-base font-semibold text-foreground truncate">
+                                {tVar(variation.id, "name", variation.name)}
+                              </h3>
+                              {trapLocked && (
+                                <span className="text-[10px] text-muted-foreground/60 font-mono ml-1">
+                                  {daysUntilNextTrap}d left
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-sm text-muted-foreground leading-relaxed pl-6 line-clamp-2">
+                              {tVar(variation.id, "description", variation.description)}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2 flex-shrink-0 ml-3">
+                            {trapLocked ? (
+                              <Lock className="w-4 h-4 text-muted-foreground/40" />
+                            ) : (
+                              <ChevronRight className="w-4 h-4 text-orange-500/60 group-hover:text-orange-500 transition-colors" />
+                            )}
+                          </div>
+                        </div>
+                      </motion.button>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          );
+        })()}
 
       </div>
       <UpgradeModal
