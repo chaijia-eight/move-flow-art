@@ -132,6 +132,10 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const canPractice = isPro || !practiceUsedToday;
   const canAnalyze = isPro || !analysisUsedToday;
 
+  // Rolling 7-day check for traps
+  const canLearnTrap = isPro || !lastTrapLearnedAt || 
+    (Date.now() - new Date(lastTrapLearnedAt).getTime() > 7 * 24 * 60 * 60 * 1000);
+
   const recordLineLearn = useCallback(async () => {
     if (!user || isPro) return;
     const today = todayStr();
