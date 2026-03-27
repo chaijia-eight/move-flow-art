@@ -40,11 +40,10 @@ export function playCastleSound() {
   playSound("castle");
 }
 
-// Keep these as simple wrappers using move sound
 export function playMasterySound() {
-  playSound("move");
+  playSound("gameEnd");
 }
 
 export function playLineCompleteSound() {
-  playSound("move");
+  playSound("gameEnd");
 }
