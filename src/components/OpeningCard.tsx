@@ -21,7 +21,7 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
   const theme = themes[opening.themeId];
   const isWhite = opening.primarySide === "w";
 
-  const { totalLines, progress, openingFen } = useMemo(() => {
+  const { totalLines, totalMoves, progress, openingFen } = useMemo(() => {
     const lines = extractAllLines(opening);
     const lineIds = lines.map((l) => l.id);
     const totalMoves = lines.reduce((sum, l) => sum + l.moves.length, 0);
