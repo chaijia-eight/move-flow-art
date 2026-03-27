@@ -250,7 +250,7 @@ export default function DevEditPanel({ currentLine, moveHistory, primarySide, on
                     style={{
                       background: crucialIndex === i ? "hsl(0, 70%, 35%)" : isOpponent ? "hsl(0, 0%, 18%)" : "hsl(0, 0%, 15%)",
                       color: crucialIndex === i ? "white" : isOpponent ? "hsl(0, 50%, 65%)" : "hsl(0, 0%, 60%)",
-                      ringColor: "hsl(0, 70%, 55%)",
+                      outline: crucialIndex === i ? "2px solid hsl(0, 70%, 55%)" : "none",
                     }}
                     title={`Index ${i} — ${isOpponent ? "Opponent" : "Player"} move`}
                   >
