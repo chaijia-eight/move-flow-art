@@ -135,9 +135,17 @@ export default function Index() {
         >
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-3xl font-semibold text-foreground tracking-tight">
-                ArcChess
-              </h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-3xl font-semibold text-foreground tracking-tight">
+                  ArcChess
+                </h1>
+                {isPro && (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/15 text-primary text-xs font-semibold">
+                    <Crown className="w-3 h-3" />
+                    Premium
+                  </span>
+                )}
+              </div>
               <p className="text-muted-foreground mt-1 text-sm max-w-md">
                 {t("appTagline")}
               </p>
