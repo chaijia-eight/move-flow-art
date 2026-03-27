@@ -16193,3 +16193,11 @@ export const openings: Opening[] = [
     ]
   },
 ];
+
+// Inject trap variations into each opening
+for (const opening of openings) {
+  const trap = trapVariations[opening.id];
+  if (trap) {
+    opening.variations.push(trap);
+  }
+}
