@@ -57,6 +57,7 @@ export type Database = {
         Row: {
           analysis_used: boolean
           id: string
+          last_trap_learned_at: string | null
           lines_learned: number
           practice_used: boolean
           updated_at: string
@@ -66,6 +67,7 @@ export type Database = {
         Insert: {
           analysis_used?: boolean
           id?: string
+          last_trap_learned_at?: string | null
           lines_learned?: number
           practice_used?: boolean
           updated_at?: string
@@ -75,6 +77,7 @@ export type Database = {
         Update: {
           analysis_used?: boolean
           id?: string
+          last_trap_learned_at?: string | null
           lines_learned?: number
           practice_used?: boolean
           updated_at?: string

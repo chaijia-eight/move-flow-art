@@ -1,4 +1,5 @@
 import type { OpeningNode, Opening, VariationInfo } from "./openings";
+import { trapVariations } from "./trapTrees";
 
 // =============================================
 // ITALIAN GAME

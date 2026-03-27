@@ -1,0 +1,1 @@
+ALTER TABLE public.daily_usage ADD COLUMN IF NOT EXISTS last_trap_learned_at timestamp with time zone DEFAULT NULL;
