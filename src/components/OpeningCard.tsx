@@ -24,8 +24,10 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
   const { totalLines, progress, openingFen } = useMemo(() => {
     const lines = extractAllLines(opening);
     const lineIds = lines.map((l) => l.id);
+    const totalMoves = lines.reduce((sum, l) => sum + l.moves.length, 0);
     return {
       totalLines: lines.length,
+      totalMoves,
       progress: getOpeningProgress(lineIds),
       openingFen: getOpeningFen(opening),
     };
