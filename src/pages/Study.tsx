@@ -191,11 +191,13 @@ export default function Study() {
 
   const handleUndo = () => {
     if (undoStack.length === 0) return;
+    // Undo two moves at a time (player + opponent) so we land back on the player's turn
+    const stepsBack = undoStack.length >= 2 ? 2 : 1;
     const current = saveSnapshot();
     setRedoStack((prev) => [current, ...prev]);
-    const prev = undoStack[undoStack.length - 1];
-    setUndoStack((s) => s.slice(0, -1));
-    restoreSnapshot(prev);
+    const target = undoStack[undoStack.length - stepsBack];
+    setUndoStack((s) => s.slice(0, -stepsBack));
+    restoreSnapshot(target);
   };
 
   const handleRedo = () => {
