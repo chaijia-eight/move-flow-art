@@ -249,9 +249,9 @@ export default function Study() {
     if (initialAutoPlayed.current) return;
     if (!opening) return;
     const firstMover = "w";
-    if (playerColor !== firstMover && opening.tree.length > 0) {
+    if (playerColor !== firstMover && activeTree.length > 0) {
       initialAutoPlayed.current = true;
-      const mainNode = pickComputerNode(opening.tree, 0) || opening.tree[0];
+      const mainNode = pickComputerNode(activeTree, 0) || activeTree[0];
       setIsComputerTurn(true);
       setTimeout(() => {
         try {
@@ -262,7 +262,7 @@ export default function Study() {
           setCurrentNodes(mainNode.children);
           setUndoStack([{
             fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-            currentNodes: opening.tree,
+            currentNodes: activeTree,
             moveHistory: [],
             moveCount: 0,
             currentVariation: null,
@@ -272,7 +272,7 @@ export default function Study() {
         setIsComputerTurn(false);
       }, 600);
     }
-  }, [opening, playerColor, chess, resetCounter]);
+  }, [opening, playerColor, chess, resetCounter, activeTree]);
 
   const findInOtherOpenings = useCallback((moveList: string[]): { id: string; name: string; nodes: OpeningNode[] } | null => {
     for (const op of openings) {
