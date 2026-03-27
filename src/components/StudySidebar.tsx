@@ -34,6 +34,7 @@ interface StudySidebarProps {
   hasNextLine: boolean;
   conclusionText?: string;
   crucialMomentMessage?: string | null;
+  isTrap?: boolean;
   fen: string;
 }
 
