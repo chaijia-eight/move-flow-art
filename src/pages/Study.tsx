@@ -610,6 +610,15 @@ export default function Study() {
     if (!currentLine || !variationParam) return;
     const currentIdx = allVariationLines.findIndex((l) => l.id === currentLine.id);
     if (currentIdx < allVariationLines.length - 1) {
+      // Check if the next line is new and user hit free-tier limit
+      const nextLine = allVariationLines[currentIdx + 1];
+      const nextProgress = getLineProgress(nextLine.id);
+      const isNextNew = nextProgress.attempts === 0;
+      if (isNextNew && user && !canLearnNewLine) {
+        setUpgradeReason("lines");
+        setShowUpgradeModal(true);
+        return;
+      }
       navigate(
         `/study/${openingId}/play?color=${colorParam || opening?.primarySide || "w"}&variation=${variationParam}&line=${currentIdx + 1}`,
         { replace: true }
