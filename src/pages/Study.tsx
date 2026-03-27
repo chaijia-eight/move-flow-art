@@ -978,6 +978,13 @@ export default function Study() {
         onAdopt={() => pendingSwitchData?.onAdopt()}
         onStay={() => pendingSwitchData?.onStay()}
       />
+
+      {/* Upgrade modal */}
+      <UpgradeModal
+        open={showUpgradeModal}
+        onClose={() => { setShowUpgradeModal(false); navigate(-1); }}
+        reason={upgradeReason}
+      />
     </div>
   );
 }
