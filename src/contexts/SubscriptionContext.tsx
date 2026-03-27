@@ -54,6 +54,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const [dailyLinesUsed, setDailyLinesUsed] = useState(0);
   const [practiceUsedToday, setPracticeUsedToday] = useState(false);
   const [analysisUsedToday, setAnalysisUsedToday] = useState(false);
+  const [lastTrapLearnedAt, setLastTrapLearnedAt] = useState<string | null>(null);
 
   const todayStr = () => new Date().toISOString().slice(0, 10);
 
