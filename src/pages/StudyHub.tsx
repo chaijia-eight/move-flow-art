@@ -248,6 +248,11 @@ export default function StudyHub() {
                 disabled={!hasAttempted}
                 onClick={() => {
                   if (!hasAttempted) return;
+                  if (user && !canPractice) {
+                    setUpgradeReason("practice");
+                    setShowUpgradeModal(true);
+                    return;
+                  }
                   const randomLine = attemptedLines[Math.floor(Math.random() * attemptedLines.length)];
                   if (randomLine) {
                     const variation = opening.variations.find(v => v.id === randomLine.variationId);
