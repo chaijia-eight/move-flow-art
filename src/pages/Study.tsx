@@ -569,7 +569,7 @@ export default function Study() {
     initialAutoPlayed.current = false;
     chess.reset();
     setFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-    setCurrentNodes(opening?.tree || []);
+    setCurrentNodes(activeTree);
     setMoveHistory([]);
     setFeedback(null);
     setMoveCount(0);
