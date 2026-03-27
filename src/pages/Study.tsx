@@ -580,6 +580,7 @@ export default function Study() {
     setLineCompleted(false);
     setShowMasteryPrompt(false);
     setMoveResults([]);
+    setShowConfetti(false);
     setShowSwitchConfirm(false);
     setPendingSwitchData(null);
     setResetCounter((c) => c + 1);
