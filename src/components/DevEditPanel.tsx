@@ -61,38 +61,6 @@ export default function DevEditPanel({ currentLine, moveHistory, primarySide, on
 
   if (!isDev || !currentLine) return null;
 
-  const lineId = currentLine.id;
-  const override = overrides[lineId];
-  const defaultConclusion = lineConclusions[lineId] || "";
-
-  // Load current data into editor when line changes or panel opens
-  useEffect(() => {
-    if (!isOpen) return;
-    const moves = override?.moves || currentLine.moves;
-    setEditMoves(moves.join(" "));
-    setEditConclusion(override?.conclusion_text || defaultConclusion);
-    setCrucialIndex(override?.crucial_moment_index ?? currentLine.crucialMoment?.moveIndex ?? null);
-    setValidationError(null);
-  }, [isOpen, lineId]);
-
-  const validateMoves = useCallback((movesStr: string): { valid: boolean; moves: string[]; error?: string } => {
-    const sans = movesStr.trim().split(/\s+/).filter(Boolean);
-    if (sans.length === 0) return { valid: false, moves: [], error: "No moves entered" };
-
-    const chess = new Chess();
-    const validMoves: string[] = [];
-    for (let i = 0; i < sans.length; i++) {
-      try {
-        const result = chess.move(sans[i]);
-        if (!result) return { valid: false, moves: validMoves, error: `Invalid move at index ${i}: "${sans[i]}"` };
-        validMoves.push(result.san.replace(/[+#]/g, "")); // Normalize
-      } catch {
-        return { valid: false, moves: validMoves, error: `Illegal move at index ${i}: "${sans[i]}"` };
-      }
-    }
-    return { valid: true, moves: validMoves };
-  }, []);
-
   const handleSave = async () => {
     setSaving(true);
     setValidationError(null);
