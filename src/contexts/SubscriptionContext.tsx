@@ -55,7 +55,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     if (!user) return;
     const { data } = await supabase
       .from("daily_usage")
-      .select("lines_learned, practice_used")
+      .select("lines_learned, practice_used, analysis_used")
       .eq("user_id", user.id)
       .eq("usage_date", todayStr())
       .maybeSingle();
