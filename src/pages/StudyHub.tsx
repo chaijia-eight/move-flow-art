@@ -14,10 +14,14 @@ import UpgradeModal from "@/components/UpgradeModal";
 
 export default function StudyHub() {
   const { openingId } = useParams();
+  const { user } = useAuth();
+  const { canPractice, canLearnNewLine } = useSubscription();
   const navigate = useNavigate();
   const { setTheme, currentTheme } = useTheme();
   const [showAgainstVariations, setShowAgainstVariations] = useState(false);
   const [expandedVariation, setExpandedVariation] = useState<string | null>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [upgradeReason, setUpgradeReason] = useState<"lines" | "practice">("lines");
 
   const opening = openings.find((o) => o.id === openingId);
 
