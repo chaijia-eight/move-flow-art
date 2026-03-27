@@ -758,7 +758,7 @@ export default function Study() {
           style={{
             width: totalPlayerMoves > 0 ? `${Math.min(100, (playerMovesCompleted / totalPlayerMoves) * 100)}%` : "0%",
             background: isChallengeMode
-              ? "hsl(45, 100%, 50%)"
+              ? "hsl(35, 92%, 50%)"
               : `linear-gradient(90deg, ${currentTheme.primaryColor}, ${currentTheme.accentColor})`,
           }}
         />
