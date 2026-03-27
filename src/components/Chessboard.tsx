@@ -48,6 +48,7 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
   const prevFenRef = useRef<string>(fen);
   const boardRef = useRef<HTMLDivElement>(null);
   const isDraggingRef = useRef(false);
+  const skipNextAnimRef = useRef(false);
 
   const board = useMemo(() => fenToBoard(fen), [fen]);
   const chess = useMemo(() => new Chess(fen), [fen]);
@@ -87,7 +88,11 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
       const isCastle = changedCount === 4;
 
       if (fromSquare && toSquare) {
-        setAnimMove({ from: fromSquare, to: toSquare, isCapture: wasCapture, id: ++animIdCounter });
+        const skipAnim = skipNextAnimRef.current && !isCastle;
+        skipNextAnimRef.current = false;
+        if (!skipAnim) {
+          setAnimMove({ from: fromSquare, to: toSquare, isCapture: wasCapture, id: ++animIdCounter });
+        }
         setLastMove({ from: fromSquare, to: toSquare });
         if (wasCapture) {
           playCaptureSound();
@@ -225,6 +230,7 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
         const legalMoves = getLegalMoves(dragState.square);
         const targetMove = legalMoves.find(m => m.to === targetSquare);
         if (targetMove) {
+          skipNextAnimRef.current = true;
           onMove(dragState.square, targetSquare, targetMove.san);
           setSelectedSquare(null);
         }
