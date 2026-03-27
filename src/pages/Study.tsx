@@ -8,6 +8,7 @@ import ProgressDots from "@/components/ProgressDots";
 import SwitchConfirmModal from "@/components/SwitchConfirmModal";
 import StudySidebar from "@/components/StudySidebar";
 import UpgradeModal from "@/components/UpgradeModal";
+import DevEditPanel from "@/components/DevEditPanel";
 import ConfettiBurst from "@/components/ConfettiBurst";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "@/contexts/ThemeContext";
