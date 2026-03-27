@@ -476,6 +476,11 @@ export default function StudyHub() {
         </motion.div>
 
       </div>
+      <UpgradeModal
+        open={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        reason={upgradeReason}
+      />
     </div>
   );
 }
