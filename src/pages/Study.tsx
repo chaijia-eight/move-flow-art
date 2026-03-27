@@ -16,8 +16,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { type OpeningNode, type MoveCategory } from "@/data/openings";
 import { openings } from "@/data/openingTrees";
-import { extractLinesForVariation, type Line } from "@/lib/lineExtractor";
+import { extractLinesForVariation, applyLineOverrides, type Line } from "@/lib/lineExtractor";
 import { lineConclusions } from "@/data/lineConclusions";
+import { useLineOverrides } from "@/hooks/useLineOverrides";
 import {
   getLineProgress,
   recordAttempt,
