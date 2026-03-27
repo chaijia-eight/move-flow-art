@@ -253,7 +253,56 @@ export default function Index() {
           </div>
         </motion.section>
 
-        {/* Your Focus */}
+        {/* Daily Limits & Upgrade */}
+        {user && !isPro && (
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.18 }}
+            className="max-w-3xl"
+          >
+            <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium mb-2">
+              {t("dailyLimits")}
+            </h2>
+            <div className="rounded-xl border border-border bg-card p-4 space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+                    <span>{t("newLines")}</span>
+                    <span className={!canLearnNewLine ? "text-destructive font-medium" : ""}>
+                      {dailyLinesUsed}/{FREE_DAILY_LINES}
+                    </span>
+                  </div>
+                  <Progress value={(dailyLinesUsed / FREE_DAILY_LINES) * 100} className="h-1.5" />
+                </div>
+                <div>
+                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+                    <span>{t("practice")}</span>
+                    <span className={!canPractice ? "text-destructive font-medium" : ""}>
+                      {practiceUsedToday ? "1/1" : "0/1"}
+                    </span>
+                  </div>
+                  <Progress value={practiceUsedToday ? 100 : 0} className="h-1.5" />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between rounded-lg bg-primary/5 border border-primary/10 p-3">
+                <div>
+                  <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
+                    <Crown className="w-3.5 h-3.5 text-primary" />
+                    {t("proPlan")} — {t("proPlanPrice")}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{t("proFeatures")}</p>
+                </div>
+                <Button size="sm" onClick={() => startCheckout()} className="gap-1.5 shrink-0">
+                  <Zap className="w-3.5 h-3.5" />
+                  {t("upgradeToPro")}
+                </Button>
+              </div>
+            </div>
+          </motion.section>
+        )}
+
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
