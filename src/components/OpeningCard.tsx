@@ -92,7 +92,7 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium truncate" style={{ color: cardText }}>{openingName}</p>
           <p className="text-[11px] truncate" style={{ color: cardMuted }}>
-            {Math.round(progress * 100)}% · {totalLines} {t("lines")}
+            {Math.round(progress * 100)}% · {totalLines} {t("lines")} · {totalMoves} {t("moves")}
           </p>
         </div>
         {onToggleFocus && (
