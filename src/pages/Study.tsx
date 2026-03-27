@@ -1046,6 +1046,14 @@ export default function Study() {
         onClose={() => { setShowUpgradeModal(false); if (upgradeFromGate) navigate(-1); setUpgradeFromGate(false); }}
         reason={upgradeReason}
       />
+
+      {/* Developer editing panel */}
+      <DevEditPanel
+        currentLine={currentLine}
+        moveHistory={moveHistory}
+        primarySide={opening?.primarySide || "w"}
+        onOverrideApplied={reloadOverrides}
+      />
     </div>
   );
 }
