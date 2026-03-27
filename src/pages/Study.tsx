@@ -59,6 +59,10 @@ export default function Study() {
   const opening = openings.find((o) => o.id === openingId);
   const colorParam = searchParams.get("color") as "w" | "b" | null;
   const variationParam = searchParams.get("variation");
+
+  // Resolve the active variation's tree (trap variations have their own tree)
+  const activeVariation = opening?.variations.find((v) => v.id === variationParam);
+  const activeTree = activeVariation?.tree || opening?.tree || [];
   const lineParam = searchParams.get("line");
   const isReview = searchParams.get("review") === "1";
   const isPracticeMode = searchParams.get("practice") === "1";
@@ -120,7 +124,7 @@ export default function Study() {
 
   const chessRef = useRef(new Chess());
   const [fen, setFen] = useState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-  const [currentNodes, setCurrentNodes] = useState<OpeningNode[]>(opening?.tree || []);
+  const [currentNodes, setCurrentNodes] = useState<OpeningNode[]>(activeTree);
   const [moveHistory, setMoveHistory] = useState<MoveRecord[]>([]);
   const [feedback, setFeedback] = useState<{
     type: MoveCategory;
@@ -565,7 +569,7 @@ export default function Study() {
     initialAutoPlayed.current = false;
     chess.reset();
     setFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-    setCurrentNodes(opening?.tree || []);
+    setCurrentNodes(activeTree);
     setMoveHistory([]);
     setFeedback(null);
     setMoveCount(0);
@@ -592,8 +596,8 @@ export default function Study() {
     setPlayerColor(color);
     handleReset();
 
-    if (color !== "w" && opening && opening.tree.length > 0) {
-      const mainNode = pickComputerNode(opening.tree, 0) || opening.tree[0];
+    if (color !== "w" && activeTree.length > 0) {
+      const mainNode = pickComputerNode(activeTree, 0) || activeTree[0];
       initialAutoPlayed.current = true;
       setIsComputerTurn(true);
       setTimeout(() => {
