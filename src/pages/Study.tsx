@@ -97,9 +97,11 @@ export default function Study() {
     const isNewLine = progress.attempts === 0;
     if (isNewLine && user && !canLearnNewLine) {
       setUpgradeReason("lines");
+      setUpgradeFromGate(true);
       setShowUpgradeModal(true);
     } else if (isPracticeMode && user && !canPractice) {
       setUpgradeReason("practice");
+      setUpgradeFromGate(true);
       setShowUpgradeModal(true);
     } else if (isNewLine && user && !isPro) {
       // Record usage for free tier
