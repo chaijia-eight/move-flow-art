@@ -994,7 +994,7 @@ export default function Study() {
       {/* Upgrade modal */}
       <UpgradeModal
         open={showUpgradeModal}
-        onClose={() => { setShowUpgradeModal(false); navigate(-1); }}
+        onClose={() => { setShowUpgradeModal(false); if (upgradeFromGate) navigate(-1); setUpgradeFromGate(false); }}
         reason={upgradeReason}
       />
     </div>
