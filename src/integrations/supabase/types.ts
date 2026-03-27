@@ -55,6 +55,7 @@ export type Database = {
       }
       daily_usage: {
         Row: {
+          analysis_used: boolean
           id: string
           lines_learned: number
           practice_used: boolean
@@ -63,6 +64,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          analysis_used?: boolean
           id?: string
           lines_learned?: number
           practice_used?: boolean
@@ -71,6 +73,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          analysis_used?: boolean
           id?: string
           lines_learned?: number
           practice_used?: boolean
