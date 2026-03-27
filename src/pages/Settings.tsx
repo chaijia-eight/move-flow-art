@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Volume2, VolumeX, Sun, Moon, Trash2, LogIn, LogOut, UserPlus, Mail, Globe, Crown, CreditCard, KeyRound } from "lucide-react";
+import { ArrowLeft, Volume2, VolumeX, Sun, Moon, Trash2, LogIn, LogOut, UserPlus, Mail, Globe, Crown, CreditCard, KeyRound, Copy, Check, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
