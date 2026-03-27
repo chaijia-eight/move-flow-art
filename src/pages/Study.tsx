@@ -144,6 +144,7 @@ export default function Study() {
   // Mastery prompt state
   const [showMasteryPrompt, setShowMasteryPrompt] = useState(false);
   const [lineCompleted, setLineCompleted] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   // Undo/Redo stacks
   const [undoStack, setUndoStack] = useState<HistorySnapshot[]>([]);
