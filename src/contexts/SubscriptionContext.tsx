@@ -8,10 +8,13 @@ interface SubscriptionState {
   loading: boolean;
   dailyLinesUsed: number;
   practiceUsedToday: boolean;
+  analysisUsedToday: boolean;
   canLearnNewLine: boolean;
   canPractice: boolean;
+  canAnalyze: boolean;
   recordLineLearn: () => Promise<void>;
   recordPracticeUse: () => Promise<void>;
+  recordAnalysisUse: () => Promise<void>;
   refreshSubscription: () => Promise<void>;
   startCheckout: () => Promise<void>;
   openCustomerPortal: () => Promise<void>;
@@ -25,10 +28,13 @@ const SubscriptionContext = createContext<SubscriptionState>({
   loading: true,
   dailyLinesUsed: 0,
   practiceUsedToday: false,
+  analysisUsedToday: false,
   canLearnNewLine: true,
   canPractice: true,
+  canAnalyze: true,
   recordLineLearn: async () => {},
   recordPracticeUse: async () => {},
+  recordAnalysisUse: async () => {},
   refreshSubscription: async () => {},
   startCheckout: async () => {},
   openCustomerPortal: async () => {},
@@ -41,6 +47,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [dailyLinesUsed, setDailyLinesUsed] = useState(0);
   const [practiceUsedToday, setPracticeUsedToday] = useState(false);
+  const [analysisUsedToday, setAnalysisUsedToday] = useState(false);
 
   const todayStr = () => new Date().toISOString().slice(0, 10);
 
@@ -48,7 +55,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     if (!user) return;
     const { data } = await supabase
       .from("daily_usage")
-      .select("lines_learned, practice_used")
+      .select("lines_learned, practice_used, analysis_used")
       .eq("user_id", user.id)
       .eq("usage_date", todayStr())
       .maybeSingle();
@@ -56,9 +63,11 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     if (data) {
       setDailyLinesUsed(data.lines_learned);
       setPracticeUsedToday(data.practice_used);
+      setAnalysisUsedToday(data.analysis_used);
     } else {
       setDailyLinesUsed(0);
       setPracticeUsedToday(false);
+      setAnalysisUsedToday(false);
     }
   }, [user]);
 
@@ -90,6 +99,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       setLoading(false);
       setDailyLinesUsed(0);
       setPracticeUsedToday(false);
+      setAnalysisUsedToday(false);
     }
   }, [user, refreshSubscription, fetchDailyUsage]);
 
@@ -102,6 +112,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
 
   const canLearnNewLine = isPro || dailyLinesUsed < FREE_DAILY_LINES;
   const canPractice = isPro || !practiceUsedToday;
+  const canAnalyze = isPro || !analysisUsedToday;
 
   const recordLineLearn = useCallback(async () => {
     if (!user || isPro) return;
@@ -150,6 +161,29 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     setPracticeUsedToday(true);
   }, [user, isPro]);
 
+  const recordAnalysisUse = useCallback(async () => {
+    if (!user) return;
+    const today = todayStr();
+    const { data: existing } = await supabase
+      .from("daily_usage")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("usage_date", today)
+      .maybeSingle();
+
+    if (existing) {
+      await supabase
+        .from("daily_usage")
+        .update({ analysis_used: true, updated_at: new Date().toISOString() })
+        .eq("id", existing.id);
+    } else {
+      await supabase
+        .from("daily_usage")
+        .insert({ user_id: user.id, usage_date: today, analysis_used: true });
+    }
+    setAnalysisUsedToday(true);
+  }, [user]);
+
   const startCheckout = useCallback(async () => {
     const { data, error } = await supabase.functions.invoke("create-checkout");
     if (error) throw error;
@@ -173,10 +207,13 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       loading,
       dailyLinesUsed,
       practiceUsedToday,
+      analysisUsedToday,
       canLearnNewLine,
       canPractice,
+      canAnalyze,
       recordLineLearn,
       recordPracticeUse,
+      recordAnalysisUse,
       refreshSubscription,
       startCheckout,
       openCustomerPortal,

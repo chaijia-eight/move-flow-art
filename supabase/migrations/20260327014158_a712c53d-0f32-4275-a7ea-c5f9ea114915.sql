@@ -1,0 +1,1 @@
+ALTER TABLE public.daily_usage ADD COLUMN analysis_used boolean NOT NULL DEFAULT false;

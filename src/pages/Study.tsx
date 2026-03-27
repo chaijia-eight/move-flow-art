@@ -25,7 +25,7 @@ import {
 } from "@/lib/progressStore";
 import { playLineCompleteSound, playMasterySound } from "@/lib/chessSounds";
 import { squareToCoords } from "@/data/pieceUnicode";
-import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap, Eye } from "lucide-react";
+import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap, Eye, ExternalLink } from "lucide-react";
 import { t, tf, tn, tDesc, tVar } from "@/lib/i18n";
 
 interface MoveRecord {
@@ -48,7 +48,7 @@ export default function Study() {
   const navigate = useNavigate();
   const { setTheme, currentTheme } = useTheme();
   const { user } = useAuth();
-  const { canLearnNewLine, canPractice, recordLineLearn, recordPracticeUse, isPro } = useSubscription();
+  const { canLearnNewLine, canPractice, canAnalyze, recordLineLearn, recordPracticeUse, recordAnalysisUse, isPro } = useSubscription();
   const isMobile = useIsMobile();
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeReason, setUpgradeReason] = useState<"lines" | "practice">("lines");
@@ -922,7 +922,24 @@ export default function Study() {
                 </motion.div>
               )}
 
-              {/* Mastery prompt buttons - only on mobile */}
+              {/* Lichess Analysis - mobile, after completed or mastery */}
+              {isMobile && (lineCompleted || showMasteryPrompt) && (isPro || canAnalyze) && (
+                <motion.div key="lichess-btn" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}>
+                  <button
+                    onClick={() => {
+                      if (user && !isPro) recordAnalysisUse();
+                      const encodedFen = fen.replace(/ /g, "_");
+                      const color = playerColor === "w" ? "white" : "black";
+                      window.open(`https://lichess.org/analysis/${encodedFen}?color=${color}`, "_blank");
+                    }}
+                    className="w-full py-2.5 rounded-xl text-xs font-medium border border-border/50 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors flex items-center justify-center gap-1.5"
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                    {t("lichessAnalysis")}
+                    {!isPro && <span className="text-[10px] opacity-60">({t("oncePerDay")})</span>}
+                  </button>
+                </motion.div>
+              )}
               {isMobile && showMasteryPrompt && (
                 <motion.div key="mastery-btns" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}
                   className="flex gap-3"
@@ -975,6 +992,7 @@ export default function Study() {
               hasNextLine={allVariationLines.length > 0 && !!currentLine && allVariationLines.findIndex(l => l.id === currentLine.id) < allVariationLines.length - 1}
               conclusionText={currentLine ? lineConclusions[currentLine.id] : undefined}
               crucialMomentMessage={crucialMomentMessage}
+              fen={fen}
             />
           </div>
         )}

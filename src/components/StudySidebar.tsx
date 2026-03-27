@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Trophy } from "lucide-react";
+import { useSubscription } from "@/contexts/SubscriptionContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { Trophy, ExternalLink, Crown } from "lucide-react";
 import { t, tf } from "@/lib/i18n";
 
 interface MoveRecord {
@@ -32,6 +34,7 @@ interface StudySidebarProps {
   hasNextLine: boolean;
   conclusionText?: string;
   crucialMomentMessage?: string | null;
+  fen: string;
 }
 
 export default function StudySidebar({
@@ -56,9 +59,23 @@ export default function StudySidebar({
   hasNextLine,
   conclusionText,
   crucialMomentMessage,
+  fen,
 }: StudySidebarProps) {
   const { currentTheme } = useTheme();
+  const { user } = useAuth();
+  const { isPro, canAnalyze, recordAnalysisUse } = useSubscription();
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const handleLichessAnalysis = () => {
+    // Record usage for free users
+    if (user && !isPro) {
+      recordAnalysisUse();
+    }
+    // Build Lichess analysis URL from FEN
+    const encodedFen = fen.replace(/ /g, "_");
+    const color = playerSide === "w" ? "white" : "black";
+    window.open(`https://lichess.org/analysis/${encodedFen}?color=${color}`, "_blank");
+  };
 
   // Auto-scroll to bottom on new moves
   useEffect(() => {
@@ -234,6 +251,18 @@ export default function StudySidebar({
                   </button>
                 )}
               </div>
+
+              {/* Lichess Analysis */}
+              {(isPro || canAnalyze) && (
+                <button
+                  onClick={handleLichessAnalysis}
+                  className="w-full py-2 rounded-lg text-xs font-medium border border-border/50 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors flex items-center justify-center gap-1.5"
+                >
+                  <ExternalLink className="w-3 h-3" />
+                  {t("lichessAnalysis")}
+                  {!isPro && <span className="text-[10px] opacity-60">({t("oncePerDay")})</span>}
+                </button>
+              )}
             </motion.div>
           )}
 
@@ -272,6 +301,18 @@ export default function StudySidebar({
                   {t("yesMastered")}
                 </button>
               </div>
+
+              {/* Lichess Analysis */}
+              {(isPro || canAnalyze) && (
+                <button
+                  onClick={handleLichessAnalysis}
+                  className="w-full py-2 rounded-lg text-xs font-medium border border-border/50 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors flex items-center justify-center gap-1.5"
+                >
+                  <ExternalLink className="w-3 h-3" />
+                  {t("lichessAnalysis")}
+                  {!isPro && <span className="text-[10px] opacity-60">({t("oncePerDay")})</span>}
+                </button>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
