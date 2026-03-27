@@ -77,6 +77,8 @@ function getRecommendation(): Recommendation | null {
 }
 
 export default function Index() {
+  const { user } = useAuth();
+  const { isPro, dailyLinesUsed, practiceUsedToday, canLearnNewLine, canPractice, startCheckout } = useSubscription();
   const navigate = useNavigate();
   const [focusedIds, setFocusedIds] = useState(getFocusedOpenings);
 
