@@ -249,9 +249,9 @@ export default function Study() {
     if (initialAutoPlayed.current) return;
     if (!opening) return;
     const firstMover = "w";
-    if (playerColor !== firstMover && opening.tree.length > 0) {
+    if (playerColor !== firstMover && activeTree.length > 0) {
       initialAutoPlayed.current = true;
-      const mainNode = pickComputerNode(opening.tree, 0) || opening.tree[0];
+      const mainNode = pickComputerNode(activeTree, 0) || activeTree[0];
       setIsComputerTurn(true);
       setTimeout(() => {
         try {
