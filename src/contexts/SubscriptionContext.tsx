@@ -99,6 +99,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       setLoading(false);
       setDailyLinesUsed(0);
       setPracticeUsedToday(false);
+      setAnalysisUsedToday(false);
     }
   }, [user, refreshSubscription, fetchDailyUsage]);
 
