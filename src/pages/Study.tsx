@@ -713,7 +713,7 @@ export default function Study() {
             <p className="text-xs text-muted-foreground">
               {sideLabel}
               {isChallengeMode && !lineCompleted && (
-                <span className="ml-2 inline-flex items-center gap-0.5 text-[10px] font-bold" style={{ color: "hsl(45, 100%, 60%)" }}>
+                <span className="ml-2 inline-flex items-center gap-0.5 text-[10px] font-bold text-amber-600 dark:text-amber-400">
                   <Zap className="w-3 h-3" /> {isPracticeMode ? "Practice" : "Challenge"}
                 </span>
               )}
