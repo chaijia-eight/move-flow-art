@@ -8,6 +8,7 @@ import ProgressDots from "@/components/ProgressDots";
 import SwitchConfirmModal from "@/components/SwitchConfirmModal";
 import StudySidebar from "@/components/StudySidebar";
 import UpgradeModal from "@/components/UpgradeModal";
+import ConfettiBurst from "@/components/ConfettiBurst";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -23,7 +24,7 @@ import {
   isLineUnlocked,
   MASTERY_PROMPT_THRESHOLD,
 } from "@/lib/progressStore";
-import { playLineCompleteSound, playMasterySound } from "@/lib/chessSounds";
+import { playLineCompleteSound, playMasterySound, playCelebrationSound } from "@/lib/chessSounds";
 import { squareToCoords } from "@/data/pieceUnicode";
 import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap, Eye, ExternalLink } from "lucide-react";
 import { t, tf, tn, tDesc, tVar } from "@/lib/i18n";
@@ -143,6 +144,7 @@ export default function Study() {
   // Mastery prompt state
   const [showMasteryPrompt, setShowMasteryPrompt] = useState(false);
   const [lineCompleted, setLineCompleted] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   // Undo/Redo stacks
   const [undoStack, setUndoStack] = useState<HistorySnapshot[]>([]);
@@ -216,6 +218,8 @@ export default function Study() {
     if (!currentLine) return;
     setLineCompleted(true);
     playLineCompleteSound();
+    playCelebrationSound();
+    setShowConfetti(true);
 
     if (isAgainstMode) return; // No progress tracking in against mode
 
@@ -224,6 +228,7 @@ export default function Study() {
       setTimeout(() => {
         playMasterySound();
         setShowMasteryPrompt(true);
+        setShowConfetti(true);
       }, 800);
     }
   }, [currentLine, isAgainstMode]);
@@ -575,6 +580,7 @@ export default function Study() {
     setLineCompleted(false);
     setShowMasteryPrompt(false);
     setMoveResults([]);
+    setShowConfetti(false);
     setShowSwitchConfirm(false);
     setPendingSwitchData(null);
     setResetCounter((c) => c + 1);
@@ -605,6 +611,10 @@ export default function Study() {
   const handleMasteryResponse = (mastered: boolean) => {
     if (currentLine) {
       markMastered(currentLine.id, mastered);
+    }
+    if (mastered) {
+      playCelebrationSound();
+      setShowConfetti(true);
     }
     setShowMasteryPrompt(false);
   };
@@ -1007,6 +1017,9 @@ export default function Study() {
         onAdopt={() => pendingSwitchData?.onAdopt()}
         onStay={() => pendingSwitchData?.onStay()}
       />
+
+      {/* Confetti celebration */}
+      <ConfettiBurst trigger={showConfetti} onComplete={() => setShowConfetti(false)} />
 
       {/* Upgrade modal */}
       <UpgradeModal
