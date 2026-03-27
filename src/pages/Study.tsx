@@ -52,6 +52,7 @@ export default function Study() {
   const isMobile = useIsMobile();
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeReason, setUpgradeReason] = useState<"lines" | "practice">("lines");
+  const [upgradeFromGate, setUpgradeFromGate] = useState(false);
   const lineGateChecked = useRef(false);
 
   const opening = openings.find((o) => o.id === openingId);
@@ -96,9 +97,11 @@ export default function Study() {
     const isNewLine = progress.attempts === 0;
     if (isNewLine && user && !canLearnNewLine) {
       setUpgradeReason("lines");
+      setUpgradeFromGate(true);
       setShowUpgradeModal(true);
     } else if (isPracticeMode && user && !canPractice) {
       setUpgradeReason("practice");
+      setUpgradeFromGate(true);
       setShowUpgradeModal(true);
     } else if (isNewLine && user && !isPro) {
       // Record usage for free tier
@@ -610,6 +613,15 @@ export default function Study() {
     if (!currentLine || !variationParam) return;
     const currentIdx = allVariationLines.findIndex((l) => l.id === currentLine.id);
     if (currentIdx < allVariationLines.length - 1) {
+      // Check if the next line is new and user hit free-tier limit
+      const nextLine = allVariationLines[currentIdx + 1];
+      const nextProgress = getLineProgress(nextLine.id);
+      const isNextNew = nextProgress.attempts === 0;
+      if (isNextNew && user && !canLearnNewLine) {
+        setUpgradeReason("lines");
+        setShowUpgradeModal(true);
+        return;
+      }
       navigate(
         `/study/${openingId}/play?color=${colorParam || opening?.primarySide || "w"}&variation=${variationParam}&line=${currentIdx + 1}`,
         { replace: true }
@@ -982,7 +994,7 @@ export default function Study() {
       {/* Upgrade modal */}
       <UpgradeModal
         open={showUpgradeModal}
-        onClose={() => { setShowUpgradeModal(false); navigate(-1); }}
+        onClose={() => { setShowUpgradeModal(false); if (upgradeFromGate) navigate(-1); setUpgradeFromGate(false); }}
         reason={upgradeReason}
       />
     </div>
