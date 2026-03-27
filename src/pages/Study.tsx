@@ -402,7 +402,8 @@ export default function Study() {
       const isChallengeMode = !isAgainstMode && (isPracticeMode || !!(lp && !lp.mastered && lp.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1));
 
       const snapshot = saveSnapshot();
-      const matchedNode = currentNodes.find((node) => node.move === san);
+      const sanNormalized = san.replace(/[+#]/g, "");
+      const matchedNode = currentNodes.find((node) => node.move.replace(/[+#]/g, "") === sanNormalized);
 
       try {
         chess.move({ from, to });
