@@ -48,6 +48,7 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
   const prevFenRef = useRef<string>(fen);
   const boardRef = useRef<HTMLDivElement>(null);
   const isDraggingRef = useRef(false);
+  const skipNextAnimRef = useRef(false);
 
   const board = useMemo(() => fenToBoard(fen), [fen]);
   const chess = useMemo(() => new Chess(fen), [fen]);
