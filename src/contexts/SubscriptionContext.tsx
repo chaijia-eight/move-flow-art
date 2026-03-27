@@ -12,9 +12,12 @@ interface SubscriptionState {
   canLearnNewLine: boolean;
   canPractice: boolean;
   canAnalyze: boolean;
+  canLearnTrap: boolean;
+  lastTrapLearnedAt: string | null;
   recordLineLearn: () => Promise<void>;
   recordPracticeUse: () => Promise<void>;
   recordAnalysisUse: () => Promise<void>;
+  recordTrapLearn: () => Promise<void>;
   refreshSubscription: () => Promise<void>;
   startCheckout: () => Promise<void>;
   openCustomerPortal: () => Promise<void>;
@@ -32,9 +35,12 @@ const SubscriptionContext = createContext<SubscriptionState>({
   canLearnNewLine: true,
   canPractice: true,
   canAnalyze: true,
+  canLearnTrap: true,
+  lastTrapLearnedAt: null,
   recordLineLearn: async () => {},
   recordPracticeUse: async () => {},
   recordAnalysisUse: async () => {},
+  recordTrapLearn: async () => {},
   refreshSubscription: async () => {},
   startCheckout: async () => {},
   openCustomerPortal: async () => {},
@@ -48,6 +54,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const [dailyLinesUsed, setDailyLinesUsed] = useState(0);
   const [practiceUsedToday, setPracticeUsedToday] = useState(false);
   const [analysisUsedToday, setAnalysisUsedToday] = useState(false);
+  const [lastTrapLearnedAt, setLastTrapLearnedAt] = useState<string | null>(null);
 
   const todayStr = () => new Date().toISOString().slice(0, 10);
 
@@ -55,7 +62,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     if (!user) return;
     const { data } = await supabase
       .from("daily_usage")
-      .select("lines_learned, practice_used, analysis_used")
+      .select("lines_learned, practice_used, analysis_used, last_trap_learned_at")
       .eq("user_id", user.id)
       .eq("usage_date", todayStr())
       .maybeSingle();
@@ -64,10 +71,21 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       setDailyLinesUsed(data.lines_learned);
       setPracticeUsedToday(data.practice_used);
       setAnalysisUsedToday(data.analysis_used);
+      setLastTrapLearnedAt((data as any).last_trap_learned_at ?? null);
     } else {
       setDailyLinesUsed(0);
       setPracticeUsedToday(false);
       setAnalysisUsedToday(false);
+      // Check for last_trap_learned_at from any recent row
+      const { data: recentTrap } = await supabase
+        .from("daily_usage")
+        .select("last_trap_learned_at")
+        .eq("user_id", user.id)
+        .not("last_trap_learned_at", "is", null)
+        .order("usage_date", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      setLastTrapLearnedAt((recentTrap as any)?.last_trap_learned_at ?? null);
     }
   }, [user]);
 
@@ -113,6 +131,10 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const canLearnNewLine = isPro || dailyLinesUsed < FREE_DAILY_LINES;
   const canPractice = isPro || !practiceUsedToday;
   const canAnalyze = isPro || !analysisUsedToday;
+
+  // Rolling 7-day check for traps
+  const canLearnTrap = isPro || !lastTrapLearnedAt || 
+    (Date.now() - new Date(lastTrapLearnedAt).getTime() > 7 * 24 * 60 * 60 * 1000);
 
   const recordLineLearn = useCallback(async () => {
     if (!user || isPro) return;
@@ -184,6 +206,30 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     setAnalysisUsedToday(true);
   }, [user]);
 
+  const recordTrapLearn = useCallback(async () => {
+    if (!user || isPro) return;
+    const now = new Date().toISOString();
+    const today = todayStr();
+    const { data: existing } = await supabase
+      .from("daily_usage")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("usage_date", today)
+      .maybeSingle();
+
+    if (existing) {
+      await supabase
+        .from("daily_usage")
+        .update({ last_trap_learned_at: now, updated_at: now } as any)
+        .eq("id", existing.id);
+    } else {
+      await supabase
+        .from("daily_usage")
+        .insert({ user_id: user.id, usage_date: today, last_trap_learned_at: now } as any);
+    }
+    setLastTrapLearnedAt(now);
+  }, [user, isPro]);
+
   const startCheckout = useCallback(async () => {
     const { data, error } = await supabase.functions.invoke("create-checkout");
     if (error) throw error;
@@ -211,9 +257,12 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       canLearnNewLine,
       canPractice,
       canAnalyze,
+      canLearnTrap,
+      lastTrapLearnedAt,
       recordLineLearn,
       recordPracticeUse,
       recordAnalysisUse,
+      recordTrapLearn,
       refreshSubscription,
       startCheckout,
       openCustomerPortal,

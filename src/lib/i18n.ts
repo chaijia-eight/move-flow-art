@@ -240,6 +240,8 @@ const translations = {
   invalidCode: { en: "Invalid code. Please try again.", zh: "无效代码，请重试。" },
   lichessAnalysis: { en: "Lichess Analysis", zh: "Lichess 分析" },
   oncePerDay: { en: "1/day", zh: "每日1次" },
+  secretTraps: { en: "Secret Traps", zh: "秘密陷阱" },
+  onePerWeek: { en: "1/week", zh: "每周1次" },
 
   // ==================== 404 ====================
   pageNotFound: { en: "Oops! Page not found", zh: "哎呀！页面未找到" },

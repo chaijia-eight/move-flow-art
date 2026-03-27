@@ -1,4 +1,5 @@
 import type { OpeningNode, Opening, VariationInfo } from "./openings";
+import { trapVariations } from "./trapTrees";
 
 // =============================================
 // ITALIAN GAME
@@ -16192,3 +16193,11 @@ export const openings: Opening[] = [
     ]
   },
 ];
+
+// Inject trap variations into each opening
+for (const opening of openings) {
+  const trap = trapVariations[opening.id];
+  if (trap) {
+    opening.variations.push(trap);
+  }
+}
