@@ -57,6 +57,7 @@ export default function Study() {
   const [upgradeReason, setUpgradeReason] = useState<"lines" | "practice">("lines");
   const [upgradeFromGate, setUpgradeFromGate] = useState(false);
   const lineGateChecked = useRef(false);
+  const { overrides: lineOverrides, reload: reloadOverrides } = useLineOverrides();
 
   const opening = openings.find((o) => o.id === openingId);
   const colorParam = searchParams.get("color") as "w" | "b" | null;
