@@ -6,6 +6,7 @@ const SOUND_URLS = {
   capture: "https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/capture.mp3",
   castle: "https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/castle.mp3",
   gameEnd: "https://images.chesscomfiles.com/chess-themes/sounds/_WEBM_/default/game-end.webm",
+  notify: "https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/notify.mp3",
 };
 
 const audioCache: Record<string, HTMLAudioElement> = {};
@@ -41,7 +42,7 @@ export function playCastleSound() {
 }
 
 export function playMasterySound() {
-  playSound("gameEnd");
+  playSound("notify");
 }
 
 export function playLineCompleteSound() {
