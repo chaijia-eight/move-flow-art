@@ -161,6 +161,29 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     setPracticeUsedToday(true);
   }, [user, isPro]);
 
+  const recordAnalysisUse = useCallback(async () => {
+    if (!user) return;
+    const today = todayStr();
+    const { data: existing } = await supabase
+      .from("daily_usage")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("usage_date", today)
+      .maybeSingle();
+
+    if (existing) {
+      await supabase
+        .from("daily_usage")
+        .update({ analysis_used: true, updated_at: new Date().toISOString() })
+        .eq("id", existing.id);
+    } else {
+      await supabase
+        .from("daily_usage")
+        .insert({ user_id: user.id, usage_date: today, analysis_used: true });
+    }
+    setAnalysisUsedToday(true);
+  }, [user]);
+
   const startCheckout = useCallback(async () => {
     const { data, error } = await supabase.functions.invoke("create-checkout");
     if (error) throw error;
