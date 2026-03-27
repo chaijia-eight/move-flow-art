@@ -85,6 +85,23 @@ export default function Study() {
     };
   }, [opening, variationParam, lineParam, lineOverrides]);
 
+  // If the current line has override moves, build a synthetic linear tree; otherwise use base tree
+  const activeTree = useMemo(() => {
+    if (!currentLine || !lineOverrides[currentLine.id]?.moves) return baseTree;
+    const overrideMoves = lineOverrides[currentLine.id].moves!;
+    const chess = new Chess();
+    const root: OpeningNode[] = [];
+    let parent: OpeningNode[] = root;
+    for (const san of overrideMoves) {
+      const fen = chess.fen();
+      try { chess.move(san); } catch { break; }
+      const node: OpeningNode = { fen, move: san, category: "main_line", children: [] };
+      parent.push(node);
+      parent = node.children;
+    }
+    return root.length > 0 ? root : baseTree;
+  }, [baseTree, currentLine, lineOverrides]);
+
   // Parse the preferred variation's starting moves into a SAN sequence
   const preferredMoves = useMemo(() => {
     if (currentLine) return currentLine.moves;
