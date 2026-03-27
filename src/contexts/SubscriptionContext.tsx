@@ -62,7 +62,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     if (!user) return;
     const { data } = await supabase
       .from("daily_usage")
-      .select("lines_learned, practice_used, analysis_used")
+      .select("lines_learned, practice_used, analysis_used, last_trap_learned_at")
       .eq("user_id", user.id)
       .eq("usage_date", todayStr())
       .maybeSingle();
@@ -71,10 +71,21 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       setDailyLinesUsed(data.lines_learned);
       setPracticeUsedToday(data.practice_used);
       setAnalysisUsedToday(data.analysis_used);
+      setLastTrapLearnedAt((data as any).last_trap_learned_at ?? null);
     } else {
       setDailyLinesUsed(0);
       setPracticeUsedToday(false);
       setAnalysisUsedToday(false);
+      // Check for last_trap_learned_at from any recent row
+      const { data: recentTrap } = await supabase
+        .from("daily_usage")
+        .select("last_trap_learned_at")
+        .eq("user_id", user.id)
+        .not("last_trap_learned_at", "is", null)
+        .order("usage_date", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      setLastTrapLearnedAt((recentTrap as any)?.last_trap_learned_at ?? null);
     }
   }, [user]);
 
