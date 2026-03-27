@@ -301,6 +301,18 @@ export default function StudySidebar({
                   {t("yesMastered")}
                 </button>
               </div>
+
+              {/* Lichess Analysis */}
+              {(isPro || canAnalyze) && (
+                <button
+                  onClick={handleLichessAnalysis}
+                  className="w-full py-2 rounded-lg text-xs font-medium border border-border/50 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors flex items-center justify-center gap-1.5"
+                >
+                  <ExternalLink className="w-3 h-3" />
+                  {t("lichessAnalysis")}
+                  {!isPro && <span className="text-[10px] opacity-60">({t("oncePerDay")})</span>}
+                </button>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
