@@ -587,15 +587,44 @@ export default function StudyHub() {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
                               <Flame className="w-4 h-4 text-orange-500 flex-shrink-0" />
+                              <h3 className="font-serif text-sm font-semibold text-foreground">
+                                Line {ti + 1}
+                              </h3>
                               {trapLocked && (
                                 <span className="text-[10px] text-muted-foreground/60 font-mono ml-1">
                                   {daysUntilNextTrap}d left
                                 </span>
                               )}
                             </div>
-                            <p className="text-sm text-muted-foreground leading-relaxed pl-6 line-clamp-2">
-                              {tVar(variation.id, "description", variation.description)}
-                            </p>
+                            <div className="flex items-center gap-1 pl-6">
+                              {editingDescId === variation.id ? (
+                                <div className="flex-1 flex gap-1" onClick={(e) => e.stopPropagation()}>
+                                  <input
+                                    value={editDescText}
+                                    onChange={(e) => setEditDescText(e.target.value)}
+                                    className="flex-1 text-sm rounded px-2 py-1"
+                                    style={{ background: "hsl(var(--muted))", color: "hsl(var(--foreground))" }}
+                                    autoFocus
+                                    onKeyDown={(e) => { if (e.key === "Enter") handleSaveDesc(variation.id); if (e.key === "Escape") setEditingDescId(null); }}
+                                  />
+                                  <button onClick={() => handleSaveDesc(variation.id)} className="text-xs px-2 py-1 rounded" style={{ background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }}>Save</button>
+                                </div>
+                              ) : (
+                                <>
+                                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                                    {getDescOverride(variation.id, variation.description)}
+                                  </p>
+                                  {isDev && (
+                                    <button
+                                      onClick={(e) => { e.stopPropagation(); setEditingDescId(variation.id); setEditDescText(getDescOverride(variation.id, variation.description)); }}
+                                      className="p-1 rounded opacity-40 hover:opacity-100 flex-shrink-0"
+                                    >
+                                      <Pencil size={12} />
+                                    </button>
+                                  )}
+                                </>
+                              )}
+                            </div>
                           </div>
                           <div className="flex items-center gap-2 flex-shrink-0 ml-3">
                             {trapLocked ? (
