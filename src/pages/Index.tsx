@@ -109,6 +109,22 @@ export default function Index() {
   const navigate = useNavigate();
   const [focusedIds, setFocusedIds] = useState(getFocusedOpenings);
 
+  // Fetch user's garden studies
+  const { data: gardenStudies } = useQuery({
+    queryKey: ["user-repertoires-dashboard", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("user_repertoires")
+        .select("id, name, side, tree")
+        .eq("user_id", user!.id)
+        .order("updated_at", { ascending: false })
+        .limit(4);
+      if (error) throw error;
+      return data;
+    },
+  });
+
   const handleToggleFocus = useCallback((openingId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     const next = toggleFocus(openingId);
