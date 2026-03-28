@@ -9,6 +9,7 @@ import { themes } from "@/data/openings";
 import { extractLinesForVariation, extractAllLines, type Line } from "@/lib/lineExtractor";
 import { getLineProgress, isLineUnlocked, getOpeningProgress } from "@/lib/progressStore";
 import { ArrowLeft, ChevronRight, Crown, Shield, ChevronDown, Lock, Check, BookOpen, RotateCcw, Shuffle, Flame, Pencil } from "lucide-react";
+import LearningPath from "@/components/LearningPath";
 import { t, tn, tDesc, tVar } from "@/lib/i18n";
 import UpgradeModal from "@/components/UpgradeModal";
 import { useLineOverrides } from "@/hooks/useLineOverrides";
