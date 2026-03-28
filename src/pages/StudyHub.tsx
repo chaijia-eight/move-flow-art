@@ -541,9 +541,6 @@ export default function StudyHub() {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
                               <Flame className="w-4 h-4 text-orange-500 flex-shrink-0" />
-                              <h3 className="font-serif text-base font-semibold text-foreground truncate">
-                                {tVar(variation.id, "name", variation.name)}
-                              </h3>
                               {trapLocked && (
                                 <span className="text-[10px] text-muted-foreground/60 font-mono ml-1">
                                   {daysUntilNextTrap}d left
