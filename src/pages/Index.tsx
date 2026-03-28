@@ -158,7 +158,7 @@ export default function Index() {
 
   const treeSections = useMemo(() => {
     if (!treeOpening) return [];
-    return treeOpening.variations.filter(v => !v.isTrap).map(v => ({
+    return treeOpening.variations.map(v => ({
       variation: v,
       lines: extractLinesForVariation(treeOpening, v),
     }));
