@@ -158,7 +158,7 @@ export default function Index() {
 
   const treeSections = useMemo(() => {
     if (!treeOpening) return [];
-    return treeOpening.variations.filter(v => !v.isTrap).map(v => ({
+    return treeOpening.variations.map(v => ({
       variation: v,
       lines: extractLinesForVariation(treeOpening, v),
     }));
@@ -480,12 +480,15 @@ export default function Index() {
                 </div>
               </div>
 
-              {/* Practice shortcut */}
+              {/* Practice shortcut — shiny yellow */}
               {treePracticeLines.length > 0 && (
-                <Button
-                  size="sm"
-                  className="w-full mb-3 gap-2"
-                  variant="outline"
+                <button
+                  className="w-full mb-3 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+                  style={{
+                    background: "linear-gradient(135deg, hsl(45, 100%, 50%, 0.15), hsl(45, 100%, 60%, 0.08))",
+                    border: "1px solid hsl(45, 100%, 50%, 0.35)",
+                    color: "hsl(45, 100%, 50%)",
+                  }}
                   onClick={() => {
                     const randomLine = treePracticeLines[Math.floor(Math.random() * treePracticeLines.length)];
                     const variation = treeOpening.variations.find(v => v.id === randomLine.variationId);
@@ -498,9 +501,9 @@ export default function Index() {
                     }
                   }}
                 >
-                  <Shuffle className="w-3.5 h-3.5" />
+                  <Shuffle className="w-4 h-4" />
                   Practice
-                </Button>
+                </button>
               )}
 
               {/* Learning path tree */}
