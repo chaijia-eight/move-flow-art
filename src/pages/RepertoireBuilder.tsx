@@ -716,7 +716,7 @@ export default function RepertoireBuilder() {
             {/* Annotation panel */}
             <div className="rounded-xl border border-border bg-card p-4">
               <h3 className="text-sm font-semibold text-foreground mb-2">{t("annotation")}</h3>
-              {selectedNodePath && selectedNode ? (
+              {currentPath.length > 0 && currentNode ? (
                 <div className="space-y-3">
                   {/* NAG symbol selector */}
                   <TooltipProvider delayDuration={200}>
