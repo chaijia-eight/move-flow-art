@@ -92,7 +92,7 @@ function AuthCard() {
 
 function SubscriptionCard() {
   const { user } = useAuth();
-  const { isPro, subscriptionEnd, loading, dailyLinesUsed, practiceUsedToday, startCheckout, openCustomerPortal } = useSubscription();
+  const { isPro, subscriptionEnd, loading, dailyLinesUsed, dailyPracticesUsed, startCheckout, openCustomerPortal } = useSubscription();
   const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   if (!user) return null;
