@@ -540,8 +540,8 @@ function TreeView({
               {node.explanation && (
                 <span className="text-[0.6rem] text-muted-foreground ml-1">💬</span>
               )}
-              {node.category === "legitAlternative" && (
-                <span className="text-[0.6rem] text-amber-500 ml-1">alt</span>
+              {node.category === "legit_alternative" && (
+                <span className="text-[0.6rem] text-amber-500/80 ml-1">alt</span>
               )}
               <button
                 onClick={(e) => {
