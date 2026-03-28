@@ -648,9 +648,9 @@ export default function StudyHub() {
               style={{ background: "hsl(var(--card) / 0.5)" }}
             >
               <LearningPath
-                sections={opening.variations.filter(v => !v.isTrap).map(v => ({
+                sections={opening.variations.map(v => ({
                   variation: v,
-                  lines: linesByVariation.get(v.id) || [],
+                  lines: v.isTrap ? (linesByVariation.get(v.id) || []).slice(0, 1) : (linesByVariation.get(v.id) || []),
                 }))}
                 theme={theme}
                 openingId={opening.id}
