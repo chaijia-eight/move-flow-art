@@ -158,10 +158,13 @@ export default function Index() {
 
   const treeSections = useMemo(() => {
     if (!treeOpening) return [];
-    return treeOpening.variations.map(v => ({
-      variation: v,
-      lines: extractLinesForVariation(treeOpening, v),
-    }));
+    return treeOpening.variations.map(v => {
+      const lines = extractLinesForVariation(treeOpening, v);
+      return {
+        variation: v,
+        lines: v.isTrap ? lines.slice(0, 1) : lines,
+      };
+    });
   }, [treeOpening]);
 
   const treeTheme = treeOpening ? themes[treeOpening.themeId] : null;
