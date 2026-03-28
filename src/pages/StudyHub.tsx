@@ -522,6 +522,7 @@ export default function StudyHub() {
                               </motion.button>
                             );
                           })}
+                          </div>
                         </div>
                       </motion.div>
                     )}
