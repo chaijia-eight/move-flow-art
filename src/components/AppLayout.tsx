@@ -55,7 +55,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               className="w-10 h-10 rounded-lg flex items-center justify-center mb-6 hover:bg-secondary transition-colors"
               aria-label="Dashboard"
             >
-              <span className="text-lg font-bold text-foreground tracking-tighter">A</span>
+              <img src="/favicon.png" alt="ArcChess" className="w-7 h-7" />
             </button>
           </TooltipTrigger>
           <TooltipContent side="right" sideOffset={8}>
