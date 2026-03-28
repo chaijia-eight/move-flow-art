@@ -56,11 +56,57 @@ const italianGameTree: OpeningNode[] = [
                                                   {
                                                     fen: "r1bqk2r/pppp1ppp/2n2n2/8/1bBPP3/2N2N2/PP3PPP/R1BQK2R b KQkq - 2 7",
                                                     move: "Nc3", category: "main_line",
-                                                    children: []
+                                                    children: [
+                                                      {
+                                                        fen: "r1bq1rk1/pppp1ppp/2n2n2/8/1bBPP3/2N2N2/PP3PPP/R1BQK2R w KQ - 3 8",
+                                                        move: "O-O", category: "main_line",
+                                                        children: [
+                                                          {
+                                                            fen: "r1bq1rk1/pppp1ppp/2n2n2/8/1bBPP3/2N2N2/PP3PPP/R1BQ1RK1 b - - 4 8",
+                                                            move: "O-O", category: "main_line",
+                                                            children: []
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
                                                   }
                                                 ]
                                               }
                                             ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        fen: "r1bq1rk1/pppp1ppp/2n2n2/2b1p3/2BPP3/2P2N2/PP3PPP/RNBQK2R w KQ - 1 6",
+                                        move: "O-O", category: "legit_alternative",
+                                        children: [
+                                          {
+                                            fen: "r1bq1rk1/pppp1ppp/2n2n2/2b1p3/2BPP3/2P2N2/PP3PPP/RNBQ1RK1 b - - 2 6",
+                                            move: "O-O", category: "legit_alternative",
+                                            children: [
+                                              {
+                                                fen: "r1bq1rk1/pppp1ppp/2n2n2/2b5/2BpP3/2P2N2/PP3PPP/RNBQ1RK1 w - - 0 7",
+                                                move: "exd4", category: "legit_alternative",
+                                                children: []
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    fen: "r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/2P2N2/PP1P1PPP/RNBQ1RK1 b kq - 2 5",
+                                    move: "O-O", category: "legit_alternative",
+                                    children: [
+                                      {
+                                        fen: "r1bq1rk1/pppp1ppp/2n2n2/2b1p3/2B1P3/2P2N2/PP1P1PPP/RNBQ1RK1 w - - 3 6",
+                                        move: "O-O", category: "legit_alternative",
+                                        children: [
+                                          {
+                                            fen: "r1bq1rk1/pppp1Bpp/2n2n2/2b1p3/4P3/2P2N2/PP1P1PPP/RNBQ1RK1 b - - 0 6",
+                                            move: "Bxf7+", category: "legit_alternative",
+                                            children: []
                                           }
                                         ]
                                       }
@@ -83,7 +129,19 @@ const italianGameTree: OpeningNode[] = [
                                           {
                                             fen: "r1bqk1nr/ppp2ppp/1bnp4/4p1B1/2BPP3/2P2N2/PP3PPP/RN1QK2R b KQkq - 2 6",
                                             move: "Bg5", category: "legit_alternative",
-                                            children: []
+                                            children: [
+                                              {
+                                                fen: "r1bqk1nr/ppp2ppp/1bnp4/6B1/2BpP3/2P2N2/PP3PPP/RN1QK2R w KQkq - 0 7",
+                                                move: "exd4", category: "legit_alternative",
+                                                children: [
+                                                  {
+                                                    fen: "r1bqk1nr/ppp2ppp/1bnp4/6B1/2BpP3/2P2N2/PP3PPP/RN1Q1RK1 b kq - 1 7",
+                                                    move: "O-O", category: "legit_alternative",
+                                                    children: []
+                                                  }
+                                                ]
+                                              }
+                                            ]
                                           }
                                         ]
                                       }
@@ -122,7 +180,19 @@ const italianGameTree: OpeningNode[] = [
                                                           {
                                                             fen: "r1b1k1nr/1pp1qppp/pbnp4/4p3/P1BPP3/2P2N2/1P3PPP/RNBQR1K1 b kq - 1 8",
                                                             move: "Re1", category: "legit_alternative",
-                                                            children: []
+                                                            children: [
+                                                              {
+                                                                fen: "r1b1k1nr/1pp1qppp/pbnp4/8/P1BpP3/2P2N2/1P3PPP/RNBQR1K1 w kq - 0 9",
+                                                                move: "exd4", category: "legit_alternative",
+                                                                children: [
+                                                                  {
+                                                                    fen: "r1b1k1nr/1pp1qppp/pbnp4/8/P1BPP3/5N2/1P3PPP/RNBQR1K1 b kq - 0 9",
+                                                                    move: "cxd4", category: "legit_alternative",
+                                                                    children: []
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
                                                           }
                                                         ]
                                                       }
@@ -191,7 +261,19 @@ const italianGameTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r1bqk1nr/ppp2ppp/1b1p4/n2P4/2B1P3/5N2/PB3PPP/RN1Q1RK1 b kq - 2 10",
                                                                             move: "Bb2", category: "main_line",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1bqk1nr/ppp2ppp/3p4/n2P4/2B1P3/5N2/PB3bPP/RN1Q1RK1 w kq - 0 11",
+                                                                                move: "Bxf2+", category: "main_line",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bqk1nr/ppp2ppp/3p4/n2P4/2B1P3/5N2/PB3RPP/RN1Q2K1 b kq - 0 11",
+                                                                                    move: "Rxf2", category: "main_line",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -230,7 +312,19 @@ const italianGameTree: OpeningNode[] = [
                                                                   {
                                                                     fen: "r1b1k1nr/pppq1ppp/1bnP4/8/2B1P3/1QP2N2/P4PPP/RNB1K2R b KQkq - 0 9",
                                                                     move: "exd6", category: "legit_alternative",
-                                                                    children: []
+                                                                    children: [
+                                                                      {
+                                                                        fen: "r1b1k1nr/pppq1ppp/2nP4/8/2B1P3/1QP2N2/P4bPP/RNB1K2R w KQkq - 0 10",
+                                                                        move: "Bxf2+", category: "legit_alternative",
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r1b1k1nr/pppq1ppp/2nP4/8/2B1P3/1QP2N2/P4KPP/RNB4R b kq - 0 10",
+                                                                            move: "Kxf2", category: "legit_alternative",
+                                                                            children: []
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
                                                                   }
                                                                 ]
                                                               }
@@ -277,7 +371,19 @@ const italianGameTree: OpeningNode[] = [
                                                                   {
                                                                     fen: "r1bqk2r/ppppbppp/5n2/n3P3/3Q4/2P2N2/P3BPPP/RNB1K2R b KQkq - 0 9",
                                                                     move: "e5", category: "legit_alternative",
-                                                                    children: []
+                                                                    children: [
+                                                                      {
+                                                                        fen: "r1bq1rk1/ppppbppp/5n2/n3P3/3Q4/2P2N2/P3BPPP/RNB1K2R w KQ - 1 10",
+                                                                        move: "O-O", category: "legit_alternative",
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r1bq1rk1/ppppbppp/5n2/n3P3/3Q4/2P2N2/P3BPPP/RNB2RK1 b - - 2 10",
+                                                                            move: "O-O", category: "legit_alternative",
+                                                                            children: []
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
                                                                   }
                                                                 ]
                                                               }
@@ -346,7 +452,19 @@ const italianGameTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r2q1rk1/bpp2ppp/p1npbn2/4p3/4P3/1BPP1N2/PP1N1PPP/R1BQR1K1 w - - 4 10",
                                                                         move: "Be6", category: "main_line",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r2q1rk1/bpp2ppp/p1npBn2/4p3/4P3/2PP1N2/PP1N1PPP/R1BQR1K1 b - - 0 10",
+                                                                            move: "Bxe6", category: "main_line",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2q1rk1/1pp2ppp/p1npBn2/4p3/4P3/2PP1N2/PP1N1bPP/R1BQR1K1 w - - 0 11",
+                                                                                move: "Bxf2+", category: "main_line",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -427,7 +545,19 @@ const italianGameTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r1bqkb1r/p4pp1/2p2n1p/n3N3/4p3/8/PPPPBPPP/RNBQK2R b KQkq - 1 10",
                                                                             move: "Ne5", category: "main_line",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1bqkb1r/p4pp1/5n1p/n1p1N3/4p3/8/PPPPBPPP/RNBQK2R w KQkq - 0 11",
+                                                                                move: "c5", category: "main_line",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bqkb1r/p4pp1/5n1p/n1p1N3/4p3/8/PPPPBPPP/RNBQ1RK1 b kq - 1 11",
+                                                                                    move: "O-O", category: "main_line",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -440,7 +570,19 @@ const italianGameTree: OpeningNode[] = [
                                                           {
                                                             fen: "r1bqkb1r/p4ppp/2p2n2/nB2p1N1/8/5Q2/PPPP1PPP/RNB1K2R b KQkq - 1 8",
                                                             move: "Qf3", category: "legit_alternative",
-                                                            children: []
+                                                            children: [
+                                                              {
+                                                                fen: "r1bqkb1r/p4ppp/2p2n2/nB4N1/4p3/5Q2/PPPP1PPP/RNB1K2R w KQkq - 0 9",
+                                                                move: "e4", category: "legit_alternative",
+                                                                children: [
+                                                                  {
+                                                                    fen: "r1bqkb1r/p4ppp/2p2n2/nB4N1/4p3/5Q2/PPPP1PPP/RNB2RK1 b kq - 1 9",
+                                                                    move: "O-O", category: "legit_alternative",
+                                                                    children: []
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
                                                           }
                                                         ]
                                                       }
@@ -483,7 +625,19 @@ const italianGameTree: OpeningNode[] = [
                                                                   {
                                                                     fen: "r1b1kb1r/p1p2ppp/8/1p1np3/3n3q/2P3N1/PP1P1PPP/RNBQKB1R b KQkq - 3 9",
                                                                     move: "Ng3", category: "legit_alternative",
-                                                                    children: []
+                                                                    children: [
+                                                                      {
+                                                                        fen: "r1b1kb1r/p1p2ppp/8/1p2p3/3n3q/2n3N1/PP1P1PPP/RNBQKB1R w KQkq - 0 10",
+                                                                        move: "Nxc3", category: "legit_alternative",
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r1b1kb1r/p1p2ppp/8/1p2p3/3n3q/2N3N1/PP1P1PPP/R1BQKB1R b KQkq - 0 10",
+                                                                            move: "Nxc3", category: "legit_alternative",
+                                                                            children: []
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
                                                                   }
                                                                 ]
                                                               }
@@ -509,16 +663,12 @@ const italianGameTree: OpeningNode[] = [
                       },
                       {
                         fen: "r1bqkbnr/pppp1pp1/2n4p/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4",
-                        move: "h6", category: "mistake",
-                        explanation: "h6 wastes a tempo. Focus on developing pieces.",
-                        suggestedMove: "Bc5",
+                        move: "h6", category: "mistake", explanation: "h6 wastes a tempo. Focus on developing pieces.", suggestedMove: "Bc5",
                         children: []
                       },
                       {
                         fen: "r1bqkbnr/1ppp1ppp/p1n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4",
-                        move: "a6", category: "mistake",
-                        explanation: "a6 is too slow. Develop with Bc5 or Nf6.",
-                        suggestedMove: "Bc5",
+                        move: "a6", category: "mistake", explanation: "a6 is too slow. Develop with Bc5 or Nf6.", suggestedMove: "Bc5",
                         children: []
                       }
                     ]
@@ -608,7 +758,19 @@ const sicilianDefenseTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "rnb2rk1/1pq1bppp/p2ppn2/8/3NPP2/2N1B3/PPP1B1PP/R2Q1RK1 w - - 3 10",
                                                                         move: "Qc7", category: "main_line",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "rnb2rk1/1pq1bppp/B2ppn2/8/3NPP2/2N1B3/PPP3PP/R2Q1RK1 b - - 0 10",
+                                                                            move: "Bxa6", category: "main_line",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "rnb2rk1/1pq1bppp/B3pn2/3p4/3NPP2/2N1B3/PPP3PP/R2Q1RK1 w - - 0 11",
+                                                                                move: "d5", category: "main_line",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -655,7 +817,19 @@ const sicilianDefenseTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r1b1k2r/1pqnbppp/p2ppn2/6B1/3NPP2/2N2Q2/PPP3PP/2KR1B1R w kq - 5 10",
                                                                         move: "Nbd7", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r1b1k2r/1pqnbppp/p2ppB2/8/3NPP2/2N2Q2/PPP3PP/2KR1B1R b kq - 0 10",
+                                                                            move: "Bxf6", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1b2rk1/1pqnbppp/p2ppB2/8/3NPP2/2N2Q2/PPP3PP/2KR1B1R w - - 1 11",
+                                                                                move: "O-O", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -710,7 +884,19 @@ const sicilianDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r2q1rk1/1p1nbppp/p2pbn2/4p3/4P3/1NN1BP2/PPPQ2PP/2KR1B1R w - - 5 11",
                                                                                 move: "Nbd7", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/1p1nbppp/B2pbn2/4p3/4P3/1NN1BP2/PPPQ2PP/2KR3R b - - 0 11",
+                                                                                    move: "Bxa6", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/1p1nbppp/B2p1n2/4p3/4P3/1bN1BP2/PPPQ2PP/2KR3R w - - 0 12",
+                                                                                        move: "Bxb3", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -783,7 +969,19 @@ const sicilianDefenseTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "2rq1rk1/pp1bppbp/3p1np1/4n3/3NP3/1BN1BP2/PPPQ2PP/2KR3R w - - 9 12",
                                                                                         move: "Ne5", category: "main_line",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "2rq1rk1/pp1bpBbp/3p1np1/4n3/3NP3/2N1BP2/PPPQ2PP/2KR3R b - - 0 12",
+                                                                                            move: "Bxf7+", category: "main_line",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "2rq2k1/pp1bprbp/3p1np1/4n3/3NP3/2N1BP2/PPPQ2PP/2KR3R w - - 0 13",
+                                                                                                move: "Rxf7", category: "main_line",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -810,7 +1008,19 @@ const sicilianDefenseTree: OpeningNode[] = [
                                                                                           {
                                                                                             fen: "2rq1rk1/pp1bppb1/2np1np1/7p/3NP2P/1BN1BP2/PPPQ2P1/2KR3R b - - 3 12",
                                                                                             move: "Bb3", category: "legit_alternative",
-                                                                                            children: []
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "2rq1rk1/pp1b1pb1/2np1np1/4p2p/3NP2P/1BN1BP2/PPPQ2P1/2KR3R w - - 0 13",
+                                                                                                move: "e5", category: "legit_alternative",
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "2rq1rk1/pp1b1pb1/2Np1np1/4p2p/4P2P/1BN1BP2/PPPQ2P1/2KR3R b - - 0 13",
+                                                                                                    move: "Nxc6", category: "legit_alternative",
+                                                                                                    children: []
+                                                                                                  }
+                                                                                                ]
+                                                                                              }
+                                                                                            ]
                                                                                           }
                                                                                         ]
                                                                                       }
@@ -871,7 +1081,19 @@ const sicilianDefenseTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r2q1rk1/pp2ppbp/2npbnp1/8/4PP2/1NN1B3/PPP1B1PP/R2Q1RK1 b - - 0 10",
                                                                             move: "f4", category: "legit_alternative",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2q1rk1/pp2ppbp/2np1np1/8/4PP2/1bN1B3/PPP1B1PP/R2Q1RK1 w - - 0 11",
+                                                                                move: "Bxb3", category: "legit_alternative",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/Bp2ppbp/2np1np1/8/4PP2/1bN5/PPP1B1PP/R2Q1RK1 b - - 0 11",
+                                                                                    move: "Bxa7", category: "legit_alternative",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -934,7 +1156,19 @@ const sicilianDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1b2rk1/pp2bppp/3ppn2/q5B1/3QPP2/2N5/PPP3PP/2KR1B1R w - - 1 11",
                                                                                 move: "Qa5", category: "main_line",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1b2rk1/pp2bppp/3ppB2/q7/3QPP2/2N5/PPP3PP/2KR1B1R b - - 0 11",
+                                                                                    move: "Bxf6", category: "main_line",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1b2rk1/pp3ppp/3ppb2/q7/3QPP2/2N5/PPP3PP/2KR1B1R w - - 0 12",
+                                                                                        move: "Bxf6", category: "main_line",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -963,7 +1197,19 @@ const sicilianDefenseTree: OpeningNode[] = [
                                                                   {
                                                                     fen: "r2qkb1r/1p1b1ppp/p1nppn2/6B1/3NPP2/2N5/PPPQ2PP/2KR1B1R b kq - 0 9",
                                                                     move: "f4", category: "legit_alternative",
-                                                                    children: []
+                                                                    children: [
+                                                                      {
+                                                                        fen: "r2qkb1r/1p1b1ppp/p1n1pn2/3p2B1/3NPP2/2N5/PPPQ2PP/2KR1B1R w kq - 0 10",
+                                                                        move: "d5", category: "legit_alternative",
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r2qkb1r/1p1b1ppp/p1n1pn2/3P2B1/3N1P2/2N5/PPPQ2PP/2KR1B1R b kq - 0 10",
+                                                                            move: "exd5", category: "legit_alternative",
+                                                                            children: []
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
                                                                   }
                                                                 ]
                                                               }
@@ -1022,7 +1268,19 @@ const sicilianDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r2q1rk1/1p1bbppp/p1nppn2/8/3NPP2/2N1B3/PPP1B1PP/R3QRK1 w - - 0 11",
                                                                                 move: "a6", category: "main_line",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/1p1bbppp/p1Nppn2/8/4PP2/2N1B3/PPP1B1PP/R3QRK1 b - - 0 11",
+                                                                                    move: "Nxc6", category: "main_line",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/1p2bppp/p1bppn2/8/4PP2/2N1B3/PPP1B1PP/R3QRK1 w - - 0 12",
+                                                                                        move: "Bxc6", category: "main_line",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -1079,7 +1337,19 @@ const sicilianDefenseTree: OpeningNode[] = [
                                                                                   {
                                                                                     fen: "r1b2rk1/1pq1bppp/p1nppn2/8/3NPP2/2N1B1Q1/PPP1B1PP/R4RK1 b - - 6 11",
                                                                                     move: "Qg3", category: "legit_alternative",
-                                                                                    children: []
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1b2rk1/1pq1bppp/p1n1pn2/3p4/3NPP2/2N1B1Q1/PPP1B1PP/R4RK1 w - - 0 12",
+                                                                                        move: "d5", category: "legit_alternative",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1b2rk1/1pq1bppp/p1n1pn2/3P4/3N1P2/2N1B1Q1/PPP1B1PP/R4RK1 b - - 0 12",
+                                                                                            move: "exd5", category: "legit_alternative",
+                                                                                            children: []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
                                                                                   }
                                                                                 ]
                                                                               }
@@ -1120,7 +1390,19 @@ const sicilianDefenseTree: OpeningNode[] = [
                                                           {
                                                             fen: "r1bqkb1r/pp3pp1/2nppn1p/8/3NP1PP/2N5/PPP2PB1/R1BQK2R b KQkq - 0 8",
                                                             move: "h4", category: "legit_alternative",
-                                                            children: []
+                                                            children: [
+                                                              {
+                                                                fen: "r1bqkb1r/pp3pp1/2n1pn1p/3p4/3NP1PP/2N5/PPP2PB1/R1BQK2R w KQkq - 0 9",
+                                                                move: "d5", category: "legit_alternative",
+                                                                children: [
+                                                                  {
+                                                                    fen: "r1bqkb1r/pp3pp1/2n1pn1p/3p4/3NP1PP/2N5/PPP2PB1/R1BQ1RK1 b kq - 1 9",
+                                                                    move: "O-O", category: "legit_alternative",
+                                                                    children: []
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
                                                           }
                                                         ]
                                                       }
@@ -1134,14 +1416,46 @@ const sicilianDefenseTree: OpeningNode[] = [
                                       },
                                       {
                                         fen: "rnbqkb1r/pp3ppp/3p1n2/4p3/3NP3/2N5/PPP2PPP/R1BQKB1R w KQkq - 0 6",
-                                        move: "e5", category: "mistake",
-                                        explanation: "e5 loses a pawn after Bb5+. Stick with a6, g6, Nc6, or e6.",
-                                        suggestedMove: "a6",
+                                        move: "e5", category: "mistake", explanation: "e5 loses a pawn after Bb5+. Stick with a6, g6, Nc6, or e6.", suggestedMove: "a6",
                                         children: []
                                       }
                                     ]
                                   }
                                 ]
+                              }
+                            ]
+                          },
+                          {
+                            fen: "rnbqkbnr/pp2pppp/3p4/4P3/3p4/5N2/PPP2PPP/RNBQKB1R b KQkq - 0 4",
+                            move: "e5", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "rnbqkbnr/pp2pppp/8/4p3/3p4/5N2/PPP2PPP/RNBQKB1R w KQkq - 0 5",
+                                move: "dxe5", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rnbqkbnr/pp2pppp/8/4p3/2Pp4/5N2/PP3PPP/RNBQKB1R b KQkq c3 0 5",
+                                    move: "c4", category: "legit_alternative",
+                                    children: []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        fen: "rnbqkbnr/pp3ppp/3p4/2p1p3/3PP3/5N2/PPP2PPP/RNBQKB1R w KQkq - 0 4",
+                        move: "e5", category: "legit_alternative",
+                        children: [
+                          {
+                            fen: "rnbqkbnr/pp3ppp/3p4/2P1p3/4P3/5N2/PPP2PPP/RNBQKB1R b KQkq - 0 4",
+                            move: "dxc5", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "rnbqkbnr/pp3ppp/8/2p1p3/4P3/5N2/PPP2PPP/RNBQKB1R w KQkq - 0 5",
+                                move: "dxc5", category: "legit_alternative",
+                                children: []
                               }
                             ]
                           }
@@ -1234,7 +1548,19 @@ const queensGambitTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r1bq1rk1/pp1nbppp/2p1p3/3n2B1/2BP4/2N1PN2/PP3PPP/2RQK2R w K - 1 10",
                                                                         move: "Nd5", category: "main_line",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r1bq1rk1/pp1nbppp/2p1p3/3n2B1/2BP4/2N1PN2/PP3PPP/2RQ1RK1 b - - 2 10",
+                                                                            move: "O-O", category: "main_line",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1bq1rk1/pp1nbppp/2p1p3/6B1/2BP4/2n1PN2/PP3PPP/2RQ1RK1 w - - 0 11",
+                                                                                move: "Nxc3", category: "main_line",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -1275,7 +1601,19 @@ const queensGambitTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "rnb2rk1/p1p1qpp1/1p2p2p/3n4/3P4/2N1PN2/PP3PPP/R2QKB1R w KQ - 0 10",
                                                                         move: "Qxe7", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "rnb2rk1/p1p1qpp1/1p2p2p/3n4/3PP3/2N2N2/PP3PPP/R2QKB1R b KQ - 0 10",
+                                                                            move: "e4", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "rnb2rk1/p1p1qpp1/1p2p2p/8/3PP3/2n2N2/PP3PPP/R2QKB1R w KQ - 0 11",
+                                                                                move: "Nxc3", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -1290,6 +1628,23 @@ const queensGambitTree: OpeningNode[] = [
                                                 ]
                                               }
                                             ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    fen: "rnbqk2r/ppp1bppp/4pn2/3P2B1/3P4/2N5/PP2PPPP/R2QKBNR b KQkq - 0 5",
+                                    move: "cxd5", category: "legit_alternative",
+                                    children: [
+                                      {
+                                        fen: "rnbq1rk1/ppp1bppp/4pn2/3P2B1/3P4/2N5/PP2PPPP/R2QKBNR w KQ - 1 6",
+                                        move: "O-O", category: "legit_alternative",
+                                        children: [
+                                          {
+                                            fen: "rnbq1rk1/ppp1bppp/4pB2/3P4/3P4/2N5/PP2PPPP/R2QKBNR b KQ - 0 6",
+                                            move: "Bxf6", category: "legit_alternative",
+                                            children: []
                                           }
                                         ]
                                       }
@@ -1328,7 +1683,19 @@ const queensGambitTree: OpeningNode[] = [
                                                           {
                                                             fen: "r1b1k2r/pp1n1ppp/2p1pn2/q2p2B1/1bPP4/2N1P3/PPQN1PPP/R3KB1R b KQkq - 5 8",
                                                             move: "Qc2", category: "legit_alternative",
-                                                            children: []
+                                                            children: [
+                                                              {
+                                                                fen: "r1b2rk1/pp1n1ppp/2p1pn2/q2p2B1/1bPP4/2N1P3/PPQN1PPP/R3KB1R w KQ - 6 9",
+                                                                move: "O-O", category: "legit_alternative",
+                                                                children: [
+                                                                  {
+                                                                    fen: "r1b2rk1/pp1n1ppp/2p1pn2/q2P2B1/1b1P4/2N1P3/PPQN1PPP/R3KB1R b KQ - 0 9",
+                                                                    move: "cxd5", category: "legit_alternative",
+                                                                    children: []
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
                                                           }
                                                         ]
                                                       }
@@ -1393,7 +1760,19 @@ const queensGambitTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "rn2kb1r/pp3p1p/2p2pb1/3p4/3P4/2N1P3/PP3PPP/R3KBNR w KQkq - 0 10",
                                                                         move: "gxf6", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "rn2kb1r/pp3p1p/2p2pb1/3p4/3P4/2N1P3/PP3PPP/2KR1BNR b kq - 1 10",
+                                                                            move: "O-O-O", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "rn2kb1r/pp3p1p/5pb1/2pp4/3P4/2N1P3/PP3PPP/2KR1BNR w kq - 0 11",
+                                                                                move: "c5", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -1414,6 +1793,23 @@ const queensGambitTree: OpeningNode[] = [
                                     ]
                                   }
                                 ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        fen: "rnbqkbnr/ppp2ppp/4p3/8/2pP4/2N5/PP2PPPP/R1BQKBNR w KQkq - 0 4",
+                        move: "dxc4", category: "legit_alternative",
+                        children: [
+                          {
+                            fen: "rnbqkbnr/ppp2ppp/4p3/3P4/2p5/2N5/PP2PPPP/R1BQKBNR b KQkq - 0 4",
+                            move: "d5", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "rnbqkbnr/ppp2ppp/8/3p4/2p5/2N5/PP2PPPP/R1BQKBNR w KQkq - 0 5",
+                                move: "exd5", category: "legit_alternative",
+                                children: []
                               }
                             ]
                           }
@@ -1486,7 +1882,19 @@ const queensGambitTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r1b1k2r/1p2qppp/p1n1pn2/2b5/2B1P3/5N2/PP2QPPP/RNBR2K1 b kq - 0 10",
                                                                             move: "e4", category: "main_line",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1b2rk1/1p2qppp/p1n1pn2/2b5/2B1P3/5N2/PP2QPPP/RNBR2K1 w - - 1 11",
+                                                                                move: "O-O", category: "main_line",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1b2rk1/1p2qppp/B1n1pn2/2b5/4P3/5N2/PP2QPPP/RNBR2K1 b - - 0 11",
+                                                                                    move: "Bxa6", category: "main_line",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -1523,7 +1931,19 @@ const queensGambitTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r1bqk2r/1p2bppp/p1n1pn2/8/3P4/1BN2N2/PP3PPP/R1BQ1RK1 w kq - 1 10",
                                                                         move: "Be7", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r1bqk2r/1p2bppp/p1n1Bn2/8/3P4/2N2N2/PP3PPP/R1BQ1RK1 b kq - 0 10",
+                                                                            move: "Bxe6", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1bq1rk1/1p2bppp/p1n1Bn2/8/3P4/2N2N2/PP3PPP/R1BQ1RK1 w - - 1 11",
+                                                                                move: "O-O", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -1582,7 +2002,19 @@ const queensGambitTree: OpeningNode[] = [
                                               {
                                                 fen: "r2qkbnr/ppp2ppp/2n1b3/8/2BpP3/5N2/PP3PPP/RNBQ1RK1 w kq - 3 7",
                                                 move: "Be6", category: "legit_alternative",
-                                                children: []
+                                                children: [
+                                                  {
+                                                    fen: "r2qkbnr/ppp2ppp/2n1B3/8/3pP3/5N2/PP3PPP/RNBQ1RK1 b kq - 0 7",
+                                                    move: "Bxe6", category: "legit_alternative",
+                                                    children: [
+                                                      {
+                                                        fen: "r2qkb1r/ppp2ppp/2n1Bn2/8/3pP3/5N2/PP3PPP/RNBQ1RK1 w kq - 1 8",
+                                                        move: "Nf6", category: "legit_alternative",
+                                                        children: []
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
                                               }
                                             ]
                                           }
@@ -1659,7 +2091,19 @@ const queensGambitTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r2q1rk1/pp1n1ppp/2p1pn2/5b2/PbBP4/2N1PN2/1P2QPPP/R1B2RK1 w - - 5 10",
                                                                         move: "Nbd7", category: "main_line",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r2q1rk1/pp1n1ppp/2p1Bn2/5b2/Pb1P4/2N1PN2/1P2QPPP/R1B2RK1 b - - 0 10",
+                                                                            move: "Bxe6", category: "main_line",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2q1rk1/pp1n1ppp/2p1bn2/8/Pb1P4/2N1PN2/1P2QPPP/R1B2RK1 w - - 0 11",
+                                                                                move: "Bxe6", category: "main_line",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -1698,7 +2142,19 @@ const queensGambitTree: OpeningNode[] = [
                                                               {
                                                                 fen: "r3kb1r/ppqn1ppp/2p2n2/4pb2/P1NP4/2N3P1/1P2PP1P/R1BQKB1R w KQkq - 0 9",
                                                                 move: "e5", category: "legit_alternative",
-                                                                children: []
+                                                                children: [
+                                                                  {
+                                                                    fen: "r3kb1r/ppqn1ppp/2p2n2/4Pb2/P1N5/2N3P1/1P2PP1P/R1BQKB1R b KQkq - 0 9",
+                                                                    move: "dxe5", category: "legit_alternative",
+                                                                    children: [
+                                                                      {
+                                                                        fen: "2kr1b1r/ppqn1ppp/2p2n2/4Pb2/P1N5/2N3P1/1P2PP1P/R1BQKB1R w KQ - 1 10",
+                                                                        move: "O-O-O", category: "legit_alternative",
+                                                                        children: []
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
                                                               }
                                                             ]
                                                           }
@@ -1767,7 +2223,19 @@ const queensGambitTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1bqkb1r/p2n1p2/2p1pn2/1p2P1B1/2pP4/2N5/PP3PPP/R2QKB1R w KQkq - 1 11",
                                                                                 move: "Nbd7", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bqkb1r/p2n1p2/2p1pB2/1p2P3/2pP4/2N5/PP3PPP/R2QKB1R b KQkq - 0 11",
+                                                                                    move: "Bxf6", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bqkb1r/p4p2/2p1pn2/1p2P3/2pP4/2N5/PP3PPP/R2QKB1R w KQkq - 0 12",
+                                                                                        move: "Nxf6", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -1842,7 +2310,19 @@ const queensGambitTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r2qk2r/pp1n1pp1/2pbpnp1/3p4/2PP4/2NBP3/PP3PPP/R1BQ1RK1 w kq - 4 10",
                                                                         move: "Bd6", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r2qk2r/pp1n1pp1/2pbpnp1/3P4/3P4/2NBP3/PP3PPP/R1BQ1RK1 b kq - 0 10",
+                                                                            move: "cxd5", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2q1rk1/pp1n1pp1/2pbpnp1/3P4/3P4/2NBP3/PP3PPP/R1BQ1RK1 w - - 1 11",
+                                                                                move: "O-O", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -1963,7 +2443,19 @@ const kingsIndianTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1bq1rk1/pppnn1bp/3p2p1/3Ppp2/2P1P3/2NN4/PP2BPPP/R1BQ1RK1 w - - 0 11",
                                                                                 move: "f5", category: "main_line",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bq1rk1/pppnn1bp/3p2p1/2PPpp2/4P3/2NN4/PP2BPPP/R1BQ1RK1 b - - 0 11",
+                                                                                    move: "c5", category: "main_line",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bq1rk1/pppnn1bp/6p1/2pPpp2/4P3/2NN4/PP2BPPP/R1BQ1RK1 w - - 0 12",
+                                                                                        move: "dxc5", category: "main_line",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -1990,7 +2482,19 @@ const kingsIndianTree: OpeningNode[] = [
                                                                                   {
                                                                                     fen: "r1bq1rk1/ppp1npbp/3p2p1/3Pp3/PPP1Pn2/2N5/3NBPPP/R1BQ1RK1 b - - 0 11",
                                                                                     move: "a4", category: "legit_alternative",
-                                                                                    children: []
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bq1rk1/ppp1npbp/3p2p1/3Pp3/PPP1P3/2N5/3NnPPP/R1BQ1RK1 w - - 0 12",
+                                                                                        move: "Nxe2+", category: "legit_alternative",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1bq1rk1/ppp1npbp/3p2p1/3Pp3/PPP1P3/8/3NNPPP/R1BQ1RK1 b - - 0 12",
+                                                                                            move: "Nxe2", category: "legit_alternative",
+                                                                                            children: []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
                                                                                   }
                                                                                 ]
                                                                               }
@@ -2033,7 +2537,19 @@ const kingsIndianTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1bq1rk1/1p3pbp/2pp1np1/p1nPp3/2P1P3/2N2N2/PP3PPP/R1BQRBK1 w - - 1 11",
                                                                                 move: "Nc5", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bq1rk1/1p3pbp/2pp1np1/p1nPp3/2P1P3/5N2/PP2NPPP/R1BQRBK1 b - - 2 11",
+                                                                                    move: "Ne2", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bq1rk1/1p3pbp/3p1np1/p1npp3/2P1P3/5N2/PP2NPPP/R1BQRBK1 w - - 0 12",
+                                                                                        move: "cxd5", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -2074,7 +2590,19 @@ const kingsIndianTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1b1qrk1/ppp2pbp/n5p1/4p1B1/2P1P1n1/2N2N2/PP2BPPP/R2Q1RK1 w - - 0 11",
                                                                                 move: "dxe5", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1b1qrk1/ppp2pbp/n5p1/2P1p1B1/4P1n1/2N2N2/PP2BPPP/R2Q1RK1 b - - 0 11",
+                                                                                    move: "c5", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1b1qrk1/ppp2pbp/n4np1/2P1p1B1/4P3/2N2N2/PP2BPPP/R2Q1RK1 w - - 1 12",
+                                                                                        move: "Nf6", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -2121,7 +2649,19 @@ const kingsIndianTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1b1qrk1/1pp2pb1/n2p1npp/p2Pp3/2P1P2B/2N5/PP1NBPPP/R2QK2R w KQ - 4 11",
                                                                                 move: "Qe8", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1b1qrk1/1pp2pb1/n2p1npp/p2Pp3/2P1P2B/2N5/PP1NBPPP/R2Q1RK1 b - - 5 11",
+                                                                                    move: "O-O", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1b1qrk1/1p3pb1/n2p1npp/p1pPp3/2P1P2B/2N5/PP1NBPPP/R2Q1RK1 w - c6 0 12",
+                                                                                        move: "c5", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -2141,9 +2681,7 @@ const kingsIndianTree: OpeningNode[] = [
                                               },
                                               {
                                                 fen: "rn1q1rk1/ppp1ppbp/3p1np1/8/2PPP1b1/2N2N2/PP2BPPP/R1BQK2R w KQ - 4 7",
-                                                move: "Bg4", category: "mistake",
-                                                explanation: "Bg4 is premature — White plays Ng5 or Be3 with tempo. Play e5 first.",
-                                                suggestedMove: "e5",
+                                                move: "Bg4", category: "mistake", explanation: "Bg4 is premature — White plays Ng5 or Be3 with tempo. Play e5 first.", suggestedMove: "e5",
                                                 children: []
                                               }
                                             ]
@@ -2199,7 +2737,19 @@ const kingsIndianTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "rnbq1rk1/ppp4p/3p1bp1/3Pp2n/2P1Pp2/2N2P2/PP1Q1BPP/2KR1BNR w - - 2 11",
                                                                                 move: "Bf6", category: "main_line",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "rnbq1rk1/Bpp4p/3p1bp1/3Pp2n/2P1Pp2/2N2P2/PP1Q2PP/2KR1BNR b - - 0 11",
+                                                                                    move: "Bxa7", category: "main_line",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "rnbq1rk1/Bp5p/3p1bp1/2pPp2n/2P1Pp2/2N2P2/PP1Q2PP/2KR1BNR w - c6 0 12",
+                                                                                        move: "c5", category: "main_line",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -2246,7 +2796,19 @@ const kingsIndianTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1bq1rk1/1p1n1pbp/p2p1np1/3Pp3/4P3/2N1BP2/PP1QN1PP/R3KB1R w KQ - 2 11",
                                                                                 move: "Nbd7", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bq1rk1/1p1n1pbp/p2p1np1/3Pp3/4P3/2N1BP2/PP1QN1PP/2KR1B1R b - - 3 11",
+                                                                                    move: "O-O-O", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bq1rkb/1p1n1p1p/p2p1np1/3Pp3/4P3/2N1BP2/PP1QN1PP/2KR1B1R w - - 4 12",
+                                                                                        move: "Bh8", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -2291,7 +2853,19 @@ const kingsIndianTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r1br2k1/pp2ppbp/2n2np1/2B5/2P1P3/2N2P2/PP4PP/R3KBNR w KQ - 1 10",
                                                                         move: "Nc6", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r1br2k1/Bp2ppbp/2n2np1/8/2P1P3/2N2P2/PP4PP/R3KBNR b KQ - 0 10",
+                                                                            move: "Bxa7", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1br2k1/Bp3pbp/2n2np1/4p3/2P1P3/2N2P2/PP4PP/R3KBNR w KQ - 0 11",
+                                                                                move: "e5", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -2350,7 +2924,19 @@ const kingsIndianTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "rn1q1rk1/pp3pbp/3p1np1/2pP4/4PPb1/2N2N2/PP2B1PP/R1BQK2R w KQ - 1 10",
                                                                         move: "Bg4", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "rn1q1rk1/pp3pbp/3p1np1/2pP4/4PPb1/2N2N2/PP2B1PP/R1BQ1RK1 b - - 2 10",
+                                                                            move: "O-O", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "rn1q1rk1/pp3pbp/3p1np1/2pP4/4PP2/2N2b2/PP2B1PP/R1BQ1RK1 w - - 0 11",
+                                                                                move: "Bxf3", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -2417,7 +3003,19 @@ const kingsIndianTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1bq1rk1/pppnn1bp/3p2p1/3Ppp2/P1P1P3/2N3P1/1P2NPBP/R1BQ1RK1 w - - 0 11",
                                                                                 move: "f5", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bq1rk1/pppnn1bp/3p2p1/2PPpp2/P3P3/2N3P1/1P2NPBP/R1BQ1RK1 b - - 0 11",
+                                                                                    move: "c5", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bq1rk1/pppnn1bp/6p1/2pPpp2/P3P3/2N3P1/1P2NPBP/R1BQ1RK1 w - - 0 12",
+                                                                                        move: "dxc5", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -2488,31 +3086,77 @@ const kingsIndianTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "1rbq1rk1/1pp2pbp/p2p1np1/3Pp3/2PnP3/2N1BP2/PP1QN1PP/2R1KB1R w K - 1 11",
                                                                                 move: "Nd4", category: "legit_alternative",
-                                                                                children: []
-                                                                              },
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "1rbq1rk1/1pp2pbp/p2p1np1/3Pp3/2PBP3/2N2P2/PP1QN1PP/2R1KB1R b K - 0 11",
+                                                                                    move: "Bxd4", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "1rbq1rk1/1pp2pbp/p2p1np1/3P4/2PpP3/2N2P2/PP1QN1PP/2R1KB1R w K - 0 12",
+                                                                                        move: "exd4", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
+                                                                              }
                                                                             ]
-                                                                          },
+                                                                          }
                                                                         ]
-                                                                      },
+                                                                      }
                                                                     ]
-                                                                  },
+                                                                  }
                                                                 ]
-                                                              },
+                                                              }
                                                             ]
-                                                          },
+                                                          }
                                                         ]
-                                                      },
+                                                      }
                                                     ]
-                                                  },
+                                                  }
                                                 ]
-                                              },
+                                              }
                                             ]
-                                          },
+                                          }
                                         ]
-                                      },
+                                      }
                                     ]
-                                  },
+                                  }
                                 ]
+                              }
+                            ]
+                          },
+                          {
+                            fen: "rnbqk2r/ppppppbp/5np1/2P5/3P4/2N5/PP2PPPP/R1BQKBNR b KQkq - 0 4",
+                            move: "c5", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "rnbq1rk1/ppppppbp/5np1/2P5/3P4/2N5/PP2PPPP/R1BQKBNR w KQ - 1 5",
+                                move: "O-O", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rnbq1rk1/ppppppbp/5np1/2PP4/8/2N5/PP2PPPP/R1BQKBNR b KQ - 0 5",
+                                    move: "d5", category: "legit_alternative",
+                                    children: []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        fen: "rnbqkb1r/pp1ppp1p/5np1/2p5/2PP4/2N5/PP2PPPP/R1BQKBNR w KQkq - 0 4",
+                        move: "c5", category: "legit_alternative",
+                        children: [
+                          {
+                            fen: "rnbqkb1r/pp1ppp1p/5np1/2P5/2P5/2N5/PP2PPPP/R1BQKBNR b KQkq - 0 4",
+                            move: "dxc5", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "rnbqkb1r/pp2pp1p/5np1/2Pp4/2P5/2N5/PP2PPPP/R1BQKBNR w KQkq d6 0 5",
+                                move: "d5", category: "legit_alternative",
+                                children: []
                               }
                             ]
                           }
@@ -2609,7 +3253,19 @@ const frenchDefenseTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "rnb1k1r1/ppq1np1Q/4p3/3pP3/3p4/P1P5/2P1NPPP/R1B1KB1R b KQq - 1 10",
                                                                             move: "Ne2", category: "main_line",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1b1k1r1/ppqnnp1Q/4p3/3pP3/3p4/P1P5/2P1NPPP/R1B1KB1R w KQq - 2 11",
+                                                                                move: "Nd7", category: "main_line",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1b1k1r1/ppqnnp1Q/4p3/3pP3/3P4/P7/2P1NPPP/R1B1KB1R b KQq - 0 11",
+                                                                                    move: "cxd4", category: "main_line",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -2650,7 +3306,19 @@ const frenchDefenseTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r3k2r/pp1bnppp/2n1p3/q1ppP3/P2P4/2P2N2/2PBBPPP/R2QK2R b KQkq - 4 10",
                                                                             move: "Be2", category: "legit_alternative",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r4rk1/pp1bnppp/2n1p3/q1ppP3/P2P4/2P2N2/2PBBPPP/R2QK2R w KQ - 5 11",
+                                                                                move: "O-O", category: "legit_alternative",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r4rk1/pp1bnppp/2n1p3/q1ppP3/P2P4/2P2N2/2PBBPPP/R2Q1RK1 b - - 6 11",
+                                                                                    move: "O-O", category: "legit_alternative",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -2713,7 +3381,19 @@ const frenchDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1bqk1r1/pp2np1Q/2n1p3/P2pP3/8/P1p5/2P2PPP/R1B1KBNR w KQq - 1 11",
                                                                                 move: "Nbc6", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bqk1r1/pp2np1Q/2n1p3/P2pP3/8/P1p5/2P1NPPP/R1B1KB1R b KQq - 2 11",
+                                                                                    move: "Ne2", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bqk1r1/pp2np1Q/2n1p3/P3P3/3p4/P1p5/2P1NPPP/R1B1KB1R w KQq - 0 12",
+                                                                                        move: "d4", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -2732,6 +3412,23 @@ const frenchDefenseTree: OpeningNode[] = [
                                                 ]
                                               }
                                             ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    fen: "rnbqk1nr/pp3ppp/4p3/2PpP3/1b6/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 5",
+                                    move: "dxc5", category: "legit_alternative",
+                                    children: [
+                                      {
+                                        fen: "rnbqk1nr/pp3ppp/4p3/2bpP3/8/2N5/PPP2PPP/R1BQKBNR w KQkq - 0 6",
+                                        move: "Bxc5", category: "legit_alternative",
+                                        children: [
+                                          {
+                                            fen: "rnbqk1nr/pp3ppp/4p3/2bpP3/8/8/PPP1NPPP/R1BQKBNR b KQkq - 1 6",
+                                            move: "Nce2", category: "legit_alternative",
+                                            children: []
                                           }
                                         ]
                                       }
@@ -2778,7 +3475,19 @@ const frenchDefenseTree: OpeningNode[] = [
                                                                   {
                                                                     fen: "r3kbnr/p1pq1ppp/np2p3/3pP3/3P2Q1/P1N2N2/1PP2PPP/R1B2RK1 b kq - 1 9",
                                                                     move: "O-O", category: "legit_alternative",
-                                                                    children: []
+                                                                    children: [
+                                                                      {
+                                                                        fen: "2kr1bnr/p1pq1ppp/np2p3/3pP3/3P2Q1/P1N2N2/1PP2PPP/R1B2RK1 w - - 2 10",
+                                                                        move: "O-O-O", category: "legit_alternative",
+                                                                        children: [
+                                                                          {
+                                                                            fen: "2kr1bnr/p1pq1ppp/np2p3/3pP3/3P2Q1/P4N2/1PP1NPPP/R1B2RK1 b - - 3 10",
+                                                                            move: "Ne2", category: "legit_alternative",
+                                                                            children: []
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
                                                                   }
                                                                 ]
                                                               }
@@ -2795,6 +3504,23 @@ const frenchDefenseTree: OpeningNode[] = [
                                         ]
                                       }
                                     ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            fen: "rnbqk1nr/ppp2ppp/4p3/3P4/1b1P4/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 4",
+                            move: "exd5", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "rnbqk1nr/ppp2ppp/8/3p4/1b1P4/2N5/PPP2PPP/R1BQKBNR w KQkq - 0 5",
+                                move: "exd5", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rnbqk1nr/ppp2ppp/8/3p4/1b1P4/2N5/PPP1NPPP/R1BQKB1R b KQkq - 1 5",
+                                    move: "Ne2", category: "legit_alternative",
+                                    children: []
                                   }
                                 ]
                               }
@@ -2861,7 +3587,19 @@ const frenchDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1b2rk1/pp1n1ppp/2n1p3/2qpP3/5P2/2N2N2/PPPQ2PP/R3KB1R w KQ - 0 11",
                                                                                 move: "Qxc5", category: "main_line",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1b2rk1/pp1n1ppp/2n1p3/2qpP3/5P2/2N2N2/PPPQ2PP/2KR1B1R b - - 1 11",
+                                                                                    move: "O-O-O", category: "main_line",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1b2rk1/pp1n1ppp/2n1p3/2q1P3/3p1P2/2N2N2/PPPQ2PP/2KR1B1R w - - 0 12",
+                                                                                        move: "d4", category: "main_line",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -2930,7 +3668,19 @@ const frenchDefenseTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r1bq1rk1/pppnbppp/4p3/8/3PN3/5N2/PPPQ1PPP/2KR1B1R w - - 6 10",
                                                                         move: "Be7", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r1bq1rk1/pppnbppp/4p3/3P4/4N3/5N2/PPPQ1PPP/2KR1B1R b - - 0 10",
+                                                                            move: "d5", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1bq1rk1/pppnbppp/8/3p4/4N3/5N2/PPPQ1PPP/2KR1B1R w - - 0 11",
+                                                                                move: "exd5", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -3009,7 +3759,19 @@ const frenchDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1bqk2r/5ppp/p1n1p3/1pnpP3/5P2/2N2N2/PPPQ2PP/R3KB1R w KQkq - 0 11",
                                                                                 move: "Nxc5", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bqk2r/5ppp/p1n1p3/1pnpP3/5P2/2N2N2/PPPQ2PP/2KR1B1R b kq - 1 11",
+                                                                                    move: "O-O-O", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bq1rk1/5ppp/p1n1p3/1pnpP3/5P2/2N2N2/PPPQ2PP/2KR1B1R w - - 2 12",
+                                                                                        move: "O-O", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -3096,7 +3858,19 @@ const frenchDefenseTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r3kb1r/pp1bnppp/1q2p3/n2pP3/2pP4/P1P2N2/1P1NBPPP/R1BQ1RK1 w kq - 6 10",
                                                                         move: "Ne7", category: "main_line",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r3kb1r/pp1bnppp/1q2p3/n2pP3/2BP4/P1P2N2/1P1N1PPP/R1BQ1RK1 b kq - 0 10",
+                                                                            move: "Bxc4", category: "main_line",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r3kb1r/pp1bnppp/1q2p3/n3P3/2pP4/P1P2N2/1P1N1PPP/R1BQ1RK1 w kq - 0 11",
+                                                                                move: "dxc4", category: "main_line",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -3149,7 +3923,19 @@ const frenchDefenseTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r3kb1r/pp1b1ppp/1qn1p3/3pPn2/3P4/5N2/PPN1BPPP/R1BQK2R w KQkq - 3 10",
                                                                         move: "Qb6", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r3kb1r/pp1b1ppp/1qn1p3/3pPn2/3P4/5N2/PPN1BPPP/R1BQ1RK1 b kq - 4 10",
+                                                                            move: "O-O", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "2kr1b1r/pp1b1ppp/1qn1p3/3pPn2/3P4/5N2/PPN1BPPP/R1BQ1RK1 w - - 5 11",
+                                                                                move: "O-O-O", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -3210,7 +3996,19 @@ const frenchDefenseTree: OpeningNode[] = [
                                                                   {
                                                                     fen: "r3kb1r/pp1bnppp/1qn1p3/3pP3/1P1P4/P1N2N2/5PPP/R1BQKB1R b KQkq - 2 9",
                                                                     move: "Nc3", category: "legit_alternative",
-                                                                    children: []
+                                                                    children: [
+                                                                      {
+                                                                        fen: "2kr1b1r/pp1bnppp/1qn1p3/3pP3/1P1P4/P1N2N2/5PPP/R1BQKB1R w KQ - 3 10",
+                                                                        move: "O-O-O", category: "legit_alternative",
+                                                                        children: [
+                                                                          {
+                                                                            fen: "2kr1b1r/pp1bnppp/1qn1p3/3pP3/1P1P4/P4N2/4NPPP/R1BQKB1R b KQ - 4 10",
+                                                                            move: "Ne2", category: "legit_alternative",
+                                                                            children: []
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
                                                                   }
                                                                 ]
                                                               }
@@ -3299,7 +4097,19 @@ const frenchDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1bqk2r/pp4pp/2nbpn2/3p4/3P4/3B4/PP1NNPPP/R1BQ1RK1 w kq - 2 11",
                                                                                 move: "Bd6", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bqk2r/pp4pB/2nbpn2/3p4/3P4/8/PP1NNPPP/R1BQ1RK1 b kq - 0 11",
+                                                                                    move: "Bxh7", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bqk2r/pp4pB/2n1pn2/3p4/3P4/8/PP1NNPPb/R1BQ1RK1 w kq - 0 12",
+                                                                                        move: "Bxh2+", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -3424,7 +4234,19 @@ const caroKannTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r2qkbnr/pp1n1pp1/2p1p2p/7P/3P4/3Q1NN1/PPP2PP1/R1B1K2R w KQkq - 0 11",
                                                                                 move: "e6", category: "main_line",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2qkbnr/pp1n1pp1/2p1p2p/7P/3P4/3Q1NN1/PPP2PP1/R1B2RK1 b kq - 1 11",
+                                                                                    move: "O-O", category: "main_line",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2qkbnr/pp1n1pp1/4p2p/2p4P/3P4/3Q1NN1/PPP2PP1/R1B2RK1 w kq - 0 12",
+                                                                                        move: "c5", category: "main_line",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               },
                                                                               {
                                                                                 fen: "r2qkb1r/pp1nppp1/2p2n1p/7P/3P4/3Q1NN1/PPP2PP1/R1B1K2R w KQkq - 1 11",
@@ -3445,7 +4267,19 @@ const caroKannTree: OpeningNode[] = [
                                                                                               {
                                                                                                 fen: "r2qk2r/pp1nbpp1/2p1pn1p/7P/3P4/3Q1NN1/PPPB1PP1/2KR3R w kq - 2 13",
                                                                                                 move: "Be7", category: "legit_alternative",
-                                                                                                children: []
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "r2qk2r/pp1nbpp1/2p1pn1B/7P/3P4/3Q1NN1/PPP2PP1/2KR3R b kq - 0 13",
+                                                                                                    move: "Bxh6", category: "legit_alternative",
+                                                                                                    children: [
+                                                                                                      {
+                                                                                                        fen: "r2q1rk1/pp1nbpp1/2p1pn1B/7P/3P4/3Q1NN1/PPP2PP1/2KR3R w - - 1 14",
+                                                                                                        move: "O-O", category: "legit_alternative",
+                                                                                                        children: []
+                                                                                                      }
+                                                                                                    ]
+                                                                                                  }
+                                                                                                ]
                                                                                               }
                                                                                             ]
                                                                                           }
@@ -3530,7 +4364,19 @@ const caroKannTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r2qk2r/pp3ppp/2p1pn2/8/3P1bb1/2P2N2/PP2BPPP/R2Q1RK1 w kq - 0 11",
                                                                                 move: "Bxf4", category: "main_line",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2qk2r/pp3ppp/2p1pn2/3P4/5bb1/2P2N2/PP2BPPP/R2Q1RK1 b kq - 0 11",
+                                                                                    move: "d5", category: "main_line",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/pp3ppp/2p1pn2/3P4/5bb1/2P2N2/PP2BPPP/R2Q1RK1 w - - 1 12",
+                                                                                        move: "O-O", category: "main_line",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -3601,7 +4447,19 @@ const caroKannTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1b1k2r/ppqn1pp1/2pbp2p/8/3PQ3/3B1N2/PPP2PPP/R1B1K2R w KQkq - 1 11",
                                                                                 move: "Qc7", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1b1k2r/ppqn1pp1/2pbp2p/8/3PQ3/3B1N2/PPP2PPP/R1B2RK1 b kq - 2 11",
+                                                                                    move: "O-O", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1b2rk1/ppqn1pp1/2pbp2p/8/3PQ3/3B1N2/PPP2PPP/R1B2RK1 w - - 3 12",
+                                                                                        move: "O-O", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -3670,7 +4528,19 @@ const caroKannTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r1bqr1k1/pp1n1ppp/2pb1p2/8/3P4/2PB4/PP2NPPP/R1BQ1RK1 w - - 7 10",
                                                                         move: "Nd7", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r1bqr1k1/pp1n1ppB/2pb1p2/8/3P4/2P5/PP2NPPP/R1BQ1RK1 b - - 0 10",
+                                                                            move: "Bxh7+", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1bqr3/pp1n1ppk/2pb1p2/8/3P4/2P5/PP2NPPP/R1BQ1RK1 w - - 0 11",
+                                                                                move: "Kxh7", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -3739,30 +4609,76 @@ const caroKannTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r2qk2r/pp2ppbp/2p1bnp1/4N3/2PP4/3B4/PP3PPP/R1BQ1RK1 b kq - 0 10",
                                                                             move: "c4", category: "legit_alternative",
-                                                                            children: []
-                                                                          },
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2q1rk1/pp2ppbp/2p1bnp1/4N3/2PP4/3B4/PP3PPP/R1BQ1RK1 w - - 1 11",
+                                                                                move: "O-O", category: "legit_alternative",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/pp2ppbp/2N1bnp1/8/2PP4/3B4/PP3PPP/R1BQ1RK1 b - - 0 11",
+                                                                                    move: "Nxc6", category: "legit_alternative",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
+                                                                          }
                                                                         ]
-                                                                      },
+                                                                      }
                                                                     ]
-                                                                  },
+                                                                  }
                                                                 ]
-                                                              },
+                                                              }
                                                             ]
-                                                          },
+                                                          }
                                                         ]
-                                                      },
+                                                      }
                                                     ]
-                                                  },
+                                                  }
                                                 ]
-                                              },
+                                              }
                                             ]
-                                          },
+                                          }
                                         ]
-                                      },
+                                      }
                                     ]
-                                  },
+                                  }
                                 ]
-                              },
+                              }
+                            ]
+                          },
+                          {
+                            fen: "rnbqkbnr/pp2pppp/2p5/3P4/4p3/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 4",
+                            move: "d5", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "rnbqkbnr/pp2pppp/8/3p4/4p3/2N5/PPP2PPP/R1BQKBNR w KQkq - 0 5",
+                                move: "cxd5", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rnbqkbnr/pp2pppp/8/3p4/4p3/8/PPP1NPPP/R1BQKBNR b KQkq - 1 5",
+                                    move: "Nce2", category: "legit_alternative",
+                                    children: []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        fen: "rnbqkbnr/pp3ppp/2p5/3pp3/3PP3/2N5/PPP2PPP/R1BQKBNR w KQkq - 0 4",
+                        move: "e5", category: "legit_alternative",
+                        children: [
+                          {
+                            fen: "rnbqkbnr/pp3ppp/2p5/3pP3/4P3/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 4",
+                            move: "dxe5", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "rnbqkbnr/pp3ppp/2p5/4P3/4p3/2N5/PPP2PPP/R1BQKBNR w KQkq - 0 5",
+                                move: "dxe4", category: "legit_alternative",
+                                children: []
+                              }
                             ]
                           }
                         ]
@@ -3832,7 +4748,19 @@ const caroKannTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r3kbnr/ppq2ppp/4p3/3pPb2/3B4/2N5/PPP1BPPP/R2Q1RK1 w kq - 1 11",
                                                                                 move: "Qc7", category: "main_line",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r3kbnr/Bpq2ppp/4p3/3pPb2/8/2N5/PPP1BPPP/R2Q1RK1 b kq - 0 11",
+                                                                                    move: "Bxa7", category: "main_line",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "2kr1bnr/Bpq2ppp/4p3/3pPb2/8/2N5/PPP1BPPP/R2Q1RK1 w - - 1 12",
+                                                                                        move: "O-O-O", category: "main_line",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -3885,7 +4813,19 @@ const caroKannTree: OpeningNode[] = [
                                                                   {
                                                                     fen: "r2qkb1r/pp1nnpp1/2p1p1bp/3pP3/3P4/1N1B1N2/PPP2PPP/R1BQ1RK1 b kq - 3 9",
                                                                     move: "Bd3", category: "legit_alternative",
-                                                                    children: []
+                                                                    children: [
+                                                                      {
+                                                                        fen: "r2qkb1r/pp1nnpp1/2p1p2p/3pP3/3P4/1N1b1N2/PPP2PPP/R1BQ1RK1 w kq - 0 10",
+                                                                        move: "Bxd3", category: "legit_alternative",
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r2qkb1r/pp1nnpp1/2p1p2B/3pP3/3P4/1N1b1N2/PPP2PPP/R2Q1RK1 b kq - 0 10",
+                                                                            move: "Bxh6", category: "legit_alternative",
+                                                                            children: []
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
                                                                   }
                                                                 ]
                                                               }
@@ -3954,7 +4894,19 @@ const caroKannTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r2qkbnr/pp3ppb/2n1p3/2ppP2N/3P2PP/2N5/PPP2P2/R1BQKB1R w KQkq - 1 10",
                                                                         move: "Nc6", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r2qkbnr/pp3ppb/2n1p3/2PpP2N/6PP/2N5/PPP2P2/R1BQKB1R b KQkq - 0 10",
+                                                                            move: "dxc5", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2qk1nr/pp3ppb/2n1p3/2bpP2N/6PP/2N5/PPP2P2/R1BQKB1R w KQkq - 0 11",
+                                                                                move: "Bxc5", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -4029,7 +4981,19 @@ const caroKannTree: OpeningNode[] = [
                                                               {
                                                                 fen: "rnbq1rk1/pp3ppp/2p2n2/2b5/2BNP3/8/PPP3PP/RNBQ1RK1 w - - 1 9",
                                                                 move: "O-O", category: "legit_alternative",
-                                                                children: []
+                                                                children: [
+                                                                  {
+                                                                    fen: "rnbq1rk1/pp3Bpp/2p2n2/2b5/3NP3/8/PPP3PP/RNBQ1RK1 b - - 0 9",
+                                                                    move: "Bxf7+", category: "legit_alternative",
+                                                                    children: [
+                                                                      {
+                                                                        fen: "rnbq2k1/pp3rpp/2p2n2/2b5/3NP3/8/PPP3PP/RNBQ1RK1 w - - 0 10",
+                                                                        move: "Rxf7", category: "legit_alternative",
+                                                                        children: []
+                                                                      }
+                                                                    ]
+                                                                  }
+                                                                ]
                                                               }
                                                             ]
                                                           }
@@ -4154,7 +5118,19 @@ const ruyLopezTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r1b2rk1/2q1bppp/p2p1n2/npp1p3/3PP3/2P2N1P/PPB2PP1/RNBQR1K1 w - - 1 12",
                                                                                         move: "Qc7", category: "main_line",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1b2rk1/2q1bppp/p2p1n2/npP1p3/4P3/2P2N1P/PPB2PP1/RNBQR1K1 b - - 0 12",
+                                                                                            move: "dxc5", category: "main_line",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r1b2rk1/2q1bppp/p4n2/npp1p3/4P3/2P2N1P/PPB2PP1/RNBQR1K1 w - - 0 13",
+                                                                                                move: "dxc5", category: "main_line",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -4187,7 +5163,19 @@ const ruyLopezTree: OpeningNode[] = [
                                                                                           {
                                                                                             fen: "r2q1rk1/1bpnbppp/p2p1n2/1p2p3/3PP3/2P2N1P/PPBN1PP1/R1BQR1K1 b - - 4 12",
                                                                                             move: "Bc2", category: "legit_alternative",
-                                                                                            children: []
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r2q1rk1/1bpnbppp/p2p1n2/1p6/3pP3/2P2N1P/PPBN1PP1/R1BQR1K1 w - - 0 13",
+                                                                                                move: "exd4", category: "legit_alternative",
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "r2q1rk1/1bpnbppp/p2p1n2/1p6/3PP3/5N1P/PPBN1PP1/R1BQR1K1 b - - 0 13",
+                                                                                                    move: "cxd4", category: "legit_alternative",
+                                                                                                    children: []
+                                                                                                  }
+                                                                                                ]
+                                                                                              }
+                                                                                            ]
                                                                                           }
                                                                                         ]
                                                                                       }
@@ -4222,7 +5210,19 @@ const ruyLopezTree: OpeningNode[] = [
                                                                                           {
                                                                                             fen: "r2qrbk1/1bp2ppp/p1np1n2/1p2p3/P2PP3/1BP2N1P/1P1N1PP1/R1BQR1K1 b - - 0 12",
                                                                                             move: "a4", category: "legit_alternative",
-                                                                                            children: []
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r2qrbk1/1bp2ppp/p1np1n2/1p6/P2pP3/1BP2N1P/1P1N1PP1/R1BQR1K1 w - - 0 13",
+                                                                                                move: "exd4", category: "legit_alternative",
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "r2qrbk1/1bp2ppp/p1np1n2/1p6/P2PP3/1B3N1P/1P1N1PP1/R1BQR1K1 b - - 0 13",
+                                                                                                    move: "cxd4", category: "legit_alternative",
+                                                                                                    children: []
+                                                                                                  }
+                                                                                                ]
+                                                                                              }
+                                                                                            ]
                                                                                           }
                                                                                         ]
                                                                                       }
@@ -4253,7 +5253,19 @@ const ruyLopezTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r4rk1/2pqbppp/p1np1n2/1p2p3/3PP3/1QP2N1P/PP3PP1/RNB1R1K1 w - - 1 12",
                                                                                         move: "Qd7", category: "legit_alternative",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r4rk1/2pqbppp/p1np1n2/1p2P3/4P3/1QP2N1P/PP3PP1/RNB1R1K1 b - - 0 12",
+                                                                                            move: "dxe5", category: "legit_alternative",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r4rk1/2pqbppp/p1n2n2/1p2p3/4P3/1QP2N1P/PP3PP1/RNB1R1K1 w - - 0 13",
+                                                                                                move: "dxe5", category: "legit_alternative",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -4318,7 +5330,19 @@ const ruyLopezTree: OpeningNode[] = [
                                                                                                   {
                                                                                                     fen: "r1bq1rk1/5ppp/p1pb4/1p1n4/3P4/1BP5/PP3PPP/RNBQR1K1 b - - 2 13",
                                                                                                     move: "Re1", category: "legit_alternative",
-                                                                                                    children: []
+                                                                                                    children: [
+                                                                                                      {
+                                                                                                        fen: "r1bq1rk1/5ppp/p1pb4/1p6/3P4/1Bn5/PP3PPP/RNBQR1K1 w - - 0 14",
+                                                                                                        move: "Nxc3", category: "legit_alternative",
+                                                                                                        children: [
+                                                                                                          {
+                                                                                                            fen: "r1bq1rk1/5ppp/p1pb4/1p6/3P4/1BN5/PP3PPP/R1BQR1K1 b - - 0 14",
+                                                                                                            move: "Nxc3", category: "legit_alternative",
+                                                                                                            children: []
+                                                                                                          }
+                                                                                                        ]
+                                                                                                      }
+                                                                                                    ]
                                                                                                   }
                                                                                                 ]
                                                                                               }
@@ -4401,7 +5425,19 @@ const ruyLopezTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r2q1rk1/2p2ppp/p1n1b3/1pbpP3/8/2P2N2/PPBN1nPP/R1BQ1RK1 w - - 0 12",
                                                                                         move: "Nxf2", category: "legit_alternative",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r2q1rk1/2p2ppB/p1n1b3/1pbpP3/8/2P2N2/PP1N1nPP/R1BQ1RK1 b - - 0 12",
+                                                                                            move: "Bxh7+", category: "legit_alternative",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r2q1r2/2p2ppk/p1n1b3/1pbpP3/8/2P2N2/PP1N1nPP/R1BQ1RK1 w - - 0 13",
+                                                                                                move: "Kxh7", category: "legit_alternative",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -4426,6 +5462,40 @@ const ruyLopezTree: OpeningNode[] = [
                                             ]
                                           }
                                         ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    fen: "r1bqkb1r/1ppp1ppp/p1B2n2/4p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 5",
+                                    move: "Bxc6", category: "legit_alternative",
+                                    children: [
+                                      {
+                                        fen: "r1bqk2r/1pppbppp/p1B2n2/4p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 1 6",
+                                        move: "Be7", category: "legit_alternative",
+                                        children: [
+                                          {
+                                            fen: "r1bqk2r/1pppbppp/p1B2n2/4p3/4P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 2 6",
+                                            move: "O-O", category: "legit_alternative",
+                                            children: []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                fen: "r1bqkbnr/1pp2ppp/p1n5/3pp3/B3P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 5",
+                                move: "d5", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "r1bqkbnr/1pp2ppp/p1n5/3pp3/B3P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 1 5",
+                                    move: "O-O", category: "legit_alternative",
+                                    children: [
+                                      {
+                                        fen: "r1bqkbnr/1pp2ppp/p1n5/4p3/B3p3/5N2/PPPP1PPP/RNBQ1RK1 w kq - 0 6",
+                                        move: "dxe4", category: "legit_alternative",
+                                        children: []
                                       }
                                     ]
                                   }
@@ -4480,7 +5550,19 @@ const ruyLopezTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r3kb1r/1pp2ppp/p1p2qn1/4p2b/4P3/3P1N1P/PPPN1PP1/R1BQR1K1 w kq - 5 10",
                                                                         move: "Ng6", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r3kb1r/1pp2ppp/p1p2qn1/4p2b/3PP3/5N1P/PPPN1PP1/R1BQR1K1 b kq - 0 10",
+                                                                            move: "d4", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r3kb1r/1pp2ppp/p1p2qn1/7b/3pP3/5N1P/PPPN1PP1/R1BQR1K1 w kq - 0 11",
+                                                                                move: "exd4", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -4573,7 +5655,19 @@ const ruyLopezTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r3kb1r/ppp2pp1/2p1b3/4Pn1p/5B2/2N2N1P/PPP2PP1/R4RK1 w - - 2 12",
                                                                                         move: "Be6", category: "main_line",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r3kb1r/ppp2pp1/2p1b3/4Pn1p/5B2/5N1P/PPP1NPP1/R4RK1 b - - 3 12",
+                                                                                            move: "Ne2", category: "main_line",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r3kb1r/ppp2pp1/2p5/4Pn1p/5B2/5N1P/bPP1NPP1/R4RK1 w - - 0 13",
+                                                                                                move: "Bxa2", category: "main_line",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -4612,7 +5706,19 @@ const ruyLopezTree: OpeningNode[] = [
                                                                                           {
                                                                                             fen: "r1k2b1r/pppb1pp1/2p4p/4Pn2/8/1PN2N1P/PBP2PP1/R4RK1 b - - 1 12",
                                                                                             move: "Bb2", category: "legit_alternative",
-                                                                                            children: []
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r1k2b1r/pppb1pp1/7p/2p1Pn2/8/1PN2N1P/PBP2PP1/R4RK1 w - - 0 13",
+                                                                                                move: "c5", category: "legit_alternative",
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "r1k2b1r/pppb1pp1/7p/2p1Pn2/8/1P3N1P/PBP1NPP1/R4RK1 b - - 1 13",
+                                                                                                    move: "Ne2", category: "legit_alternative",
+                                                                                                    children: []
+                                                                                                  }
+                                                                                                ]
+                                                                                              }
+                                                                                            ]
                                                                                           }
                                                                                         ]
                                                                                       }
@@ -4689,7 +5795,19 @@ const ruyLopezTree: OpeningNode[] = [
                                                                   {
                                                                     fen: "r1bq1rk1/pppn2pp/2p2p2/2b1p3/2N1P3/3PBN2/PPP2PPP/R2Q1RK1 b - - 1 9",
                                                                     move: "Be3", category: "legit_alternative",
-                                                                    children: []
+                                                                    children: [
+                                                                      {
+                                                                        fen: "r1bq1rk1/pppn2pp/2p2p2/4p3/2N1P3/3PbN2/PPP2PPP/R2Q1RK1 w - - 0 10",
+                                                                        move: "Bxe3", category: "legit_alternative",
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r1bq1rk1/pppn2pp/2p2p2/4p3/2NPP3/4bN2/PPP2PPP/R2Q1RK1 b - - 0 10",
+                                                                            move: "d4", category: "legit_alternative",
+                                                                            children: []
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
                                                                   }
                                                                 ]
                                                               }
@@ -4764,7 +5882,19 @@ const ruyLopezTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r1b1kb1r/ppp3pp/2N2n2/1B6/4pq2/8/PPPPQ1PP/R1B1K2R w KQkq - 0 10",
                                                                         move: "Qxf4", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r1b1kb1r/ppp3pp/2N2n2/1B6/2P1pq2/8/PP1PQ1PP/R1B1K2R b KQkq - 0 10",
+                                                                            move: "c4", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1b1kb1r/pppn2pp/2N5/1B6/2P1pq2/8/PP1PQ1PP/R1B1K2R w KQkq - 1 11",
+                                                                                move: "Nd7", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -4881,7 +6011,19 @@ const londonSystemTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r2q1rk1/pb3ppp/1pnbpn2/2pp4/3P4/2PBPNB1/PP1NQPPP/R4RK1 b - - 3 10",
                                                                             move: "O-O", category: "main_line",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2q1rk1/pb3ppp/1pnbpn2/3p4/3p4/2PBPNB1/PP1NQPPP/R4RK1 w - - 0 11",
+                                                                                move: "cxd4", category: "main_line",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/pb3ppp/1pnbpn2/3p4/3P4/3BPNB1/PP1NQPPP/R4RK1 b - - 0 11",
+                                                                                    move: "cxd4", category: "main_line",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -4944,7 +6086,19 @@ const londonSystemTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1bqr1k1/pp1n1ppp/2n1p3/2ppP3/8/2PBP1B1/PP1N1PPP/R2QK2R w KQ - 1 11",
                                                                                 move: "Nd7", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bqr1k1/pp1n1ppp/2n1p3/2ppP3/8/2PBP1B1/PP1N1PPP/R2Q1RK1 b - - 2 11",
+                                                                                    move: "O-O", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bqr1k1/pp1n1ppp/2n1p3/3pP3/2p5/2PBP1B1/PP1N1PPP/R2Q1RK1 w - - 0 12",
+                                                                                        move: "c4", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -4963,6 +6117,23 @@ const londonSystemTree: OpeningNode[] = [
                                                 ]
                                               }
                                             ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    fen: "rnbqkb1r/pp3ppp/4pn2/2Pp4/5B2/4P3/PPPN1PPP/R2QKBNR b KQkq - 0 5",
+                                    move: "dxc5", category: "legit_alternative",
+                                    children: [
+                                      {
+                                        fen: "rnbqk2r/pp3ppp/4pn2/2bp4/5B2/4P3/PPPN1PPP/R2QKBNR w KQkq - 0 6",
+                                        move: "Bxc5", category: "legit_alternative",
+                                        children: [
+                                          {
+                                            fen: "rBbqk2r/pp3ppp/4pn2/2bp4/8/4P3/PPPN1PPP/R2QKBNR b KQkq - 0 6",
+                                            move: "Bxb8", category: "legit_alternative",
+                                            children: []
                                           }
                                         ]
                                       }
@@ -5017,7 +6188,19 @@ const londonSystemTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r2q1rk1/pb1nbppp/1p2pn2/2pp4/3P1B2/2PBPN2/PP1NQPPP/R2R2K1 b - - 1 10",
                                                                             move: "Rfd1", category: "legit_alternative",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2q1rk1/pb1nbppp/1p2pn2/3p4/3p1B2/2PBPN2/PP1NQPPP/R2R2K1 w - - 0 11",
+                                                                                move: "cxd4", category: "legit_alternative",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/pb1nbppp/1p2pn2/3p4/3P1B2/3BPN2/PP1NQPPP/R2R2K1 b - - 0 11",
+                                                                                    move: "cxd4", category: "legit_alternative",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -5038,6 +6221,23 @@ const londonSystemTree: OpeningNode[] = [
                                         ]
                                       }
                                     ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            fen: "rnbqkb1r/ppB2ppp/4pn2/3p4/3P4/4P3/PPP2PPP/RN1QKBNR b KQkq - 0 4",
+                            move: "Bxc7", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "rnbqkb1r/ppB2ppp/5n2/3pp3/3P4/4P3/PPP2PPP/RN1QKBNR w KQkq - 0 5",
+                                move: "e5", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rnbqkb1r/ppB2ppp/5n2/3pP3/8/4P3/PPP2PPP/RN1QKBNR b KQkq - 0 5",
+                                    move: "dxe5", category: "legit_alternative",
+                                    children: []
                                   }
                                 ]
                               }
@@ -5100,7 +6300,19 @@ const londonSystemTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r2q1rk1/pb3ppp/1pnbpn2/2ppN3/3P4/2PBPQB1/PP1N1PPP/R3K2R b KQ - 3 10",
                                                                             move: "Qf3", category: "main_line",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2q1rk1/pb3ppp/1pnbpn2/3pN3/3p4/2PBPQB1/PP1N1PPP/R3K2R w KQ - 0 11",
+                                                                                move: "cxd4", category: "main_line",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/pb3ppp/1pnbpn2/3pN3/3p4/2PBPQB1/PP1N1PPP/R4RK1 b - - 1 11",
+                                                                                    move: "O-O", category: "main_line",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -5177,7 +6389,19 @@ const londonSystemTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r2qkb1r/1p3ppp/p1n1pn2/3p3b/3P1B2/2N2N1P/PPP1BPP1/R2QR1K1 b kq - 2 10",
                                                                             move: "Re1", category: "legit_alternative",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2qkb1r/1p3ppp/p1n1pn2/3p4/3P1B2/2N2b1P/PPP1BPP1/R2QR1K1 w kq - 0 11",
+                                                                                move: "Bxf3", category: "legit_alternative",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2qkb1r/1p3ppp/B1n1pn2/3p4/3P1B2/2N2b1P/PPP2PP1/R2QR1K1 b kq - 0 11",
+                                                                                    move: "Bxa6", category: "legit_alternative",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -5272,7 +6496,19 @@ const londonSystemTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r3k2r/pppnqppp/5n2/5p2/2NP4/4PNP1/PP3PP1/R2QK2R w KQkq - 1 12",
                                                                                         move: "Qe7", category: "main_line",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r3k2r/pppnqppp/5n2/5p2/2NP4/4PNP1/PP3PP1/R2Q1RK1 b kq - 2 12",
+                                                                                            move: "O-O", category: "main_line",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r4rk1/pppnqppp/5n2/5p2/2NP4/4PNP1/PP3PP1/R2Q1RK1 w - - 3 13",
+                                                                                                move: "O-O", category: "main_line",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -5351,7 +6587,19 @@ const londonSystemTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "rn1q1rk1/pp3ppp/5n2/2pp1b2/3P1B2/2Q1PN2/PP3PPP/R3KB1R w KQ - 0 10",
                                                                         move: "exd5", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "rn1q1rk1/pp3ppp/5n2/2Pp1b2/5B2/2Q1PN2/PP3PPP/R3KB1R b KQ - 0 10",
+                                                                            move: "dxc5", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "rn1q1rk1/pp3ppp/5n2/2P2b2/3p1B2/2Q1PN2/PP3PPP/R3KB1R w KQ - 0 11",
+                                                                                move: "d4", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -5448,7 +6696,19 @@ const londonSystemTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r2q1rk1/pb2nppp/1p1bpn2/2ppN3/3P4/2PBPQB1/PP1N1PPP/R3K2R w KQ - 4 11",
                                                                                 move: "Ne7", category: "main_line",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/pb2nppp/1p1bpn2/2ppN3/3P4/2PBPQB1/PP1N1PPP/R4RK1 b - - 5 11",
+                                                                                    move: "O-O", category: "main_line",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/pb2nppp/1p1bpn2/3pN3/3p4/2PBPQB1/PP1N1PPP/R4RK1 w - - 0 12",
+                                                                                        move: "cxd4", category: "main_line",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -5533,7 +6793,19 @@ const londonSystemTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "rn1q1rk1/pb2bppp/1p3n2/2ppN3/3P1B2/2NBP3/PP3PPP/R2Q1RK1 b - - 1 10",
                                                                             move: "Ne5", category: "legit_alternative",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "rn1q1rk1/pb2bppp/1p3n2/3pN3/3p1B2/2NBP3/PP3PPP/R2Q1RK1 w - - 0 11",
+                                                                                move: "cxd4", category: "legit_alternative",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "rn1q1rk1/pb2bppp/1p3n2/3pN3/3P1B2/2NB4/PP3PPP/R2Q1RK1 b - - 0 11",
+                                                                                    move: "exd4", category: "legit_alternative",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -5626,7 +6898,19 @@ const londonSystemTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r2q1rk1/pb1n1ppp/1p1bp3/2ppN3/3Pn3/2PBP1B1/PP1N1PPP/R2Q1RK1 w - - 6 11",
                                                                                 move: "Ne4", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/pb1n1ppp/1p1bp3/2PpN3/4n3/2PBP1B1/PP1N1PPP/R2Q1RK1 b - - 0 11",
+                                                                                    move: "dxc5", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/pb1n1ppp/3bp3/2ppN3/4n3/2PBP1B1/PP1N1PPP/R2Q1RK1 w - - 0 12",
+                                                                                        move: "bxc5", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -5743,7 +7027,19 @@ const scotchGameTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "2kr2nr/ppp2ppp/2p1b2q/2b5/4P3/2NB4/PPPQ1PPP/R1B2RK1 w - - 6 10",
                                                                         move: "Qh6", category: "main_line",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "2kr2nr/ppp2ppp/2p1b2q/2b1P3/8/2NB4/PPPQ1PPP/R1B2RK1 b - - 0 10",
+                                                                            move: "e5", category: "main_line",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "2kr2nr/ppp2ppp/2p4q/2b1P3/8/2NB4/bPPQ1PPP/R1B2RK1 w - - 0 11",
+                                                                                move: "Bxa2", category: "main_line",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -5756,6 +7052,23 @@ const scotchGameTree: OpeningNode[] = [
                                                     ]
                                                   }
                                                 ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        fen: "r1bqk1nr/pppp1ppp/2N5/8/4P3/8/PPP2bPP/RNBQKB1R w KQkq - 0 6",
+                                        move: "Bxf2+", category: "legit_alternative",
+                                        children: [
+                                          {
+                                            fen: "r1bqk1nr/pppp1ppp/2N5/8/4P3/8/PPP2KPP/RNBQ1B1R b kq - 0 6",
+                                            move: "Kxf2", category: "legit_alternative",
+                                            children: [
+                                              {
+                                                fen: "r1bqk1nr/ppp2ppp/2N5/3p4/4P3/8/PPP2KPP/RNBQ1B1R w kq - 0 7",
+                                                move: "d5", category: "legit_alternative",
+                                                children: []
                                               }
                                             ]
                                           }
@@ -5802,7 +7115,19 @@ const scotchGameTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r1b1k2r/ppp1nppp/3p2q1/2b1n3/3NP3/2P1B3/PP2BPPP/RN1Q1RK1 w kq - 0 10",
                                                                         move: "d6", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r1b1k2r/ppp1nppp/3p2q1/2b1n3/2PNP3/4B3/PP2BPPP/RN1Q1RK1 b kq - 0 10",
+                                                                            move: "c4", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1b2rk1/ppp1nppp/3p2q1/2b1n3/2PNP3/4B3/PP2BPPP/RN1Q1RK1 w - - 1 11",
+                                                                                move: "O-O", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -5875,7 +7200,19 @@ const scotchGameTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r3k2r/p1ppqpbp/b1p3p1/3nP3/2P5/BP6/P3QPPP/RN2KB1R w KQkq - 2 11",
                                                                                 move: "Bg7", category: "main_line",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r3k2r/p1ppqpbp/b1p3p1/3PP3/8/BP6/P3QPPP/RN2KB1R b KQkq - 0 11",
+                                                                                    move: "cxd5", category: "main_line",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r4rk1/p1ppqpbp/b1p3p1/3PP3/8/BP6/P3QPPP/RN2KB1R w KQ - 1 12",
+                                                                                        move: "O-O", category: "main_line",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -5914,7 +7251,19 @@ const scotchGameTree: OpeningNode[] = [
                                                                                   {
                                                                                     fen: "r1b1kb1r/2pp1ppp/1np1q3/p3P3/2P5/1P6/PB1NQPPP/R3KB1R b KQkq - 1 11",
                                                                                     move: "Bb2", category: "legit_alternative",
-                                                                                    children: []
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1b1kb1r/2p2ppp/1np1q3/p2pP3/2P5/1P6/PB1NQPPP/R3KB1R w KQkq d6 0 12",
+                                                                                        move: "d5", category: "legit_alternative",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1b1kb1r/2p2ppp/1np1q3/p2PP3/8/1P6/PB1NQPPP/R3KB1R b KQkq - 0 12",
+                                                                                            move: "cxd5", category: "legit_alternative",
+                                                                                            children: []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
                                                                                   }
                                                                                 ]
                                                                               }
@@ -5987,7 +7336,19 @@ const scotchGameTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1bq1rk1/p4ppp/2p2n2/3p2B1/1b6/2NB4/PPP2PPP/R2Q1RK1 w - - 0 11",
                                                                                 move: "c6", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bq1rk1/p4ppp/2p2B2/3p4/1b6/2NB4/PPP2PPP/R2Q1RK1 b - - 0 11",
+                                                                                    move: "Bxf6", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bq1rk1/p4ppp/2p2B2/3p4/8/2bB4/PPP2PPP/R2Q1RK1 w - - 0 12",
+                                                                                        move: "Bxc3", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -6015,9 +7376,7 @@ const scotchGameTree: OpeningNode[] = [
                               },
                               {
                                 fen: "r1bqkbnr/ppp2ppp/2np4/8/3NP3/8/PPP2PPP/RNBQKB1R w KQkq - 0 5",
-                                move: "d6", category: "mistake",
-                                explanation: "d6 is passive. Challenge with Bc5 or Nf6 for active play.",
-                                suggestedMove: "Bc5",
+                                move: "d6", category: "mistake", explanation: "d6 is passive. Challenge with Bc5 or Nf6 for active play.", suggestedMove: "Bc5",
                                 children: []
                               },
                               {
@@ -6067,30 +7426,42 @@ const scotchGameTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r1bqrbk1/ppp2ppp/2np1n2/8/3NP3/2N1BP2/PPPQB1PP/R4RK1 b - - 2 10",
                                                                             move: "Qd2", category: "legit_alternative",
-                                                                            children: []
-                                                                          },
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1bqrbk1/ppp2ppp/2n2n2/3p4/3NP3/2N1BP2/PPPQB1PP/R4RK1 w - - 0 11",
+                                                                                move: "d5", category: "legit_alternative",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bqrbk1/ppp2ppp/2n2n2/3P4/3N4/2N1BP2/PPPQB1PP/R4RK1 b - - 0 11",
+                                                                                    move: "exd5", category: "legit_alternative",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
+                                                                          }
                                                                         ]
-                                                                      },
+                                                                      }
                                                                     ]
-                                                                  },
+                                                                  }
                                                                 ]
-                                                              },
+                                                              }
                                                             ]
-                                                          },
+                                                          }
                                                         ]
-                                                      },
+                                                      }
                                                     ]
-                                                  },
+                                                  }
                                                 ]
-                                              },
+                                              }
                                             ]
-                                          },
+                                          }
                                         ]
-                                      },
+                                      }
                                     ]
-                                  },
+                                  }
                                 ]
-                              },
+                              }
                             ]
                           },
                           {
@@ -6144,7 +7515,19 @@ const scotchGameTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r2qk2r/p1pb1ppp/2p5/2bpP3/3Nn3/4B3/PPP2PPP/RN1Q1RK1 b kq - 3 10",
                                                                             move: "Be3", category: "legit_alternative",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2q1rk1/p1pb1ppp/2p5/2bpP3/3Nn3/4B3/PPP2PPP/RN1Q1RK1 w - - 4 11",
+                                                                                move: "O-O", category: "legit_alternative",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/p1pb1ppp/2N5/2bpP3/4n3/4B3/PPP2PPP/RN1Q1RK1 b - - 0 11",
+                                                                                    move: "Nxc6", category: "legit_alternative",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -6213,7 +7596,19 @@ const scotchGameTree: OpeningNode[] = [
                                                                   {
                                                                     fen: "r1bqk2r/ppp2ppp/2np1n2/8/2B1P3/2P2N2/P4PPP/R1BQR1K1 b kq - 2 9",
                                                                     move: "Re1", category: "legit_alternative",
-                                                                    children: []
+                                                                    children: [
+                                                                      {
+                                                                        fen: "r1bq1rk1/ppp2ppp/2np1n2/8/2B1P3/2P2N2/P4PPP/R1BQR1K1 w - - 3 10",
+                                                                        move: "O-O", category: "legit_alternative",
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r1bq1rk1/ppp2Bpp/2np1n2/8/4P3/2P2N2/P4PPP/R1BQR1K1 b - - 0 10",
+                                                                            move: "Bxf7+", category: "legit_alternative",
+                                                                            children: []
+                                                                          }
+                                                                        ]
+                                                                      }
+                                                                    ]
                                                                   }
                                                                 ]
                                                               }
@@ -6232,6 +7627,23 @@ const scotchGameTree: OpeningNode[] = [
                                     ]
                                   }
                                 ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        fen: "r1bqkbnr/ppp2ppp/2n5/3pp3/3PP3/5N2/PPP2PPP/RNBQKB1R w KQkq - 0 4",
+                        move: "d5", category: "legit_alternative",
+                        children: [
+                          {
+                            fen: "r1bqkbnr/ppp2ppp/2n5/3pP3/4P3/5N2/PPP2PPP/RNBQKB1R b KQkq - 0 4",
+                            move: "dxe5", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "r1bqkbnr/ppp2ppp/2n5/4P3/4p3/5N2/PPP2PPP/RNBQKB1R w KQkq - 0 5",
+                                move: "dxe4", category: "legit_alternative",
+                                children: []
                               }
                             ]
                           }
@@ -6336,7 +7748,19 @@ const dutchDefenseTree: OpeningNode[] = [
                                                                                   {
                                                                                     fen: "rnb2rk1/ppp1b1pp/3pp1q1/8/2PPR3/5NP1/PP3PBP/R1BQ2K1 b - - 0 11",
                                                                                     move: "Rxe4", category: "main_line",
-                                                                                    children: []
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "rnb2rk1/pp2b1pp/3pp1q1/2p5/2PPR3/5NP1/PP3PBP/R1BQ2K1 w - - 0 12",
+                                                                                        move: "c5", category: "main_line",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "rnb2rk1/pp2b1pp/3pp1q1/2P5/2P1R3/5NP1/PP3PBP/R1BQ2K1 b - - 0 12",
+                                                                                            move: "dxc5", category: "main_line",
+                                                                                            children: []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
                                                                                   }
                                                                                 ]
                                                                               }
@@ -6387,7 +7811,19 @@ const dutchDefenseTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r1b1qrk1/1pp1b1pp/2npp3/p7/2PPR3/5NP1/PP3PBP/R1BQ2K1 w - - 1 12",
                                                                                         move: "Nc6", category: "legit_alternative",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1b1qrk1/1pp1b1pp/2npp3/p1P5/3PR3/5NP1/PP3PBP/R1BQ2K1 b - - 0 12",
+                                                                                            move: "c5", category: "legit_alternative",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r1b1qrk1/1pp1b1pp/2n1p3/p1p5/3PR3/5NP1/PP3PBP/R1BQ2K1 w - - 0 13",
+                                                                                                move: "dxc5", category: "legit_alternative",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -6448,7 +7884,19 @@ const dutchDefenseTree: OpeningNode[] = [
                                                                                   {
                                                                                     fen: "r1bq1rk1/pp1nb1pp/2p1p3/3p1p2/2PP4/1PB2NP1/P3PPBP/R1Q2RK1 b - - 0 11",
                                                                                     move: "Bxc3", category: "legit_alternative",
-                                                                                    children: []
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bq1rk1/pp1nb1pp/2p1p3/5p2/2pP4/1PB2NP1/P3PPBP/R1Q2RK1 w - - 0 12",
+                                                                                        move: "dxc4", category: "legit_alternative",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1bq1rk1/pp1nb1pp/2p1p3/5p2/2PP4/2B2NP1/P3PPBP/R1Q2RK1 b - - 0 12",
+                                                                                            move: "bxc4", category: "legit_alternative",
+                                                                                            children: []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
                                                                                   }
                                                                                 ]
                                                                               }
@@ -6473,6 +7921,23 @@ const dutchDefenseTree: OpeningNode[] = [
                                         ]
                                       }
                                     ]
+                                  },
+                                  {
+                                    fen: "rnbqk2r/ppppb1pp/4pn2/3P1p2/8/5NP1/PPP1PPBP/RNBQK2R b KQkq - 0 5",
+                                    move: "d5", category: "legit_alternative",
+                                    children: [
+                                      {
+                                        fen: "rnbq1rk1/ppppb1pp/4pn2/3P1p2/8/5NP1/PPP1PPBP/RNBQK2R w KQ - 1 6",
+                                        move: "O-O", category: "legit_alternative",
+                                        children: [
+                                          {
+                                            fen: "rnbq1rk1/ppppb1pp/4pn2/3P1p2/8/5NP1/PPP1PPBP/RNBQ1RK1 b - - 2 6",
+                                            move: "O-O", category: "legit_alternative",
+                                            children: []
+                                          }
+                                        ]
+                                      }
+                                    ]
                                   }
                                 ]
                               },
@@ -6486,12 +7951,27 @@ const dutchDefenseTree: OpeningNode[] = [
                                     children: [
                                       {
                                         fen: "rnbqkb1r/ppp4p/3ppn2/5pp1/3P4/5NP1/PPP1PPBP/RNBQ1RK1 w kq - 0 6",
-                                        move: "g5", category: "mistake",
-                                        explanation: "g5 weakens the kingside without preparation. Develop with Be7 first.",
-                                        suggestedMove: "Be7",
+                                        move: "g5", category: "mistake", explanation: "g5 weakens the kingside without preparation. Develop with Be7 first.", suggestedMove: "Be7",
                                         children: []
                                       }
                                     ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            fen: "rnbqkb1r/pBpp2pp/4pn2/5p2/3P4/6P1/PPP1PP1P/RNBQK1NR b KQkq - 0 4",
+                            move: "Bxb7", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "rn1qkb1r/pbpp2pp/4pn2/5p2/3P4/6P1/PPP1PP1P/RNBQK1NR w KQkq - 0 5",
+                                move: "Bxb7", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rn1qkb1r/pbpp2pp/4pn2/3P1p2/8/6P1/PPP1PP1P/RNBQK1NR b KQkq - 0 5",
+                                    move: "d5", category: "legit_alternative",
+                                    children: []
                                   }
                                 ]
                               }
@@ -6554,7 +8034,19 @@ const dutchDefenseTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r1bq1rk1/ppp1p1bp/5np1/3Ppp2/2P5/1QN3P1/PP2PPBP/R1B2RK1 b - - 1 10",
                                                                             move: "Qb3", category: "main_line",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1bq1rk1/pp2p1bp/5np1/2pPpp2/2P5/1QN3P1/PP2PPBP/R1B2RK1 w - c6 0 11",
+                                                                                move: "c5", category: "main_line",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bq1rk1/pp2p1bp/5np1/2pPpp2/2P1P3/1QN3P1/PP3PBP/R1B2RK1 b - - 0 11",
+                                                                                    move: "e4", category: "main_line",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -6593,7 +8085,19 @@ const dutchDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "rnb1qrk1/ppp3bp/5np1/4p3/2P1Pp2/1PN2NP1/P4PBP/R1BQ1RK1 w - - 0 11",
                                                                                 move: "f4", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "rnb1qrk1/ppp3bp/5np1/4p3/2P1PB2/1PN2NP1/P4PBP/R2Q1RK1 b - - 0 11",
+                                                                                    move: "Bxf4", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "rnb1qrk1/pp4bp/5np1/2p1p3/2P1PB2/1PN2NP1/P4PBP/R2Q1RK1 w - - 0 12",
+                                                                                        move: "c5", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -6634,7 +8138,19 @@ const dutchDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1bq1rk1/ppn3bp/2pp1np1/4pp2/1PPP4/2N2NP1/PB2PPBP/1R1Q1RK1 w - - 0 11",
                                                                                 move: "e5", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bq1rk1/ppn3bp/2pp1np1/4Pp2/1PP5/2N2NP1/PB2PPBP/1R1Q1RK1 b - - 0 11",
+                                                                                    move: "dxe5", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bq1rk1/ppn3bp/2p2np1/4pp2/1PP5/2N2NP1/PB2PPBP/1R1Q1RK1 w - - 0 12",
+                                                                                        move: "dxe5", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -6723,7 +8239,19 @@ const dutchDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "rn3rk1/pp1bq1pp/2p1pn2/3p1p2/2PP1P2/2N2N2/PPQ1PPBP/R4RK1 w - - 1 11",
                                                                                 move: "Bd7", category: "main_line",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "rn3rk1/pp1bq1pp/2p1pn2/3P1p2/3P1P2/2N2N2/PPQ1PPBP/R4RK1 b - - 0 11",
+                                                                                    move: "cxd5", category: "main_line",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "rn3rk1/pp1bq1pp/4pn2/3p1p2/3P1P2/2N2N2/PPQ1PPBP/R4RK1 w - - 0 12",
+                                                                                        move: "cxd5", category: "main_line",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -6788,7 +8316,19 @@ const dutchDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1bq1rk1/pp1nb1pp/2p1p3/3p1p2/2PP1B2/2P2NP1/P1Q1PPBP/R4RK1 w - - 1 11",
                                                                                 move: "Nd7", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bq1rk1/pp1nb1pp/2p1p3/3P1p2/3P1B2/2P2NP1/P1Q1PPBP/R4RK1 b - - 0 11",
+                                                                                    move: "cxd5", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bq1rk1/pp1nb1pp/4p3/3p1p2/3P1B2/2P2NP1/P1Q1PPBP/R4RK1 w - - 0 12",
+                                                                                        move: "cxd5", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -6875,7 +8415,19 @@ const dutchDefenseTree: OpeningNode[] = [
                                                                                   {
                                                                                     fen: "rnb2rk1/pp2q1pp/2pbp3/3p1p2/2PP4/1PB2NP1/P1Q1PPBP/R4RK1 b - - 0 11",
                                                                                     move: "Bxc3", category: "legit_alternative",
-                                                                                    children: []
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "rnb2rk1/pp2q1pp/2pbp3/5p2/2pP4/1PB2NP1/P1Q1PPBP/R4RK1 w - - 0 12",
+                                                                                        move: "dxc4", category: "legit_alternative",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "rnb2rk1/pp2q1pp/2pbp3/5p2/2PP4/2B2NP1/P1Q1PPBP/R4RK1 b - - 0 12",
+                                                                                            move: "bxc4", category: "legit_alternative",
+                                                                                            children: []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
                                                                                   }
                                                                                 ]
                                                                               }
@@ -6964,7 +8516,19 @@ const dutchDefenseTree: OpeningNode[] = [
                                                           {
                                                             fen: "r2qkb1r/pppn3p/4bpp1/3p1p2/3P4/2NBPQ2/PPP2PPP/R3K1NR b KQkq - 1 8",
                                                             move: "Qf3", category: "legit_alternative",
-                                                            children: []
+                                                            children: [
+                                                              {
+                                                                fen: "r2qkb1r/pp1n3p/4bpp1/2pp1p2/3P4/2NBPQ2/PPP2PPP/R3K1NR w KQkq - 0 9",
+                                                                move: "c5", category: "legit_alternative",
+                                                                children: [
+                                                                  {
+                                                                    fen: "r2qkb1r/pp1n3p/4bpp1/2Pp1p2/8/2NBPQ2/PPP2PPP/R3K1NR b KQkq - 0 9",
+                                                                    move: "dxc5", category: "legit_alternative",
+                                                                    children: []
+                                                                  }
+                                                                ]
+                                                              }
+                                                            ]
                                                           }
                                                         ]
                                                       }
@@ -7079,7 +8643,19 @@ const pircDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r2q1rk1/pppnnpbp/3p2p1/3Pp3/4P1b1/2N1BN2/PPPQBPPP/3R1RK1 w - - 3 11",
                                                                                 move: "Nd7", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/Bppnnpbp/3p2p1/3Pp3/4P1b1/2N2N2/PPPQBPPP/3R1RK1 b - - 0 11",
+                                                                                    move: "Bxa7", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/Bppnnpbp/3p2p1/3Pp3/4P3/2N2b2/PPPQBPPP/3R1RK1 w - - 0 12",
+                                                                                        move: "Bxf3", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -7136,7 +8712,19 @@ const pircDefenseTree: OpeningNode[] = [
                                                                                   {
                                                                                     fen: "r1b2rk1/pp2ppbp/n5p1/2pQP3/8/5N2/PPP1BPPP/R1B1R1K1 b - - 0 11",
                                                                                     move: "Qxd5", category: "legit_alternative",
-                                                                                    children: []
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1b2rk1/pp2pp1p/n5p1/2pQb3/8/5N2/PPP1BPPP/R1B1R1K1 w - - 0 12",
+                                                                                        move: "Bxe5", category: "legit_alternative",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1b2rk1/pp2pp1p/B5p1/2pQb3/8/5N2/PPP2PPP/R1B1R1K1 b - - 0 12",
+                                                                                            move: "Bxa6", category: "legit_alternative",
+                                                                                            children: []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
                                                                                   }
                                                                                 ]
                                                                               }
@@ -7209,7 +8797,19 @@ const pircDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1b2rk1/ppqn1pbp/2p2np1/P3p3/4P3/2N1BN1P/1PP1BPP1/R2QK2R w KQ - 0 11",
                                                                                 move: "dxe5", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1b2rk1/ppqn1pbp/2p2np1/P3p3/4P3/2N1BN1P/1PP1BPP1/R2Q1RK1 b - - 1 11",
+                                                                                    move: "O-O", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1b2rk1/ppqn1pbp/5np1/P1p1p3/4P3/2N1BN1P/1PP1BPP1/R2Q1RK1 w - - 0 12",
+                                                                                        move: "c5", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -7292,7 +8892,19 @@ const pircDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1bq1rk1/pp1np1bp/2n2pp1/2p1P3/5P2/2N2N2/PPP1B1PP/R1B1QRK1 w - - 0 11",
                                                                                 move: "f6", category: "main_line",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bq1rk1/pp1np1bp/2n2pp1/2p1P3/5P2/2N5/PPPNB1PP/R1B1QRK1 b - - 1 11",
+                                                                                    move: "Nd2", category: "main_line",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bq1rk1/pp1np1bp/2n3p1/2p1p3/5P2/2N5/PPPNB1PP/R1B1QRK1 w - - 0 12",
+                                                                                        move: "fxe5", category: "main_line",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -7351,7 +8963,19 @@ const pircDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r2q1rk1/pbn1ppbp/1p1p1np1/2pP4/P3PP2/2NB1N2/1PP3PP/R1B1QRK1 w - - 2 11",
                                                                                 move: "Bb7", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/pbn1ppbp/1p1p1np1/2pPP3/P4P2/2NB1N2/1PP3PP/R1B1QRK1 b - - 0 11",
+                                                                                    move: "e5", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/pbn1ppbp/1p3np1/2pPp3/P4P2/2NB1N2/1PP3PP/R1B1QRK1 w - - 0 12",
+                                                                                        move: "dxe5", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -7416,7 +9040,19 @@ const pircDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1b2rk1/pp2ppbp/2np1np1/q7/4PP2/2NBBN2/PPP1Q1PP/R4RK1 w - - 6 11",
                                                                                 move: "O-O", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1b2rk1/Bp2ppbp/2np1np1/q7/4PP2/2NB1N2/PPP1Q1PP/R4RK1 b - - 0 11",
+                                                                                    move: "Bxa7", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1b2rk1/Bp3pbp/2np1np1/q3p3/4PP2/2NB1N2/PPP1Q1PP/R4RK1 w - - 0 12",
+                                                                                        move: "e5", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -7437,6 +9073,23 @@ const pircDefenseTree: OpeningNode[] = [
                                             ]
                                           }
                                         ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                fen: "rnbqkb1r/pp2pp1p/3p1np1/2p5/3PPP2/2N5/PPP3PP/R1BQKBNR w KQkq - 0 5",
+                                move: "c5", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rnbqkb1r/pp2pp1p/3p1np1/2P5/4PP2/2N5/PPP3PP/R1BQKBNR b KQkq - 0 5",
+                                    move: "dxc5", category: "legit_alternative",
+                                    children: [
+                                      {
+                                        fen: "rnbqkb1r/pp2pp1p/5np1/2p5/4PP2/2N5/PPP3PP/R1BQKBNR w KQkq - 0 6",
+                                        move: "dxc5", category: "legit_alternative",
+                                        children: []
                                       }
                                     ]
                                   }
@@ -7499,7 +9152,19 @@ const pircDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1b2rk1/pp1n1p1p/2pp1npQ/q2Pp3/4P3/2N2P2/PPP3PP/2KR1BNR w - - 1 11",
                                                                                 move: "Nbd7", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1b2rk1/pp1n1p1p/2pp1npQ/q2Pp3/4P3/5P2/PPP1N1PP/2KR1BNR b - - 2 11",
+                                                                                    move: "Nce2", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1b2rk1/pp1n1p1p/3p1npQ/q2pp3/4P3/5P2/PPP1N1PP/2KR1BNR w - - 0 12",
+                                                                                        move: "cxd5", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -7578,7 +9243,19 @@ const pircDefenseTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r1bq1rk1/p2nppbp/2pp1np1/6B1/1p1PPP2/3B1N2/PPPQN1PP/2KR3R b - - 1 10",
                                                                             move: "Nce2", category: "legit_alternative",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1bq1rk1/p2n1pbp/2pp1np1/4p1B1/1p1PPP2/3B1N2/PPPQN1PP/2KR3R w - - 0 11",
+                                                                                move: "e5", category: "legit_alternative",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bq1rk1/p2n1pbp/2pp1np1/4P1B1/1p2PP2/3B1N2/PPPQN1PP/2KR3R b - - 0 11",
+                                                                                    move: "dxe5", category: "legit_alternative",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -7655,7 +9332,19 @@ const pircDefenseTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r2q1rk1/1bp1ppbp/p1np1np1/1p1N4/3PP3/4BP2/PPPQN1PP/1K1R1B1R b - - 3 10",
                                                                             move: "Nd5", category: "legit_alternative",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2q1rk1/1bp2pbp/p1np1np1/1p1Np3/3PP3/4BP2/PPPQN1PP/1K1R1B1R w - - 0 11",
+                                                                                move: "e5", category: "legit_alternative",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/1bp2pbp/p1np1np1/1p1NP3/4P3/4BP2/PPPQN1PP/1K1R1B1R b - - 0 11",
+                                                                                    move: "dxe5", category: "legit_alternative",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -7728,28 +9417,40 @@ const pircDefenseTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r2q1rk1/1bp1ppbp/p1np1np1/1p6/3PP1PP/2N1BP2/PPPQ4/2KR1BNR w - - 1 10",
                                                                         move: "Bb7", category: "legit_alternative",
-                                                                        children: []
-                                                                      },
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r2q1rk1/1bp1ppbp/p1np1np1/1B6/3PP1PP/2N1BP2/PPPQ4/2KR2NR b - - 0 10",
+                                                                            move: "Bxb5", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2q1rk1/1bp2pbp/p1np1np1/1B2p3/3PP1PP/2N1BP2/PPPQ4/2KR2NR w - - 0 11",
+                                                                                move: "e5", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
+                                                                      }
                                                                     ]
-                                                                  },
+                                                                  }
                                                                 ]
-                                                              },
+                                                              }
                                                             ]
-                                                          },
+                                                          }
                                                         ]
-                                                      },
+                                                      }
                                                     ]
-                                                  },
+                                                  }
                                                 ]
-                                              },
+                                              }
                                             ]
-                                          },
+                                          }
                                         ]
-                                      },
+                                      }
                                     ]
-                                  },
+                                  }
                                 ]
-                              },
+                              }
                             ]
                           },
                           {
@@ -7799,30 +9500,59 @@ const pircDefenseTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "rnb2rk1/p3ppbp/2pp1np1/q5B1/1p1PP2P/2N2P2/PPPQ2P1/1K1R1BNR w - - 0 10",
                                                                         move: "b4", category: "legit_alternative",
-                                                                        children: []
-                                                                      },
+                                                                        children: [
+                                                                          {
+                                                                            fen: "rnb2rk1/p3ppbp/2pp1Bp1/q7/1p1PP2P/2N2P2/PPPQ2P1/1K1R1BNR b - - 0 10",
+                                                                            move: "Bxf6", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "rnb2rk1/p3pp1p/2pp1bp1/q7/1p1PP2P/2N2P2/PPPQ2P1/1K1R1BNR w - - 0 11",
+                                                                                move: "Bxf6", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
+                                                                      }
                                                                     ]
-                                                                  },
+                                                                  }
                                                                 ]
-                                                              },
+                                                              }
                                                             ]
-                                                          },
+                                                          }
                                                         ]
-                                                      },
+                                                      }
                                                     ]
-                                                  },
+                                                  }
                                                 ]
-                                              },
+                                              }
                                             ]
-                                          },
+                                          }
                                         ]
-                                      },
+                                      }
                                     ]
-                                  },
+                                  }
                                 ]
-                              },
+                              }
                             ]
-                          },
+                          }
+                        ]
+                      },
+                      {
+                        fen: "rnbqkb1r/pp2pppp/3p1n2/2p5/3PP3/2N5/PPP2PPP/R1BQKBNR w KQkq - 0 4",
+                        move: "c5", category: "legit_alternative",
+                        children: [
+                          {
+                            fen: "rnbqkb1r/pp2pppp/3p1n2/2P5/4P3/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 4",
+                            move: "dxc5", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "rnbqkb1r/pp2pppp/5n2/2p5/4P3/2N5/PPP2PPP/R1BQKBNR w KQkq - 0 5",
+                                move: "dxc5", category: "legit_alternative",
+                                children: []
+                              }
+                            ]
+                          }
                         ]
                       }
                     ]
@@ -7912,7 +9642,19 @@ const scandinavianDefenseTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "rn2kb1r/pp3ppp/2p1pq2/5b2/2BP4/5N2/PPPB1PPP/R2QK2R w KQkq - 0 10",
                                                                         move: "Qxf6", category: "main_line",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "rn2kb1r/pp3ppp/2p1pq2/5b2/2BP4/5N2/PPPB1PPP/R2Q1RK1 b kq - 1 10",
+                                                                            move: "O-O", category: "main_line",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "rn2kb1r/pp3ppp/2p1pq2/8/2BP4/5N2/PPbB1PPP/R2Q1RK1 w kq - 0 11",
+                                                                                move: "Bxc2", category: "main_line",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -7965,7 +9707,19 @@ const scandinavianDefenseTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r3k2r/pp1n1ppp/2p1pn2/q4b2/1bBP4/2N2N2/PPPBQPPP/2KR3R w kq - 4 10",
                                                                         move: "Nbd7", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r3k2r/pp1n1ppp/2p1Bn2/q4b2/1b1P4/2N2N2/PPPBQPPP/2KR3R b kq - 0 10",
+                                                                            move: "Bxe6", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r4rk1/pp1n1ppp/2p1Bn2/q4b2/1b1P4/2N2N2/PPPBQPPP/2KR3R w - - 1 11",
+                                                                                move: "O-O", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -8028,7 +9782,19 @@ const scandinavianDefenseTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "rn1qkb1r/pp3p1p/2p1pp2/5b2/2BP4/5N2/PPPBQPPP/R3K2R b KQkq - 1 10",
                                                                             move: "Qe2", category: "legit_alternative",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "rn1qkb1r/pp3p1p/2p1pp2/8/2BP4/5N2/PPbBQPPP/R3K2R w KQkq - 0 11",
+                                                                                move: "Bxc2", category: "legit_alternative",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "rn1qkb1r/pp3p1p/2p1pp2/8/2BP4/5N2/PPbBQPPP/R4RK1 b kq - 1 11",
+                                                                                    move: "O-O", category: "legit_alternative",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -8049,6 +9815,40 @@ const scandinavianDefenseTree: OpeningNode[] = [
                                         ]
                                       }
                                     ]
+                                  }
+                                ]
+                              },
+                              {
+                                fen: "rnb1kbnr/pp2pppp/8/q1p5/3P4/2N5/PPP2PPP/R1BQKBNR w KQkq - 0 5",
+                                move: "c5", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rnb1kbnr/pp2pppp/8/q1P5/8/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 5",
+                                    move: "dxc5", category: "legit_alternative",
+                                    children: [
+                                      {
+                                        fen: "rnb1kbnr/pp3ppp/8/q1P1p3/8/2N5/PPP2PPP/R1BQKBNR w KQkq - 0 6",
+                                        move: "e5", category: "legit_alternative",
+                                        children: []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            fen: "rnb1kbnr/ppp1pppp/8/q7/8/8/PPPPNPPP/R1BQKBNR b KQkq - 3 4",
+                            move: "Nce2", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "rnb1kbnr/pp2pppp/8/q1p5/8/8/PPPPNPPP/R1BQKBNR w KQkq - 0 5",
+                                move: "c5", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rnb1kbnr/pp2pppp/8/q1p5/2P5/8/PP1PNPPP/R1BQKBNR b KQkq - 0 5",
+                                    move: "c4", category: "legit_alternative",
+                                    children: []
                                   }
                                 ]
                               }
@@ -8111,7 +9911,19 @@ const scandinavianDefenseTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r3k2r/1ppnbppp/p2qpn2/5b2/3P1P2/2N1B3/PPPNB1PP/R2Q1RK1 b kq - 0 10",
                                                                             move: "f4", category: "legit_alternative",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r4rk1/1ppnbppp/p2qpn2/5b2/3P1P2/2N1B3/PPPNB1PP/R2Q1RK1 w - - 1 11",
+                                                                                move: "O-O", category: "legit_alternative",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r4rk1/1ppnbppp/B2qpn2/5b2/3P1P2/2N1B3/PPPN2PP/R2Q1RK1 b - - 0 11",
+                                                                                    move: "Bxa6", category: "legit_alternative",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -8190,7 +10002,19 @@ const scandinavianDefenseTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r2q1rk1/pppnbppp/4pn2/5bB1/2BP4/2N2N2/PPP2PPP/R2QR1K1 w - - 6 10",
                                                                         move: "Nbd7", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r2q1rk1/pppnbppp/4pB2/5b2/2BP4/2N2N2/PPP2PPP/R2QR1K1 b - - 0 10",
+                                                                            move: "Bxf6", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2q1rk1/ppp1bppp/4pn2/5b2/2BP4/2N2N2/PPP2PPP/R2QR1K1 w - - 0 11",
+                                                                                move: "Nxf6", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -8287,7 +10111,19 @@ const scandinavianDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1bq1rk1/pp2ppbp/1np3p1/n2P4/2PN4/2N5/PP2BPPP/R1BQ1RK1 w - - 0 11",
                                                                                 move: "c6", category: "main_line",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bq1rk1/pp2ppbp/1nN3p1/n2P4/2P5/2N5/PP2BPPP/R1BQ1RK1 b - - 0 11",
+                                                                                    move: "Nxc6", category: "main_line",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bq1rk1/pp2ppbp/1nn3p1/3P4/2P5/2N5/PP2BPPP/R1BQ1RK1 w - - 0 12",
+                                                                                        move: "Nxc6", category: "main_line",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -8346,7 +10182,19 @@ const scandinavianDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1bq1rk1/ppp1npbp/1n4p1/3Pp3/2P5/2N1BN1P/PP1Q1PP1/R3KB1R w KQ - 1 11",
                                                                                 move: "Ne7", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bq1rk1/ppp1npbp/1n4p1/3Pp3/2P5/2N1BN1P/PP1Q1PP1/2KR1B1R b - - 2 11",
+                                                                                    move: "O-O-O", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/ppp1npbp/1n4p1/3Pp3/2P5/2N1BN1b/PP1Q1PP1/2KR1B1R w - - 0 12",
+                                                                                        move: "Bxh3", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -8425,7 +10273,19 @@ const scandinavianDefenseTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r2q1rk1/pppnbppp/1n2p3/8/2PP2b1/2N1BN2/PP2BPPP/2RQ1RK1 b - - 6 10",
                                                                             move: "Rc1", category: "legit_alternative",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2q1rk1/pppnbppp/1n2p3/8/2PP4/2N1Bb2/PP2BPPP/2RQ1RK1 w - - 0 11",
+                                                                                move: "Bxf3", category: "legit_alternative",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/pppnbppp/1n2p3/8/2PP4/2N1BB2/PP3PPP/2RQ1RK1 b - - 0 11",
+                                                                                    move: "Bxf3", category: "legit_alternative",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -8518,7 +10378,19 @@ const scandinavianDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r2qkb1r/1pp3pp/1n2pn2/p4b2/3P4/PBN2P2/1PP3PP/R1BQK1NR w KQkq - 0 11",
                                                                                 move: "fxe6", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2qkb1r/1pp3pp/1n2Bn2/p4b2/3P4/P1N2P2/1PP3PP/R1BQK1NR b KQkq - 0 11",
+                                                                                    move: "Bxe6", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2qk2r/1pp3pp/1n2Bn2/p4b2/3P4/b1N2P2/1PP3PP/R1BQK1NR w KQkq - 0 12",
+                                                                                        move: "Bxa3", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -8605,7 +10477,19 @@ const scandinavianDefenseTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r2qr1k1/ppp2ppp/2n2n2/8/1bPP2b1/2N2N2/PP2BPPP/R1BQ1RK1 w - - 9 10",
                                                                         move: "Nc6", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r2qr1k1/ppp2ppp/2n2n2/2P5/1b1P2b1/2N2N2/PP2BPPP/R1BQ1RK1 b - - 0 10",
+                                                                            move: "c5", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2qr1k1/ppp2ppp/2n2n2/2b5/3P2b1/2N2N2/PP2BPPP/R1BQ1RK1 w - - 0 11",
+                                                                                move: "Bxc5", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -8722,7 +10606,19 @@ const englishOpeningTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r2q1rk1/ppp1bppp/1nn1b3/4p3/8/2NPBNP1/PP2PPBP/2RQ1RK1 b - - 4 10",
                                                                             move: "Rc1", category: "main_line",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2q1rk1/ppp1bppp/1nn5/4p3/8/2NPBNP1/bP2PPBP/2RQ1RK1 w - - 0 11",
+                                                                                move: "Bxa2", category: "main_line",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/ppp1bppp/1Bn5/4p3/8/2NP1NP1/bP2PPBP/2RQ1RK1 b - - 0 11",
+                                                                                    move: "Bxb6", category: "main_line",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -8755,7 +10651,19 @@ const englishOpeningTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1bq1rk1/1pp1b1pp/1nn2p2/p3p3/8/P1NPBNP1/1P2PPBP/R2Q1RK1 w - - 0 11",
                                                                                 move: "f6", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bq1rk1/1pp1b1pp/1Bn2p2/p3p3/8/P1NP1NP1/1P2PPBP/R2Q1RK1 b - - 0 11",
+                                                                                    move: "Bxb6", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bq1rk1/1pp3pp/1Bn2p2/p3p3/8/b1NP1NP1/1P2PPBP/R2Q1RK1 w - - 0 12",
+                                                                                        move: "Bxa3", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -8778,6 +10686,40 @@ const englishOpeningTree: OpeningNode[] = [
                                         ]
                                       }
                                     ]
+                                  }
+                                ]
+                              },
+                              {
+                                fen: "rnbqkb1r/pp3ppp/5n2/2pPp3/8/2N3P1/PP1PPP1P/R1BQKBNR w KQkq c6 0 5",
+                                move: "c5", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rnbqkb1r/pp3ppp/5n2/2pPp3/3P4/2N3P1/PP2PP1P/R1BQKBNR b KQkq - 0 5",
+                                    move: "d4", category: "legit_alternative",
+                                    children: [
+                                      {
+                                        fen: "rnbqkb1r/pp3ppp/5n2/3Pp3/3p4/2N3P1/PP2PP1P/R1BQKBNR w KQkq - 0 6",
+                                        move: "cxd4", category: "legit_alternative",
+                                        children: []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            fen: "rnbqkb1r/ppp2ppp/5n2/2Ppp3/8/2N3P1/PP1PPP1P/R1BQKBNR b KQkq - 0 4",
+                            move: "c5", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "rnbqk2r/ppp2ppp/5n2/2bpp3/8/2N3P1/PP1PPP1P/R1BQKBNR w KQkq - 0 5",
+                                move: "Bxc5", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rnbqk2r/ppp2ppp/5n2/2bpp3/3P4/2N3P1/PP2PP1P/R1BQKBNR b KQkq - 0 5",
+                                    move: "d4", category: "legit_alternative",
+                                    children: []
                                   }
                                 ]
                               }
@@ -8836,7 +10778,19 @@ const englishOpeningTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "rnb1r1k1/ppp2ppp/5n2/3q4/3Np3/2P3P1/PP2PPBP/R1BQ1RK1 w - - 0 10",
                                                                         move: "Qxd5", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "rnb1r1k1/ppp2ppp/5n2/3q4/3NB3/2P3P1/PP2PP1P/R1BQ1RK1 b - - 0 10",
+                                                                            move: "Bxe4", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "rnb1r1k1/pp3ppp/5n2/2pq4/3NB3/2P3P1/PP2PP1P/R1BQ1RK1 w - - 0 11",
+                                                                                move: "c5", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -8933,7 +10887,19 @@ const englishOpeningTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r2q1rk1/ppp1b1pp/1nn1bp2/4p3/8/2NPBNP1/PP2PPBP/2RQ1RK1 w - - 0 11",
                                                                                 move: "f6", category: "main_line",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/ppp1b1pp/1Bn1bp2/4p3/8/2NP1NP1/PP2PPBP/2RQ1RK1 b - - 0 11",
+                                                                                    move: "Bxb6", category: "main_line",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/ppp1b1pp/1Bn2p2/4p3/8/2NP1NP1/bP2PPBP/2RQ1RK1 w - - 0 12",
+                                                                                        move: "Bxa2", category: "main_line",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -9006,7 +10972,19 @@ const englishOpeningTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r1bqr1k1/pppp1ppp/2n2n2/6N1/2P5/2P2BP1/PP2P2P/R1BQ1RK1 b - - 0 10",
                                                                             move: "Bxf3", category: "legit_alternative",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1bqr1k1/ppp2ppp/2n2n2/3p2N1/2P5/2P2BP1/PP2P2P/R1BQ1RK1 w - - 0 11",
+                                                                                move: "d5", category: "legit_alternative",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bqr1k1/ppp2ppp/2n2n2/3P2N1/8/2P2BP1/PP2P2P/R1BQ1RK1 b - - 0 11",
+                                                                                    move: "cxd5", category: "legit_alternative",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -9079,28 +11057,40 @@ const englishOpeningTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r1bq1rk1/p1p2ppp/5n2/3p4/1b6/2N1P3/PP1B1PPP/R2QKB1R w KQ - 0 10",
                                                                         move: "cxd5", category: "legit_alternative",
-                                                                        children: []
-                                                                      },
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r1bq1rk1/p1p2ppp/5n2/3p4/1b2P3/2N5/PP1B1PPP/R2QKB1R b KQ - 0 10",
+                                                                            move: "e4", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1bq1rk1/p1p2ppp/5n2/8/1b2p3/2N5/PP1B1PPP/R2QKB1R w KQ - 0 11",
+                                                                                move: "dxe4", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
+                                                                      }
                                                                     ]
-                                                                  },
+                                                                  }
                                                                 ]
-                                                              },
+                                                              }
                                                             ]
-                                                          },
+                                                          }
                                                         ]
-                                                      },
+                                                      }
                                                     ]
-                                                  },
+                                                  }
                                                 ]
-                                              },
+                                              }
                                             ]
-                                          },
+                                          }
                                         ]
-                                      },
+                                      }
                                     ]
-                                  },
+                                  }
                                 ]
-                              },
+                              }
                             ]
                           },
                           {
@@ -9150,30 +11140,42 @@ const englishOpeningTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r1bqr1k1/ppp2ppp/2n5/3n4/1b2p3/2NP1NP1/PP1BPPBP/R2Q1RK1 w - - 2 10",
                                                                         move: "Re8", category: "legit_alternative",
-                                                                        children: []
-                                                                      },
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r1bqr1k1/ppp2ppp/2n5/3n4/1b2P3/2N2NP1/PP1BPPBP/R2Q1RK1 b - - 0 10",
+                                                                            move: "dxe4", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1bqr1k1/ppp2ppp/2n5/8/1b2P3/2n2NP1/PP1BPPBP/R2Q1RK1 w - - 0 11",
+                                                                                move: "Nxc3", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
+                                                                      }
                                                                     ]
-                                                                  },
+                                                                  }
                                                                 ]
-                                                              },
+                                                              }
                                                             ]
-                                                          },
+                                                          }
                                                         ]
-                                                      },
+                                                      }
                                                     ]
-                                                  },
+                                                  }
                                                 ]
-                                              },
+                                              }
                                             ]
-                                          },
+                                          }
                                         ]
-                                      },
+                                      }
                                     ]
-                                  },
+                                  }
                                 ]
-                              },
+                              }
                             ]
-                          },
+                          }
                         ]
                       }
                     ]
@@ -9241,7 +11243,19 @@ const englishOpeningTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1bq1rk1/ppp1n1b1/3p1npp/1P2pp2/2P5/2NP1NP1/P3PPBP/1RBQ1RK1 w - - 1 11",
                                                                                 move: "Ne7", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bq1rk1/ppp1n1b1/3p1npB/1P2pp2/2P5/2NP1NP1/P3PPBP/1R1Q1RK1 b - - 0 11",
+                                                                                    move: "Bxh6", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bq1rk1/ppp1n3/3p1npb/1P2pp2/2P5/2NP1NP1/P3PPBP/1R1Q1RK1 w - - 0 12",
+                                                                                        move: "Bxh6", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -9304,7 +11318,19 @@ const englishOpeningTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r2q1rk1/ppp3bp/2npbnp1/3Npp2/2P1P3/3P2P1/PP2NPBP/R1BQ1RK1 w - - 5 10",
                                                                         move: "Be6", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r2q1rk1/ppp3bp/2npbNp1/4pp2/2P1P3/3P2P1/PP2NPBP/R1BQ1RK1 b - - 0 10",
+                                                                            move: "Nxf6+", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2q1rk1/ppp4p/2npbbp1/4pp2/2P1P3/3P2P1/PP2NPBP/R1BQ1RK1 w - - 0 11",
+                                                                                move: "Bxf6", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -9409,7 +11435,19 @@ const englishOpeningTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r1bq1rk1/pp2ppbp/3p1np1/8/2P5/2NQ2P1/PP2PPBP/R1B2RK1 b - - 1 10",
                                                                             move: "Qd3", category: "legit_alternative",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1bq1rk1/pp3pbp/3p1np1/4p3/2P5/2NQ2P1/PP2PPBP/R1B2RK1 w - - 0 11",
+                                                                                move: "e5", category: "legit_alternative",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bq1rk1/pB3pbp/3p1np1/4p3/2P5/2NQ2P1/PP2PP1P/R1B2RK1 b - - 0 11",
+                                                                                    move: "Bxb7", category: "legit_alternative",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -9504,7 +11542,19 @@ const englishOpeningTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r1bq1rk1/ppn1bppp/2n5/2p1p3/1P6/P1NP1NP1/4PPBP/R1BQ1RK1 b - - 0 10",
                                                                             move: "b4", category: "legit_alternative",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1bq1rk1/ppn1bppp/2n5/4p3/1Pp5/P1NP1NP1/4PPBP/R1BQ1RK1 w - - 0 11",
+                                                                                move: "c4", category: "legit_alternative",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bq1rk1/ppn1bppp/2n5/4p3/1PP5/P1N2NP1/4PPBP/R1BQ1RK1 b - - 0 11",
+                                                                                    move: "dxc4", category: "legit_alternative",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -9609,7 +11659,19 @@ const englishOpeningTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r2qk2r/1b1nbppp/pp1ppn2/8/2PQ4/1PN2NP1/P3PPBP/R1BR2K1 w kq - 1 11",
                                                                                 move: "Nbd7", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2qk2r/1b1nbppp/pp1ppn2/2P5/3Q4/1PN2NP1/P3PPBP/R1BR2K1 b kq - 0 11",
+                                                                                    move: "c5", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/1b1nbppp/pp1ppn2/2P5/3Q4/1PN2NP1/P3PPBP/R1BR2K1 w - - 1 12",
+                                                                                        move: "O-O", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -9734,7 +11796,19 @@ const nimzoIndianTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r2q1rk1/pbpn1ppp/1p3n2/3p2B1/3P4/P1QBP3/1P3PPP/R3K1NR w KQ - 2 11",
                                                                                 move: "Nbd7", category: "main_line",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/pbpn1ppp/1p3n2/3p2B1/3P4/P1QBP3/1P3PPP/2KR2NR b - - 3 11",
+                                                                                    move: "O-O-O", category: "main_line",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/pb1n1ppp/1p3n2/2pp2B1/3P4/P1QBP3/1P3PPP/2KR2NR w - - 0 12",
+                                                                                        move: "c5", category: "main_line",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -9769,7 +11843,19 @@ const nimzoIndianTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r2q1rk1/pbpn1pp1/1p2pn1p/3p4/2PP3B/P1Q1PP2/1P4PP/R3KBNR w KQ - 1 11",
                                                                                 move: "Nbd7", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/pbpn1pp1/1p2pn1p/3P4/3P3B/P1Q1PP2/1P4PP/R3KBNR b KQ - 0 11",
+                                                                                    move: "cxd5", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/pbpn1pp1/1p3n1p/3p4/3P3B/P1Q1PP2/1P4PP/R3KBNR w KQ - 0 12",
+                                                                                        move: "exd5", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -9788,6 +11874,23 @@ const nimzoIndianTree: OpeningNode[] = [
                                                 ]
                                               }
                                             ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    fen: "rnbq1rk1/pppp1ppp/4pn2/2P5/1b1P4/2N5/PPQ1PPPP/R1B1KBNR b KQ - 0 5",
+                                    move: "c5", category: "legit_alternative",
+                                    children: [
+                                      {
+                                        fen: "rnbq1rk1/pppp1ppp/4pn2/2b5/3P4/2N5/PPQ1PPPP/R1B1KBNR w KQ - 0 6",
+                                        move: "Bxc5", category: "legit_alternative",
+                                        children: [
+                                          {
+                                            fen: "rnbq1rk1/pppp1ppp/4pn2/2P5/8/2N5/PPQ1PPPP/R1B1KBNR b KQ - 0 6",
+                                            move: "dxc5", category: "legit_alternative",
+                                            children: []
                                           }
                                         ]
                                       }
@@ -9846,7 +11949,19 @@ const nimzoIndianTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "rnb1k2r/pp3p2/7p/q1Pp2p1/1b2n3/2N1P1B1/PPQ2PPP/R3KBNR w KQkq - 1 11",
                                                                                 move: "Qa5", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "rnb1k2r/pp3p2/7p/q1Pp2p1/1b2n3/2N1P1B1/PPQ2PPP/2KR1BNR b kq - 2 11",
+                                                                                    move: "O-O-O", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "rnb2rk1/pp3p2/7p/q1Pp2p1/1b2n3/2N1P1B1/PPQ2PPP/2KR1BNR w - - 3 12",
+                                                                                        move: "O-O", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -9923,7 +12038,19 @@ const nimzoIndianTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r2q1rk1/pb1n1ppp/1p2pn2/2bp2B1/2P5/P1N1PN2/1PQ1BPPP/R3K2R w KQ - 2 11",
                                                                                 move: "Nbd7", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/pb1n1ppp/1p2pn2/2bp2B1/2P5/P1N1PN2/1PQ1BPPP/R4RK1 b - - 3 11",
+                                                                                    move: "O-O", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/pb1n1ppp/1p2pn2/2b3B1/2p5/P1N1PN2/1PQ1BPPP/R4RK1 w - - 0 12",
+                                                                                        move: "dxc4", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -9951,9 +12078,7 @@ const nimzoIndianTree: OpeningNode[] = [
                               },
                               {
                                 fen: "rnbqk2r/ppp2ppp/3ppn2/8/1bPP4/2N5/PPQ1PPPP/R1B1KBNR w KQkq - 0 5",
-                                move: "d6", category: "mistake",
-                                explanation: "d6 is too passive — play O-O or d5 to challenge the center.",
-                                suggestedMove: "O-O",
+                                move: "d6", category: "mistake", explanation: "d6 is too passive — play O-O or d5 to challenge the center.", suggestedMove: "O-O",
                                 children: []
                               }
                             ]
@@ -10021,7 +12146,19 @@ const nimzoIndianTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r2q1rk1/pb1n1ppp/1p2pn2/6B1/1bBP4/2N2N2/PP3PPP/R2QR1K1 w - - 4 12",
                                                                                         move: "Nbd7", category: "main_line",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r2q1rk1/pb1n1ppp/1p2pB2/8/1bBP4/2N2N2/PP3PPP/R2QR1K1 b - - 0 12",
+                                                                                            move: "Bxf6", category: "main_line",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r2q1rk1/pb3ppp/1p2pn2/8/1bBP4/2N2N2/PP3PPP/R2QR1K1 w - - 0 13",
+                                                                                                move: "Nxf6", category: "main_line",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -10070,7 +12207,19 @@ const nimzoIndianTree: OpeningNode[] = [
                                                                                   {
                                                                                     fen: "r1b2rk1/ppq2ppp/2n1pn2/2p5/3P4/P1PBPN2/5PPP/R1BQ1RK1 b - - 2 11",
                                                                                     move: "Bd3", category: "legit_alternative",
-                                                                                    children: []
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1b2rk1/ppq2ppp/2n1pn2/8/3p4/P1PBPN2/5PPP/R1BQ1RK1 w - - 0 12",
+                                                                                        move: "cxd4", category: "legit_alternative",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1b2rk1/ppq2ppp/2n1pn2/8/3P4/P2BPN2/5PPP/R1BQ1RK1 b - - 0 12",
+                                                                                            move: "cxd4", category: "legit_alternative",
+                                                                                            children: []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
                                                                                   }
                                                                                 ]
                                                                               }
@@ -10137,7 +12286,19 @@ const nimzoIndianTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "rn1q1rk1/pb3ppp/1p6/2ppN3/1b1PnP2/2NBP3/PP4PP/R1BQ1RK1 w - - 1 11",
                                                                                 move: "Ne4", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "rn1q1rk1/pb3ppp/1p6/2PpN3/1b2nP2/2NBP3/PP4PP/R1BQ1RK1 b - - 0 11",
+                                                                                    move: "dxc5", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "rn1q1rk1/pb3ppp/8/2ppN3/1b2nP2/2NBP3/PP4PP/R1BQ1RK1 w - - 0 12",
+                                                                                        move: "bxc5", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -10220,7 +12381,19 @@ const nimzoIndianTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1b1k2r/pp1nqpp1/3p1n1p/2pPp3/2P4B/2PBP3/P3NPPP/R2QK2R w KQkq - 4 11",
                                                                                 move: "Qe7", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1b1k2r/pp1nqpp1/3p1n1p/2pPp3/2P4B/2PBP3/P3NPPP/R2Q1RK1 b kq - 5 11",
+                                                                                    move: "O-O", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1b2rk1/pp1nqpp1/3p1n1p/2pPp3/2P4B/2PBP3/P3NPPP/R2Q1RK1 w - - 6 12",
+                                                                                        move: "O-O", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -10295,28 +12468,40 @@ const nimzoIndianTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "rn1q1rk1/pbp2ppp/1p2p3/3n2B1/3P4/P1Q2P2/1P2P1PP/R3KBNR w KQ - 0 10",
                                                                         move: "Nxd5", category: "legit_alternative",
-                                                                        children: []
-                                                                      },
+                                                                        children: [
+                                                                          {
+                                                                            fen: "rn1q1rk1/pbp2ppp/1p2p3/3n2B1/3P4/P1Q2P2/1P2P1PP/2KR1BNR b - - 1 10",
+                                                                            move: "O-O-O", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "rn1q1rk1/pbp2ppp/1p2p3/6B1/3P4/P1n2P2/1P2P1PP/2KR1BNR w - - 0 11",
+                                                                                move: "Nxc3", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
+                                                                      }
                                                                     ]
-                                                                  },
+                                                                  }
                                                                 ]
-                                                              },
+                                                              }
                                                             ]
-                                                          },
+                                                          }
                                                         ]
-                                                      },
+                                                      }
                                                     ]
-                                                  },
+                                                  }
                                                 ]
-                                              },
+                                              }
                                             ]
-                                          },
+                                          }
                                         ]
-                                      },
+                                      }
                                     ]
-                                  },
+                                  }
                                 ]
-                              },
+                              }
                             ]
                           },
                           {
@@ -10366,30 +12551,59 @@ const nimzoIndianTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "rnb1k2r/pp2nppp/4p3/q1P5/4P3/P1P2P2/6PP/R1BQKBNR w KQkq - 1 10",
                                                                         move: "Ne7", category: "legit_alternative",
-                                                                        children: []
-                                                                      },
+                                                                        children: [
+                                                                          {
+                                                                            fen: "rnb1k2r/pp2nppp/4p3/q1P1P3/8/P1P2P2/6PP/R1BQKBNR b KQkq - 0 10",
+                                                                            move: "e5", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "rnb2rk1/pp2nppp/4p3/q1P1P3/8/P1P2P2/6PP/R1BQKBNR w KQ - 1 11",
+                                                                                move: "O-O", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
+                                                                      }
                                                                     ]
-                                                                  },
+                                                                  }
                                                                 ]
-                                                              },
+                                                              }
                                                             ]
-                                                          },
+                                                          }
                                                         ]
-                                                      },
+                                                      }
                                                     ]
-                                                  },
+                                                  }
                                                 ]
-                                              },
+                                              }
                                             ]
-                                          },
+                                          }
                                         ]
-                                      },
+                                      }
                                     ]
-                                  },
+                                  }
                                 ]
-                              },
+                              }
                             ]
-                          },
+                          }
+                        ]
+                      },
+                      {
+                        fen: "rnbqkb1r/pp1p1ppp/4pn2/2p5/2PP4/2N5/PP2PPPP/R1BQKBNR w KQkq - 0 4",
+                        move: "c5", category: "legit_alternative",
+                        children: [
+                          {
+                            fen: "rnbqkb1r/pp1p1ppp/4pn2/2P5/2P5/2N5/PP2PPPP/R1BQKBNR b KQkq - 0 4",
+                            move: "dxc5", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "rnbqk2r/pp1p1ppp/4pn2/2b5/2P5/2N5/PP2PPPP/R1BQKBNR w KQkq - 0 5",
+                                move: "Bxc5", category: "legit_alternative",
+                                children: []
+                              }
+                            ]
+                          }
                         ]
                       }
                     ]
@@ -10495,7 +12709,19 @@ const grunfeldDefenseTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "rnb2rk1/pp2ppbp/6p1/8/3PP3/5N2/q2BBPPP/R2Q1RK1 w - - 0 12",
                                                                                         move: "Qxa2", category: "main_line",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "rnb2rk1/pp2ppbp/6p1/3P4/4P3/5N2/q2BBPPP/R2Q1RK1 b - - 0 12",
+                                                                                            move: "d5", category: "main_line",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "rnb2rk1/pp2pp1p/6p1/3P4/4P3/5N2/q2BBPPP/b2Q1RK1 w - - 0 13",
+                                                                                                move: "Bxa1", category: "main_line",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -10550,7 +12776,19 @@ const grunfeldDefenseTree: OpeningNode[] = [
                                                                                               {
                                                                                                 fen: "rn3rk1/pp2ppbp/6p1/8/3PP1b1/5N2/q2BBPPP/1R1Q1RK1 w - - 2 13",
                                                                                                 move: "Bg4", category: "legit_alternative",
-                                                                                                children: []
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "rn3rk1/pp2ppbp/6p1/3P4/4P1b1/5N2/q2BBPPP/1R1Q1RK1 b - - 0 13",
+                                                                                                    move: "d5", category: "legit_alternative",
+                                                                                                    children: [
+                                                                                                      {
+                                                                                                        fen: "rn3rk1/pp2ppbp/6p1/3P4/4P3/5b2/q2BBPPP/1R1Q1RK1 w - - 0 14",
+                                                                                                        move: "Bxf3", category: "legit_alternative",
+                                                                                                        children: []
+                                                                                                      }
+                                                                                                    ]
+                                                                                                  }
+                                                                                                ]
                                                                                               }
                                                                                             ]
                                                                                           }
@@ -10609,7 +12847,19 @@ const grunfeldDefenseTree: OpeningNode[] = [
                                                                                               {
                                                                                                 fen: "rnb1r1k1/pp3pbp/6p1/q1pP4/8/2P1BN2/P2Q1PPP/2R1KB1R w K - 1 13",
                                                                                                 move: "Re8", category: "legit_alternative",
-                                                                                                children: []
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "rnb1r1k1/pp3pbp/6p1/q1pP4/2P5/4BN2/P2Q1PPP/2R1KB1R b K - 0 13",
+                                                                                                    move: "c4", category: "legit_alternative",
+                                                                                                    children: [
+                                                                                                      {
+                                                                                                        fen: "r1b1r1k1/pp1n1pbp/6p1/q1pP4/2P5/4BN2/P2Q1PPP/2R1KB1R w K - 1 14",
+                                                                                                        move: "Nd7", category: "legit_alternative",
+                                                                                                        children: []
+                                                                                                      }
+                                                                                                    ]
+                                                                                                  }
+                                                                                                ]
                                                                                               }
                                                                                             ]
                                                                                           }
@@ -10672,7 +12922,19 @@ const grunfeldDefenseTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "rnbr2k1/pp2ppbp/6p1/q7/3PP3/4BN2/P2Q1PPP/1R2KB1R w K - 1 12",
                                                                                         move: "Rd8", category: "legit_alternative",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "rnbr2k1/pp2ppbp/6p1/q2P4/4P3/4BN2/P2Q1PPP/1R2KB1R b K - 0 12",
+                                                                                            move: "d5", category: "legit_alternative",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "rnbr2k1/pp3pbp/6p1/q2Pp3/4P3/4BN2/P2Q1PPP/1R2KB1R w K e6 0 13",
+                                                                                                move: "e5", category: "legit_alternative",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -10739,7 +13001,19 @@ const grunfeldDefenseTree: OpeningNode[] = [
                                                                                               {
                                                                                                 fen: "r1bq1rk1/p3ppbp/1p4p1/n7/3PP3/3BB3/P3NPPP/R2Q1RK1 w - - 0 13",
                                                                                                 move: "b6", category: "legit_alternative",
-                                                                                                children: []
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "r1bq1rk1/p3ppbp/1p4p1/n2P4/4P3/3BB3/P3NPPP/R2Q1RK1 b - - 0 13",
+                                                                                                    move: "d5", category: "legit_alternative",
+                                                                                                    children: [
+                                                                                                      {
+                                                                                                        fen: "r1bq1rk1/p3pp1p/1p4p1/n2P4/4P3/3BB3/P3NPPP/b2Q1RK1 w - - 0 14",
+                                                                                                        move: "Bxa1", category: "legit_alternative",
+                                                                                                        children: []
+                                                                                                      }
+                                                                                                    ]
+                                                                                                  }
+                                                                                                ]
                                                                                               }
                                                                                             ]
                                                                                           }
@@ -10804,7 +13078,19 @@ const grunfeldDefenseTree: OpeningNode[] = [
                                                                                               {
                                                                                                 fen: "r2q2k1/pp2prbp/6p1/n1p5/3PP1b1/2P1BP2/P3N1PP/R2Q1RK1 w - - 0 13",
                                                                                                 move: "Rxf7", category: "legit_alternative",
-                                                                                                children: []
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "r2q2k1/pp2prbp/6p1/n1P5/4P1b1/2P1BP2/P3N1PP/R2Q1RK1 b - - 0 13",
+                                                                                                    move: "dxc5", category: "legit_alternative",
+                                                                                                    children: [
+                                                                                                      {
+                                                                                                        fen: "r2q2k1/pp2pr1p/6p1/n1P5/4P1b1/2b1BP2/P3N1PP/R2Q1RK1 w - - 0 14",
+                                                                                                        move: "Bxc3", category: "legit_alternative",
+                                                                                                        children: []
+                                                                                                      }
+                                                                                                    ]
+                                                                                                  }
+                                                                                                ]
                                                                                               }
                                                                                             ]
                                                                                           }
@@ -10836,9 +13122,24 @@ const grunfeldDefenseTree: OpeningNode[] = [
                                       },
                                       {
                                         fen: "rnbqkb1r/ppp1pp1p/6p1/8/1n1PP3/2N5/PP3PPP/R1BQKBNR w KQkq - 1 6",
-                                        move: "Nb4", category: "mistake",
-                                        explanation: "Nb4 loses time. Take on c3 to challenge White's center.",
-                                        suggestedMove: "Nxc3",
+                                        move: "Nb4", category: "mistake", explanation: "Nb4 loses time. Take on c3 to challenge White's center.", suggestedMove: "Nxc3",
+                                        children: []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                fen: "rnbqkb1r/pp2pp1p/5np1/2pP4/3P4/2N5/PP2PPPP/R1BQKBNR w KQkq c6 0 5",
+                                move: "c5", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rnbqkb1r/pp2pp1p/5np1/2PP4/8/2N5/PP2PPPP/R1BQKBNR b KQkq - 0 5",
+                                    move: "dxc5", category: "legit_alternative",
+                                    children: [
+                                      {
+                                        fen: "rnbqkb1r/pp3p1p/5np1/2PPp3/8/2N5/PP2PPPP/R1BQKBNR w KQkq e6 0 6",
+                                        move: "e5", category: "legit_alternative",
                                         children: []
                                       }
                                     ]
@@ -10910,7 +13211,19 @@ const grunfeldDefenseTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r2q1rk1/ppp1p1bp/1nn3p1/5b2/3P4/2NQBN2/PP2BPPP/R3K2R w KQ - 0 12",
                                                                                         move: "Bxf5", category: "main_line",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r2q1rk1/ppp1p1bp/1nn3p1/5b2/3P4/2NQBN2/PP2BPPP/R4RK1 b - - 1 12",
+                                                                                            move: "O-O", category: "main_line",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r2q1rk1/ppp1p2p/1nn3p1/5b2/3b4/2NQBN2/PP2BPPP/R4RK1 w - - 0 13",
+                                                                                                move: "Bxd4", category: "main_line",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -10963,7 +13276,19 @@ const grunfeldDefenseTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r1bq1rk1/2p1p1bp/p1n1p1p1/1p1n4/3P4/1QN2N2/PP2BPPP/R1B1K2R w KQ - 0 12",
                                                                                         move: "fxe6", category: "legit_alternative",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1bq1rk1/2p1p1bp/p1n1p1p1/1p1n4/3P4/1QN2N2/PP2BPPP/R1B2RK1 b - - 1 12",
+                                                                                            move: "O-O", category: "legit_alternative",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r1bq1rk1/2p1p1bp/p1n1p1p1/1p6/3P4/1Qn2N2/PP2BPPP/R1B2RK1 w - - 0 13",
+                                                                                                move: "Nxc3", category: "legit_alternative",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -11046,7 +13371,19 @@ const grunfeldDefenseTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r4rk1/pp2ppbp/2n2np1/2q5/2B3b1/2N1PN2/PP2QPPP/R1BR2K1 w - - 4 12",
                                                                                         move: "Bg4", category: "legit_alternative",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r4rk1/pp2pBbp/2n2np1/2q5/6b1/2N1PN2/PP2QPPP/R1BR2K1 b - - 0 12",
+                                                                                            move: "Bxf7+", category: "legit_alternative",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r5k1/pp2prbp/2n2np1/2q5/6b1/2N1PN2/PP2QPPP/R1BR2K1 w - - 0 13",
+                                                                                                move: "Rxf7", category: "legit_alternative",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -11129,7 +13466,19 @@ const grunfeldDefenseTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "rn1q1rk1/pp2ppbp/6p1/3pNb2/3P4/5PP1/PP2P1BP/R1BQ1RK1 w - - 1 12",
                                                                                         move: "Bf5", category: "legit_alternative",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "rn1q1rk1/pp2ppbp/6p1/3pNb2/3PP3/5PP1/PP4BP/R1BQ1RK1 b - - 0 12",
+                                                                                            move: "e4", category: "legit_alternative",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "rn1q1rk1/pp2ppbp/6p1/4Nb2/3Pp3/5PP1/PP4BP/R1BQ1RK1 w - - 0 13",
+                                                                                                move: "dxe4", category: "legit_alternative",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -11158,6 +13507,23 @@ const grunfeldDefenseTree: OpeningNode[] = [
                                     ]
                                   }
                                 ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        fen: "rnbqkb1r/pp1ppp1p/5np1/2p5/2PP4/2N5/PP2PPPP/R1BQKBNR w KQkq - 0 4",
+                        move: "c5", category: "legit_alternative",
+                        children: [
+                          {
+                            fen: "rnbqkb1r/pp1ppp1p/5np1/2P5/2P5/2N5/PP2PPPP/R1BQKBNR b KQkq - 0 4",
+                            move: "dxc5", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "rnbqkb1r/pp2pp1p/5np1/2Pp4/2P5/2N5/PP2PPPP/R1BQKBNR w KQkq d6 0 5",
+                                move: "d5", category: "legit_alternative",
+                                children: []
                               }
                             ]
                           }
@@ -11258,7 +13624,19 @@ const alekhineDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r2q1rk1/ppp1bppp/1nn1p3/4Pb2/2PP4/2N1BN2/PP2B1PP/R2QK2R w KQ - 4 11",
                                                                                 move: "O-O", category: "main_line",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/ppp1bppp/1nn1p3/4Pb2/2PP4/2N1BN2/PP2B1PP/R2Q1RK1 b - - 5 11",
+                                                                                    move: "O-O", category: "main_line",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/pppnbppp/2n1p3/4Pb2/2PP4/2N1BN2/PP2B1PP/R2Q1RK1 w - - 6 12",
+                                                                                        move: "Nd7", category: "main_line",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -11321,7 +13699,19 @@ const alekhineDefenseTree: OpeningNode[] = [
                                                                                               {
                                                                                                 fen: "r2q1rk1/ppp3pp/1nn1pb2/8/2PP2b1/1P2BN2/P3B1PP/RN1Q1RK1 w - - 0 13",
                                                                                                 move: "Bxf6", category: "legit_alternative",
-                                                                                                children: []
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "r2q1rk1/ppp3pp/1nn1pb2/2P5/3P2b1/1P2BN2/P3B1PP/RN1Q1RK1 b - - 0 13",
+                                                                                                    move: "c5", category: "legit_alternative",
+                                                                                                    children: [
+                                                                                                      {
+                                                                                                        fen: "r2q1rk1/ppp3pp/1nn1p3/2P5/3b2b1/1P2BN2/P3B1PP/RN1Q1RK1 w - - 0 14",
+                                                                                                        move: "Bxd4", category: "legit_alternative",
+                                                                                                        children: []
+                                                                                                      }
+                                                                                                    ]
+                                                                                                  }
+                                                                                                ]
                                                                                               }
                                                                                             ]
                                                                                           }
@@ -11394,7 +13784,19 @@ const alekhineDefenseTree: OpeningNode[] = [
                                                                                           {
                                                                                             fen: "rn1qk2r/pp3ppp/1n2p3/4Pb2/2PP4/P3BN2/6PP/R2QKB1R b KQkq - 0 12",
                                                                                             move: "cxd4", category: "legit_alternative",
-                                                                                            children: []
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "rn1q1rk1/pp3ppp/1n2p3/4Pb2/2PP4/P3BN2/6PP/R2QKB1R w KQ - 1 13",
+                                                                                                move: "O-O", category: "legit_alternative",
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "rn1q1rk1/pp3ppp/1n2p3/2P1Pb2/3P4/P3BN2/6PP/R2QKB1R b KQ - 0 13",
+                                                                                                    move: "c5", category: "legit_alternative",
+                                                                                                    children: []
+                                                                                                  }
+                                                                                                ]
+                                                                                              }
+                                                                                            ]
                                                                                           }
                                                                                         ]
                                                                                       }
@@ -11465,7 +13867,19 @@ const alekhineDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1bqk2r/ppp1ppbp/1n6/3Pp3/1nP2B2/2N2N2/PP2B1PP/R2QK2R w KQkq - 1 11",
                                                                                 move: "Nb4", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bqk2r/ppp1ppbp/1n6/3Pp3/1nP2B2/2N2N2/PP2B1PP/R2Q1RK1 b kq - 2 11",
+                                                                                    move: "O-O", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bq1rk1/ppp1ppbp/1n6/3Pp3/1nP2B2/2N2N2/PP2B1PP/R2Q1RK1 w - - 3 12",
+                                                                                        move: "O-O", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -11552,7 +13966,19 @@ const alekhineDefenseTree: OpeningNode[] = [
                                                                                               {
                                                                                                 fen: "r2q1rk1/ppp1bppp/2n5/2P2b2/2pP4/2N1BN2/PP3PPP/R2Q1RK1 w - - 0 13",
                                                                                                 move: "dxc4", category: "main_line",
-                                                                                                children: []
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "r2q1rk1/ppp1bppp/2n5/2PP1b2/2p5/2N1BN2/PP3PPP/R2Q1RK1 b - - 0 13",
+                                                                                                    move: "d5", category: "main_line",
+                                                                                                    children: [
+                                                                                                      {
+                                                                                                        fen: "r2q1rk1/ppp2ppp/2n5/2bP1b2/2p5/2N1BN2/PP3PPP/R2Q1RK1 w - - 0 14",
+                                                                                                        move: "Bxc5", category: "main_line",
+                                                                                                        children: []
+                                                                                                      }
+                                                                                                    ]
+                                                                                                  }
+                                                                                                ]
                                                                                               }
                                                                                             ]
                                                                                           }
@@ -11641,7 +14067,19 @@ const alekhineDefenseTree: OpeningNode[] = [
                                                                                               {
                                                                                                 fen: "r1nq1rk1/pp2ppbp/2n3p1/2Pp1b2/3P1B2/2N2N1P/PP2BPP1/R2Q1RK1 w - - 1 13",
                                                                                                 move: "Nc8", category: "legit_alternative",
-                                                                                                children: []
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "r1nq1rk1/pp2ppbp/2n3p1/2Pp1b2/3P1B2/2N4P/PP1NBPP1/R2Q1RK1 b - - 2 13",
+                                                                                                    move: "Nd2", category: "legit_alternative",
+                                                                                                    children: [
+                                                                                                      {
+                                                                                                        fen: "r1nq1rk1/pp2pp1p/2n3p1/2Pp1b2/3b1B2/2N4P/PP1NBPP1/R2Q1RK1 w - - 0 14",
+                                                                                                        move: "Bxd4", category: "legit_alternative",
+                                                                                                        children: []
+                                                                                                      }
+                                                                                                    ]
+                                                                                                  }
+                                                                                                ]
                                                                                               }
                                                                                             ]
                                                                                           }
@@ -11670,6 +14108,23 @@ const alekhineDefenseTree: OpeningNode[] = [
                                             ]
                                           }
                                         ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                fen: "rnbqkb1r/ppp1pppp/8/3np3/2PP4/8/PP3PPP/RNBQKBNR w KQkq - 0 5",
+                                move: "dxe5", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rnbqkb1r/ppp1pppp/8/3Pp3/3P4/8/PP3PPP/RNBQKBNR b KQkq - 0 5",
+                                    move: "cxd5", category: "legit_alternative",
+                                    children: [
+                                      {
+                                        fen: "rnbqkb1r/ppp1pppp/8/3P4/3p4/8/PP3PPP/RNBQKBNR w KQkq - 0 6",
+                                        move: "exd4", category: "legit_alternative",
+                                        children: []
                                       }
                                     ]
                                   }
@@ -11740,7 +14195,19 @@ const alekhineDefenseTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r2q1rk1/pp1nbppp/2p1pn2/5b2/2PP1B2/2N2N2/PP2BPPP/R2Q1RK1 w - - 5 12",
                                                                                         move: "O-O", category: "legit_alternative",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r2q1rk1/pp1nbppp/2p1pn2/2P2b2/3P1B2/2N2N2/PP2BPPP/R2Q1RK1 b - - 0 12",
+                                                                                            move: "c5", category: "legit_alternative",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r2q1rk1/pp1n1ppp/2p1pn2/2b2b2/3P1B2/2N2N2/PP2BPPP/R2Q1RK1 w - - 0 13",
+                                                                                                move: "Bxc5", category: "legit_alternative",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -11829,7 +14296,19 @@ const alekhineDefenseTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r2q1rk1/pp2bppp/1nnpp3/7b/2PP4/2N1BN1P/PP2BPP1/R2Q1RK1 w - - 3 12",
                                                                                         move: "Nc6", category: "legit_alternative",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r2q1rk1/pp2bppp/1nnpp3/2P4b/3P4/2N1BN1P/PP2BPP1/R2Q1RK1 b - - 0 12",
+                                                                                            move: "c5", category: "legit_alternative",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r2q1rk1/pp2bppp/1nn1p3/2p4b/3P4/2N1BN1P/PP2BPP1/R2Q1RK1 w - - 0 13",
+                                                                                                move: "dxc5", category: "legit_alternative",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -11858,6 +14337,23 @@ const alekhineDefenseTree: OpeningNode[] = [
                                     ]
                                   }
                                 ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        fen: "rnbqkb1r/pp1ppppp/8/2pnP3/3P4/8/PPP2PPP/RNBQKBNR w KQkq - 0 4",
+                        move: "c5", category: "legit_alternative",
+                        children: [
+                          {
+                            fen: "rnbqkb1r/pp1ppppp/8/2PnP3/8/8/PPP2PPP/RNBQKBNR b KQkq - 0 4",
+                            move: "dxc5", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "r1bqkb1r/pp1ppppp/2n5/2PnP3/8/8/PPP2PPP/RNBQKBNR w KQkq - 1 5",
+                                move: "Nc6", category: "legit_alternative",
+                                children: []
                               }
                             ]
                           }
@@ -11936,7 +14432,19 @@ const alekhineDefenseTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r1bq1rk1/p1p2ppp/1pnbp3/4P3/2B5/2P2N2/PP2QPPP/R1B2RK1 w - - 0 12",
                                                                                         move: "b6", category: "legit_alternative",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1bq1rk1/p1p2ppp/1pnbB3/4P3/8/2P2N2/PP2QPPP/R1B2RK1 b - - 0 12",
+                                                                                            move: "Bxe6", category: "legit_alternative",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r2q1rk1/p1p2ppp/1pnbb3/4P3/8/2P2N2/PP2QPPP/R1B2RK1 w - - 0 13",
+                                                                                                move: "Bxe6", category: "legit_alternative",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -12065,7 +14573,19 @@ const viennaGameTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r3kb1r/ppp1qppp/2n5/3pP3/8/2PP1BP1/P1P4P/R1BQK2R w KQkq - 1 11",
                                                                                 move: "Qe7", category: "main_line",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r3kb1r/ppp1qppp/2n5/3pP3/8/2PP1BP1/P1P4P/R1BQ1RK1 b kq - 2 11",
+                                                                                    move: "O-O", category: "main_line",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "2kr1b1r/ppp1qppp/2n5/3pP3/8/2PP1BP1/P1P4P/R1BQ1RK1 w - - 3 12",
+                                                                                        move: "O-O-O", category: "main_line",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -12134,7 +14654,19 @@ const viennaGameTree: OpeningNode[] = [
                                                                                   {
                                                                                     fen: "r1bq1rk1/ppp3pp/2n2b2/3p4/3P4/2P2N2/P1P1B1PP/R1BQ1RK1 b - - 0 11",
                                                                                     move: "d4", category: "legit_alternative",
-                                                                                    children: []
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bq1rk1/ppp3pp/2n5/3p4/3b4/2P2N2/P1P1B1PP/R1BQ1RK1 w - - 0 12",
+                                                                                        move: "Bxd4+", category: "legit_alternative",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1bq1rk1/ppp3pp/2n5/3p4/3P4/5N2/P1P1B1PP/R1BQ1RK1 b - - 0 12",
+                                                                                            move: "cxd4", category: "legit_alternative",
+                                                                                            children: []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
                                                                                   }
                                                                                 ]
                                                                               }
@@ -12215,7 +14747,19 @@ const viennaGameTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r1bq1rk1/pp4pp/2n2b2/2pp4/5B2/2PP1N2/P1P1B1PP/R2Q1RK1 w - - 0 12",
                                                                                         move: "Bxf6", category: "legit_alternative",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1bq1rk1/pp4pp/2n2b2/2pp4/2P2B2/3P1N2/P1P1B1PP/R2Q1RK1 b - - 0 12",
+                                                                                            move: "c4", category: "legit_alternative",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r1bq1rk1/pp4pp/2n2b2/2p5/2p2B2/3P1N2/P1P1B1PP/R2Q1RK1 w - - 0 13",
+                                                                                                move: "dxc4", category: "legit_alternative",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -12242,6 +14786,40 @@ const viennaGameTree: OpeningNode[] = [
                                         ]
                                       }
                                     ]
+                                  }
+                                ]
+                              },
+                              {
+                                fen: "rnbqkb1r/ppp2ppp/5n2/4P3/4p3/2N5/PPPP2PP/R1BQKBNR w KQkq - 0 5",
+                                move: "dxe4", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rnbqkb1r/ppp2ppp/5n2/4P3/3Pp3/2N5/PPP3PP/R1BQKBNR b KQkq d3 0 5",
+                                    move: "d4", category: "legit_alternative",
+                                    children: [
+                                      {
+                                        fen: "rnbqkb1r/pp3ppp/5n2/2p1P3/3Pp3/2N5/PPP3PP/R1BQKBNR w KQkq - 0 6",
+                                        move: "c5", category: "legit_alternative",
+                                        children: []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            fen: "rnbqkb1r/ppp2ppp/5n2/3Pp3/5P2/2N5/PPPP2PP/R1BQKBNR b KQkq - 0 4",
+                            move: "exd5", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "rnbqkb1r/pp3ppp/5n2/2pPp3/5P2/2N5/PPPP2PP/R1BQKBNR w KQkq c6 0 5",
+                                move: "c5", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rnbqkb1r/pp3ppp/5n2/2pPP3/8/2N5/PPPP2PP/R1BQKBNR b KQkq - 0 5",
+                                    move: "fxe5", category: "legit_alternative",
+                                    children: []
                                   }
                                 ]
                               }
@@ -12300,7 +14878,19 @@ const viennaGameTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "2kr1bnr/ppp1qppp/2np4/4P3/3P1Bb1/2N2N2/PPP1Q1PP/2KR1B1R w - - 3 10",
                                                                         move: "O-O-O", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "2kr1bnr/ppp1qppp/2np4/3PP3/5Bb1/2N2N2/PPP1Q1PP/2KR1B1R b - - 0 10",
+                                                                            move: "d5", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "2kr1bnr/ppp1qppp/2n5/3Pp3/5Bb1/2N2N2/PPP1Q1PP/2KR1B1R w - - 0 11",
+                                                                                move: "dxe5", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -12395,7 +14985,19 @@ const viennaGameTree: OpeningNode[] = [
                                                                                   {
                                                                                     fen: "r2q1rk1/ppp2ppp/5n2/2p1p3/2B1PPb1/2PP1Q2/PP4PP/R1B2RK1 b - - 0 11",
                                                                                     move: "Qxf3", category: "main_line",
-                                                                                    children: []
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/ppp2ppp/5n2/2p1p3/2B1PP2/2PP1b2/PP4PP/R1B2RK1 w - - 0 12",
+                                                                                        move: "Bxf3", category: "main_line",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r2q1rk1/ppp2ppp/5n2/2p1P3/2B1P3/2PP1b2/PP4PP/R1B2RK1 b - - 0 12",
+                                                                                            move: "fxe5", category: "main_line",
+                                                                                            children: []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
                                                                                   }
                                                                                 ]
                                                                               }
@@ -12482,7 +15084,19 @@ const viennaGameTree: OpeningNode[] = [
                                                                           {
                                                                             fen: "r1bq1rk1/ppppbp1p/3n2p1/4n3/3P4/1BN5/PPP1QPPP/R1B1K2R b KQ - 0 10",
                                                                             move: "d4", category: "legit_alternative",
-                                                                            children: []
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r1bq1rk1/pp1pbp1p/3n2p1/2p1n3/3P4/1BN5/PPP1QPPP/R1B1K2R w KQ - 0 11",
+                                                                                move: "c5", category: "legit_alternative",
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bq1rk1/pp1pbp1p/3n2p1/2p1n3/3P4/1BN5/PPP1QPPP/R1B2RK1 b - - 1 11",
+                                                                                    move: "O-O", category: "legit_alternative",
+                                                                                    children: []
+                                                                                  }
+                                                                                ]
+                                                                              }
+                                                                            ]
                                                                           }
                                                                         ]
                                                                       }
@@ -12520,9 +15134,7 @@ const viennaGameTree: OpeningNode[] = [
                             children: [
                               {
                                 fen: "rnbqkb1r/ppp2pp1/3p1n1p/4p3/2B1P3/2NP4/PPP2PPP/R1BQK1NR w KQkq - 0 5",
-                                move: "h6", category: "mistake",
-                                explanation: "h6 wastes time. Develop with Bc5 or Nc6.",
-                                suggestedMove: "Bc5",
+                                move: "h6", category: "mistake", explanation: "h6 wastes time. Develop with Bc5 or Nc6.", suggestedMove: "Bc5",
                                 children: []
                               }
                             ]
@@ -12592,7 +15204,19 @@ const viennaGameTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r2q1rk1/ppp2ppp/5n2/2p1p3/2BnPPb1/3P1N2/PPP3PP/R1BQ1RK1 w - - 2 10",
                                                                         move: "Nd4", category: "main_line",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r2q1rk1/ppp2ppp/5n2/2p1P3/2BnP1b1/3P1N2/PPP3PP/R1BQ1RK1 b - - 0 10",
+                                                                            move: "fxe5", category: "main_line",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2q1rk1/ppp2ppp/5n2/2p1P3/2B1P1b1/3P1n2/PPP3PP/R1BQ1RK1 w - - 0 11",
+                                                                                move: "Nxf3+", category: "main_line",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -12675,7 +15299,19 @@ const viennaGameTree: OpeningNode[] = [
                                                                       {
                                                                         fen: "r2qkbnr/ppp2p1p/8/n2P4/2BP1pb1/2NQ1p2/PPP3PP/R1B2RK1 w kq - 3 10",
                                                                         move: "Na5", category: "legit_alternative",
-                                                                        children: []
+                                                                        children: [
+                                                                          {
+                                                                            fen: "r2qkbnr/ppp2p1p/8/n2P4/2BP1Bb1/2NQ1p2/PPP3PP/R4RK1 b kq - 0 10",
+                                                                            move: "Bxf4", category: "legit_alternative",
+                                                                            children: [
+                                                                              {
+                                                                                fen: "r2qkbnr/pp3p1p/8/n1pP4/2BP1Bb1/2NQ1p2/PPP3PP/R4RK1 w kq c6 0 11",
+                                                                                move: "c5", category: "legit_alternative",
+                                                                                children: []
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        ]
                                                                       }
                                                                     ]
                                                                   }
@@ -12766,7 +15402,19 @@ const viennaGameTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "2kr3r/pppqnppp/3p1n2/2bPp3/8/3PB1P1/PPP1NPBP/R2Q1RK1 w - - 1 11",
                                                                                 move: "Ne7", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "2kr3r/pppqnppp/3p1n2/2BPp3/8/3P2P1/PPP1NPBP/R2Q1RK1 b - - 0 11",
+                                                                                    move: "Bxc5", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "2kr3r/pppqnppp/5n2/2pPp3/8/3P2P1/PPP1NPBP/R2Q1RK1 w - - 0 12",
+                                                                                        move: "dxc5", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -12899,7 +15547,19 @@ const catalanOpeningTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r2q1rk1/1pp1bppp/n1b1pn2/p7/P1QP1B2/2N2NP1/1P2PPBP/R4RK1 w - - 2 12",
                                                                                         move: "Na6", category: "main_line",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r2q1rk1/1pB1bppp/n1b1pn2/p7/P1QP4/2N2NP1/1P2PPBP/R4RK1 b - - 0 12",
+                                                                                            move: "Bxc7", category: "main_line",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r2q1rk1/1pB1bppp/n3pn2/p7/P1QP4/2N2bP1/1P2PPBP/R4RK1 w - - 0 13",
+                                                                                                move: "Bxf3", category: "main_line",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -12958,7 +15618,19 @@ const catalanOpeningTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r1b2rk1/p1p1qppp/5n2/4p3/Q1pP4/6P1/PP2PP1P/RNB2RK1 w - - 0 12",
                                                                                         move: "e5", category: "legit_alternative",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1b2rk1/p1p1qppp/5n2/4P3/Q1p5/6P1/PP2PP1P/RNB2RK1 b - - 0 12",
+                                                                                            move: "dxe5", category: "legit_alternative",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r1b2rk1/p3qppp/5n2/2p1P3/Q1p5/6P1/PP2PP1P/RNB2RK1 w - - 0 13",
+                                                                                                move: "c5", category: "legit_alternative",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -13027,7 +15699,19 @@ const catalanOpeningTree: OpeningNode[] = [
                                                                                           {
                                                                                             fen: "2rq1rk1/pb1nbppp/1pp1pn2/8/2PPN3/1P3NP1/P1Q2PBP/R1BR2K1 b - - 0 12",
                                                                                             move: "Nxe4", category: "legit_alternative",
-                                                                                            children: []
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "2rq1rk1/pb1nbppp/1p2pn2/2p5/2PPN3/1P3NP1/P1Q2PBP/R1BR2K1 w - - 0 13",
+                                                                                                move: "c5", category: "legit_alternative",
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "2rq1rk1/pb1nbppp/1p2pn2/2P5/2P1N3/1P3NP1/P1Q2PBP/R1BR2K1 b - - 0 13",
+                                                                                                    move: "dxc5", category: "legit_alternative",
+                                                                                                    children: []
+                                                                                                  }
+                                                                                                ]
+                                                                                              }
+                                                                                            ]
                                                                                           }
                                                                                         ]
                                                                                       }
@@ -13088,7 +15772,19 @@ const catalanOpeningTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r1b2rk1/ppqnbppp/2p1pn2/8/2PP4/3Q1NP1/PP3PBP/R1BR2K1 w - - 4 12",
                                                                                         move: "Qc7", category: "legit_alternative",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1b2rk1/ppqnbppp/2p1pn2/2P5/3P4/3Q1NP1/PP3PBP/R1BR2K1 b - - 0 12",
+                                                                                            move: "c5", category: "legit_alternative",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r1b2rk1/ppqn1ppp/2p1pn2/2b5/3P4/3Q1NP1/PP3PBP/R1BR2K1 w - - 0 13",
+                                                                                                move: "Bxc5", category: "legit_alternative",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -13157,28 +15853,40 @@ const catalanOpeningTree: OpeningNode[] = [
                                                                                           {
                                                                                             fen: "r2q1rk1/p2nbppp/bpp1p3/8/2PPQB2/5NP1/PP3PBP/R4RK1 b - - 0 12",
                                                                                             move: "Qxe4", category: "legit_alternative",
-                                                                                            children: []
-                                                                                          },
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r2q1rk1/p2nbppp/1pp1p3/8/2bPQB2/5NP1/PP3PBP/R4RK1 w - - 0 13",
+                                                                                                move: "Bxc4", category: "legit_alternative",
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "r2q1rk1/p2nbppp/1pp1p3/3P4/2b1QB2/5NP1/PP3PBP/R4RK1 b - - 0 13",
+                                                                                                    move: "d5", category: "legit_alternative",
+                                                                                                    children: []
+                                                                                                  }
+                                                                                                ]
+                                                                                              }
+                                                                                            ]
+                                                                                          }
                                                                                         ]
-                                                                                      },
+                                                                                      }
                                                                                     ]
-                                                                                  },
+                                                                                  }
                                                                                 ]
-                                                                              },
+                                                                              }
                                                                             ]
-                                                                          },
+                                                                          }
                                                                         ]
-                                                                      },
+                                                                      }
                                                                     ]
-                                                                  },
+                                                                  }
                                                                 ]
-                                                              },
+                                                              }
                                                             ]
-                                                          },
+                                                          }
                                                         ]
-                                                      },
+                                                      }
                                                     ]
-                                                  },
+                                                  }
                                                 ]
                                               },
                                               {
@@ -13228,31 +15936,60 @@ const catalanOpeningTree: OpeningNode[] = [
                                                                                           {
                                                                                             fen: "r2q1rk1/1bpnbppp/4pn2/8/3PN3/5NP1/PP3PBP/R1BQR1K1 b - - 0 12",
                                                                                             move: "Nxe4", category: "legit_alternative",
-                                                                                            children: []
-                                                                                          },
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r2q1rk1/2pnbppp/4pn2/8/3Pb3/5NP1/PP3PBP/R1BQR1K1 w - - 0 13",
+                                                                                                move: "Bxe4", category: "legit_alternative",
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "r2q1rk1/2pnbppp/4pn2/3P4/4b3/5NP1/PP3PBP/R1BQR1K1 b - - 0 13",
+                                                                                                    move: "d5", category: "legit_alternative",
+                                                                                                    children: []
+                                                                                                  }
+                                                                                                ]
+                                                                                              }
+                                                                                            ]
+                                                                                          }
                                                                                         ]
-                                                                                      },
+                                                                                      }
                                                                                     ]
-                                                                                  },
+                                                                                  }
                                                                                 ]
-                                                                              },
+                                                                              }
                                                                             ]
-                                                                          },
+                                                                          }
                                                                         ]
-                                                                      },
+                                                                      }
                                                                     ]
-                                                                  },
+                                                                  }
                                                                 ]
-                                                              },
+                                                              }
                                                             ]
-                                                          },
+                                                          }
                                                         ]
-                                                      },
+                                                      }
                                                     ]
-                                                  },
+                                                  }
                                                 ]
-                                              },
+                                              }
                                             ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    fen: "rnbqk2r/ppp1bppp/4pn2/3P4/3P4/6P1/PP2PPBP/RNBQK1NR b KQkq - 0 5",
+                                    move: "cxd5", category: "legit_alternative",
+                                    children: [
+                                      {
+                                        fen: "rnbq1rk1/ppp1bppp/4pn2/3P4/3P4/6P1/PP2PPBP/RNBQK1NR w KQ - 1 6",
+                                        move: "O-O", category: "legit_alternative",
+                                        children: [
+                                          {
+                                            fen: "rnbq1rk1/ppp1bppp/4pn2/3P4/3PP3/6P1/PP3PBP/RNBQK1NR b KQ - 0 6",
+                                            move: "e4", category: "legit_alternative",
+                                            children: []
                                           }
                                         ]
                                       }
@@ -13319,7 +16056,19 @@ const catalanOpeningTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r1b2rk1/p4ppp/1pn1pn2/2b5/2P5/5NP1/P2NPPBP/R1BR2K1 w - - 0 12",
                                                                                         move: "b6", category: "legit_alternative",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1b2rk1/p4ppp/1pn1pn2/2b5/2P1P3/5NP1/P2N1PBP/R1BR2K1 b - - 0 12",
+                                                                                            move: "e4", category: "legit_alternative",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r1b2rk1/p4ppp/1pn1pn2/8/2P1P3/5NP1/P2N1bBP/R1BR2K1 w - - 0 13",
+                                                                                                move: "Bxf2+", category: "legit_alternative",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -13346,6 +16095,23 @@ const catalanOpeningTree: OpeningNode[] = [
                                         ]
                                       }
                                     ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            fen: "rnbqkb1r/ppp2ppp/4pn2/3P4/3P4/6P1/PP2PP1P/RNBQKBNR b KQkq - 0 4",
+                            move: "cxd5", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "rnbqkb1r/ppp2ppp/5n2/3p4/3P4/6P1/PP2PP1P/RNBQKBNR w KQkq - 0 5",
+                                move: "exd5", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rnbqkb1r/ppp2ppp/5n2/3p4/3PP3/6P1/PP3P1P/RNBQKBNR b KQkq - 0 5",
+                                    move: "e4", category: "legit_alternative",
+                                    children: []
                                   }
                                 ]
                               }
@@ -13412,7 +16178,19 @@ const catalanOpeningTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r2q1rk1/pb1nbppp/1pp1pn2/3p4/2PP1B2/5NP1/PPQ1PPBP/RN1R2K1 w - - 2 11",
                                                                                 move: "Bb7", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r2q1rk1/pb1nbppp/1pp1pn2/3P4/3P1B2/5NP1/PPQ1PPBP/RN1R2K1 b - - 0 11",
+                                                                                    move: "cxd5", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/pb1nbppp/1p2pn2/3p4/3P1B2/5NP1/PPQ1PPBP/RN1R2K1 w - - 0 12",
+                                                                                        move: "cxd5", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -13545,7 +16323,19 @@ const benoniDefenseTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r1bqr1k1/ppn2pbp/3p1np1/2pP4/4P3/2N2P2/PP1NB1PP/R1BQ1RK1 w - - 1 12",
                                                                                         move: "Nc7", category: "main_line",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1bqr1k1/ppn2pbp/3p1np1/2pPP3/8/2N2P2/PP1NB1PP/R1BQ1RK1 b - - 0 12",
+                                                                                            move: "e5", category: "main_line",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r1bqr1k1/ppn2pbp/5np1/2pPp3/8/2N2P2/PP1NB1PP/R1BQ1RK1 w - - 0 13",
+                                                                                                move: "dxe5", category: "main_line",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -13582,7 +16372,19 @@ const benoniDefenseTree: OpeningNode[] = [
                                                                                               {
                                                                                                 fen: "r2qr1k1/pp1n1pbp/3p1np1/2pP4/P3P3/2N5/1P1NQPPP/R1B2RK1 w - - 1 13",
                                                                                                 move: "Re8", category: "legit_alternative",
-                                                                                                children: []
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "r2qr1k1/pp1n1pbp/3p1np1/2pPP3/P7/2N5/1P1NQPPP/R1B2RK1 b - - 0 13",
+                                                                                                    move: "e5", category: "legit_alternative",
+                                                                                                    children: [
+                                                                                                      {
+                                                                                                        fen: "r2qr1k1/pp1n1pbp/5np1/2pPp3/P7/2N5/1P1NQPPP/R1B2RK1 w - - 0 14",
+                                                                                                        move: "dxe5", category: "legit_alternative",
+                                                                                                        children: []
+                                                                                                      }
+                                                                                                    ]
+                                                                                                  }
+                                                                                                ]
                                                                                               }
                                                                                             ]
                                                                                           }
@@ -13623,7 +16425,19 @@ const benoniDefenseTree: OpeningNode[] = [
                                                                                               {
                                                                                                 fen: "rn3rk1/1p2qpbp/p2p1np1/2pP4/P3PB2/2N2B2/1P3PPP/R2Q1RK1 w - - 1 13",
                                                                                                 move: "Qe7", category: "legit_alternative",
-                                                                                                children: []
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "rn3rk1/1p2qpbp/p2B1np1/2pP4/P3P3/2N2B2/1P3PPP/R2Q1RK1 b - - 0 13",
+                                                                                                    move: "Bxd6", category: "legit_alternative",
+                                                                                                    children: [
+                                                                                                      {
+                                                                                                        fen: "rn3rk1/1p2qpbp/p2B1np1/3P4/P1p1P3/2N2B2/1P3PPP/R2Q1RK1 w - - 0 14",
+                                                                                                        move: "c4", category: "legit_alternative",
+                                                                                                        children: []
+                                                                                                      }
+                                                                                                    ]
+                                                                                                  }
+                                                                                                ]
                                                                                               }
                                                                                             ]
                                                                                           }
@@ -13690,7 +16504,19 @@ const benoniDefenseTree: OpeningNode[] = [
                                                                                           {
                                                                                             fen: "r1bq1rk1/ppnn1pbp/3p2p1/2pP4/P3PP2/2NB1N2/1P4PP/R1BQ1RK1 b - - 6 12",
                                                                                             move: "Bd3", category: "legit_alternative",
-                                                                                            children: []
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r1bq1rk1/ppnn1p1p/3p2p1/2pP4/P3PP2/2bB1N2/1P4PP/R1BQ1RK1 w - - 0 13",
+                                                                                                move: "Bxc3", category: "legit_alternative",
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "r1bq1rk1/ppnn1p1p/3p2p1/2pPP3/P4P2/2bB1N2/1P4PP/R1BQ1RK1 b - - 0 13",
+                                                                                                    move: "e5", category: "legit_alternative",
+                                                                                                    children: []
+                                                                                                  }
+                                                                                                ]
+                                                                                              }
+                                                                                            ]
                                                                                           }
                                                                                         ]
                                                                                       }
@@ -13755,7 +16581,19 @@ const benoniDefenseTree: OpeningNode[] = [
                                                                                           {
                                                                                             fen: "r1bqr1k1/pp3pbp/3p1np1/2pPn3/P3PP2/2NB2N1/1P4PP/R1BQ1RK1 b - - 0 12",
                                                                                             move: "f4", category: "legit_alternative",
-                                                                                            children: []
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r1bqr1k1/pp3pbp/3p1np1/3Pn3/P1p1PP2/2NB2N1/1P4PP/R1BQ1RK1 w - - 0 13",
+                                                                                                move: "c4", category: "legit_alternative",
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "r1bqr1k1/pp3pbp/3p1np1/3PP3/P1p1P3/2NB2N1/1P4PP/R1BQ1RK1 b - - 0 13",
+                                                                                                    move: "fxe5", category: "legit_alternative",
+                                                                                                    children: []
+                                                                                                  }
+                                                                                                ]
+                                                                                              }
+                                                                                            ]
                                                                                           }
                                                                                         ]
                                                                                       }
@@ -13781,9 +16619,7 @@ const benoniDefenseTree: OpeningNode[] = [
                                               },
                                               {
                                                 fen: "rnbqkb1r/p4ppp/3p1n2/1ppP4/4P3/2N5/PP3PPP/R1BQKBNR w KQkq - 0 7",
-                                                move: "b5", category: "mistake",
-                                                explanation: "b5 is premature without g6/Bg7. Play g6 first to fianchetto.",
-                                                suggestedMove: "g6",
+                                                move: "b5", category: "mistake", explanation: "b5 is premature without g6/Bg7. Play g6 first to fianchetto.", suggestedMove: "g6",
                                                 children: []
                                               }
                                             ]
@@ -13843,7 +16679,19 @@ const benoniDefenseTree: OpeningNode[] = [
                                                                                               {
                                                                                                 fen: "r1bqr1k1/p1n2pbp/1p1p1np1/2pP4/P1N5/2N3P1/1P2PPBP/R1BQ1RK1 w - - 0 13",
                                                                                                 move: "b6", category: "main_line",
-                                                                                                children: []
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "r1bqr1k1/p1n2pbp/1p1p1np1/2pP4/P1N1P3/2N3P1/1P3PBP/R1BQ1RK1 b - - 0 13",
+                                                                                                    move: "e4", category: "main_line",
+                                                                                                    children: [
+                                                                                                      {
+                                                                                                        fen: "r1bqr1k1/p1nn1pbp/1p1p2p1/2pP4/P1N1P3/2N3P1/1P3PBP/R1BQ1RK1 w - - 1 14",
+                                                                                                        move: "Nd7", category: "main_line",
+                                                                                                        children: []
+                                                                                                      }
+                                                                                                    ]
+                                                                                                  }
+                                                                                                ]
                                                                                               }
                                                                                             ]
                                                                                           }
@@ -13884,7 +16732,19 @@ const benoniDefenseTree: OpeningNode[] = [
                                                                                               {
                                                                                                 fen: "1rbqr1k1/1p1n1pbp/p2p1np1/2pP4/P7/2N3PP/1P1NPPB1/R1BQ1RK1 w - - 1 13",
                                                                                                 move: "Rb8", category: "legit_alternative",
-                                                                                                children: []
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "1rbqr1k1/1p1n1pbp/p2p1np1/2pP4/P3P3/2N3PP/1P1N1PB1/R1BQ1RK1 b - - 0 13",
+                                                                                                    move: "e4", category: "legit_alternative",
+                                                                                                    children: [
+                                                                                                      {
+                                                                                                        fen: "1rbqr1k1/1p1n1pbp/p2p1np1/3P4/P1p1P3/2N3PP/1P1N1PB1/R1BQ1RK1 w - - 0 14",
+                                                                                                        move: "c4", category: "legit_alternative",
+                                                                                                        children: []
+                                                                                                      }
+                                                                                                    ]
+                                                                                                  }
+                                                                                                ]
                                                                                               }
                                                                                             ]
                                                                                           }
@@ -13933,7 +16793,19 @@ const benoniDefenseTree: OpeningNode[] = [
                                                                                                       {
                                                                                                         fen: "r1b1r1k1/pp2qpbp/5np1/2pPp3/5B2/2N3P1/PP1QPPBP/R3R1K1 w - - 0 14",
                                                                                                         move: "dxe5", category: "legit_alternative",
-                                                                                                        children: []
+                                                                                                        children: [
+                                                                                                          {
+                                                                                                            fen: "r1b1r1k1/pp2qpbp/5np1/2pPB3/8/2N3P1/PP1QPPBP/R3R1K1 b - - 0 14",
+                                                                                                            move: "Bxe5", category: "legit_alternative",
+                                                                                                            children: [
+                                                                                                              {
+                                                                                                                fen: "r1b1r1k1/pp2qpbp/5np1/3PB3/2p5/2N3P1/PP1QPPBP/R3R1K1 w - - 0 15",
+                                                                                                                move: "c4", category: "legit_alternative",
+                                                                                                                children: []
+                                                                                                              }
+                                                                                                            ]
+                                                                                                          }
+                                                                                                        ]
                                                                                                       }
                                                                                                     ]
                                                                                                   }
@@ -14012,33 +16884,79 @@ const benoniDefenseTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r1bqr1k1/ppn2pbp/3p1np1/2pP4/4P3/2N2P2/PP1NB1PP/R1BQ1RK1 w - - 1 12",
                                                                                         move: "Nc7", category: "legit_alternative",
-                                                                                        children: []
-                                                                                      },
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1bqr1k1/ppn2pbp/3p1np1/2pPP3/8/2N2P2/PP1NB1PP/R1BQ1RK1 b - - 0 12",
+                                                                                            move: "e5", category: "legit_alternative",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r1bqr1k1/ppn2pbp/5np1/2pPp3/8/2N2P2/PP1NB1PP/R1BQ1RK1 w - - 0 13",
+                                                                                                move: "dxe5", category: "legit_alternative",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
+                                                                                      }
                                                                                     ]
-                                                                                  },
+                                                                                  }
                                                                                 ]
-                                                                              },
+                                                                              }
                                                                             ]
-                                                                          },
+                                                                          }
                                                                         ]
-                                                                      },
+                                                                      }
                                                                     ]
-                                                                  },
+                                                                  }
                                                                 ]
-                                                              },
+                                                              }
                                                             ]
-                                                          },
+                                                          }
                                                         ]
-                                                      },
+                                                      }
                                                     ]
-                                                  },
+                                                  }
                                                 ]
-                                              },
+                                              }
                                             ]
-                                          },
+                                          }
                                         ]
                                       }
                                     ]
+                                  }
+                                ]
+                              },
+                              {
+                                fen: "rnbqkb1r/pp1p1ppp/5n2/2pPp3/2P5/2N5/PP2PPPP/R1BQKBNR w KQkq - 0 5",
+                                move: "e5", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rnbqkb1r/pp1p1ppp/5n2/2pPp3/2P1P3/2N5/PP3PPP/R1BQKBNR b KQkq - 0 5",
+                                    move: "e4", category: "legit_alternative",
+                                    children: [
+                                      {
+                                        fen: "r1bqkb1r/pp1p1ppp/2n2n2/2pPp3/2P1P3/2N5/PP3PPP/R1BQKBNR w KQkq - 1 6",
+                                        move: "Nc6", category: "legit_alternative",
+                                        children: []
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            fen: "rnbqkb1r/pp1p1ppp/4pn2/2pP4/2P1P3/8/PP3PPP/RNBQKBNR b KQkq - 0 4",
+                            move: "e4", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "rnbqkb1r/pp1p1ppp/5n2/2pp4/2P1P3/8/PP3PPP/RNBQKBNR w KQkq - 0 5",
+                                move: "exd5", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rnbqkb1r/pp1p1ppp/5n2/2pP4/4P3/8/PP3PPP/RNBQKBNR b KQkq - 0 5",
+                                    move: "cxd5", category: "legit_alternative",
+                                    children: []
                                   }
                                 ]
                               }
@@ -14105,7 +17023,19 @@ const benoniDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r1bqnrk1/pp1nb2p/3p2p1/2pPpp2/2P1PP2/2N3P1/PP2N1BP/R1BQ1RK1 w - - 0 11",
                                                                                 move: "f5", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r1bqnrk1/pp1nb2p/3p2p1/2pPPp2/2P1P3/2N3P1/PP2N1BP/R1BQ1RK1 b - - 0 11",
+                                                                                    move: "fxe5", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bqnrk1/pp1nb2p/6p1/2pPpp2/2P1P3/2N3P1/PP2N1BP/R1BQ1RK1 w - - 0 12",
+                                                                                        move: "dxe5", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -14234,7 +17164,19 @@ const philidorDefenseTree: OpeningNode[] = [
                                                                                   {
                                                                                     fen: "r2q1rk1/pb1nbpp1/1ppp1n1p/4p3/P2PP2B/2N2N2/BPP2PPP/R2QR1K1 b - - 1 11",
                                                                                     move: "Bh4", category: "main_line",
-                                                                                    children: []
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/pb1nbpp1/1ppp1n1p/8/P2pP2B/2N2N2/BPP2PPP/R2QR1K1 w - - 0 12",
+                                                                                        move: "exd4", category: "main_line",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r2q1rk1/pb1nbpp1/1ppp1B1p/8/P2pP3/2N2N2/BPP2PPP/R2QR1K1 b - - 0 12",
+                                                                                            move: "Bxf6", category: "main_line",
+                                                                                            children: []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
                                                                                   }
                                                                                 ]
                                                                               }
@@ -14275,7 +17217,19 @@ const philidorDefenseTree: OpeningNode[] = [
                                                                                   {
                                                                                     fen: "r1bqnrk1/pp1nbp1p/3p2p1/2pPp3/P1B1PP2/2N5/1PPN2PP/R1BQR1K1 b - - 0 11",
                                                                                     move: "f4", category: "legit_alternative",
-                                                                                    children: []
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bq1rk1/pp1nbp1p/3p1np1/2pPp3/P1B1PP2/2N5/1PPN2PP/R1BQR1K1 w - - 1 12",
+                                                                                        move: "Nef6", category: "legit_alternative",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1bq1rk1/pp1nbp1p/3p1np1/2pPP3/P1B1P3/2N5/1PPN2PP/R1BQR1K1 b - - 0 12",
+                                                                                            move: "fxe5", category: "legit_alternative",
+                                                                                            children: []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
                                                                                   }
                                                                                 ]
                                                                               }
@@ -14328,7 +17282,19 @@ const philidorDefenseTree: OpeningNode[] = [
                                                                                   {
                                                                                     fen: "r4rk1/pbqnbppp/1ppp1n2/4p3/P1BPP3/2N1BN1P/1PPQ1PP1/R3R1K1 b - - 3 11",
                                                                                     move: "Qd2", category: "legit_alternative",
-                                                                                    children: []
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r4rk1/pbqnbppp/1ppp1n2/8/P1BpP3/2N1BN1P/1PPQ1PP1/R3R1K1 w - - 0 12",
+                                                                                        move: "exd4", category: "legit_alternative",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r4rk1/pbqnbBpp/1ppp1n2/8/P2pP3/2N1BN1P/1PPQ1PP1/R3R1K1 b - - 0 12",
+                                                                                            move: "Bxf7+", category: "legit_alternative",
+                                                                                            children: []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
                                                                                   }
                                                                                 ]
                                                                               }
@@ -14347,6 +17313,23 @@ const philidorDefenseTree: OpeningNode[] = [
                                                     ]
                                                   }
                                                 ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        fen: "r1bqkb1r/pppn1ppp/3p1n2/8/2BpP3/2N2N2/PPP2PPP/R1BQK2R w KQkq - 0 6",
+                                        move: "exd4", category: "legit_alternative",
+                                        children: [
+                                          {
+                                            fen: "r1bqkb1r/pppn1ppp/3p1n2/8/2BpP3/2N2N2/PPP2PPP/R1BQ1RK1 b kq - 1 6",
+                                            move: "O-O", category: "legit_alternative",
+                                            children: [
+                                              {
+                                                fen: "r1bqkb1r/pp1n1ppp/3p1n2/2p5/2BpP3/2N2N2/PPP2PPP/R1BQ1RK1 w kq - 0 7",
+                                                move: "c5", category: "legit_alternative",
+                                                children: []
                                               }
                                             ]
                                           }
@@ -14401,7 +17384,19 @@ const philidorDefenseTree: OpeningNode[] = [
                                                                               {
                                                                                 fen: "r3k2r/pbqnbpp1/2pp1n1p/1p2p3/3PP1P1/2N1BN1P/PPPQ1PB1/2KR3R w kq - 4 11",
                                                                                 move: "Qc7", category: "legit_alternative",
-                                                                                children: []
+                                                                                children: [
+                                                                                  {
+                                                                                    fen: "r3k2r/pbqnbpp1/2pp1n1p/1p2P3/4P1P1/2N1BN1P/PPPQ1PB1/2KR3R b kq - 0 11",
+                                                                                    move: "dxe5", category: "legit_alternative",
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r4rk1/pbqnbpp1/2pp1n1p/1p2P3/4P1P1/2N1BN1P/PPPQ1PB1/2KR3R w - - 1 12",
+                                                                                        move: "O-O", category: "legit_alternative",
+                                                                                        children: []
+                                                                                      }
+                                                                                    ]
+                                                                                  }
+                                                                                ]
                                                                               }
                                                                             ]
                                                                           }
@@ -14482,7 +17477,19 @@ const philidorDefenseTree: OpeningNode[] = [
                                                                                   {
                                                                                     fen: "r1b1r1k1/ppqnbppp/2p2n2/4p3/P3P3/BPN5/2PNBPPP/R2Q1RK1 b - - 4 11",
                                                                                     move: "Nd2", category: "legit_alternative",
-                                                                                    children: []
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1b1r1k1/ppqn1ppp/2p2n2/4p3/P3P3/bPN5/2PNBPPP/R2Q1RK1 w - - 0 12",
+                                                                                        move: "Bxa3", category: "legit_alternative",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1b1r1k1/ppqn1ppp/2p2n2/4p3/P3P3/bPN2N2/2P1BPPP/R2Q1RK1 b - - 1 12",
+                                                                                            move: "Nf3", category: "legit_alternative",
+                                                                                            children: []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
                                                                                   }
                                                                                 ]
                                                                               }
@@ -14569,7 +17576,19 @@ const philidorDefenseTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "2rq1rk1/1p2bppp/p1npbn2/2p5/P3PB2/2N2N2/1PP1BPPP/R2QR1K1 w - - 3 12",
                                                                                         move: "Rc8", category: "legit_alternative",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "2rq1rk1/1p2bppp/p1nBbn2/2p5/P3P3/2N2N2/1PP1BPPP/R2QR1K1 b - - 0 12",
+                                                                                            move: "Bxd6", category: "legit_alternative",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "2rq1rk1/1p3ppp/p1nbbn2/2p5/P3P3/2N2N2/1PP1BPPP/R2QR1K1 w - - 0 13",
+                                                                                                move: "Bxd6", category: "legit_alternative",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -14601,9 +17620,7 @@ const philidorDefenseTree: OpeningNode[] = [
                               },
                               {
                                 fen: "rn1qkb1r/ppp2ppp/3p1n2/4p3/3PP1b1/2N2N2/PPP2PPP/R1BQKB1R w KQkq - 3 5",
-                                move: "Bg4", category: "mistake",
-                                explanation: "Bg4 is premature and awkward. Play Nbd7 or Be7 first.",
-                                suggestedMove: "Nbd7",
+                                move: "Bg4", category: "mistake", explanation: "Bg4 is premature and awkward. Play Nbd7 or Be7 first.", suggestedMove: "Nbd7",
                                 children: []
                               }
                             ]
@@ -14675,7 +17692,19 @@ const philidorDefenseTree: OpeningNode[] = [
                                                                                           {
                                                                                             fen: "rnb2rk1/ppp2ppp/8/3N2N1/8/2PB4/PP3PPP/R3K2R b KQ - 0 12",
                                                                                             move: "Bxd3", category: "legit_alternative",
-                                                                                            children: []
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "rnb2rk1/pp3ppp/8/2pN2N1/8/2PB4/PP3PPP/R3K2R w KQ - 0 13",
+                                                                                                move: "c5", category: "legit_alternative",
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "rnb2rk1/pp3ppp/8/2pN2N1/8/2PB4/PP3PPP/R4RK1 b - - 1 13",
+                                                                                                    move: "O-O", category: "legit_alternative",
+                                                                                                    children: []
+                                                                                                  }
+                                                                                                ]
+                                                                                              }
+                                                                                            ]
                                                                                           }
                                                                                         ]
                                                                                       }
@@ -14778,7 +17807,19 @@ const philidorDefenseTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r4rk1/pbqnbpp1/1ppp1n1p/4p3/P2PP2B/2N2N2/BPP2PPP/R2QR1K1 w - - 2 12",
                                                                                         move: "Qc7", category: "main_line",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r4rk1/pbqnbpp1/1ppp1n1p/4P3/P3P2B/2N2N2/BPP2PPP/R2QR1K1 b - - 0 12",
+                                                                                            move: "dxe5", category: "main_line",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r4rk1/pbqnbpp1/1pp2n1p/4p3/P3P2B/2N2N2/BPP2PPP/R2QR1K1 w - - 0 13",
+                                                                                                move: "dxe5", category: "main_line",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -14845,7 +17886,19 @@ const philidorDefenseTree: OpeningNode[] = [
                                                                                   {
                                                                                     fen: "r1b2rk1/pp1nqppp/2p2n2/4p1B1/2B1P2Q/2N5/PPP2PPP/R4RK1 b - - 4 11",
                                                                                     move: "Nc3", category: "legit_alternative",
-                                                                                    children: []
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1b2rk1/pp1nqppp/5n2/2p1p1B1/2B1P2Q/2N5/PPP2PPP/R4RK1 w - - 0 12",
+                                                                                        move: "c5", category: "legit_alternative",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1b2rk1/pp1nqppp/5B2/2p1p3/2B1P2Q/2N5/PPP2PPP/R4RK1 b - - 0 12",
+                                                                                            move: "Bxf6", category: "legit_alternative",
+                                                                                            children: []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
                                                                                   }
                                                                                 ]
                                                                               }
@@ -14922,7 +17975,19 @@ const philidorDefenseTree: OpeningNode[] = [
                                                                                   {
                                                                                     fen: "r2q1rk1/pb1nbppp/1p1p1n2/2pPp1B1/P3P3/2N2N2/BPP2PPP/R2QR1K1 b - - 1 11",
                                                                                     move: "Bg5", category: "legit_alternative",
-                                                                                    children: []
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/p2nbppp/1p1p1n2/2pbp1B1/P3P3/2N2N2/BPP2PPP/R2QR1K1 w - - 0 12",
+                                                                                        move: "Bxd5", category: "legit_alternative",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r2q1rk1/p2nbppp/1p1p1n2/2pPp1B1/P7/2N2N2/BPP2PPP/R2QR1K1 b - - 0 12",
+                                                                                            move: "exd5", category: "legit_alternative",
+                                                                                            children: []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
                                                                                   }
                                                                                 ]
                                                                               }
@@ -14947,6 +18012,23 @@ const philidorDefenseTree: OpeningNode[] = [
                                         ]
                                       }
                                     ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            fen: "r1bqkbnr/pppn1ppp/3p4/4P3/4P3/5N2/PPP2PPP/RNBQKB1R b KQkq - 0 4",
+                            move: "dxe5", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "r1bqkbnr/pppn1ppp/8/4p3/4P3/5N2/PPP2PPP/RNBQKB1R w KQkq - 0 5",
+                                move: "dxe5", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "r1bqkbnr/pppn1ppp/8/4p3/2P1P3/5N2/PP3PPP/RNBQKB1R b KQkq - 0 5",
+                                    move: "c4", category: "legit_alternative",
+                                    children: []
                                   }
                                 ]
                               }
@@ -15057,7 +18139,19 @@ const retiOpeningTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r2q1rk1/1pp1bppp/n1b1pn2/p7/P1QP1B2/2N2NP1/1P2PPBP/R4RK1 w - - 2 12",
                                                                                         move: "Na6", category: "main_line",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r2q1rk1/1pB1bppp/n1b1pn2/p7/P1QP4/2N2NP1/1P2PPBP/R4RK1 b - - 0 12",
+                                                                                            move: "Bxc7", category: "main_line",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r2q1rk1/1pB1bppp/n3pn2/p7/P1QP4/2N2bP1/1P2PPBP/R4RK1 w - - 0 13",
+                                                                                                move: "Bxf3", category: "main_line",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -15118,7 +18212,19 @@ const retiOpeningTree: OpeningNode[] = [
                                                                                   {
                                                                                     fen: "r1bq1rk1/pp2bppp/2p2n2/4N3/2Q5/2N3P1/PP2PPBP/R1B2RK1 b - - 0 11",
                                                                                     move: "Nxe5", category: "legit_alternative",
-                                                                                    children: []
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bq1rk1/pp2bppp/5n2/2p1N3/2Q5/2N3P1/PP2PPBP/R1B2RK1 w - - 0 12",
+                                                                                        move: "c5", category: "legit_alternative",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1bq1rk1/pB2bppp/5n2/2p1N3/2Q5/2N3P1/PP2PP1P/R1B2RK1 b - - 0 12",
+                                                                                            move: "Bxb7", category: "legit_alternative",
+                                                                                            children: []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
                                                                                   }
                                                                                 ]
                                                                               }
@@ -15191,7 +18297,19 @@ const retiOpeningTree: OpeningNode[] = [
                                                                                           {
                                                                                             fen: "2rq1rk1/pb2bppp/1pn1pn2/3p4/2PP4/1PN2NP1/PB3PBP/R2QR1K1 b - - 2 12",
                                                                                             move: "Re1", category: "legit_alternative",
-                                                                                            children: []
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "2rq1rk1/pb2bppp/1pn1pn2/8/2pP4/1PN2NP1/PB3PBP/R2QR1K1 w - - 0 13",
+                                                                                                move: "dxc4", category: "legit_alternative",
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "2rq1rk1/pb2bppp/1pn1pn2/8/2PP4/2N2NP1/PB3PBP/R2QR1K1 b - - 0 13",
+                                                                                                    move: "bxc4", category: "legit_alternative",
+                                                                                                    children: []
+                                                                                                  }
+                                                                                                ]
+                                                                                              }
+                                                                                            ]
                                                                                           }
                                                                                         ]
                                                                                       }
@@ -15216,6 +18334,23 @@ const retiOpeningTree: OpeningNode[] = [
                                                 ]
                                               }
                                             ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    fen: "rnbqk2r/ppp1bppp/4pn2/3P4/8/5NP1/PP1PPPBP/RNBQK2R b KQkq - 0 5",
+                                    move: "cxd5", category: "legit_alternative",
+                                    children: [
+                                      {
+                                        fen: "rnbq1rk1/ppp1bppp/4pn2/3P4/8/5NP1/PP1PPPBP/RNBQK2R w KQ - 1 6",
+                                        move: "O-O", category: "legit_alternative",
+                                        children: [
+                                          {
+                                            fen: "rnbq1rk1/ppp1bppp/4pn2/3P4/8/5NP1/PP1PPPBP/RNBQ1RK1 b - - 2 6",
+                                            move: "O-O", category: "legit_alternative",
+                                            children: []
                                           }
                                         ]
                                       }
@@ -15278,7 +18413,19 @@ const retiOpeningTree: OpeningNode[] = [
                                                                                   {
                                                                                     fen: "r2q1rk1/pp1bbppp/2n1p3/2p4n/2Q5/2NPBNP1/PP2PPBP/R4RK1 b - - 6 11",
                                                                                     move: "Be3", category: "legit_alternative",
-                                                                                    children: []
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/pp1bbppp/2n5/2p1p2n/2Q5/2NPBNP1/PP2PPBP/R4RK1 w - - 0 12",
+                                                                                        move: "e5", category: "legit_alternative",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r2q1rk1/pp1bbppp/2n5/2B1p2n/2Q5/2NP1NP1/PP2PPBP/R4RK1 b - - 0 12",
+                                                                                            move: "Bxc5", category: "legit_alternative",
+                                                                                            children: []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
                                                                                   }
                                                                                 ]
                                                                               }
@@ -15303,6 +18450,23 @@ const retiOpeningTree: OpeningNode[] = [
                                         ]
                                       }
                                     ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            fen: "rnbqkb1r/ppp2ppp/4pn2/3P4/8/5NP1/PP1PPP1P/RNBQKB1R b KQkq - 0 4",
+                            move: "cxd5", category: "legit_alternative",
+                            children: [
+                              {
+                                fen: "rnbqkb1r/ppp2ppp/5n2/3p4/8/5NP1/PP1PPP1P/RNBQKB1R w KQkq - 0 5",
+                                move: "exd5", category: "legit_alternative",
+                                children: [
+                                  {
+                                    fen: "rnbqkb1r/ppp2ppp/5n2/3p4/3P4/5NP1/PP2PP1P/RNBQKB1R b KQkq - 0 5",
+                                    move: "d4", category: "legit_alternative",
+                                    children: []
                                   }
                                 ]
                               }
@@ -15377,7 +18541,19 @@ const retiOpeningTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r1bqr1k1/pp1n1ppp/2pbpn2/8/2PP4/3Q1NP1/PP3PBP/R1BR2K1 w - - 4 12",
                                                                                         move: "Re8", category: "legit_alternative",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1bqr1k1/pp1n1ppp/2pbpn2/2P5/3P4/3Q1NP1/PP3PBP/R1BR2K1 b - - 0 12",
+                                                                                            move: "c5", category: "legit_alternative",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r1bqr1k1/pp1n1ppp/2p1pn2/2P5/3P4/3Q1Nb1/PP3PBP/R1BR2K1 w - - 0 13",
+                                                                                                move: "Bxg3", category: "legit_alternative",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -15486,7 +18662,19 @@ const retiOpeningTree: OpeningNode[] = [
                                                                                   {
                                                                                     fen: "r1bq1rk1/pp2ppbp/1np2np1/8/3NP3/N1PP2P1/P3QPBP/R1B2RK1 b - - 2 11",
                                                                                     move: "Qe2", category: "legit_alternative",
-                                                                                    children: []
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r1bq1rk1/pp3pbp/1np2np1/4p3/3NP3/N1PP2P1/P3QPBP/R1B2RK1 w - - 0 12",
+                                                                                        move: "e5", category: "legit_alternative",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r1bq1rk1/pp3pbp/1nN2np1/4p3/4P3/N1PP2P1/P3QPBP/R1B2RK1 b - - 0 12",
+                                                                                            move: "Nxc6", category: "legit_alternative",
+                                                                                            children: []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
                                                                                   }
                                                                                 ]
                                                                               }
@@ -15603,7 +18791,19 @@ const retiOpeningTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "rn1q1rk1/pp2bppp/2p1p3/7b/4P3/5NPP/PPP2PB1/R1B1QRK1 w - - 1 12",
                                                                                         move: "Bh5", category: "main_line",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "rn1q1rk1/pp2bppp/2p1p3/4P2b/8/5NPP/PPP2PB1/R1B1QRK1 b - - 0 12",
+                                                                                            move: "e5", category: "main_line",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "rn1q1rk1/pp2bppp/2p1p3/4P3/8/5bPP/PPP2PB1/R1B1QRK1 w - - 0 13",
+                                                                                                move: "Bxf3", category: "main_line",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -15708,7 +18908,19 @@ const retiOpeningTree: OpeningNode[] = [
                                                                                           {
                                                                                             fen: "r2q1rk1/3nbppp/b1n1p3/ppppP3/5B1P/3P1NP1/PPP2PB1/R2QRNK1 b - - 2 12",
                                                                                             move: "Bf4", category: "legit_alternative",
-                                                                                            children: []
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r2q1rk1/3n1ppp/b1n1p3/ppppP3/5B1b/3P1NP1/PPP2PB1/R2QRNK1 w - - 0 13",
+                                                                                                move: "Bxh4", category: "legit_alternative",
+                                                                                                children: [
+                                                                                                  {
+                                                                                                    fen: "r2q1rk1/3n1ppp/b1n1p3/ppppP3/3P1B1b/5NP1/PPP2PB1/R2QRNK1 b - - 0 13",
+                                                                                                    move: "d4", category: "legit_alternative",
+                                                                                                    children: []
+                                                                                                  }
+                                                                                                ]
+                                                                                              }
+                                                                                            ]
                                                                                           }
                                                                                         ]
                                                                                       }
@@ -15811,7 +19023,19 @@ const retiOpeningTree: OpeningNode[] = [
                                                                                       {
                                                                                         fen: "r4rk1/pppq1pbp/2n1b1p1/4p3/4P3/2P2NP1/PP2QPBP/R1B2RK1 w - - 3 12",
                                                                                         move: "Qd7", category: "legit_alternative",
-                                                                                        children: []
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r4rk1/pppq1pbp/2n1b1p1/4p3/2P1P3/5NP1/PP2QPBP/R1B2RK1 b - - 0 12",
+                                                                                            move: "c4", category: "legit_alternative",
+                                                                                            children: [
+                                                                                              {
+                                                                                                fen: "r4rk1/pppq1pbp/2n3p1/4p3/2b1P3/5NP1/PP2QPBP/R1B2RK1 w - - 0 13",
+                                                                                                move: "Bxc4", category: "legit_alternative",
+                                                                                                children: []
+                                                                                              }
+                                                                                            ]
+                                                                                          }
+                                                                                        ]
                                                                                       }
                                                                                     ]
                                                                                   }
@@ -15920,7 +19144,19 @@ const retiOpeningTree: OpeningNode[] = [
                                                                                   {
                                                                                     fen: "r2q1rk1/pp1n1ppp/2p2n2/2b1p2b/4P2N/6PP/PPPN1PB1/R1B1QRK1 b - - 4 11",
                                                                                     move: "Nh4", category: "legit_alternative",
-                                                                                    children: []
+                                                                                    children: [
+                                                                                      {
+                                                                                        fen: "r2q1rk1/pp1n1ppp/2p2n2/4p2b/4P2N/6PP/PPPN1bB1/R1B1QRK1 w - - 0 12",
+                                                                                        move: "Bxf2+", category: "legit_alternative",
+                                                                                        children: [
+                                                                                          {
+                                                                                            fen: "r2q1rk1/pp1n1ppp/2p2n2/4p2b/4P2N/6PP/PPPN1RB1/R1B1Q1K1 b - - 0 12",
+                                                                                            move: "Rxf2", category: "legit_alternative",
+                                                                                            children: []
+                                                                                          }
+                                                                                        ]
+                                                                                      }
+                                                                                    ]
                                                                                   }
                                                                                 ]
                                                                               }

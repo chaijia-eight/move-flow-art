@@ -475,7 +475,7 @@ export default function StudyHub() {
           </div>
         </motion.div>
 
-        {/* Secret Traps */}
+        {/* Crushing Lines / Traps */}
         {(() => {
           const trapVariations = opening.variations.filter(v => v.isTrap);
           if (trapVariations.length === 0) return null;
