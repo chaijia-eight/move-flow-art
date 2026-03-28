@@ -232,13 +232,24 @@ export default function Study() {
 
   const pickComputerNode = useCallback((children: OpeningNode[], moveIndex: number): OpeningNode | null => {
     if (children.length === 0) return null;
+
+    // 1. Crucial moment move takes highest priority (e.g. trap's diverging move)
+    const cm = currentLine?.crucialMoment;
+    if (cm && !cm.isPlayerMove && moveIndex === cm.moveIndex) {
+      const crucialNode = children.find((c) => c.move === cm.move);
+      if (crucialNode) return crucialNode;
+    }
+
+    // 2. Follow the line's preferred moves
     if (preferredMoves && moveIndex < preferredMoves.length) {
       const preferredSan = preferredMoves[moveIndex];
       const preferred = children.find((c) => c.move === preferredSan);
       if (preferred) return preferred;
     }
+
+    // 3. Fallback to main_line or first child
     return children.find((c) => c.category === "main_line") || children[0];
-  }, [preferredMoves]);
+  }, [preferredMoves, currentLine]);
 
   // Handle line completion
   const handleLineComplete = useCallback((wasCorrect: boolean) => {
