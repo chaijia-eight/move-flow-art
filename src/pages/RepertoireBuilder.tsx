@@ -64,7 +64,10 @@ function getMovesAlongPath(tree: OpeningNode[], path: TreePath): string[] {
 // Single highlight color — toggle on/off
 const HIGHLIGHT_COLOR = "hsl(140, 65%, 45%)";
 
-export default function RepertoireBuilder() {
+interface Chapter {
+  name: string;
+  tree: OpeningNode[];
+}
   const { repertoireId } = useParams<{ repertoireId?: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
