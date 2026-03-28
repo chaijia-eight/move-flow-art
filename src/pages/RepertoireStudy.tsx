@@ -289,6 +289,3 @@ export default function RepertoireStudy() {
     </div>
   );
 }
-
-// Need AnimatePresence import
-import { AnimatePresence } from "framer-motion";
