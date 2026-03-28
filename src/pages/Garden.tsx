@@ -155,6 +155,11 @@ export default function Garden() {
           </div>
         )}
       </div>
+      <UpgradeModal
+        open={showUpgrade}
+        onClose={() => setShowUpgrade(false)}
+        reason="lines"
+      />
     </div>
   );
 }
