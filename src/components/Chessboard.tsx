@@ -50,6 +50,7 @@ export default function Chessboard({
   fen, onMove, moveHints, disabled, flipped = false, playerColor,
   arrowFrom, arrowTo, highlightSquare, highlightColor = "gold",
   customArrows, customHighlights, onRightClickDraw, onRightClickSquare,
+  nagOverlays,
 }: ChessboardProps) {
   const { currentTheme } = useTheme();
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
