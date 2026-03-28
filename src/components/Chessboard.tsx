@@ -573,7 +573,7 @@ export default function Chessboard({
                             <img
                               src={sym.icon}
                               alt={sym.label}
-                              className="absolute -top-1 -right-1 w-4 h-4 pointer-events-none z-30 drop-shadow-md"
+                              className="absolute -top-2 -right-2 w-7 h-7 pointer-events-none z-30 drop-shadow-lg"
                             />
                           );
                         })()}
