@@ -8,7 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
-import { useSubscription, FREE_DAILY_LINES } from "@/contexts/SubscriptionContext";
+import { useSubscription, FREE_DAILY_LINES, FREE_DAILY_PRACTICES } from "@/contexts/SubscriptionContext";
 import { loadSettings, saveSettings, type AppSettings } from "@/lib/settingsStore";
 import { t, tf } from "@/lib/i18n";
 
