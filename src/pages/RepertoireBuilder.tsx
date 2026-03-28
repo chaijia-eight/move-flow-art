@@ -77,7 +77,8 @@ export default function RepertoireBuilder() {
 
   const [name, setName] = useState("My Repertoire");
   const [side, setSide] = useState<"w" | "b">("w");
-  const [tree, setTree] = useState<OpeningNode[]>([]);
+  const [chapters, setChapters] = useState<Chapter[]>([]);
+  const [activeChapterIdx, setActiveChapterIdx] = useState(0);
   const [currentPath, setCurrentPath] = useState<TreePath>([]);
   const [selectedNodePath, setSelectedNodePath] = useState<TreePath | null>(null);
   const [annotation, setAnnotation] = useState("");
@@ -88,6 +89,20 @@ export default function RepertoireBuilder() {
   const [showChapterCreate, setShowChapterCreate] = useState(false);
   const [pgnInput, setPgnInput] = useState("");
   const [showPgnImport, setShowPgnImport] = useState(false);
+  const [newChapterName, setNewChapterName] = useState("Chapter 1");
+
+  // Derived tree from active chapter
+  const tree = chapters[activeChapterIdx]?.tree ?? [];
+  const setTree = useCallback((newTree: OpeningNode[] | ((prev: OpeningNode[]) => OpeningNode[])) => {
+    setChapters(prev => {
+      const updated = [...prev];
+      if (updated[activeChapterIdx]) {
+        const resolved = typeof newTree === 'function' ? newTree(updated[activeChapterIdx].tree) : newTree;
+        updated[activeChapterIdx] = { ...updated[activeChapterIdx], tree: resolved };
+      }
+      return updated;
+    });
+  }, [activeChapterIdx]);
 
   // Load existing repertoire
   const { data: existing } = useQuery({
