@@ -756,7 +756,7 @@ export default function RepertoireBuilder() {
                 </div>
               ) : (
                 <p className="text-xs text-muted-foreground">
-                  Click a move in the tree to annotate it.
+                  Navigate to a move to annotate it.
                 </p>
               )}
             </div>
