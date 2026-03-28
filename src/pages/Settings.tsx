@@ -313,9 +313,10 @@ export default function Settings() {
     if (key === "language") window.location.reload();
   };
 
-  const handleResetProgress = () => {
+  const handleResetProgress = async () => {
     if (!confirmReset) { setConfirmReset(true); return; }
-    localStorage.removeItem("chess-line-progress");
+    const { clearAllProgress } = await import("@/lib/progressStore");
+    await clearAllProgress();
     setConfirmReset(false);
     window.location.reload();
   };
