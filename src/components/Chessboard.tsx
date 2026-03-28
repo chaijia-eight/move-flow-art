@@ -87,6 +87,7 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
       }
 
       const isCastle = changedCount === 4;
+      const isEnPassant = changedCount === 3 && !wasCapture;
 
       if (fromSquare && toSquare) {
         const skipAnim = skipNextAnimRef.current && !isCastle;
