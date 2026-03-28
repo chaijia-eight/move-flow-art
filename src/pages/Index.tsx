@@ -1,11 +1,12 @@
 import React, { useMemo, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Play, Trophy, BookOpen, Target, Star, Crown, Zap, ChevronDown, Shuffle } from "lucide-react";
+import { Play, Trophy, BookOpen, Target, Star, Crown, Zap, ChevronDown, Shuffle, Leaf, ChevronRight } from "lucide-react";
 import OpeningCard from "@/components/OpeningCard";
 import LearningPath from "@/components/LearningPath";
 import { openings } from "@/data/openingTrees";
 import { themes } from "@/data/openings";
+import type { OpeningNode } from "@/data/openings";
 import { extractAllLines, extractLinesForVariation } from "@/lib/lineExtractor";
 import { getLineProgress, getOpeningProgress } from "@/lib/progressStore";
 import { getFocusedOpenings, toggleFocus } from "@/lib/focusStore";
@@ -13,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useSubscription, FREE_DAILY_LINES, FREE_DAILY_PRACTICES } from "@/contexts/SubscriptionContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 import { t, tf, tn } from "@/lib/i18n";
 
 interface Recommendation {
