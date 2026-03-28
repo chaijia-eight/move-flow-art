@@ -103,6 +103,16 @@ function getBestTreeOpening(): { opening: typeof openings[0]; progress: number; 
   return best;
 }
 
+function countGardenLines(nodes: OpeningNode[]): number {
+  if (nodes.length === 0) return 0;
+  let total = 0;
+  for (const node of nodes) {
+    if (node.children.length === 0) total += 1;
+    else total += countGardenLines(node.children);
+  }
+  return total;
+}
+
 export default function Index() {
   const { user } = useAuth();
   const { isPro, dailyLinesUsed, dailyPracticesUsed, canLearnNewLine, canPractice, startCheckout } = useSubscription();
