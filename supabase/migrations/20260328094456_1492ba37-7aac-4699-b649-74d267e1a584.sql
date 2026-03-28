@@ -1,0 +1,1 @@
+DELETE FROM line_overrides WHERE line_id = 'ruy-lopez/ruy-nxe4-trap/line-0';
