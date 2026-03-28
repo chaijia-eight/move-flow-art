@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Save, Trash2, Cpu, RotateCcw } from "lucide-react";
+import { ArrowLeft, Save, Trash2, Cpu, RotateCcw, Plus, FileText, Play } from "lucide-react";
 import { Chess } from "chess.js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
