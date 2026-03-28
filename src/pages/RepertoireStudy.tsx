@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, RotateCcw, Check, X } from "lucide-react";
 import { Chess } from "chess.js";
 import { Button } from "@/components/ui/button";
