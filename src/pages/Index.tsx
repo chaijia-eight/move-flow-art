@@ -152,6 +152,13 @@ export default function Index() {
             </div>
             <div className="flex gap-1 mt-1">
               <button
+                onClick={() => navigate("/garden")}
+                className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                aria-label="Garden"
+              >
+                <Sprout className="w-4.5 h-4.5" />
+              </button>
+              <button
                 onClick={() => navigate("/about")}
                 className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
                 aria-label="About"
