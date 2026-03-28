@@ -177,6 +177,16 @@ export default function RepertoireBuilder() {
 
   // Handle board move
   const handleMove = useCallback((_from: string, _to: string, san: string) => {
+    // Auto-create a chapter if none exist
+    if (chapters.length === 0) {
+      const newFen = (() => { const c = new Chess(); c.move(san); return c.fen(); })();
+      const newNode: OpeningNode = { fen: newFen, move: san, category: "main_line", children: [] };
+      setChapters([{ name: "Chapter 1", tree: [newNode] }]);
+      setActiveChapterIdx(0);
+      setCurrentPath([0]);
+      setShowChapterCreate(false);
+      return;
+    }
     const newTree = cloneTree(tree);
 
     let children: OpeningNode[];
