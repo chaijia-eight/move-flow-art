@@ -1,19 +1,21 @@
 import React, { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Save, ChevronRight, ChevronDown, Trash2, Plus, Cpu, RotateCcw } from "lucide-react";
+import { ArrowLeft, Save, Trash2, Cpu, RotateCcw } from "lucide-react";
 import { Chess } from "chess.js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import Chessboard from "@/components/Chessboard";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { t } from "@/lib/i18n";
 import { toast } from "@/hooks/use-toast";
-import { getEngine, destroyEngine, type EngineEvaluation } from "@/lib/stockfishEngine";
-import type { OpeningNode, MoveCategory } from "@/data/openings";
+import { getEngine, type EngineEvaluation } from "@/lib/stockfishEngine";
+import type { OpeningNode, MoveCategory, NagSymbol, CustomArrow, CustomHighlight } from "@/data/openings";
+import { NAG_SYMBOLS } from "@/data/openings";
 
 /** Path of indices into the tree to reach a node */
 type TreePath = number[];
@@ -58,6 +60,14 @@ function getMovesAlongPath(tree: OpeningNode[], path: TreePath): string[] {
   }
   return moves;
 }
+
+// Highlight color cycle
+const HIGHLIGHT_COLORS = [
+  "hsl(140, 65%, 45%)",
+  "hsl(0, 70%, 50%)",
+  "hsl(45, 90%, 55%)",
+  "hsl(210, 70%, 55%)",
+];
 
 export default function RepertoireBuilder() {
   const { repertoireId } = useParams<{ repertoireId?: string }>();
@@ -104,18 +114,21 @@ export default function RepertoireBuilder() {
   const currentMoves = useMemo(() => getMovesAlongPath(tree, currentPath), [tree, currentPath]);
   const currentFen = useMemo(() => fenAfterMoves(currentMoves), [currentMoves]);
 
-  // Current turn
   const chess = useMemo(() => new Chess(currentFen), [currentFen]);
-  const currentTurn = chess.turn();
 
-  // Get children at current position (for tree sidebar)
-  const currentChildren = useMemo(() => getChildrenAtPath(tree, currentPath), [tree, currentPath]);
+  // Get current node's arrows and highlights
+  const currentNode = useMemo(() => {
+    if (currentPath.length === 0) return null;
+    return getNodeAtPath(tree, currentPath);
+  }, [tree, currentPath]);
 
-  // Handle board move — add a node to the tree
+  const nodeArrows = currentNode?.arrows || [];
+  const nodeHighlights = currentNode?.highlights || [];
+
+  // Handle board move
   const handleMove = useCallback((_from: string, _to: string, san: string) => {
     const newTree = cloneTree(tree);
 
-    // Navigate to the current path's children
     let children: OpeningNode[];
     if (currentPath.length === 0) {
       children = newTree;
@@ -125,16 +138,13 @@ export default function RepertoireBuilder() {
       children = parent.children;
     }
 
-    // Check if this move already exists as a child
     const existingIdx = children.findIndex((c) => c.move === san);
     if (existingIdx !== -1) {
-      // Just navigate to it
       setCurrentPath([...currentPath, existingIdx]);
       setTree(newTree);
       return;
     }
 
-    // Determine category
     const category: MoveCategory = children.length === 0 ? "main_line" : "legit_alternative";
 
     const newFen = (() => {
@@ -157,26 +167,22 @@ export default function RepertoireBuilder() {
     setEngineEval(null);
   }, [tree, currentPath, currentFen]);
 
-  // Navigate to a specific path in the tree
   const navigateTo = useCallback((path: TreePath) => {
     setCurrentPath(path);
     setEngineEval(null);
   }, []);
 
-  // Go back one move
   const goBack = useCallback(() => {
     if (currentPath.length === 0) return;
     setCurrentPath(currentPath.slice(0, -1));
     setEngineEval(null);
   }, [currentPath]);
 
-  // Reset to starting position
   const resetPosition = useCallback(() => {
     setCurrentPath([]);
     setEngineEval(null);
   }, []);
 
-  // Delete a node and its subtree
   const deleteNode = useCallback((path: TreePath) => {
     if (path.length === 0) return;
     const newTree = cloneTree(tree);
@@ -195,7 +201,6 @@ export default function RepertoireBuilder() {
     children.splice(childIdx, 1);
     setTree(newTree);
 
-    // If we were on or below the deleted node, go to parent
     if (currentPath.length >= path.length) {
       const matchesOrBelow = path.every((v, i) => currentPath[i] === v);
       if (matchesOrBelow) {
@@ -205,7 +210,6 @@ export default function RepertoireBuilder() {
     setSelectedNodePath(null);
   }, [tree, currentPath]);
 
-  // Update annotation for selected node
   const updateAnnotation = useCallback((text: string) => {
     if (!selectedNodePath || selectedNodePath.length === 0) return;
     const newTree = cloneTree(tree);
@@ -216,7 +220,16 @@ export default function RepertoireBuilder() {
     setAnnotation(text);
   }, [tree, selectedNodePath]);
 
-  // When selecting a node, load its annotation
+  // NAG update
+  const updateNag = useCallback((nag: NagSymbol | undefined) => {
+    if (!selectedNodePath || selectedNodePath.length === 0) return;
+    const newTree = cloneTree(tree);
+    const node = getNodeAtPath(newTree, selectedNodePath);
+    if (!node) return;
+    node.nag = nag;
+    setTree(newTree);
+  }, [tree, selectedNodePath]);
+
   useEffect(() => {
     if (selectedNodePath) {
       const node = getNodeAtPath(tree, selectedNodePath);
@@ -224,7 +237,46 @@ export default function RepertoireBuilder() {
     }
   }, [selectedNodePath, tree]);
 
-  // Run Stockfish evaluation
+  // Arrow drawing from board
+  const handleArrowDraw = useCallback((_type: "arrow", data: { from: string; to: string; color: string }) => {
+    if (currentPath.length === 0) return;
+    const newTree = cloneTree(tree);
+    const node = getNodeAtPath(newTree, currentPath);
+    if (!node) return;
+    if (!node.arrows) node.arrows = [];
+    // Toggle: remove if same from/to exists
+    const existingIdx = node.arrows.findIndex(a => a.from === data.from && a.to === data.to);
+    if (existingIdx !== -1) {
+      node.arrows.splice(existingIdx, 1);
+    } else {
+      node.arrows.push({ from: data.from, to: data.to, color: data.color });
+    }
+    setTree(newTree);
+  }, [tree, currentPath]);
+
+  // Square highlight from board
+  const handleSquareHighlight = useCallback((square: string) => {
+    if (currentPath.length === 0) return;
+    const newTree = cloneTree(tree);
+    const node = getNodeAtPath(newTree, currentPath);
+    if (!node) return;
+    if (!node.highlights) node.highlights = [];
+    const existingIdx = node.highlights.findIndex(h => h.square === square);
+    if (existingIdx !== -1) {
+      const currentColor = node.highlights[existingIdx].color;
+      const colorIdx = HIGHLIGHT_COLORS.indexOf(currentColor);
+      if (colorIdx < HIGHLIGHT_COLORS.length - 1) {
+        node.highlights[existingIdx].color = HIGHLIGHT_COLORS[colorIdx + 1];
+      } else {
+        node.highlights.splice(existingIdx, 1);
+      }
+    } else {
+      node.highlights.push({ square, color: HIGHLIGHT_COLORS[0] });
+    }
+    setTree(newTree);
+  }, [tree, currentPath]);
+
+  // Stockfish
   const runEval = useCallback(async () => {
     setEngineLoading(true);
     try {
@@ -239,14 +291,11 @@ export default function RepertoireBuilder() {
     }
   }, [currentFen]);
 
-  // Cleanup engine on unmount
   useEffect(() => {
-    return () => {
-      // Don't destroy singleton; just leave it
-    };
+    return () => {};
   }, []);
 
-  // Save repertoire
+  // Save
   const handleSave = useCallback(async () => {
     if (!user) return;
     setSaving(true);
@@ -298,12 +347,17 @@ export default function RepertoireBuilder() {
     return hints;
   }, [currentFen]);
 
-  // Format eval score
   const formatScore = (ev: EngineEvaluation) => {
     if (ev.mate !== null) return `M${ev.mate}`;
     const score = ev.score / 100;
     return score > 0 ? `+${score.toFixed(1)}` : score.toFixed(1);
   };
+
+  // Get selected node for annotation panel
+  const selectedNode = useMemo(() => {
+    if (!selectedNodePath) return null;
+    return getNodeAtPath(tree, selectedNodePath);
+  }, [tree, selectedNodePath]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -322,7 +376,6 @@ export default function RepertoireBuilder() {
             />
           </div>
           <div className="flex items-center gap-2">
-            {/* Side toggle */}
             <div className="flex rounded-lg border border-border overflow-hidden">
               <button
                 onClick={() => setSide("w")}
@@ -361,6 +414,10 @@ export default function RepertoireBuilder() {
                 playerColor={undefined}
                 arrowFrom={engineEval?.bestMove ? engineEval.bestMove.slice(0, 2) : undefined}
                 arrowTo={engineEval?.bestMove ? engineEval.bestMove.slice(2, 4) : undefined}
+                customArrows={nodeArrows}
+                customHighlights={nodeHighlights}
+                onRightClickDraw={handleArrowDraw}
+                onRightClickSquare={handleSquareHighlight}
               />
             </div>
 
@@ -376,7 +433,6 @@ export default function RepertoireBuilder() {
                 Move {currentMoves.length}
               </span>
 
-              {/* Engine eval button */}
               <Button
                 variant="outline"
                 size="sm"
@@ -432,15 +488,13 @@ export default function RepertoireBuilder() {
                     Make a move on the board to start building.
                   </p>
                 ) : (
-                  <TreeView
-                    nodes={tree}
-                    path={[]}
+                  <InlineTreeView
+                    tree={tree}
                     currentPath={currentPath}
                     selectedPath={selectedNodePath}
                     onNavigate={navigateTo}
                     onSelect={setSelectedNodePath}
                     onDelete={deleteNode}
-                    depth={0}
                   />
                 )}
               </div>
@@ -449,13 +503,44 @@ export default function RepertoireBuilder() {
             {/* Annotation panel */}
             <div className="rounded-xl border border-border bg-card p-4">
               <h3 className="text-sm font-semibold text-foreground mb-2">{t("annotation")}</h3>
-              {selectedNodePath ? (
-                <Textarea
-                  value={annotation}
-                  onChange={(e) => updateAnnotation(e.target.value)}
-                  placeholder="Add notes for this move..."
-                  className="text-sm min-h-[80px] resize-none"
-                />
+              {selectedNodePath && selectedNode ? (
+                <div className="space-y-3">
+                  {/* NAG symbol selector */}
+                  <TooltipProvider delayDuration={200}>
+                    <div className="flex flex-wrap gap-1">
+                      {NAG_SYMBOLS.map((sym) => (
+                        <Tooltip key={sym.key}>
+                          <TooltipTrigger asChild>
+                            <button
+                              onClick={() => updateNag(selectedNode.nag === sym.key ? undefined : sym.key)}
+                              className={`w-7 h-7 rounded flex items-center justify-center transition-all border ${
+                                selectedNode.nag === sym.key
+                                  ? "border-primary bg-primary/20 ring-1 ring-primary"
+                                  : "border-border hover:border-muted-foreground hover:bg-muted"
+                              }`}
+                            >
+                              <img src={sym.icon} alt={sym.label} className="w-4 h-4" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent side="top">
+                            <p className="text-xs">{sym.label}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      ))}
+                    </div>
+                  </TooltipProvider>
+
+                  <Textarea
+                    value={annotation}
+                    onChange={(e) => updateAnnotation(e.target.value)}
+                    placeholder="Add notes for this move..."
+                    className="text-sm min-h-[80px] resize-none"
+                  />
+
+                  <p className="text-[0.6rem] text-muted-foreground">
+                    Right-click drag on board to draw arrows. Right-click a square to highlight it.
+                  </p>
+                </div>
               ) : (
                 <p className="text-xs text-muted-foreground">
                   Click a move in the tree to annotate it.
@@ -478,97 +563,248 @@ function countTreeNodes(nodes: OpeningNode[]): number {
   return count;
 }
 
-// Recursive tree view component
-function TreeView({
-  nodes,
+// Get NAG icon path
+function getNagIcon(nag?: NagSymbol): string | null {
+  if (!nag) return null;
+  const sym = NAG_SYMBOLS.find(s => s.key === nag);
+  return sym ? sym.icon : null;
+}
+
+// ─── Inline Tree View (Lichess-style) ──────────────────────────────
+// Main line goes straight down. Branches (siblings at index 1+) indent.
+
+interface InlineTreeViewProps {
+  tree: OpeningNode[];
+  currentPath: TreePath;
+  selectedPath: TreePath | null;
+  onNavigate: (p: TreePath) => void;
+  onSelect: (p: TreePath | null) => void;
+  onDelete: (p: TreePath) => void;
+}
+
+function InlineTreeView({ tree, currentPath, selectedPath, onNavigate, onSelect, onDelete }: InlineTreeViewProps) {
+  // Flatten the main line (always follow first child) and collect branches
+  const elements: React.ReactNode[] = [];
+  renderMainLine(tree, [], 0, elements, currentPath, selectedPath, onNavigate, onSelect, onDelete);
+  return <div className="space-y-0.5">{elements}</div>;
+}
+
+function renderMainLine(
+  nodes: OpeningNode[],
+  basePath: TreePath,
+  depth: number,
+  elements: React.ReactNode[],
+  currentPath: TreePath,
+  selectedPath: TreePath | null,
+  onNavigate: (p: TreePath) => void,
+  onSelect: (p: TreePath | null) => void,
+  onDelete: (p: TreePath) => void,
+) {
+  if (nodes.length === 0) return;
+
+  // The main continuation is the first node (index 0)
+  const mainNode = nodes[0];
+  const mainPath = [...basePath, 0];
+
+  // Render main node inline
+  elements.push(
+    <MoveRow
+      key={mainPath.join("-")}
+      node={mainNode}
+      path={mainPath}
+      currentPath={currentPath}
+      selectedPath={selectedPath}
+      onNavigate={onNavigate}
+      onSelect={onSelect}
+      onDelete={onDelete}
+      indent={depth}
+    />
+  );
+
+  // Render branches (siblings at index 1+) as indented sub-variations
+  for (let i = 1; i < nodes.length; i++) {
+    const branchPath = [...basePath, i];
+    const branchElements: React.ReactNode[] = [];
+    renderMainLine(
+      [nodes[i]],
+      // We need to render this branch node and its continuation
+      basePath, // use the parent's basePath with index i
+      depth + 1,
+      branchElements,
+      currentPath,
+      selectedPath,
+      onNavigate,
+      onSelect,
+      onDelete,
+    );
+    // Actually we need to render starting from the branch node itself
+    // Let's do it properly:
+    elements.push(
+      <BranchBlock key={`branch-${branchPath.join("-")}`} depth={depth}>
+        <SubLine
+          node={nodes[i]}
+          basePath={branchPath}
+          depth={depth + 1}
+          currentPath={currentPath}
+          selectedPath={selectedPath}
+          onNavigate={onNavigate}
+          onSelect={onSelect}
+          onDelete={onDelete}
+        />
+      </BranchBlock>
+    );
+  }
+
+  // Continue the main line recursively
+  if (mainNode.children.length > 0) {
+    renderMainLine(
+      mainNode.children,
+      mainPath,
+      depth,
+      elements,
+      currentPath,
+      selectedPath,
+      onNavigate,
+      onSelect,
+      onDelete,
+    );
+  }
+}
+
+function SubLine({
+  node,
+  basePath,
+  depth,
+  currentPath,
+  selectedPath,
+  onNavigate,
+  onSelect,
+  onDelete,
+}: {
+  node: OpeningNode;
+  basePath: TreePath;
+  depth: number;
+  currentPath: TreePath;
+  selectedPath: TreePath | null;
+  onNavigate: (p: TreePath) => void;
+  onSelect: (p: TreePath | null) => void;
+  onDelete: (p: TreePath) => void;
+}) {
+  const elements: React.ReactNode[] = [];
+
+  // Render this node
+  elements.push(
+    <MoveRow
+      key={basePath.join("-")}
+      node={node}
+      path={basePath}
+      currentPath={currentPath}
+      selectedPath={selectedPath}
+      onNavigate={onNavigate}
+      onSelect={onSelect}
+      onDelete={onDelete}
+      indent={0}
+    />
+  );
+
+  // Then render its children using the main-line logic
+  if (node.children.length > 0) {
+    renderMainLine(
+      node.children,
+      basePath,
+      0,
+      elements,
+      currentPath,
+      selectedPath,
+      onNavigate,
+      onSelect,
+      onDelete,
+    );
+  }
+
+  return <div className="space-y-0.5">{elements}</div>;
+}
+
+function BranchBlock({ children, depth }: { children: React.ReactNode; depth: number }) {
+  return (
+    <div className="ml-4 border-l-2 border-border/40 pl-2 my-1">
+      {children}
+    </div>
+  );
+}
+
+function MoveRow({
+  node,
   path,
   currentPath,
   selectedPath,
   onNavigate,
   onSelect,
   onDelete,
-  depth,
+  indent,
 }: {
-  nodes: OpeningNode[];
+  node: OpeningNode;
   path: TreePath;
   currentPath: TreePath;
   selectedPath: TreePath | null;
   onNavigate: (p: TreePath) => void;
   onSelect: (p: TreePath | null) => void;
   onDelete: (p: TreePath) => void;
-  depth: number;
+  indent: number;
 }) {
+  const isCurrent = currentPath.length === path.length &&
+    path.every((v, idx) => currentPath[idx] === v);
+  const isSelected = selectedPath &&
+    selectedPath.length === path.length &&
+    path.every((v, idx) => selectedPath[idx] === v);
+  const isOnPath = currentPath.length > path.length &&
+    path.every((v, idx) => currentPath[idx] === v);
+
+  const moveNum = path.length;
+  const isWhiteMove = moveNum % 2 === 1;
+  const displayNum = Math.ceil(moveNum / 2);
+  const movePrefix = isWhiteMove ? `${displayNum}.` : `${displayNum}...`;
+
+  const nagIcon = getNagIcon(node.nag);
+
   return (
-    <div className={depth > 0 ? "ml-3 border-l border-border/50 pl-2" : ""}>
-      {nodes.map((node, i) => {
-        const nodePath = [...path, i];
-        const isCurrent = currentPath.length === nodePath.length &&
-          nodePath.every((v, idx) => currentPath[idx] === v);
-        const isSelected = selectedPath &&
-          selectedPath.length === nodePath.length &&
-          nodePath.every((v, idx) => selectedPath[idx] === v);
-        const isOnPath = currentPath.length > nodePath.length &&
-          nodePath.every((v, idx) => currentPath[idx] === v);
-
-        // Compute move number display
-        const moveNum = nodePath.length;
-        const isWhiteMove = moveNum % 2 === 1;
-        const displayNum = Math.ceil(moveNum / 2);
-        const movePrefix = isWhiteMove ? `${displayNum}.` : `${displayNum}...`;
-
-        return (
-          <div key={i}>
-            <div className="flex items-center group">
-              <button
-                onClick={() => {
-                  onNavigate(nodePath);
-                  onSelect(nodePath);
-                }}
-                className={`text-xs font-mono px-1.5 py-0.5 rounded transition-colors ${
-                  isCurrent
-                    ? "bg-primary text-primary-foreground"
-                    : isOnPath
-                    ? "bg-primary/20 text-foreground"
-                    : isSelected
-                    ? "bg-accent text-accent-foreground"
-                    : "text-foreground hover:bg-muted"
-                }`}
-              >
-                <span className="text-muted-foreground mr-0.5">{movePrefix}</span>
-                {node.move}
-              </button>
-              {node.explanation && (
-                <span className="text-[0.6rem] text-muted-foreground ml-1">💬</span>
-              )}
-              {node.category === "legit_alternative" && (
-                <span className="text-[0.6rem] text-amber-500/80 ml-1">alt</span>
-              )}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete(nodePath);
-                }}
-                className="ml-auto opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive transition-all"
-              >
-                <Trash2 className="w-3 h-3" />
-              </button>
-            </div>
-
-            {node.children.length > 0 && (
-              <TreeView
-                nodes={node.children}
-                path={nodePath}
-                currentPath={currentPath}
-                selectedPath={selectedPath}
-                onNavigate={onNavigate}
-                onSelect={onSelect}
-                onDelete={onDelete}
-                depth={depth + 1}
-              />
-            )}
-          </div>
-        );
-      })}
+    <div className="flex items-center group">
+      <button
+        onClick={() => {
+          onNavigate(path);
+          onSelect(path);
+        }}
+        className={`text-xs font-mono px-1.5 py-0.5 rounded transition-colors flex items-center gap-0.5 ${
+          isCurrent
+            ? "bg-primary text-primary-foreground"
+            : isOnPath
+            ? "bg-primary/20 text-foreground"
+            : isSelected
+            ? "bg-accent text-accent-foreground"
+            : "text-foreground hover:bg-muted"
+        }`}
+      >
+        <span className="text-muted-foreground mr-0.5">{movePrefix}</span>
+        {node.move}
+        {nagIcon && (
+          <img src={nagIcon} alt="" className="w-3 h-3 ml-0.5 inline-block" />
+        )}
+      </button>
+      {node.explanation && (
+        <span className="text-[0.6rem] text-muted-foreground ml-1">💬</span>
+      )}
+      {(node.arrows?.length ?? 0) > 0 && (
+        <span className="text-[0.6rem] text-muted-foreground ml-0.5">↗</span>
+      )}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete(path);
+        }}
+        className="ml-auto opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive transition-all"
+      >
+        <Trash2 className="w-3 h-3" />
+      </button>
     </div>
   );
 }
