@@ -46,7 +46,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex bg-background">
       {/* Left Sidebar */}
-      <aside className="w-[60px] border-r border-border flex flex-col items-center py-4 shrink-0 sticky top-0 h-screen">
+      <aside className="w-[60px] border-r border-border flex flex-col items-center py-4 shrink-0 sticky top-0 h-screen z-50">
         {/* Logo */}
         <Tooltip delayDuration={300}>
           <TooltipTrigger asChild>
