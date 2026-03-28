@@ -19,10 +19,29 @@ export default function StudyHub() {
   const { canPractice, canLearnNewLine, canLearnTrap, isPro, lastTrapLearnedAt } = useSubscription();
   const navigate = useNavigate();
   const { setTheme, currentTheme } = useTheme();
+  const { overrides, saveOverride } = useLineOverrides();
   const [showAgainstVariations, setShowAgainstVariations] = useState(false);
   const [expandedVariation, setExpandedVariation] = useState<string | null>(null);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeReason, setUpgradeReason] = useState<"lines" | "practice">("lines");
+  const [editingDescId, setEditingDescId] = useState<string | null>(null);
+  const [editDescText, setEditDescText] = useState("");
+  const isDev = user?.email === "xinya.vivian@me.com";
+
+  const getDescOverride = useCallback((variationId: string, fallback: string) => {
+    const key = `${variationId}/_desc`;
+    return overrides[key]?.conclusion_text || tVar(variationId, "description", fallback);
+  }, [overrides]);
+
+  const handleSaveDesc = useCallback(async (variationId: string) => {
+    await saveOverride({
+      line_id: `${variationId}/_desc`,
+      moves: null,
+      crucial_moment_index: null,
+      conclusion_text: editDescText.trim() || null,
+    });
+    setEditingDescId(null);
+  }, [editDescText, saveOverride]);
 
   const opening = openings.find((o) => o.id === openingId);
 
