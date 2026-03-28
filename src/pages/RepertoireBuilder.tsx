@@ -725,9 +725,9 @@ export default function RepertoireBuilder() {
                         <Tooltip key={sym.key}>
                           <TooltipTrigger asChild>
                             <button
-                              onClick={() => updateNag(selectedNode.nag === sym.key ? undefined : sym.key)}
+                              onClick={() => updateNag(currentNode!.nag === sym.key ? undefined : sym.key)}
                               className={`w-7 h-7 rounded flex items-center justify-center transition-all border ${
-                                selectedNode.nag === sym.key
+                                currentNode!.nag === sym.key
                                   ? "border-primary bg-primary/20 ring-1 ring-primary"
                                   : "border-border hover:border-muted-foreground hover:bg-muted"
                               }`}
