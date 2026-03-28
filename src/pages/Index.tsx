@@ -11,7 +11,7 @@ import { getLineProgress, getOpeningProgress } from "@/lib/progressStore";
 import { getFocusedOpenings, toggleFocus } from "@/lib/focusStore";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { useSubscription, FREE_DAILY_LINES } from "@/contexts/SubscriptionContext";
+import { useSubscription, FREE_DAILY_LINES, FREE_DAILY_PRACTICES } from "@/contexts/SubscriptionContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { t, tf, tn } from "@/lib/i18n";
 

@@ -148,7 +148,7 @@ function SubscriptionCard() {
           <div className="space-y-3">
             <div className="text-sm text-muted-foreground space-y-1">
               <p>{linesUsedFn(dailyLinesUsed, FREE_DAILY_LINES)}</p>
-              <p>{practiceUsedToday ? "✗ " + t("practiceUsedToday") : "✓ Practice available"}</p>
+              <p>Practice: {dailyPracticesUsed}/{FREE_DAILY_PRACTICES} used today</p>
             </div>
             <div className="p-3 rounded-lg bg-primary/10 border border-primary/20">
               <p className="text-sm font-medium text-foreground mb-1">{t("proPlan")} — {t("proPlanPrice")}</p>
