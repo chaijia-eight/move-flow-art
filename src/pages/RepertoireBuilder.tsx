@@ -80,6 +80,9 @@ export default function RepertoireBuilder() {
   const [engineLoading, setEngineLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [loaded, setLoaded] = useState(!repertoireId);
+  const [showChapterCreate, setShowChapterCreate] = useState(false);
+  const [pgnInput, setPgnInput] = useState("");
+  const [showPgnImport, setShowPgnImport] = useState(false);
 
   // Load existing repertoire
   const { data: existing } = useQuery({
