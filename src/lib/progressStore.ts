@@ -87,6 +87,20 @@ export function getMasteredLines(): string[] {
     .map(([id]) => id);
 }
 
+/** Clear all progress data locally and in the cloud */
+export async function clearAllProgress(): Promise<void> {
+  cache = {};
+  localStorage.removeItem(STORAGE_KEY);
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) {
+    await supabase.from("user_progress").upsert({
+      user_id: user.id,
+      data: {} as any,
+      updated_at: new Date().toISOString(),
+    });
+  }
+}
+
 export const MASTERY_PROMPT_THRESHOLD = 3;
 
 // --- Cloud sync helpers ---
