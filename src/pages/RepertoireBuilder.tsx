@@ -238,10 +238,29 @@ export default function RepertoireBuilder() {
     setEngineEval(null);
   }, [currentPath]);
 
+  const goForward = useCallback(() => {
+    const children = currentPath.length === 0 ? tree : (getNodeAtPath(tree, currentPath)?.children ?? []);
+    if (children.length > 0) {
+      setCurrentPath([...currentPath, 0]);
+      setEngineEval(null);
+    }
+  }, [currentPath, tree]);
+
   const resetPosition = useCallback(() => {
     setCurrentPath([]);
     setEngineEval(null);
   }, []);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if ((e.target as HTMLElement).tagName === "INPUT" || (e.target as HTMLElement).tagName === "TEXTAREA") return;
+      if (e.key === "ArrowLeft") { e.preventDefault(); goBack(); }
+      if (e.key === "ArrowRight") { e.preventDefault(); goForward(); }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [goBack, goForward]);
 
   const deleteNode = useCallback((path: TreePath) => {
     if (path.length === 0) return;
