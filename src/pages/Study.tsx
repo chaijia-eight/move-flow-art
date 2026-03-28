@@ -279,6 +279,37 @@ export default function Study() {
   }, [lineCompleted, currentLine, hadMistake, handleLineComplete]);
 
   const initialAutoPlayed = useRef(false);
+  const prevActiveTreeRef = useRef(activeTree);
+
+  // When activeTree changes after initial load (e.g., overrides finish loading), reset the board
+  useEffect(() => {
+    if (prevActiveTreeRef.current === activeTree) return;
+    prevActiveTreeRef.current = activeTree;
+    // Only reset if we already started playing (overrides arrived late)
+    if (initialAutoPlayed.current) {
+      initialAutoPlayed.current = false;
+      chess.reset();
+      setFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+      setCurrentNodes(activeTree);
+      setMoveHistory([]);
+      setFeedback(null);
+      setMoveCount(0);
+      setIsComputerTurn(false);
+      setCurrentVariation(null);
+      setUndoStack([]);
+      setRedoStack([]);
+      setHadMistake(false);
+      setCrucialMomentShown(false);
+      setCrucialSquare(null);
+      setCrucialMomentMessage(null);
+      setLineCompleted(false);
+      setShowMasteryPrompt(false);
+      setMoveResults([]);
+      setShowConfetti(false);
+      setResetCounter((c) => c + 1);
+    }
+  }, [activeTree]);
+
   useEffect(() => {
     if (initialAutoPlayed.current) return;
     if (!opening) return;
