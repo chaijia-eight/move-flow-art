@@ -64,10 +64,18 @@ export default function Garden() {
             <h1 className="text-2xl font-serif font-bold text-foreground">{t("yourGarden")}</h1>
           </div>
           <Button
-            onClick={() => navigate("/garden/build")}
+            onClick={() => {
+              if (repertoires && repertoires.length >= maxStudies) {
+                setShowUpgrade(true);
+                return;
+              }
+              navigate("/garden/build");
+            }}
             className="gap-2"
           >
-            <Plus className="w-4 h-4" />
+            {repertoires && repertoires.length >= maxStudies && !Number.isFinite(maxStudies) ? null : (
+              repertoires && repertoires.length >= maxStudies ? <Lock className="w-4 h-4" /> : <Plus className="w-4 h-4" />
+            )}
             {t("createRepertoire")}
           </Button>
         </div>
