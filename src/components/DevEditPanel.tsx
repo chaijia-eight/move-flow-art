@@ -188,18 +188,30 @@ export default function DevEditPanel({ currentLine, moveHistory, primarySide, on
               <div className="flex items-center gap-2 mt-1">
                 <input
                   type="number"
-                  value={crucialIndex ?? ""}
+                  value={crucialIndex === null ? "" : crucialIndex === -1 ? "" : crucialIndex}
                   onChange={(e) => setCrucialIndex(e.target.value === "" ? null : parseInt(e.target.value, 10))}
                   className="w-24 p-2 rounded-lg text-xs font-mono"
                   style={{ background: "hsl(0, 0%, 8%)", border: "1px solid hsl(0, 0%, 25%)", color: "hsl(0, 0%, 85%)" }}
                   placeholder="e.g. 9"
                   min={0}
+                  disabled={crucialIndex === -1}
                 />
                 <span className="text-[11px] opacity-50">
-                  {crucialIndex != null && editMoves ? `= "${editMoves.split(/\s+/)[crucialIndex] || "?"}"` : ""}
+                  {crucialIndex === -1 ? "No crucial moment" : crucialIndex != null && editMoves ? `= "${editMoves.split(/\s+/)[crucialIndex] || "?"}"` : ""}
                 </span>
               </div>
             </div>
+            <button
+              onClick={() => setCrucialIndex(crucialIndex === -1 ? null : -1)}
+              className="w-full py-1.5 rounded-lg text-xs font-medium transition-colors hover:opacity-80"
+              style={{
+                background: crucialIndex === -1 ? "hsl(0, 70%, 35%)" : "hsl(0, 0%, 18%)",
+                color: crucialIndex === -1 ? "white" : "hsl(0, 0%, 60%)",
+                border: crucialIndex === -1 ? "1px solid hsl(0, 70%, 55%)" : "1px solid hsl(0, 0%, 25%)",
+              }}
+            >
+              🚫 No crucial moment {crucialIndex === -1 ? "(active)" : ""}
+            </button>
             <div className="text-[10px] opacity-40">
               Click a move number below to set it as crucial moment:
             </div>
