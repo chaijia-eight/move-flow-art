@@ -350,6 +350,48 @@ export default function RepertoireBuilder() {
     }
   }, [user, repertoireId, name, side, tree, navigate, queryClient]);
 
+  // PGN import: parse PGN into tree
+  const importPgn = useCallback((pgn: string) => {
+    try {
+      const c = new Chess();
+      c.loadPgn(pgn);
+      const history = c.history();
+      if (history.length === 0) {
+        toast({ title: "No moves found in PGN", variant: "destructive" });
+        return;
+      }
+      // Build linear tree from moves
+      const buildTree = (moves: string[], idx: number): OpeningNode[] => {
+        if (idx >= moves.length) return [];
+        const c2 = new Chess();
+        for (let i = 0; i <= idx; i++) c2.move(moves[i]);
+        return [{
+          fen: c2.fen(),
+          move: moves[idx],
+          category: "main_line" as MoveCategory,
+          children: buildTree(moves, idx + 1),
+        }];
+      };
+      const newTree = buildTree(history, 0);
+      setTree(prev => [...prev, ...newTree]);
+      setShowPgnImport(false);
+      setShowChapterCreate(false);
+      setPgnInput("");
+      toast({ title: `Imported ${history.length} moves` });
+    } catch (err) {
+      toast({ title: "Invalid PGN", variant: "destructive" });
+    }
+  }, []);
+
+  // Start from starting position (just dismiss the dialog, board is already at start)
+  const startFromPosition = useCallback(() => {
+    setShowChapterCreate(false);
+    setShowPgnImport(false);
+  }, []);
+
+  // Auto-show chapter creation when empty and new
+  const hasChapters = tree.length > 0;
+
   // Move hints — all legal moves
   const moveHints = useMemo(() => {
     const hints = new Map<string, { category: MoveCategory; targets: Map<string, MoveCategory> }>();
@@ -374,6 +416,9 @@ export default function RepertoireBuilder() {
     if (!selectedNodePath) return null;
     return getNodeAtPath(tree, selectedNodePath);
   }, [tree, selectedNodePath]);
+
+  // Show chapter create dialog automatically when no chapters exist
+  const showCreatePanel = showChapterCreate || (!hasChapters && loaded);
 
   return (
     <div className="min-h-screen bg-background">
