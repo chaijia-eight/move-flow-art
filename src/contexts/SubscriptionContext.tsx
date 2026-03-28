@@ -23,7 +23,8 @@ interface SubscriptionState {
   openCustomerPortal: () => Promise<void>;
 }
 
-const FREE_DAILY_LINES = 2;
+const FREE_DAILY_LINES = 3;
+const FREE_DAILY_PRACTICES = 2;
 
 const SubscriptionContext = createContext<SubscriptionState>({
   isPro: false,

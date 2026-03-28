@@ -225,7 +225,7 @@ const translations = {
   subscription: { en: "Subscription", zh: "订阅" },
   freePlan: { en: "Free Plan", zh: "免费计划" },
   proPlan: { en: "Pro Plan", zh: "专业计划" },
-  proPlanPrice: { en: "$5/month", zh: "$5/月" },
+  proPlanPrice: { en: "$3.99/month", zh: "$3.99/月" },
   currentPlan: { en: "Current Plan", zh: "当前计划" },
   upgradeToPro: { en: "Upgrade to Pro", zh: "升级到专业版" },
   manageSubscription: { en: "Manage Subscription", zh: "管理订阅" },
