@@ -6,7 +6,8 @@ import { fenToBoard, PIECE_IMAGES, coordsToSquare, squareToCoords } from "@/data
 import { useTheme } from "@/contexts/ThemeContext";
 import CaptureEffect from "@/components/CaptureEffect";
 import { playMoveSound, playCaptureSound, playCastleSound } from "@/lib/chessSounds";
-import type { MoveCategory, CustomArrow, CustomHighlight } from "@/data/openings";
+import type { MoveCategory, CustomArrow, CustomHighlight, NagSymbol } from "@/data/openings";
+import { NAG_SYMBOLS } from "@/data/openings";
 
 interface ChessboardProps {
   fen: string;
@@ -23,6 +24,8 @@ interface ChessboardProps {
   customHighlights?: CustomHighlight[];
   onRightClickDraw?: (type: "arrow", data: { from: string; to: string; color: string }) => void;
   onRightClickSquare?: (square: string) => void;
+  /** Map of square -> NagSymbol to show on that piece's corner */
+  nagOverlays?: Map<string, NagSymbol>;
 }
 
 interface AnimMove {
