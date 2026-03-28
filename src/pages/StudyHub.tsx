@@ -9,6 +9,7 @@ import { themes } from "@/data/openings";
 import { extractLinesForVariation, extractAllLines, type Line } from "@/lib/lineExtractor";
 import { getLineProgress, isLineUnlocked, getOpeningProgress } from "@/lib/progressStore";
 import { ArrowLeft, ChevronRight, Crown, Shield, ChevronDown, Lock, Check, BookOpen, RotateCcw, Shuffle, Flame, Pencil } from "lucide-react";
+import LearningPath from "@/components/LearningPath";
 import { t, tn, tDesc, tVar } from "@/lib/i18n";
 import UpgradeModal from "@/components/UpgradeModal";
 import { useLineOverrides } from "@/hooks/useLineOverrides";
@@ -418,7 +419,17 @@ export default function StudyHub() {
                         transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                         className="overflow-hidden"
                       >
-                        <div className="pt-1.5 pl-4 space-y-1">
+                        <div className="pt-1.5 space-y-1">
+                          <LearningPath
+                            lines={lines}
+                            theme={theme}
+                            onNavigate={(li) => {
+                              navigate(
+                                `/study/${opening.id}/play?color=${opening.primarySide}&variation=${variation.id}&line=${li}`
+                              );
+                            }}
+                          />
+                          <div className="pl-4 space-y-1">
                           {lines.map((line, li) => {
                             const prog = getLineProgress(line.id);
                             const variationLineIds = lines.map((l) => l.id);
@@ -511,6 +522,7 @@ export default function StudyHub() {
                               </motion.button>
                             );
                           })}
+                          </div>
                         </div>
                       </motion.div>
                     )}
