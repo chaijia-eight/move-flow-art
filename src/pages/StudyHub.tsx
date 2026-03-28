@@ -17,7 +17,7 @@ import { useLineOverrides } from "@/hooks/useLineOverrides";
 export default function StudyHub() {
   const { openingId } = useParams();
   const { user } = useAuth();
-  const { canPractice, canLearnNewLine, canLearnTrap, isPro, lastTrapLearnedAt } = useSubscription();
+  const { canPractice, canLearnNewLine, canLearnTrap, isPro } = useSubscription();
   const navigate = useNavigate();
   const { setTheme, currentTheme } = useTheme();
   const { overrides, saveOverride } = useLineOverrides();
