@@ -769,11 +769,16 @@ export default function Study() {
     ? tf<(c: string) => string>("playAs")(colorLabel)
     : tf<(c: string) => string>("playAgainst")(colorLabel);
 
-  const displayName = currentLine
-    ? currentLine.name
-    : currentVariation
-    ? currentVariation.name
-    : tn("openingName", opening.id);
+  const displayName = (() => {
+    if (activeVariation?.isTrap) {
+      const trapVariations = opening.variations.filter(v => v.isTrap);
+      const trapIndex = trapVariations.findIndex(v => v.id === activeVariation.id);
+      return `Crushing Line ${trapIndex + 1}`;
+    }
+    if (currentLine) return currentLine.name;
+    if (currentVariation) return currentVariation.name;
+    return tn("openingName", opening.id);
+  })();
 
   const lineProgress = currentLine ? getLineProgress(currentLine.id) : null;
   const isChallengeMode = !isAgainstMode && (isPracticeMode || !!(lineProgress && !lineProgress.mastered && lineProgress.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1));
