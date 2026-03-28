@@ -659,90 +659,148 @@ const caro_brooker_trap_tree: OpeningNode[] = [
 ];
 
 const noahs_ark_trap_tree: OpeningNode[] = [
+{
+  fen: "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
+  move: "e4", category: "main_line",
+  children: [
   {
-    fen: "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
-    move: "e4", category: "main_line",
+    fen: "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+    move: "e5", category: "main_line",
     children: [
     {
-      fen: "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
-      move: "e5", category: "main_line",
+      fen: "rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2",
+      move: "Nf3", category: "main_line",
       children: [
       {
-        fen: "rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2",
-        move: "Nf3", category: "main_line",
+        fen: "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
+        move: "Nc6", category: "main_line",
         children: [
         {
-          fen: "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
-          move: "Nc6", category: "main_line",
+          fen: "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3",
+          move: "Bb5", category: "main_line",
           children: [
           {
-            fen: "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3",
-            move: "Bb5", category: "main_line",
+            fen: "r1bqkbnr/1ppp1ppp/p1n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4",
+            move: "a6", category: "main_line",
             children: [
             {
-              fen: "r1bqkbnr/1ppp1ppp/p1n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4",
-              move: "a6", category: "main_line",
+              fen: "r1bqkbnr/1ppp1ppp/p1n5/4p3/B3P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 1 4",
+              move: "Ba4", category: "main_line",
               children: [
               {
-                fen: "r1bqkbnr/1ppp1ppp/p1n5/4p3/B3P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 1 4",
-                move: "Ba4", category: "main_line",
+                fen: "r1bqkb1r/1ppp1ppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 2 5",
+                move: "Nf6", category: "main_line",
                 children: [
                 {
-                  fen: "r1bqkb1r/1ppp1ppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 2 5",
-                  move: "Nf6", category: "main_line",
+                  fen: "r1bqkb1r/1ppp1ppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 3 5",
+                  move: "O-O", category: "main_line",
                   children: [
                   {
-                    fen: "r1bqkb1r/1ppp1ppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 3 5",
-                    move: "O-O", category: "main_line",
+                    fen: "r1bqkb1r/1ppp1ppp/p1n5/4p3/B3n3/5N2/PPPP1PPP/RNBQ1RK1 w kq - 0 6",
+                    move: "Nxe4", category: "main_line",
                     children: [
                     {
-                      fen: "r1bqkb1r/1ppp1ppp/p1n5/4p3/B3n3/5N2/PPPP1PPP/RNBQ1RK1 w kq - 0 6",
-                      move: "Nxe4", category: "main_line",
+                      fen: "r1bqkb1r/1ppp1ppp/p1n5/4p3/B2Pn3/5N2/PPP2PPP/RNBQ1RK1 b kq - 0 6",
+                      move: "d4", category: "main_line",
                       children: [
                       {
-                        fen: "r1bqkb1r/1ppp1ppp/p1n5/4p3/B2Pn3/5N2/PPP2PPP/RNBQ1RK1 b kq - 0 6",
-                        move: "d4", category: "main_line",
+                        fen: "r1bqkb1r/2pp1ppp/p1n5/1p2p3/B2Pn3/5N2/PPP2PPP/RNBQ1RK1 w kq - 0 7",
+                        move: "b5", category: "main_line",
                         children: [
                         {
-                          fen: "r1bqkb1r/2pp1ppp/p1n5/1p2p3/B2Pn3/5N2/PPP2PPP/RNBQ1RK1 w kq - 0 7",
-                          move: "b5", category: "main_line",
+                          fen: "r1bqkb1r/2pp1ppp/p1n5/1p2p3/3Pn3/1B3N2/PPP2PPP/RNBQ1RK1 b kq - 1 7",
+                          move: "Bb3", category: "main_line",
                           children: [
                           {
-                            fen: "r1bqkb1r/2pp1ppp/p1n5/1p2p3/3Pn3/1B3N2/PPP2PPP/RNBQ1RK1 b kq - 1 7",
-                            move: "Bb3", category: "main_line",
+                            fen: "r1bqkb1r/2p2ppp/p1n5/1p1pp3/3Pn3/1B3N2/PPP2PPP/RNBQ1RK1 w kq - 0 8",
+                            move: "d5", category: "main_line",
                             children: [
                             {
-                              fen: "r1bqkb1r/2p2ppp/p1n5/1p1pp3/3Pn3/1B3N2/PPP2PPP/RNBQ1RK1 w kq - 0 8",
-                              move: "d5", category: "main_line",
+                              fen: "r1bqkb1r/2p2ppp/p1n5/1p1pP3/4n3/1B3N2/PPP2PPP/RNBQ1RK1 b kq - 0 8",
+                              move: "dxe5", category: "main_line",
                               children: [
                               {
-                                fen: "r1bqkb1r/2p2ppp/p1n5/1p1pP3/4n3/1B3N2/PPP2PPP/RNBQ1RK1 b kq - 0 8",
-                                move: "dxe5", category: "main_line",
+                                fen: "r2qkb1r/2p2ppp/p1n1b3/1p1pP3/4n3/1B3N2/PPP2PPP/RNBQ1RK1 w kq - 1 9",
+                                move: "Be6", category: "main_line",
                                 children: [
                                 {
-                                  fen: "r2qkb1r/2p2ppp/p1n1b3/1p1pP3/4n3/1B3N2/PPP2PPP/RNBQ1RK1 w kq - 1 9",
-                                  move: "Be6", category: "main_line",
+                                  fen: "r2qkb1r/2p2ppp/p1n1b3/1p1pP3/4n3/1BP2N2/PP3PPP/RNBQ1RK1 b kq - 0 9",
+                                  move: "c3", category: "main_line",
                                   children: [
                                   {
-                                    fen: "r2qkb1r/2p2ppp/p1n1b3/1p1pP3/4n3/1BP2N2/PP3PPP/RNBQ1RK1 b kq - 0 9",
-                                    move: "c3", category: "main_line",
+                                    fen: "r2qk2r/2p2ppp/p1n1b3/1pbpP3/4n3/1BP2N2/PP3PPP/RNBQ1RK1 w kq - 1 10",
+                                    move: "Bc5", category: "main_line",
                                     children: [
                                     {
-                                      fen: "r2qk2r/2p1bppp/p1n1b3/1p1pP3/4n3/1BP2N2/PP3PPP/RNBQ1RK1 w kq - 1 10",
-                                      move: "Be7", category: "main_line",
+                                      fen: "r2qk2r/2p2ppp/p1n1b3/1pbpP3/4n3/1BP2N2/PP1N1PPP/R1BQ1RK1 b kq - 2 10",
+                                      move: "Nbd2", category: "main_line",
                                       children: [
                                       {
-                                        fen: "r2qk2r/2p1bppp/p1n1b3/1p1pP3/4n3/1BP2N2/PP1N1PPP/R1BQ1RK1 b kq - 2 10",
-                                        move: "Nbd2", category: "main_line",
+                                        fen: "r2q1rk1/2p2ppp/p1n1b3/1pbpP3/4n3/1BP2N2/PP1N1PPP/R1BQ1RK1 w - - 3 11",
+                                        move: "O-O", category: "main_line",
                                         children: [
                                         {
-                                          fen: "r2q1rk1/2p1bppp/p1n1b3/1p1pP3/4n3/1BP2N2/PP1N1PPP/R1BQ1RK1 w - - 3 11",
-                                          move: "O-O", category: "main_line",
+                                          fen: "r2q1rk1/2p2ppp/p1n1b3/1pbpP3/4n3/2P2N2/PPBN1PPP/R1BQ1RK1 b - - 4 11",
+                                          move: "Bc2", category: "main_line",
                                           children: [
                                           {
-                                            fen: "r2q1rk1/2p1bppp/p1n1b3/1p1pP3/4n3/1BP2N2/PP1N1PPP/R1BQR1K1 b - - 4 11",
-                                            move: "Re1", category: "main_line",
-                                            children: []
+                                            fen: "r2q1rk1/2p2ppp/p1n1b3/1pbpP3/8/2P2N2/PPBn1PPP/R1BQ1RK1 w - - 0 12",
+                                            move: "Nxd2", category: "main_line",
+                                            children: [
+                                            {
+                                              fen: "r2q1rk1/2p2ppp/p1n1b3/1pbpP3/8/2P2N2/PPBB1PPP/R2Q1RK1 b - - 0 12",
+                                              move: "Bxd2", category: "main_line",
+                                              children: [
+                                              {
+                                                fen: "r2q1rk1/2p3pp/p1n1b3/1pbpPp2/8/2P2N2/PPBB1PPP/R2Q1RK1 w - f6 0 13",
+                                                move: "f5", category: "main_line",
+                                                children: [
+                                                {
+                                                  fen: "r2q1rk1/2p3pp/p1n1bP2/1pbp4/8/2P2N2/PPBB1PPP/R2Q1RK1 b - - 0 13",
+                                                  move: "exf6", category: "main_line",
+                                                  children: [
+                                                  {
+                                                    fen: "r2q2k1/2p3pp/p1n1br2/1pbp4/8/2P2N2/PPBB1PPP/R2Q1RK1 w - - 0 14",
+                                                    move: "Rxf6", category: "main_line",
+                                                    children: [
+                                                    {
+                                                      fen: "r2q2k1/2p3pp/p1n1br2/1pbp2N1/8/2P5/PPBB1PPP/R2Q1RK1 b - - 1 14",
+                                                      move: "Ng5", category: "main_line",
+                                                      children: [
+                                                      {
+                                                        fen: "r2q2k1/2pb2pp/p1n2r2/1pbp2N1/8/2P5/PPBB1PPP/R2Q1RK1 w - - 2 15",
+                                                        move: "Bd7", category: "main_line",
+                                                        children: [
+                                                        {
+                                                          fen: "r2q2k1/2pb2pp/p1n2r2/1pbp2NQ/8/2P5/PPBB1PPP/R4RK1 b - - 3 15",
+                                                          move: "Qh5", category: "main_line",
+                                                          children: [
+                                                          {
+                                                            fen: "r2q2k1/2pb2p1/p1n2r1p/1pbp2NQ/8/2P5/PPBB1PPP/R4RK1 w - - 0 16",
+                                                            move: "h6", category: "main_line",
+                                                            children: [
+                                                            {
+                                                              fen: "r2q2k1/2pb1Np1/p1n2r1p/1pbp3Q/8/2P5/PPBB1PPP/R4RK1 b - - 1 16",
+                                                              move: "Nf7", category: "main_line",
+                                                              children: []
+                                                            }
+                                                            ]
+                                                          }
+                                                          ]
+                                                        }
+                                                        ]
+                                                      }
+                                                      ]
+                                                    }
+                                                    ]
+                                                  }
+                                                  ]
+                                                }
+                                                ]
+                                              }
+                                              ]
+                                            }
+                                            ]
                                           }
                                           ]
                                         }
@@ -784,6 +842,8 @@ const noahs_ark_trap_tree: OpeningNode[] = [
     }
     ]
   }
+  ]
+}
 ];
 
 const london_nc5_trap_tree: OpeningNode[] = [
