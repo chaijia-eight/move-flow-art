@@ -498,18 +498,35 @@ export default function RepertoireBuilder() {
           </div>
         </div>
 
-        {/* Create Chapter button */}
-        <div className="flex items-center gap-2 mb-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowChapterCreate(true)}
-            className="gap-1.5"
-          >
-            <Plus className="w-4 h-4" />
-            Create Chapter
-          </Button>
-        </div>
+        {/* Chapter tabs */}
+        {hasChapters && (
+          <div className="flex items-center gap-1.5 mb-3 overflow-x-auto pb-1">
+            {chapters.map((ch, idx) => (
+              <button
+                key={idx}
+                onClick={() => {
+                  setActiveChapterIdx(idx);
+                  setCurrentPath([]);
+                  setSelectedNodePath(null);
+                  setEngineEval(null);
+                }}
+                className={`px-3 py-1.5 text-xs font-medium rounded-lg whitespace-nowrap transition-colors ${
+                  idx === activeChapterIdx
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
+                }`}
+              >
+                {ch.name}
+              </button>
+            ))}
+            <button
+              onClick={() => setShowChapterCreate(true)}
+              className="px-2 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted"
+            >
+              <Plus className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
 
         {/* Chapter creation panel */}
         <AnimatePresence>
@@ -521,10 +538,25 @@ export default function RepertoireBuilder() {
               className="mb-4"
             >
               {!showPgnImport ? (
-                <div className="rounded-xl border border-border bg-card p-6 max-w-md mx-auto">
-                  <h3 className="text-base font-semibold text-foreground mb-4 text-center">
+                <div className="rounded-xl border border-border bg-card p-6 max-w-md mx-auto relative">
+                  {/* Close button — only if there are already chapters */}
+                  {hasChapters && (
+                    <button
+                      onClick={() => { setShowChapterCreate(false); setShowPgnImport(false); }}
+                      className="absolute top-3 right-3 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                  <h3 className="text-base font-semibold text-foreground mb-3 text-center">
                     New Chapter
                   </h3>
+                  <Input
+                    value={newChapterName}
+                    onChange={(e) => setNewChapterName(e.target.value)}
+                    placeholder="Chapter name"
+                    className="text-sm mb-4"
+                  />
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={startFromPosition}
@@ -545,7 +577,13 @@ export default function RepertoireBuilder() {
                   </div>
                 </div>
               ) : (
-                <div className="rounded-xl border border-border bg-card p-6 max-w-lg mx-auto">
+                <div className="rounded-xl border border-border bg-card p-6 max-w-lg mx-auto relative">
+                  <button
+                    onClick={() => { setShowChapterCreate(false); setShowPgnImport(false); setPgnInput(""); }}
+                    className="absolute top-3 right-3 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
                   <h3 className="text-base font-semibold text-foreground mb-3">Import PGN</h3>
                   <Textarea
                     value={pgnInput}
