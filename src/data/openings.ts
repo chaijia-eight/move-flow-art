@@ -1,5 +1,31 @@
 export type MoveCategory = "main_line" | "legit_alternative" | "mistake";
 
+export type NagSymbol = "brilliant" | "great_find" | "best" | "excellent" | "book" | "forced" | "alternative" | "mistake" | "blunder" | "missed_opportunity";
+
+export interface CustomArrow {
+  from: string;
+  to: string;
+  color: string;
+}
+
+export interface CustomHighlight {
+  square: string;
+  color: string;
+}
+
+export const NAG_SYMBOLS: { key: NagSymbol; label: string; icon: string }[] = [
+  { key: "brilliant", label: "Brilliant", icon: "/symbols/brilliant.png" },
+  { key: "great_find", label: "Great Find", icon: "/symbols/great_find.png" },
+  { key: "best", label: "Best", icon: "/symbols/best.png" },
+  { key: "excellent", label: "Excellent", icon: "/symbols/excellent.png" },
+  { key: "book", label: "Book", icon: "/symbols/book.png" },
+  { key: "forced", label: "Forced", icon: "/symbols/forced.png" },
+  { key: "alternative", label: "Alternative", icon: "/symbols/alternative.png" },
+  { key: "mistake", label: "Mistake", icon: "/symbols/mistake.png" },
+  { key: "missed_opportunity", label: "Missed Opportunity", icon: "/symbols/missed_opportunity.png" },
+  { key: "blunder", label: "Blunder", icon: "/symbols/blunder.png" },
+];
+
 export interface OpeningNode {
   fen: string;
   move: string;
@@ -7,6 +33,9 @@ export interface OpeningNode {
   variationName?: string;
   explanation?: string;
   suggestedMove?: string;
+  nag?: NagSymbol;
+  arrows?: CustomArrow[];
+  highlights?: CustomHighlight[];
   children: OpeningNode[];
 }
 
