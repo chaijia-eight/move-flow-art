@@ -545,23 +545,38 @@ export default function Chessboard({
 
                     {/* Chess piece */}
                     {piece && (
-                      <motion.img
-                        key={`${square}-${animMove?.id ?? 0}`}
-                        src={PIECE_IMAGES[piece]}
-                        alt={piece}
-                        draggable={false}
-                        className="relative z-20 select-none w-[80%] h-[80%] object-contain"
-                        style={{
-                          cursor: disabled ? "default" : "grab",
-                          opacity: isDragSource ? 0.3 : 1,
-                        }}
-                        initial={slideOffset ? { x: slideOffset.x, y: slideOffset.y } : false}
-                        animate={{ x: 0, y: 0 }}
-                        transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-                        whileHover={!disabled ? { scale: 1.1, transition: { duration: 0.15 } } : {}}
-                        whileTap={!disabled ? { scale: 0.95 } : {}}
-                        onPointerDown={(e) => handleDragStart(e, square, piece)}
-                      />
+                      <div className="relative z-20 w-[80%] h-[80%]">
+                        <motion.img
+                          key={`${square}-${animMove?.id ?? 0}`}
+                          src={PIECE_IMAGES[piece]}
+                          alt={piece}
+                          draggable={false}
+                          className="select-none w-full h-full object-contain"
+                          style={{
+                            cursor: disabled ? "default" : "grab",
+                            opacity: isDragSource ? 0.3 : 1,
+                          }}
+                          initial={slideOffset ? { x: slideOffset.x, y: slideOffset.y } : false}
+                          animate={{ x: 0, y: 0 }}
+                          transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+                          whileHover={!disabled ? { scale: 1.1, transition: { duration: 0.15 } } : {}}
+                          whileTap={!disabled ? { scale: 0.95 } : {}}
+                          onPointerDown={(e) => handleDragStart(e, square, piece)}
+                        />
+                        {/* NAG overlay on piece corner */}
+                        {nagOverlays?.get(square) && (() => {
+                          const nag = nagOverlays.get(square)!;
+                          const sym = NAG_SYMBOLS.find(s => s.key === nag);
+                          if (!sym) return null;
+                          return (
+                            <img
+                              src={sym.icon}
+                              alt={sym.label}
+                              className="absolute -top-1 -right-1 w-4 h-4 pointer-events-none z-30 drop-shadow-md"
+                            />
+                          );
+                        })()}
+                      </div>
                     )}
 
                     {/* Coordinate labels */}

@@ -249,7 +249,7 @@ export default function RepertoireBuilder() {
     setTree(newTree);
   }, [tree, currentPath]);
 
-  // Square highlight from board
+  // Square highlight from board — simple toggle
   const handleSquareHighlight = useCallback((square: string) => {
     if (currentPath.length === 0) return;
     const newTree = cloneTree(tree);
@@ -258,15 +258,9 @@ export default function RepertoireBuilder() {
     if (!node.highlights) node.highlights = [];
     const existingIdx = node.highlights.findIndex(h => h.square === square);
     if (existingIdx !== -1) {
-      const currentColor = node.highlights[existingIdx].color;
-      const colorIdx = HIGHLIGHT_COLORS.indexOf(currentColor);
-      if (colorIdx < HIGHLIGHT_COLORS.length - 1) {
-        node.highlights[existingIdx].color = HIGHLIGHT_COLORS[colorIdx + 1];
-      } else {
-        node.highlights.splice(existingIdx, 1);
-      }
+      node.highlights.splice(existingIdx, 1);
     } else {
-      node.highlights.push({ square, color: HIGHLIGHT_COLORS[0] });
+      node.highlights.push({ square, color: HIGHLIGHT_COLOR });
     }
     setTree(newTree);
   }, [tree, currentPath]);
