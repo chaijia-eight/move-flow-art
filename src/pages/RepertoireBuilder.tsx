@@ -225,7 +225,7 @@ export default function RepertoireBuilder() {
     setTree(newTree);
     setCurrentPath([...currentPath, newIdx]);
     setEngineEval(null);
-  }, [tree, currentPath, currentFen]);
+  }, [tree, currentPath, currentFen, chapters]);
 
   const navigateTo = useCallback((path: TreePath) => {
     setCurrentPath(path);
