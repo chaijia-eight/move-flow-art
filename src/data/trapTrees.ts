@@ -659,90 +659,148 @@ const caro_brooker_trap_tree: OpeningNode[] = [
 ];
 
 const noahs_ark_trap_tree: OpeningNode[] = [
+{
+  fen: "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
+  move: "e4", category: "main_line",
+  children: [
   {
-    fen: "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
-    move: "e4", category: "main_line",
+    fen: "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+    move: "e5", category: "main_line",
     children: [
     {
-      fen: "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
-      move: "e5", category: "main_line",
+      fen: "rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2",
+      move: "Nf3", category: "main_line",
       children: [
       {
-        fen: "rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2",
-        move: "Nf3", category: "main_line",
+        fen: "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
+        move: "Nc6", category: "main_line",
         children: [
         {
-          fen: "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
-          move: "Nc6", category: "main_line",
+          fen: "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3",
+          move: "Bb5", category: "main_line",
           children: [
           {
-            fen: "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3",
-            move: "Bb5", category: "main_line",
+            fen: "r1bqkbnr/1ppp1ppp/p1n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4",
+            move: "a6", category: "main_line",
             children: [
             {
-              fen: "r1bqkbnr/1ppp1ppp/p1n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4",
-              move: "a6", category: "main_line",
+              fen: "r1bqkbnr/1ppp1ppp/p1n5/4p3/B3P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 1 4",
+              move: "Ba4", category: "main_line",
               children: [
               {
-                fen: "r1bqkbnr/1ppp1ppp/p1n5/4p3/B3P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 1 4",
-                move: "Ba4", category: "main_line",
+                fen: "r1bqkb1r/1ppp1ppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 2 5",
+                move: "Nf6", category: "main_line",
                 children: [
                 {
-                  fen: "r1bqkb1r/1ppp1ppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 2 5",
-                  move: "Nf6", category: "main_line",
+                  fen: "r1bqkb1r/1ppp1ppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 3 5",
+                  move: "O-O", category: "main_line",
                   children: [
                   {
-                    fen: "r1bqkb1r/1ppp1ppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 3 5",
-                    move: "O-O", category: "main_line",
+                    fen: "r1bqkb1r/1ppp1ppp/p1n5/4p3/B3n3/5N2/PPPP1PPP/RNBQ1RK1 w kq - 0 6",
+                    move: "Nxe4", category: "main_line",
                     children: [
                     {
-                      fen: "r1bqkb1r/1ppp1ppp/p1n5/4p3/B3n3/5N2/PPPP1PPP/RNBQ1RK1 w kq - 0 6",
-                      move: "Nxe4", category: "main_line",
+                      fen: "r1bqkb1r/1ppp1ppp/p1n5/4p3/B2Pn3/5N2/PPP2PPP/RNBQ1RK1 b kq - 0 6",
+                      move: "d4", category: "main_line",
                       children: [
                       {
-                        fen: "r1bqkb1r/1ppp1ppp/p1n5/4p3/B2Pn3/5N2/PPP2PPP/RNBQ1RK1 b kq - 0 6",
-                        move: "d4", category: "main_line",
+                        fen: "r1bqkb1r/2pp1ppp/p1n5/1p2p3/B2Pn3/5N2/PPP2PPP/RNBQ1RK1 w kq - 0 7",
+                        move: "b5", category: "main_line",
                         children: [
                         {
-                          fen: "r1bqkb1r/2pp1ppp/p1n5/1p2p3/B2Pn3/5N2/PPP2PPP/RNBQ1RK1 w kq - 0 7",
-                          move: "b5", category: "main_line",
+                          fen: "r1bqkb1r/2pp1ppp/p1n5/1p2p3/3Pn3/1B3N2/PPP2PPP/RNBQ1RK1 b kq - 1 7",
+                          move: "Bb3", category: "main_line",
                           children: [
                           {
-                            fen: "r1bqkb1r/2pp1ppp/p1n5/1p2p3/3Pn3/1B3N2/PPP2PPP/RNBQ1RK1 b kq - 1 7",
-                            move: "Bb3", category: "main_line",
+                            fen: "r1bqkb1r/2p2ppp/p1n5/1p1pp3/3Pn3/1B3N2/PPP2PPP/RNBQ1RK1 w kq - 0 8",
+                            move: "d5", category: "main_line",
                             children: [
                             {
-                              fen: "r1bqkb1r/2p2ppp/p1n5/1p1pp3/3Pn3/1B3N2/PPP2PPP/RNBQ1RK1 w kq - 0 8",
-                              move: "d5", category: "main_line",
+                              fen: "r1bqkb1r/2p2ppp/p1n5/1p1pP3/4n3/1B3N2/PPP2PPP/RNBQ1RK1 b kq - 0 8",
+                              move: "dxe5", category: "main_line",
                               children: [
                               {
-                                fen: "r1bqkb1r/2p2ppp/p1n5/1p1pP3/4n3/1B3N2/PPP2PPP/RNBQ1RK1 b kq - 0 8",
-                                move: "dxe5", category: "main_line",
+                                fen: "r2qkb1r/2p2ppp/p1n1b3/1p1pP3/4n3/1B3N2/PPP2PPP/RNBQ1RK1 w kq - 1 9",
+                                move: "Be6", category: "main_line",
                                 children: [
                                 {
-                                  fen: "r2qkb1r/2p2ppp/p1n1b3/1p1pP3/4n3/1B3N2/PPP2PPP/RNBQ1RK1 w kq - 1 9",
-                                  move: "Be6", category: "main_line",
+                                  fen: "r2qkb1r/2p2ppp/p1n1b3/1p1pP3/4n3/1BP2N2/PP3PPP/RNBQ1RK1 b kq - 0 9",
+                                  move: "c3", category: "main_line",
                                   children: [
                                   {
-                                    fen: "r2qkb1r/2p2ppp/p1n1b3/1p1pP3/4n3/1BP2N2/PP3PPP/RNBQ1RK1 b kq - 0 9",
-                                    move: "c3", category: "main_line",
+                                    fen: "r2qk2r/2p2ppp/p1n1b3/1pbpP3/4n3/1BP2N2/PP3PPP/RNBQ1RK1 w kq - 1 10",
+                                    move: "Bc5", category: "main_line",
                                     children: [
                                     {
-                                      fen: "r2qk2r/2p1bppp/p1n1b3/1p1pP3/4n3/1BP2N2/PP3PPP/RNBQ1RK1 w kq - 1 10",
-                                      move: "Be7", category: "main_line",
+                                      fen: "r2qk2r/2p2ppp/p1n1b3/1pbpP3/4n3/1BP2N2/PP1N1PPP/R1BQ1RK1 b kq - 2 10",
+                                      move: "Nbd2", category: "main_line",
                                       children: [
                                       {
-                                        fen: "r2qk2r/2p1bppp/p1n1b3/1p1pP3/4n3/1BP2N2/PP1N1PPP/R1BQ1RK1 b kq - 2 10",
-                                        move: "Nbd2", category: "main_line",
+                                        fen: "r2q1rk1/2p2ppp/p1n1b3/1pbpP3/4n3/1BP2N2/PP1N1PPP/R1BQ1RK1 w - - 3 11",
+                                        move: "O-O", category: "main_line",
                                         children: [
                                         {
-                                          fen: "r2q1rk1/2p1bppp/p1n1b3/1p1pP3/4n3/1BP2N2/PP1N1PPP/R1BQ1RK1 w - - 3 11",
-                                          move: "O-O", category: "main_line",
+                                          fen: "r2q1rk1/2p2ppp/p1n1b3/1pbpP3/4n3/2P2N2/PPBN1PPP/R1BQ1RK1 b - - 4 11",
+                                          move: "Bc2", category: "main_line",
                                           children: [
                                           {
-                                            fen: "r2q1rk1/2p1bppp/p1n1b3/1p1pP3/4n3/1BP2N2/PP1N1PPP/R1BQR1K1 b - - 4 11",
-                                            move: "Re1", category: "main_line",
-                                            children: []
+                                            fen: "r2q1rk1/2p2ppp/p1n1b3/1pbpP3/8/2P2N2/PPBn1PPP/R1BQ1RK1 w - - 0 12",
+                                            move: "Nxd2", category: "main_line",
+                                            children: [
+                                            {
+                                              fen: "r2q1rk1/2p2ppp/p1n1b3/1pbpP3/8/2P2N2/PPBB1PPP/R2Q1RK1 b - - 0 12",
+                                              move: "Bxd2", category: "main_line",
+                                              children: [
+                                              {
+                                                fen: "r2q1rk1/2p3pp/p1n1b3/1pbpPp2/8/2P2N2/PPBB1PPP/R2Q1RK1 w - f6 0 13",
+                                                move: "f5", category: "main_line",
+                                                children: [
+                                                {
+                                                  fen: "r2q1rk1/2p3pp/p1n1bP2/1pbp4/8/2P2N2/PPBB1PPP/R2Q1RK1 b - - 0 13",
+                                                  move: "exf6", category: "main_line",
+                                                  children: [
+                                                  {
+                                                    fen: "r2q2k1/2p3pp/p1n1br2/1pbp4/8/2P2N2/PPBB1PPP/R2Q1RK1 w - - 0 14",
+                                                    move: "Rxf6", category: "main_line",
+                                                    children: [
+                                                    {
+                                                      fen: "r2q2k1/2p3pp/p1n1br2/1pbp2N1/8/2P5/PPBB1PPP/R2Q1RK1 b - - 1 14",
+                                                      move: "Ng5", category: "main_line",
+                                                      children: [
+                                                      {
+                                                        fen: "r2q2k1/2pb2pp/p1n2r2/1pbp2N1/8/2P5/PPBB1PPP/R2Q1RK1 w - - 2 15",
+                                                        move: "Bd7", category: "main_line",
+                                                        children: [
+                                                        {
+                                                          fen: "r2q2k1/2pb2pp/p1n2r2/1pbp2NQ/8/2P5/PPBB1PPP/R4RK1 b - - 3 15",
+                                                          move: "Qh5", category: "main_line",
+                                                          children: [
+                                                          {
+                                                            fen: "r2q2k1/2pb2p1/p1n2r1p/1pbp2NQ/8/2P5/PPBB1PPP/R4RK1 w - - 0 16",
+                                                            move: "h6", category: "main_line",
+                                                            children: [
+                                                            {
+                                                              fen: "r2q2k1/2pb1Np1/p1n2r1p/1pbp3Q/8/2P5/PPBB1PPP/R4RK1 b - - 1 16",
+                                                              move: "Nf7", category: "main_line",
+                                                              children: []
+                                                            }
+                                                            ]
+                                                          }
+                                                          ]
+                                                        }
+                                                        ]
+                                                      }
+                                                      ]
+                                                    }
+                                                    ]
+                                                  }
+                                                  ]
+                                                }
+                                                ]
+                                              }
+                                              ]
+                                            }
+                                            ]
                                           }
                                           ]
                                         }
@@ -784,6 +842,8 @@ const noahs_ark_trap_tree: OpeningNode[] = [
     }
     ]
   }
+  ]
+}
 ];
 
 const london_nc5_trap_tree: OpeningNode[] = [
@@ -2562,7 +2622,7 @@ export const trapVariations: Record<string, VariationInfo> = {
   "kings-indian": { id: "kid-bayonet-trap", name: "Bayonet Counter-Trap", description: "Punish White's premature Bg5 pin with a sharp kingside counter.", plan: "After White plays Bg5 prematurely, push h6 and g5! chasing the bishop. Then Nh5 targets the weakened g3 bishop, gaining the bishop pair and kingside initiative.", startingMoves: "1.d4 Nf6 2.c4 g6 3.Nc3 Bg7 4.e4 d6 5.Nf3 O-O 6.Be2 e5 7.d5 Nbd7 8.Bg5 h6 9.Bh4 g5 10.Bg3 Nh5", tree: kid_bayonet_trap_tree, depth: 20, isTrap: true, trapMoveIndex: 14 },
   "french-defense": { id: "french-poisoned-pawn", name: "Poisoned Pawn Trap", description: "Punish White's greedy Qxg7 with a devastating counterattack.", plan: "In the Winawer, after White plays Qg4 attacking g7, allow Qxg7! After Rg8 the queen is nearly trapped. Black gets massive compensation with open lines and rapid development.", startingMoves: "1.e4 e6 2.d4 d5 3.Nc3 Bb4 4.e5 c5 5.a3 Bxc3+ 6.bxc3 Ne7 7.Qg4 Qc7 8.Qxg7 Rg8 9.Qxh7 cxd4 10.Ne2 Nbc6 11.f4 Bd7", tree: french_poisoned_pawn_tree, depth: 22, isTrap: true, trapMoveIndex: 14 },
   "caro-kann": { id: "caro-brooker-trap", name: "Brooker Trap", description: "Punish White's greedy knight invasion with a solid setup.", plan: "In the Advance Caro-Kann, develop smoothly with Bf5, e6, and c5. After White overextends with Na4-c5, Black castles with a solid position and pressure on d4.", startingMoves: "1.e4 c6 2.d4 d5 3.e5 Bf5 4.Nf3 e6 5.Be2 c5 6.O-O Nc6 7.c3 cxd4 8.cxd4 Nge7 9.Nc3 Ng6 10.Na4 Be7 11.Nc5 O-O", tree: caro_brooker_trap_tree, depth: 22, isTrap: true, trapMoveIndex: 18 },
-  "ruy-lopez": { id: "ruy-nxe4-trap", name: "Open Ruy Lopez Trap", description: "Punish Black's premature Nxe4 pawn grab in the Ruy Lopez.", plan: "After 5...Nxe4?!, play d4! opening the center. Black's knight is misplaced on e4 and must retreat. White builds a powerful center with dxe5 and develops with tempo via c3, Nbd2, Re1.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bb5 a6 4.Ba4 Nf6 5.O-O Nxe4 6.d4 b5 7.Bb3 d5 8.dxe5 Be6 9.c3 Be7 10.Nbd2 O-O 11.Re1", tree: noahs_ark_trap_tree, depth: 21, isTrap: true, trapMoveIndex: 9 },
+  "ruy-lopez": { id: "ruy-nxe4-trap", name: "Tarrasch Trap", description: "Punish Black's Bc5 mistake with a devastating Bxh7+ sacrifice and Nf7 fork.", plan: "After Black grabs with Nxe4, play d4! and build pressure. When Black misplaces the bishop with Bc5?!, trade knights then launch a kingside attack: Ng5, Qh5, and the crushing Bxh7+ sacrifice followed by Nf7 forking queen and rook.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.Bb5 a6 4.Ba4 Nf6 5.O-O Nxe4 6.d4 b5 7.Bb3 d5 8.dxe5 Be6 9.c3 Bc5 10.Nbd2 O-O 11.Bc2 Nxd2 12.Bxd2 f5 13.exf6 Rxf6 14.Ng5 Bd7 15.Qh5 h6 16.Nf7", tree: noahs_ark_trap_tree, depth: 31, isTrap: true, trapMoveIndex: 17 },
   "london-system": { id: "london-nc5-trap", name: "Knight Outpost Trap", description: "Punish Black's passive play with a devastating knight outpost.", plan: "After Black develops passively, plant a knight on e5 supported by f4. The knight dominates the center and supports a kingside attack.", startingMoves: "1.d4 Nf6 2.Bf4 d5 3.e3 c5 4.c3 Nc6 5.Nd2 e6 6.Ngf3 Bd6 7.Bg3 O-O 8.Bd3 b6 9.Ne5 Bb7 10.f4 Ne7", tree: london_nc5_trap_tree, depth: 20, isTrap: true, trapMoveIndex: 15 },
   "scotch-game": { id: "scotch-qh4-refute", name: "Qh4 Refutation", description: "Punish Black's premature Qh4 with precise development gaining tempi.", plan: "After 4...Qh4?!, play Nc3! defending e4. Black's queen is exposed and loses time. After Nb5 threatening Nc7+, Black must waste moves while White develops freely.", startingMoves: "1.e4 e5 2.Nf3 Nc6 3.d4 exd4 4.Nxd4 Qh4 5.Nc3 Bb4 6.Be2 Qxe4 7.Nb5 Kd8 8.O-O Bxc3 9.bxc3", tree: scotch_qh4_refute_tree, depth: 17, isTrap: true, trapMoveIndex: 7 },
   "dutch-defense": { id: "dutch-staunton-refute", name: "Staunton Gambit Refutation", description: "Refute White's aggressive 2.e4 gambit with solid play keeping the extra pawn.", plan: "After 1.d4 f5 2.e4 fxe4, calmly develop with Nf6 and e6. Black keeps the extra pawn with a solid position. White's gambit is unsound.", startingMoves: "1.d4 f5 2.e4 fxe4 3.Nc3 Nf6 4.Bg5 e6 5.Nxe4 Be7 6.Bxf6 Bxf6 7.Nf3 O-O 8.Bd3 d5 9.Ng3 Nd7", tree: dutch_staunton_refute_tree, depth: 18, isTrap: true, trapMoveIndex: 2 },
