@@ -93,7 +93,7 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
         const skipAnim = skipNextAnimRef.current && !isCastle;
         skipNextAnimRef.current = false;
         if (!skipAnim) {
-          setAnimMove({ from: fromSquare, to: toSquare, isCapture: wasCapture, id: ++animIdCounter });
+          setAnimMove({ from: fromSquare, to: toSquare, isCapture: wasCapture || isEnPassant, id: ++animIdCounter });
         }
         setLastMove({ from: fromSquare, to: toSquare });
         if (wasCapture) {
