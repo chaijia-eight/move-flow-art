@@ -408,6 +408,10 @@ export default function RepertoireBuilder() {
 
   // Create a new chapter
   const createChapter = useCallback((chapterTree: OpeningNode[]) => {
+    if (chapters.length >= maxChaptersPerStudy) {
+      toast({ title: "Chapter limit reached", description: "Upgrade to Pro for unlimited chapters.", variant: "destructive" });
+      return;
+    }
     const chapterName = newChapterName.trim() || `Chapter ${chapters.length + 1}`;
     setChapters(prev => [...prev, { name: chapterName, tree: chapterTree }]);
     setActiveChapterIdx(chapters.length);
@@ -417,7 +421,7 @@ export default function RepertoireBuilder() {
     setShowPgnImport(false);
     setPgnInput("");
     setNewChapterName(`Chapter ${chapters.length + 2}`);
-  }, [chapters.length, newChapterName]);
+  }, [chapters.length, newChapterName, maxChaptersPerStudy]);
 
   // PGN import: parse PGN into tree
   const importPgn = useCallback((pgn: string) => {
