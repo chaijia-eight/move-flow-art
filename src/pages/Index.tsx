@@ -440,19 +440,23 @@ export default function Index() {
                   </div>
 
                   {/* CTA */}
-                  <Button
+                  <button
                     onClick={() => startCheckout()}
-                    className="w-full gap-2 h-11 text-sm font-semibold"
+                    className="relative w-full gap-2 h-11 text-sm font-semibold rounded-md flex items-center justify-center overflow-hidden"
                     style={{
                       background: "linear-gradient(135deg, hsl(45, 100%, 50%), hsl(35, 100%, 45%))",
                       color: "hsl(30, 50%, 10%)",
-                      border: "none",
                       boxShadow: "0 4px 16px hsl(45 100% 50% / 0.3)",
                     }}
                   >
-                    <Crown className="w-4 h-4" />
-                    Upgrade to Pro — $3.99/mo
-                  </Button>
+                    <span className="absolute inset-0 pointer-events-none" style={{
+                      background: "linear-gradient(105deg, transparent 40%, hsla(0,0%,100%,0.4) 50%, transparent 60%)",
+                      backgroundSize: "200% 100%",
+                      animation: "shimmer 2.5s ease-in-out infinite",
+                    }} />
+                    <Crown className="w-4 h-4 relative z-10" />
+                    <span className="relative z-10">Upgrade to Pro — $3.99/mo</span>
+                  </button>
                 </div>
               </div>
             </motion.section>
