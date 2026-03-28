@@ -462,6 +462,75 @@ export default function RepertoireBuilder() {
           </div>
         </div>
 
+        {/* Create Chapter button */}
+        <div className="flex items-center gap-2 mb-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowChapterCreate(true)}
+            className="gap-1.5"
+          >
+            <Plus className="w-4 h-4" />
+            Create Chapter
+          </Button>
+        </div>
+
+        {/* Chapter creation panel */}
+        <AnimatePresence>
+          {showCreatePanel && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mb-4"
+            >
+              {!showPgnImport ? (
+                <div className="rounded-xl border border-border bg-card p-6 max-w-md mx-auto">
+                  <h3 className="text-base font-semibold text-foreground mb-4 text-center">
+                    New Chapter
+                  </h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={startFromPosition}
+                      className="flex flex-col items-center gap-2 p-4 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-all group"
+                    >
+                      <Play className="w-8 h-8 text-muted-foreground group-hover:text-primary transition-colors" />
+                      <span className="text-sm font-medium text-foreground">Starting Position</span>
+                      <span className="text-[0.65rem] text-muted-foreground text-center">Begin from the initial board</span>
+                    </button>
+                    <button
+                      onClick={() => setShowPgnImport(true)}
+                      className="flex flex-col items-center gap-2 p-4 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-all group"
+                    >
+                      <FileText className="w-8 h-8 text-muted-foreground group-hover:text-primary transition-colors" />
+                      <span className="text-sm font-medium text-foreground">Import PGN</span>
+                      <span className="text-[0.65rem] text-muted-foreground text-center">Paste a PGN to import moves</span>
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="rounded-xl border border-border bg-card p-6 max-w-lg mx-auto">
+                  <h3 className="text-base font-semibold text-foreground mb-3">Import PGN</h3>
+                  <Textarea
+                    value={pgnInput}
+                    onChange={(e) => setPgnInput(e.target.value)}
+                    placeholder={'Paste PGN here...\ne.g. 1. e4 e5 2. Nf3 Nc6 3. Bb5'}
+                    className="text-sm min-h-[120px] resize-none font-mono mb-3"
+                  />
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" onClick={() => { setShowPgnImport(false); setPgnInput(""); }}>
+                      Cancel
+                    </Button>
+                    <Button size="sm" onClick={() => importPgn(pgnInput)} disabled={!pgnInput.trim()}>
+                      Import
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Main layout */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-4">
           {/* Board */}
