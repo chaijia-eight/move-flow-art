@@ -204,6 +204,7 @@ export default function Chessboard({
   };
 
   const handleDragStart = useCallback((e: React.PointerEvent, square: string, piece: string) => {
+    if (e.button !== 0) return; // Only left-click initiates drag
     if (!canInteract()) return;
     if (!isOwnPiece(piece)) return;
 
