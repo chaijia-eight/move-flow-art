@@ -68,6 +68,8 @@ interface Chapter {
   name: string;
   tree: OpeningNode[];
 }
+
+export default function RepertoireBuilder() {
   const { repertoireId } = useParams<{ repertoireId?: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
