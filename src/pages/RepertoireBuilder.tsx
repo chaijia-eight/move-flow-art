@@ -61,13 +61,8 @@ function getMovesAlongPath(tree: OpeningNode[], path: TreePath): string[] {
   return moves;
 }
 
-// Highlight color cycle
-const HIGHLIGHT_COLORS = [
-  "hsl(140, 65%, 45%)",
-  "hsl(0, 70%, 50%)",
-  "hsl(45, 90%, 55%)",
-  "hsl(210, 70%, 55%)",
-];
+// Single highlight color — toggle on/off
+const HIGHLIGHT_COLOR = "hsl(140, 65%, 45%)";
 
 export default function RepertoireBuilder() {
   const { repertoireId } = useParams<{ repertoireId?: string }>();
