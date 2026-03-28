@@ -322,9 +322,6 @@ export default function StudyHub() {
           const trapVariations = opening.variations.filter(v => v.isTrap);
           if (trapVariations.length === 0) return null;
 
-          const daysUntilNextTrap = !canLearnTrap && lastTrapLearnedAt
-            ? Math.max(0, Math.ceil((7 * 24 * 60 * 60 * 1000 - (Date.now() - new Date(lastTrapLearnedAt).getTime())) / (24 * 60 * 60 * 1000)))
-            : 0;
 
           return (
             <motion.div
