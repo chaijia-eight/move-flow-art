@@ -135,7 +135,7 @@ export default function RepertoireBuilder() {
     }
 
     // Determine category
-    const category: MoveCategory = children.length === 0 ? "main_line" : "legitAlternative";
+    const category: MoveCategory = children.length === 0 ? "main_line" : "legit_alternative";
 
     const newFen = (() => {
       const c = new Chess(currentFen);
