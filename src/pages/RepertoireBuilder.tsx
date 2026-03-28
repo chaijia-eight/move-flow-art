@@ -271,31 +271,29 @@ export default function RepertoireBuilder() {
   }, [tree, currentPath]);
 
   const updateAnnotation = useCallback((text: string) => {
-    if (!selectedNodePath || selectedNodePath.length === 0) return;
+    if (currentPath.length === 0) return;
     const newTree = cloneTree(tree);
-    const node = getNodeAtPath(newTree, selectedNodePath);
+    const node = getNodeAtPath(newTree, currentPath);
     if (!node) return;
     node.explanation = text || undefined;
     setTree(newTree);
     setAnnotation(text);
-  }, [tree, selectedNodePath]);
+  }, [tree, currentPath]);
 
   // NAG update
   const updateNag = useCallback((nag: NagSymbol | undefined) => {
-    if (!selectedNodePath || selectedNodePath.length === 0) return;
+    if (currentPath.length === 0) return;
     const newTree = cloneTree(tree);
-    const node = getNodeAtPath(newTree, selectedNodePath);
+    const node = getNodeAtPath(newTree, currentPath);
     if (!node) return;
     node.nag = nag;
     setTree(newTree);
-  }, [tree, selectedNodePath]);
+  }, [tree, currentPath]);
 
   useEffect(() => {
-    if (selectedNodePath) {
-      const node = getNodeAtPath(tree, selectedNodePath);
-      setAnnotation(node?.explanation || "");
-    }
-  }, [selectedNodePath, tree]);
+    const node = currentPath.length > 0 ? getNodeAtPath(tree, currentPath) : null;
+    setAnnotation(node?.explanation || "");
+  }, [currentPath, tree]);
 
   // Arrow drawing from board
   const handleArrowDraw = useCallback((_type: "arrow", data: { from: string; to: string; color: string }) => {
@@ -718,7 +716,7 @@ export default function RepertoireBuilder() {
             {/* Annotation panel */}
             <div className="rounded-xl border border-border bg-card p-4">
               <h3 className="text-sm font-semibold text-foreground mb-2">{t("annotation")}</h3>
-              {selectedNodePath && selectedNode ? (
+              {currentPath.length > 0 && currentNode ? (
                 <div className="space-y-3">
                   {/* NAG symbol selector */}
                   <TooltipProvider delayDuration={200}>
@@ -727,9 +725,9 @@ export default function RepertoireBuilder() {
                         <Tooltip key={sym.key}>
                           <TooltipTrigger asChild>
                             <button
-                              onClick={() => updateNag(selectedNode.nag === sym.key ? undefined : sym.key)}
+                              onClick={() => updateNag(currentNode!.nag === sym.key ? undefined : sym.key)}
                               className={`w-7 h-7 rounded flex items-center justify-center transition-all border ${
-                                selectedNode.nag === sym.key
+                                currentNode!.nag === sym.key
                                   ? "border-primary bg-primary/20 ring-1 ring-primary"
                                   : "border-border hover:border-muted-foreground hover:bg-muted"
                               }`}
@@ -758,7 +756,7 @@ export default function RepertoireBuilder() {
                 </div>
               ) : (
                 <p className="text-xs text-muted-foreground">
-                  Click a move in the tree to annotate it.
+                  Navigate to a move to annotate it.
                 </p>
               )}
             </div>
