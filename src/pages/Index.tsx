@@ -349,10 +349,10 @@ export default function Index() {
                     <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
                       <span>{t("practice")}</span>
                       <span className={!canPractice ? "text-destructive font-medium" : ""}>
-                        {practiceUsedToday ? "1/1" : "0/1"}
+                        {dailyPracticesUsed}/{FREE_DAILY_PRACTICES}
                       </span>
                     </div>
-                    <Progress value={practiceUsedToday ? 100 : 0} className="h-1.5" />
+                    <Progress value={(dailyPracticesUsed / FREE_DAILY_PRACTICES) * 100} className="h-1.5" />
                   </div>
                 </div>
 
