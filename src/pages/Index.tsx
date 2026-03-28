@@ -102,7 +102,7 @@ function getBestTreeOpening(): { opening: typeof openings[0]; progress: number; 
 
 export default function Index() {
   const { user } = useAuth();
-  const { isPro, dailyLinesUsed, practiceUsedToday, canLearnNewLine, canPractice, startCheckout } = useSubscription();
+  const { isPro, dailyLinesUsed, dailyPracticesUsed, canLearnNewLine, canPractice, startCheckout } = useSubscription();
   const navigate = useNavigate();
   const [focusedIds, setFocusedIds] = useState(getFocusedOpenings);
 
