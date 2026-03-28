@@ -385,7 +385,7 @@ export default function StudyHub() {
                               </h3>
                               {trapLocked && (
                                 <span className="text-[10px] text-muted-foreground/60 font-mono ml-1">
-                                  {daysUntilNextTrap}d left
+                                  Daily limit reached
                                 </span>
                               )}
                             </div>
