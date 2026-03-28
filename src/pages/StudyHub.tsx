@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -8,9 +8,10 @@ import { openings } from "@/data/openingTrees";
 import { themes } from "@/data/openings";
 import { extractLinesForVariation, extractAllLines, type Line } from "@/lib/lineExtractor";
 import { getLineProgress, isLineUnlocked, getOpeningProgress } from "@/lib/progressStore";
-import { ArrowLeft, ChevronRight, Crown, Shield, ChevronDown, Lock, Check, BookOpen, RotateCcw, Shuffle, Flame } from "lucide-react";
+import { ArrowLeft, ChevronRight, Crown, Shield, ChevronDown, Lock, Check, BookOpen, RotateCcw, Shuffle, Flame, Pencil } from "lucide-react";
 import { t, tn, tDesc, tVar } from "@/lib/i18n";
 import UpgradeModal from "@/components/UpgradeModal";
+import { useLineOverrides } from "@/hooks/useLineOverrides";
 
 export default function StudyHub() {
   const { openingId } = useParams();
