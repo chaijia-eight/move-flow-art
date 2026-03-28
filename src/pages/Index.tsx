@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, ChevronRight, Trophy, BookOpen, Target, Settings, Info, Star, Crown, Zap } from "lucide-react";
+import { Play, ChevronRight, Trophy, BookOpen, Target, Settings, Info, Star, Crown, Zap, Sprout } from "lucide-react";
 import OpeningCard from "@/components/OpeningCard";
 import { openings } from "@/data/openingTrees";
 import { themes } from "@/data/openings";
@@ -151,6 +151,13 @@ export default function Index() {
               </p>
             </div>
             <div className="flex gap-1 mt-1">
+              <button
+                onClick={() => navigate("/garden")}
+                className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                aria-label="Garden"
+              >
+                <Sprout className="w-4.5 h-4.5" />
+              </button>
               <button
                 onClick={() => navigate("/about")}
                 className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"

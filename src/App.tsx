@@ -11,8 +11,10 @@ import StudyHub from "./pages/StudyHub.tsx";
 import Study from "./pages/Study.tsx";
 import Settings from "./pages/Settings.tsx";
 import About from "./pages/About.tsx";
-import GardenPractice from "./pages/GardenPractice.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import Garden from "./pages/Garden.tsx";
+import RepertoireBuilder from "./pages/RepertoireBuilder.tsx";
+import RepertoireStudy from "./pages/RepertoireStudy.tsx";
 
 const queryClient = new QueryClient();
 
@@ -29,9 +31,12 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/about" element={<About />} />
+              <Route path="/garden" element={<Garden />} />
+              <Route path="/garden/build" element={<RepertoireBuilder />} />
+              <Route path="/garden/build/:repertoireId" element={<RepertoireBuilder />} />
+              <Route path="/garden/study/:repertoireId" element={<RepertoireStudy />} />
               <Route path="/study/:openingId" element={<StudyHub />} />
               <Route path="/study/:openingId/play" element={<Study />} />
-              <Route path="/study/:openingId/custom/:lineId" element={<GardenPractice />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
