@@ -350,7 +350,7 @@ export default function RepertoireBuilder() {
           .update({
             name,
             side,
-            tree: tree as any,
+            tree: chapters as any,
             updated_at: new Date().toISOString(),
           })
           .eq("id", repertoireId);
@@ -361,7 +361,7 @@ export default function RepertoireBuilder() {
             user_id: user.id,
             name,
             side,
-            tree: tree as any,
+            tree: chapters as any,
           })
           .select("id")
           .single();
@@ -376,7 +376,20 @@ export default function RepertoireBuilder() {
     } finally {
       setSaving(false);
     }
-  }, [user, repertoireId, name, side, tree, navigate, queryClient]);
+  }, [user, repertoireId, name, side, chapters, navigate, queryClient]);
+
+  // Create a new chapter
+  const createChapter = useCallback((chapterTree: OpeningNode[]) => {
+    const chapterName = newChapterName.trim() || `Chapter ${chapters.length + 1}`;
+    setChapters(prev => [...prev, { name: chapterName, tree: chapterTree }]);
+    setActiveChapterIdx(chapters.length);
+    setCurrentPath([]);
+    setSelectedNodePath(null);
+    setShowChapterCreate(false);
+    setShowPgnImport(false);
+    setPgnInput("");
+    setNewChapterName(`Chapter ${chapters.length + 2}`);
+  }, [chapters.length, newChapterName]);
 
   // PGN import: parse PGN into tree
   const importPgn = useCallback((pgn: string) => {
@@ -388,7 +401,6 @@ export default function RepertoireBuilder() {
         toast({ title: "No moves found in PGN", variant: "destructive" });
         return;
       }
-      // Build linear tree from moves
       const buildTree = (moves: string[], idx: number): OpeningNode[] => {
         if (idx >= moves.length) return [];
         const c2 = new Chess();
@@ -401,24 +413,20 @@ export default function RepertoireBuilder() {
         }];
       };
       const newTree = buildTree(history, 0);
-      setTree(prev => [...prev, ...newTree]);
-      setShowPgnImport(false);
-      setShowChapterCreate(false);
-      setPgnInput("");
+      createChapter(newTree);
       toast({ title: `Imported ${history.length} moves` });
     } catch (err) {
       toast({ title: "Invalid PGN", variant: "destructive" });
     }
-  }, []);
+  }, [createChapter]);
 
-  // Start from starting position (just dismiss the dialog, board is already at start)
+  // Start from starting position — creates a new empty chapter
   const startFromPosition = useCallback(() => {
-    setShowChapterCreate(false);
-    setShowPgnImport(false);
-  }, []);
+    createChapter([]);
+  }, [createChapter]);
 
-  // Auto-show chapter creation when empty and new
-  const hasChapters = tree.length > 0;
+  // Auto-show chapter creation when no chapters exist
+  const hasChapters = chapters.length > 0;
 
   // Move hints — all legal moves
   const moveHints = useMemo(() => {
