@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Save, Trash2, Cpu, RotateCcw } from "lucide-react";
+import { ArrowLeft, Save, Trash2, Cpu, RotateCcw, Plus, FileText, Play } from "lucide-react";
 import { Chess } from "chess.js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -61,13 +61,8 @@ function getMovesAlongPath(tree: OpeningNode[], path: TreePath): string[] {
   return moves;
 }
 
-// Highlight color cycle
-const HIGHLIGHT_COLORS = [
-  "hsl(140, 65%, 45%)",
-  "hsl(0, 70%, 50%)",
-  "hsl(45, 90%, 55%)",
-  "hsl(210, 70%, 55%)",
-];
+// Single highlight color — toggle on/off
+const HIGHLIGHT_COLOR = "hsl(140, 65%, 45%)";
 
 export default function RepertoireBuilder() {
   const { repertoireId } = useParams<{ repertoireId?: string }>();
@@ -85,6 +80,9 @@ export default function RepertoireBuilder() {
   const [engineLoading, setEngineLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [loaded, setLoaded] = useState(!repertoireId);
+  const [showChapterCreate, setShowChapterCreate] = useState(false);
+  const [pgnInput, setPgnInput] = useState("");
+  const [showPgnImport, setShowPgnImport] = useState(false);
 
   // Load existing repertoire
   const { data: existing } = useQuery({
@@ -124,6 +122,30 @@ export default function RepertoireBuilder() {
 
   const nodeArrows = currentNode?.arrows || [];
   const nodeHighlights = currentNode?.highlights || [];
+
+  // Build NAG overlays map: for the current node, show its NAG on the piece that moved
+  const nagOverlays = useMemo(() => {
+    const map = new Map<string, NagSymbol>();
+    if (currentNode?.nag && currentNode.fen) {
+      // The piece that just moved is on the target square; parse the move's target from FEN
+      // We can derive the target square from the last move in currentMoves
+      const lastMove = currentMoves[currentMoves.length - 1];
+      if (lastMove) {
+        // Get the destination square by trying the move
+        try {
+          const prevFen = currentPath.length > 1
+            ? fenAfterMoves(currentMoves.slice(0, -1))
+            : new Chess().fen();
+          const c = new Chess(prevFen);
+          const m = c.move(lastMove);
+          if (m) {
+            map.set(m.to, currentNode.nag);
+          }
+        } catch {}
+      }
+    }
+    return map;
+  }, [currentNode, currentMoves, currentPath]);
 
   // Handle board move
   const handleMove = useCallback((_from: string, _to: string, san: string) => {
@@ -254,7 +276,7 @@ export default function RepertoireBuilder() {
     setTree(newTree);
   }, [tree, currentPath]);
 
-  // Square highlight from board
+  // Square highlight from board — simple toggle
   const handleSquareHighlight = useCallback((square: string) => {
     if (currentPath.length === 0) return;
     const newTree = cloneTree(tree);
@@ -263,15 +285,9 @@ export default function RepertoireBuilder() {
     if (!node.highlights) node.highlights = [];
     const existingIdx = node.highlights.findIndex(h => h.square === square);
     if (existingIdx !== -1) {
-      const currentColor = node.highlights[existingIdx].color;
-      const colorIdx = HIGHLIGHT_COLORS.indexOf(currentColor);
-      if (colorIdx < HIGHLIGHT_COLORS.length - 1) {
-        node.highlights[existingIdx].color = HIGHLIGHT_COLORS[colorIdx + 1];
-      } else {
-        node.highlights.splice(existingIdx, 1);
-      }
+      node.highlights.splice(existingIdx, 1);
     } else {
-      node.highlights.push({ square, color: HIGHLIGHT_COLORS[0] });
+      node.highlights.push({ square, color: HIGHLIGHT_COLOR });
     }
     setTree(newTree);
   }, [tree, currentPath]);
@@ -334,6 +350,48 @@ export default function RepertoireBuilder() {
     }
   }, [user, repertoireId, name, side, tree, navigate, queryClient]);
 
+  // PGN import: parse PGN into tree
+  const importPgn = useCallback((pgn: string) => {
+    try {
+      const c = new Chess();
+      c.loadPgn(pgn);
+      const history = c.history();
+      if (history.length === 0) {
+        toast({ title: "No moves found in PGN", variant: "destructive" });
+        return;
+      }
+      // Build linear tree from moves
+      const buildTree = (moves: string[], idx: number): OpeningNode[] => {
+        if (idx >= moves.length) return [];
+        const c2 = new Chess();
+        for (let i = 0; i <= idx; i++) c2.move(moves[i]);
+        return [{
+          fen: c2.fen(),
+          move: moves[idx],
+          category: "main_line" as MoveCategory,
+          children: buildTree(moves, idx + 1),
+        }];
+      };
+      const newTree = buildTree(history, 0);
+      setTree(prev => [...prev, ...newTree]);
+      setShowPgnImport(false);
+      setShowChapterCreate(false);
+      setPgnInput("");
+      toast({ title: `Imported ${history.length} moves` });
+    } catch (err) {
+      toast({ title: "Invalid PGN", variant: "destructive" });
+    }
+  }, []);
+
+  // Start from starting position (just dismiss the dialog, board is already at start)
+  const startFromPosition = useCallback(() => {
+    setShowChapterCreate(false);
+    setShowPgnImport(false);
+  }, []);
+
+  // Auto-show chapter creation when empty and new
+  const hasChapters = tree.length > 0;
+
   // Move hints — all legal moves
   const moveHints = useMemo(() => {
     const hints = new Map<string, { category: MoveCategory; targets: Map<string, MoveCategory> }>();
@@ -358,6 +416,9 @@ export default function RepertoireBuilder() {
     if (!selectedNodePath) return null;
     return getNodeAtPath(tree, selectedNodePath);
   }, [tree, selectedNodePath]);
+
+  // Show chapter create dialog automatically when no chapters exist
+  const showCreatePanel = showChapterCreate || (!hasChapters && loaded);
 
   return (
     <div className="min-h-screen bg-background">
@@ -401,6 +462,75 @@ export default function RepertoireBuilder() {
           </div>
         </div>
 
+        {/* Create Chapter button */}
+        <div className="flex items-center gap-2 mb-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowChapterCreate(true)}
+            className="gap-1.5"
+          >
+            <Plus className="w-4 h-4" />
+            Create Chapter
+          </Button>
+        </div>
+
+        {/* Chapter creation panel */}
+        <AnimatePresence>
+          {showCreatePanel && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mb-4"
+            >
+              {!showPgnImport ? (
+                <div className="rounded-xl border border-border bg-card p-6 max-w-md mx-auto">
+                  <h3 className="text-base font-semibold text-foreground mb-4 text-center">
+                    New Chapter
+                  </h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={startFromPosition}
+                      className="flex flex-col items-center gap-2 p-4 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-all group"
+                    >
+                      <Play className="w-8 h-8 text-muted-foreground group-hover:text-primary transition-colors" />
+                      <span className="text-sm font-medium text-foreground">Starting Position</span>
+                      <span className="text-[0.65rem] text-muted-foreground text-center">Begin from the initial board</span>
+                    </button>
+                    <button
+                      onClick={() => setShowPgnImport(true)}
+                      className="flex flex-col items-center gap-2 p-4 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-all group"
+                    >
+                      <FileText className="w-8 h-8 text-muted-foreground group-hover:text-primary transition-colors" />
+                      <span className="text-sm font-medium text-foreground">Import PGN</span>
+                      <span className="text-[0.65rem] text-muted-foreground text-center">Paste a PGN to import moves</span>
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="rounded-xl border border-border bg-card p-6 max-w-lg mx-auto">
+                  <h3 className="text-base font-semibold text-foreground mb-3">Import PGN</h3>
+                  <Textarea
+                    value={pgnInput}
+                    onChange={(e) => setPgnInput(e.target.value)}
+                    placeholder={'Paste PGN here...\ne.g. 1. e4 e5 2. Nf3 Nc6 3. Bb5'}
+                    className="text-sm min-h-[120px] resize-none font-mono mb-3"
+                  />
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" onClick={() => { setShowPgnImport(false); setPgnInput(""); }}>
+                      Cancel
+                    </Button>
+                    <Button size="sm" onClick={() => importPgn(pgnInput)} disabled={!pgnInput.trim()}>
+                      Import
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Main layout */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-4">
           {/* Board */}
@@ -418,6 +548,7 @@ export default function RepertoireBuilder() {
                 customHighlights={nodeHighlights}
                 onRightClickDraw={handleArrowDraw}
                 onRightClickSquare={handleSquareHighlight}
+                nagOverlays={nagOverlays}
               />
             </div>
 

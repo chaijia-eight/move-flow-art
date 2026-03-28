@@ -6,7 +6,8 @@ import { fenToBoard, PIECE_IMAGES, coordsToSquare, squareToCoords } from "@/data
 import { useTheme } from "@/contexts/ThemeContext";
 import CaptureEffect from "@/components/CaptureEffect";
 import { playMoveSound, playCaptureSound, playCastleSound } from "@/lib/chessSounds";
-import type { MoveCategory, CustomArrow, CustomHighlight } from "@/data/openings";
+import type { MoveCategory, CustomArrow, CustomHighlight, NagSymbol } from "@/data/openings";
+import { NAG_SYMBOLS } from "@/data/openings";
 
 interface ChessboardProps {
   fen: string;
@@ -23,6 +24,8 @@ interface ChessboardProps {
   customHighlights?: CustomHighlight[];
   onRightClickDraw?: (type: "arrow", data: { from: string; to: string; color: string }) => void;
   onRightClickSquare?: (square: string) => void;
+  /** Map of square -> NagSymbol to show on that piece's corner */
+  nagOverlays?: Map<string, NagSymbol>;
 }
 
 interface AnimMove {
@@ -47,6 +50,7 @@ export default function Chessboard({
   fen, onMove, moveHints, disabled, flipped = false, playerColor,
   arrowFrom, arrowTo, highlightSquare, highlightColor = "gold",
   customArrows, customHighlights, onRightClickDraw, onRightClickSquare,
+  nagOverlays,
 }: ChessboardProps) {
   const { currentTheme } = useTheme();
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
@@ -541,23 +545,38 @@ export default function Chessboard({
 
                     {/* Chess piece */}
                     {piece && (
-                      <motion.img
-                        key={`${square}-${animMove?.id ?? 0}`}
-                        src={PIECE_IMAGES[piece]}
-                        alt={piece}
-                        draggable={false}
-                        className="relative z-20 select-none w-[80%] h-[80%] object-contain"
-                        style={{
-                          cursor: disabled ? "default" : "grab",
-                          opacity: isDragSource ? 0.3 : 1,
-                        }}
-                        initial={slideOffset ? { x: slideOffset.x, y: slideOffset.y } : false}
-                        animate={{ x: 0, y: 0 }}
-                        transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-                        whileHover={!disabled ? { scale: 1.1, transition: { duration: 0.15 } } : {}}
-                        whileTap={!disabled ? { scale: 0.95 } : {}}
-                        onPointerDown={(e) => handleDragStart(e, square, piece)}
-                      />
+                      <div className="relative z-20 w-[80%] h-[80%]">
+                        <motion.img
+                          key={`${square}-${animMove?.id ?? 0}`}
+                          src={PIECE_IMAGES[piece]}
+                          alt={piece}
+                          draggable={false}
+                          className="select-none w-full h-full object-contain"
+                          style={{
+                            cursor: disabled ? "default" : "grab",
+                            opacity: isDragSource ? 0.3 : 1,
+                          }}
+                          initial={slideOffset ? { x: slideOffset.x, y: slideOffset.y } : false}
+                          animate={{ x: 0, y: 0 }}
+                          transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+                          whileHover={!disabled ? { scale: 1.1, transition: { duration: 0.15 } } : {}}
+                          whileTap={!disabled ? { scale: 0.95 } : {}}
+                          onPointerDown={(e) => handleDragStart(e, square, piece)}
+                        />
+                        {/* NAG overlay on piece corner */}
+                        {nagOverlays?.get(square) && (() => {
+                          const nag = nagOverlays.get(square)!;
+                          const sym = NAG_SYMBOLS.find(s => s.key === nag);
+                          if (!sym) return null;
+                          return (
+                            <img
+                              src={sym.icon}
+                              alt={sym.label}
+                              className="absolute -top-1 -right-1 w-4 h-4 pointer-events-none z-30 drop-shadow-md"
+                            />
+                          );
+                        })()}
+                      </div>
                     )}
 
                     {/* Coordinate labels */}
