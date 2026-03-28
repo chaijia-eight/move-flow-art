@@ -1,8 +1,9 @@
 import React, { useMemo, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Play, Trophy, BookOpen, Target, Star, Crown, Zap } from "lucide-react";
+import { Play, Trophy, BookOpen, Target, Star, Crown, Zap, ChevronDown, Shuffle } from "lucide-react";
 import OpeningCard from "@/components/OpeningCard";
+import LearningPath from "@/components/LearningPath";
 import { openings } from "@/data/openingTrees";
 import { themes } from "@/data/openings";
 import { extractAllLines, extractLinesForVariation } from "@/lib/lineExtractor";
@@ -76,6 +77,29 @@ function getRecommendation(): Recommendation | null {
   return bestInProgress || bestUntouched || null;
 }
 
+/** Find the non-100% opening with the most progress (attempts) */
+function getBestTreeOpening(): { opening: typeof openings[0]; progress: number; totalAttempts: number } | null {
+  let best: { opening: typeof openings[0]; progress: number; totalAttempts: number } | null = null;
+
+  for (const opening of openings) {
+    const allLines = extractAllLines(opening);
+    const lineIds = allLines.map((l) => l.id);
+    const prog = getOpeningProgress(lineIds);
+    if (prog >= 1) continue;
+
+    let attempts = 0;
+    for (const line of allLines) {
+      attempts += getLineProgress(line.id).attempts;
+    }
+
+    if (attempts > 0 && (!best || attempts > best.totalAttempts)) {
+      best = { opening, progress: prog, totalAttempts: attempts };
+    }
+  }
+
+  return best;
+}
+
 export default function Index() {
   const { user } = useAuth();
   const { isPro, dailyLinesUsed, practiceUsedToday, canLearnNewLine, canPractice, startCheckout } = useSubscription();
@@ -119,10 +143,100 @@ export default function Index() {
     return openings.filter((o) => focusedIds.includes(o.id));
   }, [focusedIds]);
 
+  // Tree shortcut: best non-100% opening with most progress
+  const defaultTreeOpening = useMemo(() => getBestTreeOpening(), []);
+  const [selectedTreeOpeningId, setSelectedTreeOpeningId] = useState<string | null>(null);
+  const [showTreeSelector, setShowTreeSelector] = useState(false);
+
+  const treeOpening = useMemo(() => {
+    if (selectedTreeOpeningId) {
+      const o = openings.find(op => op.id === selectedTreeOpeningId);
+      if (o) return o;
+    }
+    return defaultTreeOpening?.opening || null;
+  }, [selectedTreeOpeningId, defaultTreeOpening]);
+
+  const treeSections = useMemo(() => {
+    if (!treeOpening) return [];
+    return treeOpening.variations.filter(v => !v.isTrap).map(v => ({
+      variation: v,
+      lines: extractLinesForVariation(treeOpening, v),
+    }));
+  }, [treeOpening]);
+
+  const treeTheme = treeOpening ? themes[treeOpening.themeId] : null;
+
+  // Practice shortcut for tree opening
+  const treePracticeLines = useMemo(() => {
+    if (!treeOpening) return [];
+    const allLines = extractAllLines(treeOpening);
+    return allLines.filter(l => getLineProgress(l.id).attempts >= 1);
+  }, [treeOpening]);
+
   const recTheme = recommendation ? themes[recommendation.themeId] : null;
 
   return (
     <div className="min-h-screen flex">
+      {/* Left column: Your Focus */}
+      <div className="hidden lg:flex flex-col w-[240px] shrink-0 border-r border-border p-4 pt-10 sticky top-0 h-screen overflow-y-auto">
+        <motion.div
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="flex items-center gap-2 mb-4">
+            <Star className="w-3.5 h-3.5 text-primary" />
+            <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium">
+              Your Focus
+            </h2>
+          </div>
+
+          {focusedOpenings.length === 0 ? (
+            <div className="rounded-lg border border-dashed border-border/60 p-4 text-center">
+              <p className="text-xs text-muted-foreground">
+                Click the <Star className="w-3 h-3 inline -mt-0.5" /> on any opening to pin it here.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {focusedOpenings.map((opening, i) => (
+                <OpeningCard
+                  key={opening.id}
+                  opening={opening}
+                  onClick={() => navigate(`/study/${opening.id}`)}
+                  index={i}
+                  focused={true}
+                  onToggleFocus={(e) => handleToggleFocus(opening.id, e)}
+                  compact
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Stats below focus */}
+          <div className="mt-8">
+            <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium mb-3">
+              {t("progress")}
+            </h2>
+            <div className="space-y-2.5">
+              {[
+                { label: t("linesMastered"), value: `${stats.masteredLines}/${stats.totalLines}`, icon: Trophy },
+                { label: t("openingsStarted"), value: `${stats.openingsStarted}/${stats.totalOpenings}`, icon: BookOpen },
+                { label: t("totalAttempts"), value: String(stats.totalAttempts), icon: Target },
+              ].map(({ label, value, icon: Icon }) => (
+                <div key={label} className="rounded-lg border border-border bg-card p-3">
+                  <div className="flex items-center gap-2">
+                    <Icon className="w-3 h-3 text-muted-foreground" />
+                    <p className="text-xs text-muted-foreground">{label}</p>
+                  </div>
+                  <p className="text-lg font-semibold text-foreground mt-0.5">{value}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
       {/* Center content */}
       <div className="flex-1 min-w-0 px-6 pt-10 pb-16">
         <motion.div
@@ -259,8 +373,9 @@ export default function Index() {
             </motion.section>
           )}
 
-          {/* Your Focus */}
+          {/* Mobile: Your Focus (shown below on small screens) */}
           <motion.section
+            className="lg:hidden"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -276,7 +391,7 @@ export default function Index() {
             {focusedOpenings.length === 0 ? (
               <div className="rounded-lg border border-dashed border-border/60 p-6 text-center">
                 <p className="text-sm text-muted-foreground">
-                  No focus set yet. Click the <Star className="w-3.5 h-3.5 inline -mt-0.5" /> on any opening card to add it here.
+                  Click the <Star className="w-3.5 h-3.5 inline -mt-0.5" /> on any opening card to add it here.
                 </p>
               </div>
             ) : (
@@ -297,29 +412,119 @@ export default function Index() {
         </div>
       </div>
 
-      {/* Right sidebar - Stats */}
-      <aside className="w-[280px] border-l border-border shrink-0 p-5 pt-10 hidden lg:block sticky top-0 h-screen overflow-y-auto">
+      {/* Right sidebar: Opening Tree Shortcut */}
+      <aside className="w-[220px] border-l border-border shrink-0 p-4 pt-10 hidden lg:flex flex-col sticky top-0 h-screen overflow-y-auto">
         <motion.div
           initial={{ opacity: 0, x: 10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
+          className="flex flex-col h-full"
         >
-          <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium mb-3">
-            {t("progress")}
-          </h2>
-          <div className="space-y-3">
-            {[
-              { label: t("linesMastered"), value: `${stats.masteredLines}/${stats.totalLines}`, icon: Trophy },
-              { label: t("openingsStarted"), value: `${stats.openingsStarted}/${stats.totalOpenings}`, icon: BookOpen },
-              { label: t("totalAttempts"), value: String(stats.totalAttempts), icon: Target },
-            ].map(({ label, value, icon: Icon }) => (
-              <div key={label} className="rounded-lg border border-border bg-card p-3.5">
-                <Icon className="w-3.5 h-3.5 text-muted-foreground mb-1.5" />
-                <p className="text-xl font-semibold text-foreground">{value}</p>
-                <p className="text-[11px] text-muted-foreground mt-0.5">{label}</p>
+          {treeOpening && treeTheme ? (
+            <>
+              {/* Opening selector */}
+              <div className="relative mb-3">
+                <button
+                  onClick={() => setShowTreeSelector(s => !s)}
+                  className="w-full text-left rounded-lg border border-border bg-card p-2.5 flex items-center justify-between gap-2 hover:bg-accent/50 transition-colors"
+                >
+                  <div className="min-w-0">
+                    <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono">Tree</p>
+                    <p className="text-sm font-semibold text-foreground truncate">
+                      {tn("openingName", treeOpening.id)}
+                    </p>
+                  </div>
+                  <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground/50 shrink-0 transition-transform ${showTreeSelector ? "rotate-180" : ""}`} />
+                </button>
+
+                {showTreeSelector && (
+                  <div className="absolute top-full left-0 right-0 mt-1 z-20 rounded-lg border border-border bg-card shadow-lg max-h-[300px] overflow-y-auto">
+                    {openings
+                      .filter(o => {
+                        const lines = extractAllLines(o);
+                        const prog = getOpeningProgress(lines.map(l => l.id));
+                        return prog < 1 && lines.some(l => getLineProgress(l.id).attempts > 0);
+                      })
+                      .map(o => (
+                        <button
+                          key={o.id}
+                          onClick={() => { setSelectedTreeOpeningId(o.id); setShowTreeSelector(false); }}
+                          className={`w-full text-left px-3 py-2 text-sm hover:bg-accent/50 transition-colors flex items-center gap-2 ${o.id === treeOpening.id ? "bg-accent/30" : ""}`}
+                        >
+                          <div
+                            className="w-2 h-2 rounded-full shrink-0"
+                            style={{ background: themes[o.themeId].accentColor }}
+                          />
+                          <span className="truncate text-foreground">{tn("openingName", o.id)}</span>
+                        </button>
+                      ))
+                    }
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
+
+              {/* Progress */}
+              <div className="mb-3">
+                <div className="flex items-center justify-between text-[10px] text-muted-foreground mb-1">
+                  <span>Progress</span>
+                  <span>{Math.round(getOpeningProgress(extractAllLines(treeOpening).map(l => l.id)) * 100)}%</span>
+                </div>
+                <div className="h-1 rounded-full overflow-hidden" style={{ background: "hsl(var(--muted))" }}>
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{
+                      width: `${getOpeningProgress(extractAllLines(treeOpening).map(l => l.id)) * 100}%`,
+                      background: treeTheme.accentColor,
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Practice shortcut */}
+              {treePracticeLines.length > 0 && (
+                <Button
+                  size="sm"
+                  className="w-full mb-3 gap-2"
+                  variant="outline"
+                  onClick={() => {
+                    const randomLine = treePracticeLines[Math.floor(Math.random() * treePracticeLines.length)];
+                    const variation = treeOpening.variations.find(v => v.id === randomLine.variationId);
+                    if (variation) {
+                      const lines = extractLinesForVariation(treeOpening, variation);
+                      const lineIdx = lines.findIndex(l => l.id === randomLine.id);
+                      navigate(
+                        `/study/${treeOpening.id}/play?color=${treeOpening.primarySide}&variation=${randomLine.variationId}&line=${lineIdx >= 0 ? lineIdx : 0}&practice=1`
+                      );
+                    }
+                  }}
+                >
+                  <Shuffle className="w-3.5 h-3.5" />
+                  Practice
+                </Button>
+              )}
+
+              {/* Learning path tree */}
+              <div className="flex-1 overflow-y-auto -mx-2 scrollbar-thin">
+                <LearningPath
+                  sections={treeSections}
+                  theme={treeTheme}
+                  openingId={treeOpening.id}
+                  primarySide={treeOpening.primarySide}
+                  onNavigate={(variationId, lineIndex) => {
+                    navigate(
+                      `/study/${treeOpening.id}/play?color=${treeOpening.primarySide}&variation=${variationId}&line=${lineIndex}`
+                    );
+                  }}
+                />
+              </div>
+            </>
+          ) : (
+            <div className="flex-1 flex items-center justify-center">
+              <p className="text-xs text-muted-foreground text-center">
+                Start learning an opening to see your tree here.
+              </p>
+            </div>
+          )}
         </motion.div>
       </aside>
     </div>
