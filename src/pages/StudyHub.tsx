@@ -317,7 +317,129 @@ export default function StudyHub() {
           })()}
         </motion.div>
 
-        {/* Variations & Lines — side by side */}
+        {/* Crushing Lines / Traps */}
+        {(() => {
+          const trapVariations = opening.variations.filter(v => v.isTrap);
+          if (trapVariations.length === 0) return null;
+
+          const daysUntilNextTrap = !canLearnTrap && lastTrapLearnedAt
+            ? Math.max(0, Math.ceil((7 * 24 * 60 * 60 * 1000 - (Date.now() - new Date(lastTrapLearnedAt).getTime())) / (24 * 60 * 60 * 1000)))
+            : 0;
+
+          return (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              className="mb-10"
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <Flame className="w-4 h-4 text-orange-500" />
+                <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
+                  {t("secretTraps")}
+                </h2>
+                {!isPro && (
+                  <span className="text-[10px] px-2 py-0.5 rounded-full font-mono"
+                    style={{ background: "hsl(var(--muted))", color: "hsl(var(--muted-foreground))" }}
+                  >
+                    {t("onePerWeek")}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-3">
+                {trapVariations.map((variation, ti) => {
+                  const lines = linesByVariation.get(variation.id) || [];
+                  const trapLocked = !isPro && !canLearnTrap;
+
+                  return (
+                    <motion.div
+                      key={variation.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, delay: 0.25 + ti * 0.06 }}
+                    >
+                      <motion.button
+                        whileHover={!trapLocked ? { backgroundColor: "hsl(25 100% 50% / 0.08)" } : {}}
+                        whileTap={!trapLocked ? { scale: 0.98 } : {}}
+                        onClick={() => {
+                          if (trapLocked) {
+                            setUpgradeReason("lines");
+                            setShowUpgradeModal(true);
+                            return;
+                          }
+                          if (lines.length > 0) {
+                            navigate(
+                              `/study/${opening.id}/play?color=${opening.primarySide}&variation=${variation.id}&line=0`
+                            );
+                          }
+                        }}
+                        className={`w-full text-left rounded-xl p-4 border transition-all duration-300 group ${trapLocked ? 'opacity-60' : ''}`}
+                        style={{
+                          background: "hsl(var(--card))",
+                          borderColor: trapLocked ? "hsl(var(--border) / 0.3)" : "hsl(25 100% 50% / 0.3)",
+                        }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Flame className="w-4 h-4 text-orange-500 flex-shrink-0" />
+                              <h3 className="font-serif text-sm font-semibold text-foreground">
+                                Line {ti + 1}
+                              </h3>
+                              {trapLocked && (
+                                <span className="text-[10px] text-muted-foreground/60 font-mono ml-1">
+                                  {daysUntilNextTrap}d left
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-1 pl-6">
+                              {editingDescId === variation.id ? (
+                                <div className="flex-1 flex gap-1" onClick={(e) => e.stopPropagation()}>
+                                  <input
+                                    value={editDescText}
+                                    onChange={(e) => setEditDescText(e.target.value)}
+                                    className="flex-1 text-sm rounded px-2 py-1"
+                                    style={{ background: "hsl(var(--muted))", color: "hsl(var(--foreground))" }}
+                                    autoFocus
+                                    onKeyDown={(e) => { if (e.key === "Enter") handleSaveDesc(variation.id); if (e.key === "Escape") setEditingDescId(null); }}
+                                  />
+                                  <button onClick={() => handleSaveDesc(variation.id)} className="text-xs px-2 py-1 rounded" style={{ background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }}>Save</button>
+                                </div>
+                              ) : (
+                                <>
+                                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                                    {getDescOverride(variation.id, variation.description)}
+                                  </p>
+                                  {isDev && (
+                                    <button
+                                      onClick={(e) => { e.stopPropagation(); setEditingDescId(variation.id); setEditDescText(getDescOverride(variation.id, variation.description)); }}
+                                      className="p-1 rounded opacity-40 hover:opacity-100 flex-shrink-0"
+                                    >
+                                      <Pencil size={12} />
+                                    </button>
+                                  )}
+                                </>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 flex-shrink-0 ml-3">
+                            {trapLocked ? (
+                              <Lock className="w-4 h-4 text-muted-foreground/40" />
+                            ) : (
+                              <ChevronRight className="w-4 h-4 text-orange-500/60 group-hover:text-orange-500 transition-colors" />
+                            )}
+                          </div>
+                        </div>
+                      </motion.button>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          );
+        })()}
+
+
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -545,128 +667,6 @@ export default function StudyHub() {
             </div>
           </div>
         </motion.div>
-
-        {/* Crushing Lines / Traps */}
-        {(() => {
-          const trapVariations = opening.variations.filter(v => v.isTrap);
-          if (trapVariations.length === 0) return null;
-
-          const daysUntilNextTrap = !canLearnTrap && lastTrapLearnedAt
-            ? Math.max(0, Math.ceil((7 * 24 * 60 * 60 * 1000 - (Date.now() - new Date(lastTrapLearnedAt).getTime())) / (24 * 60 * 60 * 1000)))
-            : 0;
-
-          return (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.35 }}
-              className="mt-10"
-            >
-              <div className="flex items-center gap-2 mb-4">
-                <Flame className="w-4 h-4 text-orange-500" />
-                <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-medium">
-                  {t("secretTraps")}
-                </h2>
-                {!isPro && (
-                  <span className="text-[10px] px-2 py-0.5 rounded-full font-mono"
-                    style={{ background: "hsl(var(--muted))", color: "hsl(var(--muted-foreground))" }}
-                  >
-                    {t("onePerWeek")}
-                  </span>
-                )}
-              </div>
-              <div className="space-y-3">
-                {trapVariations.map((variation, ti) => {
-                  const lines = linesByVariation.get(variation.id) || [];
-                  const trapLocked = !isPro && !canLearnTrap;
-
-                  return (
-                    <motion.div
-                      key={variation.id}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.3, delay: 0.4 + ti * 0.06 }}
-                    >
-                      <motion.button
-                        whileHover={!trapLocked ? { backgroundColor: "hsl(25 100% 50% / 0.08)" } : {}}
-                        whileTap={!trapLocked ? { scale: 0.98 } : {}}
-                        onClick={() => {
-                          if (trapLocked) {
-                            setUpgradeReason("lines");
-                            setShowUpgradeModal(true);
-                            return;
-                          }
-                          if (lines.length > 0) {
-                            navigate(
-                              `/study/${opening.id}/play?color=${opening.primarySide}&variation=${variation.id}&line=0`
-                            );
-                          }
-                        }}
-                        className={`w-full text-left rounded-xl p-4 border transition-all duration-300 group ${trapLocked ? 'opacity-60' : ''}`}
-                        style={{
-                          background: "hsl(var(--card))",
-                          borderColor: trapLocked ? "hsl(var(--border) / 0.3)" : "hsl(25 100% 50% / 0.3)",
-                        }}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1">
-                              <Flame className="w-4 h-4 text-orange-500 flex-shrink-0" />
-                              <h3 className="font-serif text-sm font-semibold text-foreground">
-                                Line {ti + 1}
-                              </h3>
-                              {trapLocked && (
-                                <span className="text-[10px] text-muted-foreground/60 font-mono ml-1">
-                                  {daysUntilNextTrap}d left
-                                </span>
-                              )}
-                            </div>
-                            <div className="flex items-center gap-1 pl-6">
-                              {editingDescId === variation.id ? (
-                                <div className="flex-1 flex gap-1" onClick={(e) => e.stopPropagation()}>
-                                  <input
-                                    value={editDescText}
-                                    onChange={(e) => setEditDescText(e.target.value)}
-                                    className="flex-1 text-sm rounded px-2 py-1"
-                                    style={{ background: "hsl(var(--muted))", color: "hsl(var(--foreground))" }}
-                                    autoFocus
-                                    onKeyDown={(e) => { if (e.key === "Enter") handleSaveDesc(variation.id); if (e.key === "Escape") setEditingDescId(null); }}
-                                  />
-                                  <button onClick={() => handleSaveDesc(variation.id)} className="text-xs px-2 py-1 rounded" style={{ background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }}>Save</button>
-                                </div>
-                              ) : (
-                                <>
-                                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                                    {getDescOverride(variation.id, variation.description)}
-                                  </p>
-                                  {isDev && (
-                                    <button
-                                      onClick={(e) => { e.stopPropagation(); setEditingDescId(variation.id); setEditDescText(getDescOverride(variation.id, variation.description)); }}
-                                      className="p-1 rounded opacity-40 hover:opacity-100 flex-shrink-0"
-                                    >
-                                      <Pencil size={12} />
-                                    </button>
-                                  )}
-                                </>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2 flex-shrink-0 ml-3">
-                            {trapLocked ? (
-                              <Lock className="w-4 h-4 text-muted-foreground/40" />
-                            ) : (
-                              <ChevronRight className="w-4 h-4 text-orange-500/60 group-hover:text-orange-500 transition-colors" />
-                            )}
-                          </div>
-                        </div>
-                      </motion.button>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </motion.div>
-          );
-        })()}
 
       </div>
       <UpgradeModal
