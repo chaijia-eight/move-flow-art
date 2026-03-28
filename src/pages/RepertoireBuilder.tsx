@@ -123,7 +123,15 @@ export default function RepertoireBuilder() {
     if (existing && !loaded) {
       setName(existing.name);
       setSide(existing.side as "w" | "b");
-      setTree((existing.tree || []) as unknown as OpeningNode[]);
+      // Support old format (plain tree) and new format (chapters array)
+      const raw = existing.tree as any;
+      if (Array.isArray(raw) && raw.length > 0 && raw[0]?.name !== undefined && raw[0]?.tree !== undefined) {
+        setChapters(raw as Chapter[]);
+      } else if (Array.isArray(raw) && raw.length > 0) {
+        setChapters([{ name: "Chapter 1", tree: raw as unknown as OpeningNode[] }]);
+      } else {
+        setChapters([]);
+      }
       setLoaded(true);
     }
   }, [existing, loaded]);
