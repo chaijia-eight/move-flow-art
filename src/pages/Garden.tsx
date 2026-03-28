@@ -27,7 +27,9 @@ function countLines(nodes: OpeningNode[]): number {
 export default function Garden() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { maxStudies } = useSubscription();
   const queryClient = useQueryClient();
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   const { data: repertoires, isLoading } = useQuery({
     queryKey: ["user-repertoires", user?.id],
