@@ -431,6 +431,7 @@ export default function RepertoireBuilder() {
                 customHighlights={nodeHighlights}
                 onRightClickDraw={handleArrowDraw}
                 onRightClickSquare={handleSquareHighlight}
+                nagOverlays={nagOverlays}
               />
             </div>
 

@@ -1,7 +1,7 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Plus, ArrowLeft, Play, Pencil, Trash2, BookOpen } from "lucide-react";
+import { Plus, ArrowLeft, Trash2, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -41,7 +41,8 @@ export default function Garden() {
     },
   });
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
     if (!confirm("Delete this repertoire?")) return;
     await supabase.from("user_repertoires").delete().eq("id", id);
     queryClient.invalidateQueries({ queryKey: ["user-repertoires", user?.id] });
@@ -113,7 +114,8 @@ export default function Garden() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.06 }}
                   whileHover={{ y: -4, boxShadow: "0 20px 40px -15px hsl(var(--primary) / 0.2)" }}
-                  className="rounded-xl overflow-hidden border border-border bg-card"
+                  className="rounded-xl overflow-hidden border border-border bg-card cursor-pointer"
+                  onClick={() => navigate(`/garden/build/${rep.id}`)}
                 >
                   <div className="h-1.5 bg-gradient-to-r from-primary to-accent" />
                   <div className="p-5">
@@ -124,31 +126,12 @@ export default function Garden() {
                       {isWhite ? "White" : "Black"} · {lineCount} {t("repertoireLines")}
                     </p>
 
-                    <div className="flex items-center gap-2 pt-3 border-t border-border/50">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="flex-1 gap-1 text-xs"
-                        onClick={() => navigate(`/garden/build/${rep.id}`)}
-                      >
-                        <Pencil className="w-3 h-3" />
-                        {t("editRepertoire")}
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="flex-1 gap-1 text-xs text-primary"
-                        onClick={() => navigate(`/garden/study/${rep.id}`)}
-                        disabled={lineCount === 0}
-                      >
-                        <Play className="w-3 h-3" />
-                        {t("studyRepertoire")}
-                      </Button>
+                    <div className="flex items-center justify-end pt-3 border-t border-border/50">
                       <Button
                         variant="ghost"
                         size="icon"
                         className="text-muted-foreground hover:text-destructive h-8 w-8"
-                        onClick={() => handleDelete(rep.id)}
+                        onClick={(e) => handleDelete(e, rep.id)}
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </Button>
