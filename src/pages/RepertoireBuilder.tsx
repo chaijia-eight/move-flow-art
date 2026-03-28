@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import Chessboard from "@/components/Chessboard";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { t } from "@/lib/i18n";
@@ -73,6 +74,7 @@ export default function RepertoireBuilder() {
   const { repertoireId } = useParams<{ repertoireId?: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { maxChaptersPerStudy } = useSubscription();
   const queryClient = useQueryClient();
 
   const [name, setName] = useState("My Repertoire");
@@ -407,6 +409,10 @@ export default function RepertoireBuilder() {
 
   // Create a new chapter
   const createChapter = useCallback((chapterTree: OpeningNode[]) => {
+    if (chapters.length >= maxChaptersPerStudy) {
+      toast({ title: "Chapter limit reached", description: "Upgrade to Pro for unlimited chapters.", variant: "destructive" });
+      return;
+    }
     const chapterName = newChapterName.trim() || `Chapter ${chapters.length + 1}`;
     setChapters(prev => [...prev, { name: chapterName, tree: chapterTree }]);
     setActiveChapterIdx(chapters.length);
@@ -416,7 +422,7 @@ export default function RepertoireBuilder() {
     setShowPgnImport(false);
     setPgnInput("");
     setNewChapterName(`Chapter ${chapters.length + 2}`);
-  }, [chapters.length, newChapterName]);
+  }, [chapters.length, newChapterName, maxChaptersPerStudy]);
 
   // PGN import: parse PGN into tree
   const importPgn = useCallback((pgn: string) => {

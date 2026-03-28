@@ -17,7 +17,7 @@ import { useLineOverrides } from "@/hooks/useLineOverrides";
 export default function StudyHub() {
   const { openingId } = useParams();
   const { user } = useAuth();
-  const { canPractice, canLearnNewLine, canLearnTrap, isPro, lastTrapLearnedAt } = useSubscription();
+  const { canPractice, canLearnNewLine, canLearnTrap, isPro } = useSubscription();
   const navigate = useNavigate();
   const { setTheme, currentTheme } = useTheme();
   const { overrides, saveOverride } = useLineOverrides();
@@ -322,9 +322,6 @@ export default function StudyHub() {
           const trapVariations = opening.variations.filter(v => v.isTrap);
           if (trapVariations.length === 0) return null;
 
-          const daysUntilNextTrap = !canLearnTrap && lastTrapLearnedAt
-            ? Math.max(0, Math.ceil((7 * 24 * 60 * 60 * 1000 - (Date.now() - new Date(lastTrapLearnedAt).getTime())) / (24 * 60 * 60 * 1000)))
-            : 0;
 
           return (
             <motion.div
@@ -388,7 +385,7 @@ export default function StudyHub() {
                               </h3>
                               {trapLocked && (
                                 <span className="text-[10px] text-muted-foreground/60 font-mono ml-1">
-                                  {daysUntilNextTrap}d left
+                                  Daily limit reached
                                 </span>
                               )}
                             </div>
@@ -651,9 +648,9 @@ export default function StudyHub() {
               style={{ background: "hsl(var(--card) / 0.5)" }}
             >
               <LearningPath
-                sections={opening.variations.filter(v => !v.isTrap).map(v => ({
+                sections={opening.variations.map(v => ({
                   variation: v,
-                  lines: linesByVariation.get(v.id) || [],
+                  lines: v.isTrap ? (linesByVariation.get(v.id) || []).slice(0, 1) : (linesByVariation.get(v.id) || []),
                 }))}
                 theme={theme}
                 openingId={opening.id}

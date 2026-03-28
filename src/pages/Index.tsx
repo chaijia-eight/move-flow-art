@@ -1,18 +1,21 @@
 import React, { useMemo, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Play, Trophy, BookOpen, Target, Star, Crown, Zap, ChevronDown, Shuffle } from "lucide-react";
+import { Play, Trophy, BookOpen, Target, Star, Crown, Zap, ChevronDown, Shuffle, Leaf, ChevronRight } from "lucide-react";
 import OpeningCard from "@/components/OpeningCard";
 import LearningPath from "@/components/LearningPath";
 import { openings } from "@/data/openingTrees";
 import { themes } from "@/data/openings";
+import type { OpeningNode } from "@/data/openings";
 import { extractAllLines, extractLinesForVariation } from "@/lib/lineExtractor";
 import { getLineProgress, getOpeningProgress } from "@/lib/progressStore";
 import { getFocusedOpenings, toggleFocus } from "@/lib/focusStore";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { useSubscription, FREE_DAILY_LINES } from "@/contexts/SubscriptionContext";
+import { useSubscription, FREE_DAILY_LINES, FREE_DAILY_PRACTICES } from "@/contexts/SubscriptionContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 import { t, tf, tn } from "@/lib/i18n";
 
 interface Recommendation {
@@ -100,11 +103,37 @@ function getBestTreeOpening(): { opening: typeof openings[0]; progress: number; 
   return best;
 }
 
+function countGardenLines(nodes: OpeningNode[]): number {
+  if (nodes.length === 0) return 0;
+  let total = 0;
+  for (const node of nodes) {
+    if (node.children.length === 0) total += 1;
+    else total += countGardenLines(node.children);
+  }
+  return total;
+}
+
 export default function Index() {
   const { user } = useAuth();
-  const { isPro, dailyLinesUsed, practiceUsedToday, canLearnNewLine, canPractice, startCheckout } = useSubscription();
+  const { isPro, dailyLinesUsed, dailyPracticesUsed, canLearnNewLine, canPractice, startCheckout } = useSubscription();
   const navigate = useNavigate();
   const [focusedIds, setFocusedIds] = useState(getFocusedOpenings);
+
+  // Fetch user's garden studies
+  const { data: gardenStudies } = useQuery({
+    queryKey: ["user-repertoires-dashboard", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("user_repertoires")
+        .select("id, name, side, tree")
+        .eq("user_id", user!.id)
+        .order("updated_at", { ascending: false })
+        .limit(4);
+      if (error) throw error;
+      return data;
+    },
+  });
 
   const handleToggleFocus = useCallback((openingId: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -158,10 +187,13 @@ export default function Index() {
 
   const treeSections = useMemo(() => {
     if (!treeOpening) return [];
-    return treeOpening.variations.map(v => ({
-      variation: v,
-      lines: extractLinesForVariation(treeOpening, v),
-    }));
+    return treeOpening.variations.map(v => {
+      const lines = extractLinesForVariation(treeOpening, v);
+      return {
+        variation: v,
+        lines: v.isTrap ? lines.slice(0, 1) : lines,
+      };
+    });
   }, [treeOpening]);
 
   const treeTheme = treeOpening ? themes[treeOpening.themeId] : null;
@@ -349,10 +381,10 @@ export default function Index() {
                     <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
                       <span>{t("practice")}</span>
                       <span className={!canPractice ? "text-destructive font-medium" : ""}>
-                        {practiceUsedToday ? "1/1" : "0/1"}
+                        {dailyPracticesUsed}/{FREE_DAILY_PRACTICES}
                       </span>
                     </div>
-                    <Progress value={practiceUsedToday ? 100 : 0} className="h-1.5" />
+                    <Progress value={(dailyPracticesUsed / FREE_DAILY_PRACTICES) * 100} className="h-1.5" />
                   </div>
                 </div>
 
@@ -373,7 +405,62 @@ export default function Index() {
             </motion.section>
           )}
 
-          {/* Mobile: Your Focus (shown below on small screens) */}
+          {/* Your Studies (Garden) */}
+          {user && gardenStudies && gardenStudies.length > 0 && (
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <Leaf className="w-3.5 h-3.5 text-primary" />
+                  <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium">
+                    Your Studies
+                  </h2>
+                </div>
+                <button
+                  onClick={() => navigate("/garden")}
+                  className="text-[11px] text-muted-foreground hover:text-foreground transition-colors flex items-center gap-0.5"
+                >
+                  View all <ChevronRight className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {gardenStudies.map((rep, i) => {
+                  const tree = (rep.tree || []) as unknown as OpeningNode[];
+                  const lineCount = tree.length > 0 ? countGardenLines(tree) : 0;
+                  return (
+                    <motion.button
+                      key={rep.id}
+                      initial={{ opacity: 0, x: -6 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.15, delay: i * 0.03 }}
+                      whileHover={{ x: 4 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => navigate(`/garden/build/${rep.id}`)}
+                      className="text-left rounded-lg px-3 py-2.5 border border-border/30 bg-card hover:bg-accent/30 transition-all group"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <Leaf className="w-3 h-3 text-primary/60 shrink-0" />
+                          <span className="text-sm font-medium text-foreground truncate">{rep.name}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                          <span className="text-[10px] text-muted-foreground font-mono">
+                            {rep.side === "w" ? "W" : "B"} · {lineCount}L
+                          </span>
+                          <ChevronRight className="w-3 h-3 text-muted-foreground/30 group-hover:text-foreground/50" />
+                        </div>
+                      </div>
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </motion.section>
+          )}
+
+
           <motion.section
             className="lg:hidden"
             initial={{ opacity: 0, y: 20 }}

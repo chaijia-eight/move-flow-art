@@ -8,7 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
-import { useSubscription, FREE_DAILY_LINES } from "@/contexts/SubscriptionContext";
+import { useSubscription, FREE_DAILY_LINES, FREE_DAILY_PRACTICES } from "@/contexts/SubscriptionContext";
 import { loadSettings, saveSettings, type AppSettings } from "@/lib/settingsStore";
 import { t, tf } from "@/lib/i18n";
 
@@ -92,7 +92,7 @@ function AuthCard() {
 
 function SubscriptionCard() {
   const { user } = useAuth();
-  const { isPro, subscriptionEnd, loading, dailyLinesUsed, practiceUsedToday, startCheckout, openCustomerPortal } = useSubscription();
+  const { isPro, subscriptionEnd, loading, dailyLinesUsed, dailyPracticesUsed, startCheckout, openCustomerPortal } = useSubscription();
   const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   if (!user) return null;
@@ -148,7 +148,7 @@ function SubscriptionCard() {
           <div className="space-y-3">
             <div className="text-sm text-muted-foreground space-y-1">
               <p>{linesUsedFn(dailyLinesUsed, FREE_DAILY_LINES)}</p>
-              <p>{practiceUsedToday ? "✗ " + t("practiceUsedToday") : "✓ Practice available"}</p>
+              <p>Practice: {dailyPracticesUsed}/{FREE_DAILY_PRACTICES} used today</p>
             </div>
             <div className="p-3 rounded-lg bg-primary/10 border border-primary/20">
               <p className="text-sm font-medium text-foreground mb-1">{t("proPlan")} — {t("proPlanPrice")}</p>

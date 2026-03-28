@@ -7,7 +7,7 @@ interface SubscriptionState {
   subscriptionEnd: string | null;
   loading: boolean;
   dailyLinesUsed: number;
-  practiceUsedToday: boolean;
+  dailyPracticesUsed: number;
   analysisUsedToday: boolean;
   canLearnNewLine: boolean;
   canPractice: boolean;
@@ -21,16 +21,21 @@ interface SubscriptionState {
   refreshSubscription: () => Promise<void>;
   startCheckout: () => Promise<void>;
   openCustomerPortal: () => Promise<void>;
+  maxStudies: number;
+  maxChaptersPerStudy: number;
 }
 
-const FREE_DAILY_LINES = 2;
+const FREE_DAILY_LINES = 3;
+const FREE_DAILY_PRACTICES = 2;
+const FREE_MAX_STUDIES = 2;
+const FREE_MAX_CHAPTERS = 4;
 
 const SubscriptionContext = createContext<SubscriptionState>({
   isPro: false,
   subscriptionEnd: null,
   loading: true,
   dailyLinesUsed: 0,
-  practiceUsedToday: false,
+  dailyPracticesUsed: 0,
   analysisUsedToday: false,
   canLearnNewLine: true,
   canPractice: true,
@@ -44,6 +49,8 @@ const SubscriptionContext = createContext<SubscriptionState>({
   refreshSubscription: async () => {},
   startCheckout: async () => {},
   openCustomerPortal: async () => {},
+  maxStudies: FREE_MAX_STUDIES,
+  maxChaptersPerStudy: FREE_MAX_CHAPTERS,
 });
 
 export function SubscriptionProvider({ children }: { children: ReactNode }) {
@@ -52,7 +59,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [dailyLinesUsed, setDailyLinesUsed] = useState(0);
-  const [practiceUsedToday, setPracticeUsedToday] = useState(false);
+  const [dailyPracticesUsed, setDailyPracticesUsed] = useState(0);
   const [analysisUsedToday, setAnalysisUsedToday] = useState(false);
   const [lastTrapLearnedAt, setLastTrapLearnedAt] = useState<string | null>(null);
 
@@ -69,14 +76,14 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
 
     if (data) {
       setDailyLinesUsed(data.lines_learned);
-      setPracticeUsedToday(data.practice_used);
+      // practice_used is boolean in DB — treat true as 1 for backward compat
+      setDailyPracticesUsed(data.practice_used ? 1 : 0);
       setAnalysisUsedToday(data.analysis_used);
       setLastTrapLearnedAt((data as any).last_trap_learned_at ?? null);
     } else {
       setDailyLinesUsed(0);
-      setPracticeUsedToday(false);
+      setDailyPracticesUsed(0);
       setAnalysisUsedToday(false);
-      // Check for last_trap_learned_at from any recent row
       const { data: recentTrap } = await supabase
         .from("daily_usage")
         .select("last_trap_learned_at")
@@ -116,12 +123,11 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       setIsPro(false);
       setLoading(false);
       setDailyLinesUsed(0);
-      setPracticeUsedToday(false);
+      setDailyPracticesUsed(0);
       setAnalysisUsedToday(false);
     }
   }, [user, refreshSubscription, fetchDailyUsage]);
 
-  // Refresh subscription every 60s
   useEffect(() => {
     if (!session) return;
     const interval = setInterval(refreshSubscription, 60000);
@@ -129,12 +135,10 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   }, [session, refreshSubscription]);
 
   const canLearnNewLine = isPro || dailyLinesUsed < FREE_DAILY_LINES;
-  const canPractice = isPro || !practiceUsedToday;
+  const canPractice = isPro || dailyPracticesUsed < FREE_DAILY_PRACTICES;
   const canAnalyze = isPro || !analysisUsedToday;
-
-  // Rolling 7-day check for traps
-  const canLearnTrap = isPro || !lastTrapLearnedAt || 
-    (Date.now() - new Date(lastTrapLearnedAt).getTime() > 7 * 24 * 60 * 60 * 1000);
+  // Traps now count as regular lines — no special weekly limit
+  const canLearnTrap = canLearnNewLine;
 
   const recordLineLearn = useCallback(async () => {
     if (!user || isPro) return;
@@ -163,6 +167,7 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const recordPracticeUse = useCallback(async () => {
     if (!user || isPro) return;
     const today = todayStr();
+    const newCount = dailyPracticesUsed + 1;
     const { data: existing } = await supabase
       .from("daily_usage")
       .select("id")
@@ -180,8 +185,8 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
         .from("daily_usage")
         .insert({ user_id: user.id, usage_date: today, practice_used: true });
     }
-    setPracticeUsedToday(true);
-  }, [user, isPro]);
+    setDailyPracticesUsed(newCount);
+  }, [user, isPro, dailyPracticesUsed]);
 
   const recordAnalysisUse = useCallback(async () => {
     if (!user) return;
@@ -207,28 +212,9 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   const recordTrapLearn = useCallback(async () => {
-    if (!user || isPro) return;
-    const now = new Date().toISOString();
-    const today = todayStr();
-    const { data: existing } = await supabase
-      .from("daily_usage")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("usage_date", today)
-      .maybeSingle();
-
-    if (existing) {
-      await supabase
-        .from("daily_usage")
-        .update({ last_trap_learned_at: now, updated_at: now } as any)
-        .eq("id", existing.id);
-    } else {
-      await supabase
-        .from("daily_usage")
-        .insert({ user_id: user.id, usage_date: today, last_trap_learned_at: now } as any);
-    }
-    setLastTrapLearnedAt(now);
-  }, [user, isPro]);
+    // Traps now use the regular line limit
+    return recordLineLearn();
+  }, [recordLineLearn]);
 
   const startCheckout = useCallback(async () => {
     const { data, error } = await supabase.functions.invoke("create-checkout");
@@ -246,13 +232,16 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const maxStudies = isPro ? Infinity : FREE_MAX_STUDIES;
+  const maxChaptersPerStudy = isPro ? Infinity : FREE_MAX_CHAPTERS;
+
   return (
     <SubscriptionContext.Provider value={{
       isPro,
       subscriptionEnd,
       loading,
       dailyLinesUsed,
-      practiceUsedToday,
+      dailyPracticesUsed,
       analysisUsedToday,
       canLearnNewLine,
       canPractice,
@@ -266,6 +255,8 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       refreshSubscription,
       startCheckout,
       openCustomerPortal,
+      maxStudies,
+      maxChaptersPerStudy,
     }}>
       {children}
     </SubscriptionContext.Provider>
@@ -273,4 +264,4 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
 }
 
 export const useSubscription = () => useContext(SubscriptionContext);
-export { FREE_DAILY_LINES };
+export { FREE_DAILY_LINES, FREE_DAILY_PRACTICES, FREE_MAX_STUDIES, FREE_MAX_CHAPTERS };
