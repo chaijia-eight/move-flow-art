@@ -74,6 +74,7 @@ export default function RepertoireBuilder() {
   const { repertoireId } = useParams<{ repertoireId?: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { maxChaptersPerStudy } = useSubscription();
   const queryClient = useQueryClient();
 
   const [name, setName] = useState("My Repertoire");
