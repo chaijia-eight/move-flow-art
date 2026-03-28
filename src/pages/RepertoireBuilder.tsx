@@ -120,6 +120,30 @@ export default function RepertoireBuilder() {
   const nodeArrows = currentNode?.arrows || [];
   const nodeHighlights = currentNode?.highlights || [];
 
+  // Build NAG overlays map: for the current node, show its NAG on the piece that moved
+  const nagOverlays = useMemo(() => {
+    const map = new Map<string, NagSymbol>();
+    if (currentNode?.nag && currentNode.fen) {
+      // The piece that just moved is on the target square; parse the move's target from FEN
+      // We can derive the target square from the last move in currentMoves
+      const lastMove = currentMoves[currentMoves.length - 1];
+      if (lastMove) {
+        // Get the destination square by trying the move
+        try {
+          const prevFen = currentPath.length > 1
+            ? fenAfterMoves(currentMoves.slice(0, -1))
+            : new Chess().fen();
+          const c = new Chess(prevFen);
+          const m = c.move(lastMove);
+          if (m) {
+            map.set(m.to, currentNode.nag);
+          }
+        } catch {}
+      }
+    }
+    return map;
+  }, [currentNode, currentMoves, currentPath]);
+
   // Handle board move
   const handleMove = useCallback((_from: string, _to: string, san: string) => {
     const newTree = cloneTree(tree);
