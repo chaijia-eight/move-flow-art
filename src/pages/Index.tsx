@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { Play, ChevronRight, Trophy, BookOpen, Target, Settings, Info, Star, Crown, Zap, Sprout } from "lucide-react";
+import { motion } from "framer-motion";
+import { Play, Trophy, BookOpen, Target, Star, Crown, Zap } from "lucide-react";
 import OpeningCard from "@/components/OpeningCard";
 import { openings } from "@/data/openingTrees";
 import { themes } from "@/data/openings";
@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useSubscription, FREE_DAILY_LINES } from "@/contexts/SubscriptionContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { t, tf, tn, tDesc } from "@/lib/i18n";
+import { t, tf, tn } from "@/lib/i18n";
 
 interface Recommendation {
   openingId: string;
@@ -119,141 +119,195 @@ export default function Index() {
     return openings.filter((o) => focusedIds.includes(o.id));
   }, [focusedIds]);
 
-  const bookshelfOpenings = useMemo(() => {
-    return openings.filter((o) => !focusedIds.includes(o.id));
-  }, [focusedIds]);
-
   const recTheme = recommendation ? themes[recommendation.themeId] : null;
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="relative z-10 px-6 pt-10 pb-4 max-w-5xl mx-auto">
+    <div className="min-h-screen flex">
+      {/* Center content */}
+      <div className="flex-1 min-w-0 px-6 pt-10 pb-16">
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-8"
         >
-          <div className="flex items-start justify-between">
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-3xl font-semibold text-foreground tracking-tight">
-                  ArcChess
-                </h1>
-                {isPro && (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/15 text-primary text-xs font-semibold">
-                    <Crown className="w-3 h-3" />
-                    Premium
-                  </span>
-                )}
-              </div>
-              <p className="text-muted-foreground mt-1 text-sm max-w-md">
-                {t("appTagline")}
-              </p>
-            </div>
-            <div className="flex gap-1 mt-1">
-              <button
-                onClick={() => navigate("/garden")}
-                className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
-                aria-label="Garden"
-              >
-                <Sprout className="w-4.5 h-4.5" />
-              </button>
-              <button
-                onClick={() => navigate("/about")}
-                className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
-                aria-label="About"
-              >
-                <Info className="w-4.5 h-4.5" />
-              </button>
-              <button
-                onClick={() => navigate("/settings")}
-                className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
-                aria-label={t("settings")}
-              >
-                <Settings className="w-4.5 h-4.5" />
-              </button>
-            </div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-semibold text-foreground tracking-tight">
+              ArcChess
+            </h1>
+            {isPro && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/15 text-primary text-xs font-semibold">
+                <Crown className="w-3 h-3" />
+                Premium
+              </span>
+            )}
           </div>
+          <p className="text-muted-foreground mt-1 text-sm">
+            {t("appTagline")}
+          </p>
         </motion.div>
-      </header>
 
-      <main className="relative z-10 px-6 pb-16 max-w-5xl mx-auto space-y-8">
-        {/* Recommendation */}
-        <section className="max-w-3xl">
-          {recommendation && recTheme && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium mb-2">
-                {t("recommendedNextStep")}
-              </h2>
-              <div
-                className="rounded-xl border border-border overflow-hidden cursor-pointer group"
-                onClick={() =>
-                  navigate(
-                    `/study/${recommendation.openingId}/play?color=${recommendation.color}&variation=${recommendation.variationId}&line=${recommendation.lineIndex}`
-                  )
-                }
+        <div className="max-w-2xl space-y-8">
+          {/* Recommendation */}
+          <section>
+            {recommendation && recTheme && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
               >
-                <div className="h-1" style={{ background: `linear-gradient(90deg, ${recTheme.primaryColor}, ${recTheme.accentColor})` }} />
-                <div className="p-5 bg-card">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Target className="w-3.5 h-3.5 text-primary shrink-0" />
-                        <span className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">
-                          {tn("openingName", recommendation.openingId)}
-                        </span>
-                      </div>
-                      <h3 className="text-lg font-semibold text-foreground mb-1 truncate">
-                        {recommendation.variationName}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">{recommendation.reason}</p>
-                      <div className="mt-3">
-                        <div className="flex items-center justify-between text-[11px] text-muted-foreground mb-1">
-                          <span>{t("openingProgress")}</span>
-                          <span>{Math.round(recommendation.progress * 100)}%</span>
+                <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium mb-2">
+                  {t("recommendedNextStep")}
+                </h2>
+                <div
+                  className="rounded-xl border border-border overflow-hidden cursor-pointer group"
+                  onClick={() =>
+                    navigate(
+                      `/study/${recommendation.openingId}/play?color=${recommendation.color}&variation=${recommendation.variationId}&line=${recommendation.lineIndex}`
+                    )
+                  }
+                >
+                  <div className="h-1" style={{ background: `linear-gradient(90deg, ${recTheme.primaryColor}, ${recTheme.accentColor})` }} />
+                  <div className="p-5 bg-card">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Target className="w-3.5 h-3.5 text-primary shrink-0" />
+                          <span className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">
+                            {tn("openingName", recommendation.openingId)}
+                          </span>
                         </div>
-                        <Progress value={recommendation.progress * 100} className="h-1" />
+                        <h3 className="text-lg font-semibold text-foreground mb-1 truncate">
+                          {recommendation.variationName}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">{recommendation.reason}</p>
+                        <div className="mt-3">
+                          <div className="flex items-center justify-between text-[11px] text-muted-foreground mb-1">
+                            <span>{t("openingProgress")}</span>
+                            <span>{Math.round(recommendation.progress * 100)}%</span>
+                          </div>
+                          <Progress value={recommendation.progress * 100} className="h-1" />
+                        </div>
                       </div>
+                      <Button size="lg" className="shrink-0 gap-2 group-hover:scale-105 transition-transform">
+                        <Play className="w-4 h-4" />
+                        {t("start")}
+                      </Button>
                     </div>
-                    <Button size="lg" className="shrink-0 gap-2 group-hover:scale-105 transition-transform">
-                      <Play className="w-4 h-4" />
-                      {t("start")}
-                    </Button>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          )}
+              </motion.div>
+            )}
 
-          {!recommendation && (
-            <motion.div
+            {!recommendation && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="rounded-xl border border-border bg-card p-8 text-center"
+              >
+                <Trophy className="w-10 h-10 text-primary mx-auto mb-3" />
+                <h3 className="text-xl font-semibold text-foreground mb-1">{t("allMastered")}</h3>
+                <p className="text-sm text-muted-foreground">{t("allMasteredDesc")}</p>
+              </motion.div>
+            )}
+          </section>
+
+          {/* Daily Limits & Upgrade */}
+          {user && !isPro && (
+            <motion.section
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="rounded-xl border border-border bg-card p-8 text-center"
+              transition={{ duration: 0.5, delay: 0.15 }}
             >
-              <Trophy className="w-10 h-10 text-primary mx-auto mb-3" />
-              <h3 className="text-xl font-semibold text-foreground mb-1">{t("allMastered")}</h3>
-              <p className="text-sm text-muted-foreground">{t("allMasteredDesc")}</p>
-            </motion.div>
-          )}
-        </section>
+              <div className="rounded-xl border border-border bg-card p-4 space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+                      <span>{t("newLines")}</span>
+                      <span className={!canLearnNewLine ? "text-destructive font-medium" : ""}>
+                        {dailyLinesUsed}/{FREE_DAILY_LINES}
+                      </span>
+                    </div>
+                    <Progress value={(dailyLinesUsed / FREE_DAILY_LINES) * 100} className="h-1.5" />
+                  </div>
+                  <div>
+                    <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+                      <span>{t("practice")}</span>
+                      <span className={!canPractice ? "text-destructive font-medium" : ""}>
+                        {practiceUsedToday ? "1/1" : "0/1"}
+                      </span>
+                    </div>
+                    <Progress value={practiceUsedToday ? 100 : 0} className="h-1.5" />
+                  </div>
+                </div>
 
-        {/* Stats */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+                <div className="flex items-center justify-between rounded-lg bg-primary/5 border border-primary/10 p-3">
+                  <div>
+                    <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
+                      <Crown className="w-3.5 h-3.5 text-primary" />
+                      {t("proPlan")} — {t("proPlanPrice")}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{t("proFeatures")}</p>
+                  </div>
+                  <Button size="sm" onClick={() => startCheckout()} className="gap-1.5 shrink-0">
+                    <Zap className="w-3.5 h-3.5" />
+                    {t("upgradeToPro")}
+                  </Button>
+                </div>
+              </div>
+            </motion.section>
+          )}
+
+          {/* Your Focus */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <div className="flex items-center gap-3 mb-3">
+              <Star className="w-3.5 h-3.5 text-primary" />
+              <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium">
+                Your Focus
+              </h2>
+              <div className="flex-1 h-px bg-border/50" />
+            </div>
+
+            {focusedOpenings.length === 0 ? (
+              <div className="rounded-lg border border-dashed border-border/60 p-6 text-center">
+                <p className="text-sm text-muted-foreground">
+                  No focus set yet. Click the <Star className="w-3.5 h-3.5 inline -mt-0.5" /> on any opening card to add it here.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {focusedOpenings.map((opening, i) => (
+                  <OpeningCard
+                    key={opening.id}
+                    opening={opening}
+                    onClick={() => navigate(`/study/${opening.id}`)}
+                    index={i}
+                    focused={true}
+                    onToggleFocus={(e) => handleToggleFocus(opening.id, e)}
+                  />
+                ))}
+              </div>
+            )}
+          </motion.section>
+        </div>
+      </div>
+
+      {/* Right sidebar - Stats */}
+      <aside className="w-[280px] border-l border-border shrink-0 p-5 pt-10 hidden lg:block sticky top-0 h-screen overflow-y-auto">
+        <motion.div
+          initial={{ opacity: 0, x: 10 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
-          className="max-w-3xl"
         >
-          <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium mb-2">
+          <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium mb-3">
             {t("progress")}
           </h2>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="space-y-3">
             {[
               { label: t("linesMastered"), value: `${stats.masteredLines}/${stats.totalLines}`, icon: Trophy },
               { label: t("openingsStarted"), value: `${stats.openingsStarted}/${stats.totalOpenings}`, icon: BookOpen },
@@ -266,122 +320,8 @@ export default function Index() {
               </div>
             ))}
           </div>
-        </motion.section>
-
-        {/* Daily Limits & Upgrade */}
-        {user && !isPro && (
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.18 }}
-            className="max-w-3xl"
-          >
-            <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium mb-2">
-              {t("dailyLimits")}
-            </h2>
-            <div className="rounded-xl border border-border bg-card p-4 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
-                    <span>{t("newLines")}</span>
-                    <span className={!canLearnNewLine ? "text-destructive font-medium" : ""}>
-                      {dailyLinesUsed}/{FREE_DAILY_LINES}
-                    </span>
-                  </div>
-                  <Progress value={(dailyLinesUsed / FREE_DAILY_LINES) * 100} className="h-1.5" />
-                </div>
-                <div>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
-                    <span>{t("practice")}</span>
-                    <span className={!canPractice ? "text-destructive font-medium" : ""}>
-                      {practiceUsedToday ? "1/1" : "0/1"}
-                    </span>
-                  </div>
-                  <Progress value={practiceUsedToday ? 100 : 0} className="h-1.5" />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between rounded-lg bg-primary/5 border border-primary/10 p-3">
-                <div>
-                  <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
-                    <Crown className="w-3.5 h-3.5 text-primary" />
-                    {t("proPlan")} — {t("proPlanPrice")}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-0.5">{t("proFeatures")}</p>
-                </div>
-                <Button size="sm" onClick={() => startCheckout()} className="gap-1.5 shrink-0">
-                  <Zap className="w-3.5 h-3.5" />
-                  {t("upgradeToPro")}
-                </Button>
-              </div>
-            </div>
-          </motion.section>
-        )}
-
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <div className="flex items-center gap-3 mb-3">
-            <Star className="w-3.5 h-3.5 text-primary" />
-            <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium">
-              Your Focus
-            </h2>
-            <div className="flex-1 h-px bg-border/50" />
-          </div>
-
-          {focusedOpenings.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-border/60 p-6 text-center">
-              <p className="text-sm text-muted-foreground">
-                No focus set yet. Click the <Star className="w-3.5 h-3.5 inline -mt-0.5" /> on any opening card to add it here.
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-              {focusedOpenings.map((opening, i) => (
-                <OpeningCard
-                  key={opening.id}
-                  opening={opening}
-                  onClick={() => navigate(`/study/${opening.id}`)}
-                  index={i}
-                  focused={true}
-                  onToggleFocus={(e) => handleToggleFocus(opening.id, e)}
-                  compact
-                />
-              ))}
-            </div>
-          )}
-        </motion.section>
-
-        {/* Bookshelf */}
-        <section>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3, delay: 0.25 }}
-            className="flex items-center gap-3 mb-4"
-          >
-            <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium">
-              {t("yourBookshelf")}
-            </h2>
-            <div className="flex-1 h-px bg-border/50" />
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {bookshelfOpenings.map((opening, i) => (
-              <OpeningCard
-                key={opening.id}
-                opening={opening}
-                onClick={() => navigate(`/study/${opening.id}`)}
-                index={i}
-                focused={false}
-                onToggleFocus={(e) => handleToggleFocus(opening.id, e)}
-              />
-            ))}
-          </div>
-        </section>
-      </main>
+        </motion.div>
+      </aside>
     </div>
   );
 }
