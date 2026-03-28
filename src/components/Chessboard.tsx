@@ -204,6 +204,7 @@ export default function Chessboard({
   };
 
   const handleDragStart = useCallback((e: React.PointerEvent, square: string, piece: string) => {
+    if (e.button !== 0) return; // Only left-click initiates drag
     if (!canInteract()) return;
     if (!isOwnPiece(piece)) return;
 
@@ -572,7 +573,7 @@ export default function Chessboard({
                             <img
                               src={sym.icon}
                               alt={sym.label}
-                              className="absolute -top-1 -right-1 w-4 h-4 pointer-events-none z-30 drop-shadow-md"
+                              className="absolute -top-2 -right-2 w-7 h-7 pointer-events-none z-30 drop-shadow-lg"
                             />
                           );
                         })()}

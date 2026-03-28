@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Save, Trash2, Cpu, RotateCcw, Plus, FileText, Play } from "lucide-react";
+import { ArrowLeft, Save, Trash2, Cpu, RotateCcw, Plus, FileText, Play, X } from "lucide-react";
 import { Chess } from "chess.js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -64,6 +64,11 @@ function getMovesAlongPath(tree: OpeningNode[], path: TreePath): string[] {
 // Single highlight color — toggle on/off
 const HIGHLIGHT_COLOR = "hsl(140, 65%, 45%)";
 
+interface Chapter {
+  name: string;
+  tree: OpeningNode[];
+}
+
 export default function RepertoireBuilder() {
   const { repertoireId } = useParams<{ repertoireId?: string }>();
   const navigate = useNavigate();
@@ -72,7 +77,8 @@ export default function RepertoireBuilder() {
 
   const [name, setName] = useState("My Repertoire");
   const [side, setSide] = useState<"w" | "b">("w");
-  const [tree, setTree] = useState<OpeningNode[]>([]);
+  const [chapters, setChapters] = useState<Chapter[]>([]);
+  const [activeChapterIdx, setActiveChapterIdx] = useState(0);
   const [currentPath, setCurrentPath] = useState<TreePath>([]);
   const [selectedNodePath, setSelectedNodePath] = useState<TreePath | null>(null);
   const [annotation, setAnnotation] = useState("");
@@ -83,6 +89,20 @@ export default function RepertoireBuilder() {
   const [showChapterCreate, setShowChapterCreate] = useState(false);
   const [pgnInput, setPgnInput] = useState("");
   const [showPgnImport, setShowPgnImport] = useState(false);
+  const [newChapterName, setNewChapterName] = useState("Chapter 1");
+
+  // Derived tree from active chapter
+  const tree = chapters[activeChapterIdx]?.tree ?? [];
+  const setTree = useCallback((newTree: OpeningNode[] | ((prev: OpeningNode[]) => OpeningNode[])) => {
+    setChapters(prev => {
+      const updated = [...prev];
+      if (updated[activeChapterIdx]) {
+        const resolved = typeof newTree === 'function' ? newTree(updated[activeChapterIdx].tree) : newTree;
+        updated[activeChapterIdx] = { ...updated[activeChapterIdx], tree: resolved };
+      }
+      return updated;
+    });
+  }, [activeChapterIdx]);
 
   // Load existing repertoire
   const { data: existing } = useQuery({
@@ -103,7 +123,15 @@ export default function RepertoireBuilder() {
     if (existing && !loaded) {
       setName(existing.name);
       setSide(existing.side as "w" | "b");
-      setTree((existing.tree || []) as unknown as OpeningNode[]);
+      // Support old format (plain tree) and new format (chapters array)
+      const raw = existing.tree as any;
+      if (Array.isArray(raw) && raw.length > 0 && raw[0]?.name !== undefined && raw[0]?.tree !== undefined) {
+        setChapters(raw as Chapter[]);
+      } else if (Array.isArray(raw) && raw.length > 0) {
+        setChapters([{ name: "Chapter 1", tree: raw as unknown as OpeningNode[] }]);
+      } else {
+        setChapters([]);
+      }
       setLoaded(true);
     }
   }, [existing, loaded]);
@@ -149,6 +177,16 @@ export default function RepertoireBuilder() {
 
   // Handle board move
   const handleMove = useCallback((_from: string, _to: string, san: string) => {
+    // Auto-create a chapter if none exist
+    if (chapters.length === 0) {
+      const newFen = (() => { const c = new Chess(); c.move(san); return c.fen(); })();
+      const newNode: OpeningNode = { fen: newFen, move: san, category: "main_line", children: [] };
+      setChapters([{ name: "Chapter 1", tree: [newNode] }]);
+      setActiveChapterIdx(0);
+      setCurrentPath([0]);
+      setShowChapterCreate(false);
+      return;
+    }
     const newTree = cloneTree(tree);
 
     let children: OpeningNode[];
@@ -187,7 +225,7 @@ export default function RepertoireBuilder() {
     setTree(newTree);
     setCurrentPath([...currentPath, newIdx]);
     setEngineEval(null);
-  }, [tree, currentPath, currentFen]);
+  }, [tree, currentPath, currentFen, chapters]);
 
   const navigateTo = useCallback((path: TreePath) => {
     setCurrentPath(path);
@@ -322,7 +360,7 @@ export default function RepertoireBuilder() {
           .update({
             name,
             side,
-            tree: tree as any,
+            tree: chapters as any,
             updated_at: new Date().toISOString(),
           })
           .eq("id", repertoireId);
@@ -333,7 +371,7 @@ export default function RepertoireBuilder() {
             user_id: user.id,
             name,
             side,
-            tree: tree as any,
+            tree: chapters as any,
           })
           .select("id")
           .single();
@@ -348,7 +386,20 @@ export default function RepertoireBuilder() {
     } finally {
       setSaving(false);
     }
-  }, [user, repertoireId, name, side, tree, navigate, queryClient]);
+  }, [user, repertoireId, name, side, chapters, navigate, queryClient]);
+
+  // Create a new chapter
+  const createChapter = useCallback((chapterTree: OpeningNode[]) => {
+    const chapterName = newChapterName.trim() || `Chapter ${chapters.length + 1}`;
+    setChapters(prev => [...prev, { name: chapterName, tree: chapterTree }]);
+    setActiveChapterIdx(chapters.length);
+    setCurrentPath([]);
+    setSelectedNodePath(null);
+    setShowChapterCreate(false);
+    setShowPgnImport(false);
+    setPgnInput("");
+    setNewChapterName(`Chapter ${chapters.length + 2}`);
+  }, [chapters.length, newChapterName]);
 
   // PGN import: parse PGN into tree
   const importPgn = useCallback((pgn: string) => {
@@ -360,7 +411,6 @@ export default function RepertoireBuilder() {
         toast({ title: "No moves found in PGN", variant: "destructive" });
         return;
       }
-      // Build linear tree from moves
       const buildTree = (moves: string[], idx: number): OpeningNode[] => {
         if (idx >= moves.length) return [];
         const c2 = new Chess();
@@ -373,24 +423,20 @@ export default function RepertoireBuilder() {
         }];
       };
       const newTree = buildTree(history, 0);
-      setTree(prev => [...prev, ...newTree]);
-      setShowPgnImport(false);
-      setShowChapterCreate(false);
-      setPgnInput("");
+      createChapter(newTree);
       toast({ title: `Imported ${history.length} moves` });
     } catch (err) {
       toast({ title: "Invalid PGN", variant: "destructive" });
     }
-  }, []);
+  }, [createChapter]);
 
-  // Start from starting position (just dismiss the dialog, board is already at start)
+  // Start from starting position — creates a new empty chapter
   const startFromPosition = useCallback(() => {
-    setShowChapterCreate(false);
-    setShowPgnImport(false);
-  }, []);
+    createChapter([]);
+  }, [createChapter]);
 
-  // Auto-show chapter creation when empty and new
-  const hasChapters = tree.length > 0;
+  // Auto-show chapter creation when no chapters exist
+  const hasChapters = chapters.length > 0;
 
   // Move hints — all legal moves
   const moveHints = useMemo(() => {
@@ -462,18 +508,35 @@ export default function RepertoireBuilder() {
           </div>
         </div>
 
-        {/* Create Chapter button */}
-        <div className="flex items-center gap-2 mb-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowChapterCreate(true)}
-            className="gap-1.5"
-          >
-            <Plus className="w-4 h-4" />
-            Create Chapter
-          </Button>
-        </div>
+        {/* Chapter tabs */}
+        {hasChapters && (
+          <div className="flex items-center gap-1.5 mb-3 overflow-x-auto pb-1">
+            {chapters.map((ch, idx) => (
+              <button
+                key={idx}
+                onClick={() => {
+                  setActiveChapterIdx(idx);
+                  setCurrentPath([]);
+                  setSelectedNodePath(null);
+                  setEngineEval(null);
+                }}
+                className={`px-3 py-1.5 text-xs font-medium rounded-lg whitespace-nowrap transition-colors ${
+                  idx === activeChapterIdx
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
+                }`}
+              >
+                {ch.name}
+              </button>
+            ))}
+            <button
+              onClick={() => setShowChapterCreate(true)}
+              className="px-2 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted"
+            >
+              <Plus className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
 
         {/* Chapter creation panel */}
         <AnimatePresence>
@@ -485,10 +548,25 @@ export default function RepertoireBuilder() {
               className="mb-4"
             >
               {!showPgnImport ? (
-                <div className="rounded-xl border border-border bg-card p-6 max-w-md mx-auto">
-                  <h3 className="text-base font-semibold text-foreground mb-4 text-center">
+                <div className="rounded-xl border border-border bg-card p-6 max-w-md mx-auto relative">
+                  {/* Close button — only if there are already chapters */}
+                  {hasChapters && (
+                    <button
+                      onClick={() => { setShowChapterCreate(false); setShowPgnImport(false); }}
+                      className="absolute top-3 right-3 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                  <h3 className="text-base font-semibold text-foreground mb-3 text-center">
                     New Chapter
                   </h3>
+                  <Input
+                    value={newChapterName}
+                    onChange={(e) => setNewChapterName(e.target.value)}
+                    placeholder="Chapter name"
+                    className="text-sm mb-4"
+                  />
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={startFromPosition}
@@ -509,7 +587,13 @@ export default function RepertoireBuilder() {
                   </div>
                 </div>
               ) : (
-                <div className="rounded-xl border border-border bg-card p-6 max-w-lg mx-auto">
+                <div className="rounded-xl border border-border bg-card p-6 max-w-lg mx-auto relative">
+                  <button
+                    onClick={() => { setShowChapterCreate(false); setShowPgnImport(false); setPgnInput(""); }}
+                    className="absolute top-3 right-3 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
                   <h3 className="text-base font-semibold text-foreground mb-3">Import PGN</h3>
                   <Textarea
                     value={pgnInput}
