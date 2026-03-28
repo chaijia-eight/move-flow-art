@@ -213,9 +213,13 @@ export function applyLineOverrides(
       result.nodeCount = override.moves.length;
     }
 
-    // Apply crucial moment override
+    // Apply crucial moment override (-1 means explicitly no crucial moment)
     if (override.crucial_moment_index != null) {
-      result.crucialMoment = buildTrapCrucialMoment(result.moves, override.crucial_moment_index, primarySide);
+      if (override.crucial_moment_index === -1) {
+        result.crucialMoment = undefined;
+      } else {
+        result.crucialMoment = buildTrapCrucialMoment(result.moves, override.crucial_moment_index, primarySide);
+      }
     }
 
     return result;
