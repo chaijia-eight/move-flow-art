@@ -359,46 +359,99 @@ export default function Index() {
             )}
           </section>
 
-          {/* Daily Limits & Upgrade */}
+          {/* Pro Up Block */}
           {user && !isPro && (
             <motion.section
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.15 }}
             >
-              <div className="rounded-xl border border-border bg-card p-4 space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
-                      <span>{t("newLines")}</span>
-                      <span className={!canLearnNewLine ? "text-destructive font-medium" : ""}>
-                        {dailyLinesUsed}/{FREE_DAILY_LINES}
-                      </span>
+              <div className="rounded-xl border border-primary/20 overflow-hidden">
+                {/* Header gradient */}
+                <div className="relative px-6 py-5 bg-gradient-to-br from-primary/15 via-primary/10 to-accent/10 border-b border-primary/10">
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary)/0.08),transparent_70%)]" />
+                  <div className="relative flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className="p-1.5 rounded-lg bg-primary/20">
+                          <Crown className="w-5 h-5 text-primary" />
+                        </div>
+                        <h2 className="text-lg font-bold text-foreground tracking-tight">Pro Up</h2>
+                      </div>
+                      <p className="text-sm text-muted-foreground">Unlock the full ArcChess experience</p>
                     </div>
-                    <Progress value={(dailyLinesUsed / FREE_DAILY_LINES) * 100} className="h-1.5" />
-                  </div>
-                  <div>
-                    <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
-                      <span>{t("practice")}</span>
-                      <span className={!canPractice ? "text-destructive font-medium" : ""}>
-                        {dailyPracticesUsed}/{FREE_DAILY_PRACTICES}
-                      </span>
+                    <div className="text-right">
+                      <p className="text-2xl font-bold text-foreground">$3.99</p>
+                      <p className="text-xs text-muted-foreground">/month</p>
                     </div>
-                    <Progress value={(dailyPracticesUsed / FREE_DAILY_PRACTICES) * 100} className="h-1.5" />
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between rounded-lg bg-primary/5 border border-primary/10 p-3">
+                <div className="bg-card px-6 py-5 space-y-5">
+                  {/* Today's usage */}
                   <div>
-                    <p className="text-sm font-medium text-foreground flex items-center gap-1.5">
-                      <Crown className="w-3.5 h-3.5 text-primary" />
-                      {t("proPlan")} — {t("proPlanPrice")}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-0.5">{t("proFeatures")}</p>
+                    <p className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium mb-3">Today's Usage</p>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+                          <span>{t("newLines")}</span>
+                          <span className={!canLearnNewLine ? "text-destructive font-medium" : ""}>
+                            {dailyLinesUsed}/{FREE_DAILY_LINES}
+                          </span>
+                        </div>
+                        <Progress value={(dailyLinesUsed / FREE_DAILY_LINES) * 100} className="h-1.5" />
+                      </div>
+                      <div>
+                        <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+                          <span>{t("practice")}</span>
+                          <span className={!canPractice ? "text-destructive font-medium" : ""}>
+                            {dailyPracticesUsed}/{FREE_DAILY_PRACTICES}
+                          </span>
+                        </div>
+                        <Progress value={(dailyPracticesUsed / FREE_DAILY_PRACTICES) * 100} className="h-1.5" />
+                      </div>
+                    </div>
                   </div>
-                  <Button size="sm" onClick={() => startCheckout()} className="gap-1.5 shrink-0">
-                    <Zap className="w-3.5 h-3.5" />
-                    {t("upgradeToPro")}
+
+                  {/* Comparison */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="rounded-lg border border-border p-3 bg-muted/30">
+                      <p className="text-xs font-semibold text-muted-foreground mb-2">Free Plan</p>
+                      <ul className="space-y-1.5 text-xs text-muted-foreground">
+                        <li className="flex items-center gap-1.5"><span className="w-1 h-1 rounded-full bg-muted-foreground/40 shrink-0" />3 lines / day</li>
+                        <li className="flex items-center gap-1.5"><span className="w-1 h-1 rounded-full bg-muted-foreground/40 shrink-0" />2 practices / day</li>
+                        <li className="flex items-center gap-1.5"><span className="w-1 h-1 rounded-full bg-muted-foreground/40 shrink-0" />1 analysis / day</li>
+                        <li className="flex items-center gap-1.5"><span className="w-1 h-1 rounded-full bg-muted-foreground/40 shrink-0" />2 studies max</li>
+                        <li className="flex items-center gap-1.5"><span className="w-1 h-1 rounded-full bg-muted-foreground/40 shrink-0" />4 chapters / study</li>
+                      </ul>
+                    </div>
+                    <div className="rounded-lg border border-primary/30 p-3 bg-primary/5">
+                      <p className="text-xs font-semibold text-primary mb-2 flex items-center gap-1">
+                        <Crown className="w-3 h-3" /> Pro Plan
+                      </p>
+                      <ul className="space-y-1.5 text-xs text-foreground">
+                        <li className="flex items-center gap-1.5"><Zap className="w-3 h-3 text-primary shrink-0" />Unlimited lines</li>
+                        <li className="flex items-center gap-1.5"><Zap className="w-3 h-3 text-primary shrink-0" />Unlimited practice</li>
+                        <li className="flex items-center gap-1.5"><Zap className="w-3 h-3 text-primary shrink-0" />Unlimited analysis</li>
+                        <li className="flex items-center gap-1.5"><Zap className="w-3 h-3 text-primary shrink-0" />Unlimited studies</li>
+                        <li className="flex items-center gap-1.5"><Zap className="w-3 h-3 text-primary shrink-0" />Unlimited chapters</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* CTA */}
+                  <Button
+                    onClick={() => startCheckout()}
+                    className="w-full gap-2 h-11 text-sm font-semibold"
+                    style={{
+                      background: "linear-gradient(135deg, hsl(45, 100%, 50%), hsl(35, 100%, 45%))",
+                      color: "hsl(30, 50%, 10%)",
+                      border: "none",
+                      boxShadow: "0 4px 16px hsl(45 100% 50% / 0.3)",
+                    }}
+                  >
+                    <Crown className="w-4 h-4" />
+                    Upgrade to Pro — $3.99/mo
                   </Button>
                 </div>
               </div>
