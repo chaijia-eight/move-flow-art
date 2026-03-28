@@ -317,7 +317,7 @@ export default function StudyHub() {
           })()}
         </motion.div>
 
-        {/* Variations & Lines */}
+        {/* Variations & Lines — side by side */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -326,210 +326,223 @@ export default function StudyHub() {
           <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-4">
             {t("linesToLearn")}
           </h2>
-          <div className="space-y-3">
-            {opening.variations.filter(v => !v.isTrap).map((variation, vi) => {
-              const lines = linesByVariation.get(variation.id) || [];
-              const masteredInVariation = lines.filter((l) => getLineProgress(l.id).mastered).length;
-              const isExpanded = expandedVariation === variation.id;
+          <div className="flex gap-6">
+            {/* Left: variation list */}
+            <div className="flex-1 min-w-0 space-y-3">
+              {opening.variations.filter(v => !v.isTrap).map((variation, vi) => {
+                const lines = linesByVariation.get(variation.id) || [];
+                const masteredInVariation = lines.filter((l) => getLineProgress(l.id).mastered).length;
+                const isExpanded = expandedVariation === variation.id;
 
-              return (
-                <motion.div
-                  key={variation.id}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: 0.3 + vi * 0.06 }}
-                >
-                  <motion.button
-                    whileHover={{ backgroundColor: `${theme.accentColor}08` }}
-                    whileTap={{ scale: 0.99 }}
-                    onClick={() => setExpandedVariation(isExpanded ? null : variation.id)}
-                    className="w-full text-left rounded-xl p-4 border border-border/30 transition-all duration-300 group"
-                    style={{ background: "hsl(var(--card))" }}
+                return (
+                  <motion.div
+                    key={variation.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.3 + vi * 0.06 }}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <div
-                            className="w-2 h-2 rounded-full flex-shrink-0"
-                            style={{ background: theme.accentColor }}
-                          />
-                          <h3 className="font-serif text-base font-semibold text-foreground truncate">
-                            {tVar(variation.id, "name", variation.name)}
-                          </h3>
-                          <span className="text-xs text-muted-foreground/60 font-mono ml-1">
-                            {masteredInVariation}/{lines.length} {t("linesCount")}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1 pl-4">
-                          {editingDescId === variation.id ? (
-                            <div className="flex-1 flex gap-1" onClick={(e) => e.stopPropagation()}>
-                              <input
-                                value={editDescText}
-                                onChange={(e) => setEditDescText(e.target.value)}
-                                className="flex-1 text-sm rounded px-2 py-1"
-                                style={{ background: "hsl(var(--muted))", color: "hsl(var(--foreground))" }}
-                                autoFocus
-                                onKeyDown={(e) => { if (e.key === "Enter") handleSaveDesc(variation.id); if (e.key === "Escape") setEditingDescId(null); }}
-                              />
-                              <button onClick={() => handleSaveDesc(variation.id)} className="text-xs px-2 py-1 rounded" style={{ background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }}>Save</button>
-                            </div>
-                          ) : (
-                            <>
-                              <p className="text-sm text-muted-foreground leading-relaxed line-clamp-1">
-                                {getDescOverride(variation.id, variation.description)}
-                              </p>
-                              {isDev && (
-                                <button
-                                  onClick={(e) => { e.stopPropagation(); setEditingDescId(variation.id); setEditDescText(getDescOverride(variation.id, variation.description)); }}
-                                  className="p-1 rounded opacity-40 hover:opacity-100 flex-shrink-0"
-                                >
-                                  <Pencil size={12} />
-                                </button>
-                              )}
-                            </>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 flex-shrink-0 ml-3">
-                        <div className="w-16 h-1.5 rounded-full overflow-hidden" style={{ background: "hsl(var(--muted))" }}>
-                          <div
-                            className="h-full rounded-full transition-all duration-500"
-                            style={{
-                              width: `${lines.length > 0 ? (masteredInVariation / lines.length) * 100 : 0}%`,
-                              background: theme.accentColor,
-                            }}
-                          />
-                        </div>
-                        <motion.div
-                          animate={{ rotate: isExpanded ? 180 : 0 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <ChevronDown className="w-4 h-4 text-muted-foreground/40" />
-                        </motion.div>
-                      </div>
-                    </div>
-                  </motion.button>
-
-                  <AnimatePresence>
-                    {isExpanded && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                        className="overflow-hidden"
-                      >
-                        <div className="pt-1.5 space-y-1">
-                          <LearningPath
-                            lines={lines}
-                            theme={theme}
-                            onNavigate={(li) => {
-                              navigate(
-                                `/study/${opening.id}/play?color=${opening.primarySide}&variation=${variation.id}&line=${li}`
-                              );
-                            }}
-                          />
-                          <div className="pl-4 space-y-1">
-                          {lines.map((line, li) => {
-                            const prog = getLineProgress(line.id);
-                            const variationLineIds = lines.map((l) => l.id);
-                            const unlocked = isLineUnlocked(line.id, variationLineIds);
-                            const isMastered = prog.mastered;
-
-                            return (
-                              <motion.button
-                                key={line.id}
-                                initial={{ opacity: 0, x: -6 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.15, delay: li * 0.03 }}
-                                whileHover={unlocked ? { x: 4, backgroundColor: `${theme.accentColor}10` } : {}}
-                                whileTap={unlocked ? { scale: 0.98 } : {}}
-                                onClick={() => {
-                                  if (!unlocked) return;
-                                  navigate(
-                                    `/study/${opening.id}/play?color=${opening.primarySide}&variation=${variation.id}&line=${li}`
-                                  );
-                                }}
-                                className={`w-full text-left rounded-lg px-3 py-2.5 border transition-all duration-200 group ${
-                                  !unlocked ? "opacity-40 cursor-not-allowed" : "cursor-pointer"
-                                }`}
-                                style={{
-                                  background: isMastered
-                                    ? `${theme.accentColor}08`
-                                    : "hsl(var(--card))",
-                                  borderColor: isMastered
-                                    ? `${theme.accentColor}30`
-                                    : "hsl(var(--border) / 0.3)",
-                                }}
-                              >
-                                <div className="flex items-center justify-between">
-                                  <div className="flex items-center gap-2 min-w-0">
-                                    {!unlocked ? (
-                                      <Lock className="w-3.5 h-3.5 text-muted-foreground/50 flex-shrink-0" />
-                                    ) : isMastered ? (
-                                      <Check className="w-3.5 h-3.5 flex-shrink-0" style={{ color: theme.accentColor }} />
-                                    ) : (
-                                      <div
-                                        className="w-3.5 h-3.5 rounded-full border-2 flex-shrink-0"
-                                        style={{ borderColor: `${theme.accentColor}40` }}
-                                      />
-                                    )}
-                                    <span className={`text-sm truncate ${isMastered ? "font-medium" : ""}`}
-                                      style={{ color: isMastered ? theme.accentColor : undefined }}
-                                    >
-                                      {line.name}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-                                    {prog.correctAttempts > 0 && !isMastered && (
-                                      <span className="text-[10px] text-muted-foreground/60 font-mono">
-                                        {prog.correctAttempts}× {t("correct")}
-                                      </span>
-                                    )}
-                                    {isMastered && (
-                                      <motion.button
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          navigate(
-                                            `/study/${opening.id}/play?color=${opening.primarySide}&variation=${variation.id}&line=${li}&review=1`
-                                          );
-                                        }}
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.9 }}
-                                        className="p-1 rounded hover:bg-accent/50 transition-colors"
-                                        title={t("reviewMode")}
-                                      >
-                                        <RotateCcw className="w-3.5 h-3.5 text-muted-foreground/50" />
-                                      </motion.button>
-                                    )}
-                                    {unlocked && (
-                                      <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-foreground/50 transition-colors" />
-                                    )}
-                                  </div>
-                                </div>
-                                {line.crucialMoment ? (
-                                  <p className="text-[11px] mt-0.5 pl-5.5 truncate" style={{ color: `${theme.accentColor}cc` }}>
-                                    <span className="font-medium">
-                                      {line.crucialMoment.isPlayerMove ? "⚡" : "🛡️"}
-                                    </span>
-                                    {" "}{line.crucialMoment.description}
-                                  </p>
-                                ) : (
-                                  <p className="text-[11px] text-muted-foreground/60 mt-0.5 pl-5.5 font-mono truncate">
-                                    {line.moves.join(" ")}
-                                  </p>
+                    <motion.button
+                      whileHover={{ backgroundColor: `${theme.accentColor}08` }}
+                      whileTap={{ scale: 0.99 }}
+                      onClick={() => setExpandedVariation(isExpanded ? null : variation.id)}
+                      className="w-full text-left rounded-xl p-4 border border-border/30 transition-all duration-300 group"
+                      style={{ background: "hsl(var(--card))" }}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <div
+                              className="w-2 h-2 rounded-full flex-shrink-0"
+                              style={{ background: theme.accentColor }}
+                            />
+                            <h3 className="font-serif text-base font-semibold text-foreground truncate">
+                              {tVar(variation.id, "name", variation.name)}
+                            </h3>
+                            <span className="text-xs text-muted-foreground/60 font-mono ml-1">
+                              {masteredInVariation}/{lines.length} {t("linesCount")}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1 pl-4">
+                            {editingDescId === variation.id ? (
+                              <div className="flex-1 flex gap-1" onClick={(e) => e.stopPropagation()}>
+                                <input
+                                  value={editDescText}
+                                  onChange={(e) => setEditDescText(e.target.value)}
+                                  className="flex-1 text-sm rounded px-2 py-1"
+                                  style={{ background: "hsl(var(--muted))", color: "hsl(var(--foreground))" }}
+                                  autoFocus
+                                  onKeyDown={(e) => { if (e.key === "Enter") handleSaveDesc(variation.id); if (e.key === "Escape") setEditingDescId(null); }}
+                                />
+                                <button onClick={() => handleSaveDesc(variation.id)} className="text-xs px-2 py-1 rounded" style={{ background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }}>Save</button>
+                              </div>
+                            ) : (
+                              <>
+                                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-1">
+                                  {getDescOverride(variation.id, variation.description)}
+                                </p>
+                                {isDev && (
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); setEditingDescId(variation.id); setEditDescText(getDescOverride(variation.id, variation.description)); }}
+                                    className="p-1 rounded opacity-40 hover:opacity-100 flex-shrink-0"
+                                  >
+                                    <Pencil size={12} />
+                                  </button>
                                 )}
-                              </motion.button>
-                            );
-                          })}
+                              </>
+                            )}
                           </div>
                         </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              );
-            })}
+                        <div className="flex items-center gap-2 flex-shrink-0 ml-3">
+                          <div className="w-16 h-1.5 rounded-full overflow-hidden" style={{ background: "hsl(var(--muted))" }}>
+                            <div
+                              className="h-full rounded-full transition-all duration-500"
+                              style={{
+                                width: `${lines.length > 0 ? (masteredInVariation / lines.length) * 100 : 0}%`,
+                                background: theme.accentColor,
+                              }}
+                            />
+                          </div>
+                          <motion.div
+                            animate={{ rotate: isExpanded ? 180 : 0 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <ChevronDown className="w-4 h-4 text-muted-foreground/40" />
+                          </motion.div>
+                        </div>
+                      </div>
+                    </motion.button>
+
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                          className="overflow-hidden"
+                        >
+                          <div className="pt-1.5 pl-4 space-y-1">
+                            {lines.map((line, li) => {
+                              const prog = getLineProgress(line.id);
+                              const variationLineIds = lines.map((l) => l.id);
+                              const unlocked = isLineUnlocked(line.id, variationLineIds);
+                              const isMastered = prog.mastered;
+
+                              return (
+                                <motion.button
+                                  key={line.id}
+                                  initial={{ opacity: 0, x: -6 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ duration: 0.15, delay: li * 0.03 }}
+                                  whileHover={unlocked ? { x: 4, backgroundColor: `${theme.accentColor}10` } : {}}
+                                  whileTap={unlocked ? { scale: 0.98 } : {}}
+                                  onClick={() => {
+                                    if (!unlocked) return;
+                                    navigate(
+                                      `/study/${opening.id}/play?color=${opening.primarySide}&variation=${variation.id}&line=${li}`
+                                    );
+                                  }}
+                                  className={`w-full text-left rounded-lg px-3 py-2.5 border transition-all duration-200 group ${
+                                    !unlocked ? "opacity-40 cursor-not-allowed" : "cursor-pointer"
+                                  }`}
+                                  style={{
+                                    background: isMastered
+                                      ? `${theme.accentColor}08`
+                                      : "hsl(var(--card))",
+                                    borderColor: isMastered
+                                      ? `${theme.accentColor}30`
+                                      : "hsl(var(--border) / 0.3)",
+                                  }}
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2 min-w-0">
+                                      {!unlocked ? (
+                                        <Lock className="w-3.5 h-3.5 text-muted-foreground/50 flex-shrink-0" />
+                                      ) : isMastered ? (
+                                        <Check className="w-3.5 h-3.5 flex-shrink-0" style={{ color: theme.accentColor }} />
+                                      ) : (
+                                        <div
+                                          className="w-3.5 h-3.5 rounded-full border-2 flex-shrink-0"
+                                          style={{ borderColor: `${theme.accentColor}40` }}
+                                        />
+                                      )}
+                                      <span className={`text-sm truncate ${isMastered ? "font-medium" : ""}`}
+                                        style={{ color: isMastered ? theme.accentColor : undefined }}
+                                      >
+                                        {line.name}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                                      {prog.correctAttempts > 0 && !isMastered && (
+                                        <span className="text-[10px] text-muted-foreground/60 font-mono">
+                                          {prog.correctAttempts}× {t("correct")}
+                                        </span>
+                                      )}
+                                      {isMastered && (
+                                        <motion.button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            navigate(
+                                              `/study/${opening.id}/play?color=${opening.primarySide}&variation=${variation.id}&line=${li}&review=1`
+                                            );
+                                          }}
+                                          whileHover={{ scale: 1.1 }}
+                                          whileTap={{ scale: 0.9 }}
+                                          className="p-1 rounded hover:bg-accent/50 transition-colors"
+                                          title={t("reviewMode")}
+                                        >
+                                          <RotateCcw className="w-3.5 h-3.5 text-muted-foreground/50" />
+                                        </motion.button>
+                                      )}
+                                      {unlocked && (
+                                        <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-foreground/50 transition-colors" />
+                                      )}
+                                    </div>
+                                  </div>
+                                  {line.crucialMoment ? (
+                                    <p className="text-[11px] mt-0.5 pl-5.5 truncate" style={{ color: `${theme.accentColor}cc` }}>
+                                      <span className="font-medium">
+                                        {line.crucialMoment.isPlayerMove ? "⚡" : "🛡️"}
+                                      </span>
+                                      {" "}{line.crucialMoment.description}
+                                    </p>
+                                  ) : (
+                                    <p className="text-[11px] text-muted-foreground/60 mt-0.5 pl-5.5 font-mono truncate">
+                                      {line.moves.join(" ")}
+                                    </p>
+                                  )}
+                                </motion.button>
+                              );
+                            })}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {/* Right: winding learning path (all variations) */}
+            <div
+              className="hidden md:block w-[180px] flex-shrink-0 max-h-[600px] overflow-y-auto rounded-xl border border-border/20 scrollbar-thin"
+              style={{ background: "hsl(var(--card) / 0.5)" }}
+            >
+              <LearningPath
+                sections={opening.variations.filter(v => !v.isTrap).map(v => ({
+                  variation: v,
+                  lines: linesByVariation.get(v.id) || [],
+                }))}
+                theme={theme}
+                openingId={opening.id}
+                primarySide={opening.primarySide}
+                onNavigate={(variationId, lineIndex) => {
+                  navigate(
+                    `/study/${opening.id}/play?color=${opening.primarySide}&variation=${variationId}&line=${lineIndex}`
+                  );
+                }}
+              />
+            </div>
           </div>
         </motion.div>
 
