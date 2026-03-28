@@ -96,7 +96,7 @@ export default function Chessboard({ fen, onMove, moveHints, disabled, flipped =
           setAnimMove({ from: fromSquare, to: toSquare, isCapture: wasCapture || isEnPassant, id: ++animIdCounter });
         }
         setLastMove({ from: fromSquare, to: toSquare });
-        if (wasCapture) {
+        if (wasCapture || isEnPassant) {
           playCaptureSound();
         } else if (isCastle) {
           playCastleSound();
