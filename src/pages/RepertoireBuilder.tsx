@@ -699,7 +699,7 @@ export default function RepertoireBuilder() {
                 >
                   <div className="flex items-center gap-3">
                     <span className={`text-lg font-mono font-bold ${
-                      engineEval.score > 50 ? "text-green-500" : engineEval.score < -50 ? "text-red-500" : "text-muted-foreground"
+                      (() => { const s = currentFen.split(' ')[1] === 'b' ? -engineEval.score : engineEval.score; return s > 50 ? "text-green-500" : s < -50 ? "text-red-500" : "text-muted-foreground"; })()
                     }`}>
                       {formatScore(engineEval)}
                     </span>
