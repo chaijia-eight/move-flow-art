@@ -475,8 +475,13 @@ export default function RepertoireBuilder() {
   }, [currentFen]);
 
   const formatScore = (ev: EngineEvaluation) => {
-    if (ev.mate !== null) return `M${ev.mate}`;
-    const score = ev.score / 100;
+    const isBlackTurn = currentFen.split(' ')[1] === 'b';
+    if (ev.mate !== null) {
+      const m = isBlackTurn ? -ev.mate : ev.mate;
+      return `M${m > 0 ? "+" : ""}${m}`;
+    }
+    const raw = isBlackTurn ? -ev.score : ev.score;
+    const score = raw / 100;
     return score > 0 ? `+${score.toFixed(1)}` : score.toFixed(1);
   };
 
@@ -694,7 +699,7 @@ export default function RepertoireBuilder() {
                 >
                   <div className="flex items-center gap-3">
                     <span className={`text-lg font-mono font-bold ${
-                      engineEval.score > 50 ? "text-green-500" : engineEval.score < -50 ? "text-red-500" : "text-muted-foreground"
+                      (() => { const s = currentFen.split(' ')[1] === 'b' ? -engineEval.score : engineEval.score; return s > 50 ? "text-green-500" : s < -50 ? "text-red-500" : "text-muted-foreground"; })()
                     }`}>
                       {formatScore(engineEval)}
                     </span>
