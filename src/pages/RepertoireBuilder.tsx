@@ -475,8 +475,13 @@ export default function RepertoireBuilder() {
   }, [currentFen]);
 
   const formatScore = (ev: EngineEvaluation) => {
-    if (ev.mate !== null) return `M${ev.mate}`;
-    const score = ev.score / 100;
+    const isBlackTurn = currentFen.split(' ')[1] === 'b';
+    if (ev.mate !== null) {
+      const m = isBlackTurn ? -ev.mate : ev.mate;
+      return `M${m > 0 ? "+" : ""}${m}`;
+    }
+    const raw = isBlackTurn ? -ev.score : ev.score;
+    const score = raw / 100;
     return score > 0 ? `+${score.toFixed(1)}` : score.toFixed(1);
   };
 
