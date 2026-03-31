@@ -95,6 +95,7 @@ export default function RepertoireBuilder() {
   const [newChapterName, setNewChapterName] = useState("Chapter 1");
   const [editingChapterIdx, setEditingChapterIdx] = useState<number | null>(null);
   const [editingChapterName, setEditingChapterName] = useState("");
+  const [viewMode, setViewMode] = useState<"board" | "tree">("board");
 
   // Derived tree from active chapter
   const tree = chapters[activeChapterIdx]?.tree ?? [];
