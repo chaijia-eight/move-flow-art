@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Save, Trash2, Cpu, RotateCcw, Plus, FileText, Play, X } from "lucide-react";
+import { ArrowLeft, Save, Trash2, Cpu, RotateCcw, Plus, FileText, Play, X, LayoutGrid, GitFork } from "lucide-react";
 import { Chess } from "chess.js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,7 @@ import { toast } from "@/hooks/use-toast";
 import { getEngine, type EngineEvaluation } from "@/lib/stockfishEngine";
 import type { OpeningNode, MoveCategory, NagSymbol, CustomArrow, CustomHighlight } from "@/data/openings";
 import { NAG_SYMBOLS } from "@/data/openings";
+import VisualTreeGraph from "@/components/VisualTreeGraph";
 
 /** Path of indices into the tree to reach a node */
 type TreePath = number[];
@@ -94,6 +95,7 @@ export default function RepertoireBuilder() {
   const [newChapterName, setNewChapterName] = useState("Chapter 1");
   const [editingChapterIdx, setEditingChapterIdx] = useState<number | null>(null);
   const [editingChapterName, setEditingChapterName] = useState("");
+  const [viewMode, setViewMode] = useState<"board" | "tree">("board");
 
   // Derived tree from active chapter
   const tree = chapters[activeChapterIdx]?.tree ?? [];
@@ -513,6 +515,28 @@ export default function RepertoireBuilder() {
             />
           </div>
           <div className="flex items-center gap-2">
+            {/* View mode toggle */}
+            <div className="flex rounded-lg border border-border overflow-hidden">
+              <button
+                onClick={() => setViewMode("board")}
+                className={`px-2.5 py-1.5 transition-colors ${
+                  viewMode === "board" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                }`}
+                title="Board view"
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={() => setViewMode("tree")}
+                className={`px-2.5 py-1.5 transition-colors ${
+                  viewMode === "tree" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                }`}
+                title="Tree view"
+              >
+                <GitFork className="w-3.5 h-3.5" />
+              </button>
+            </div>
+            {/* Side selector */}
             <div className="flex rounded-lg border border-border overflow-hidden">
               <button
                 onClick={() => setSide("w")}
@@ -691,6 +715,18 @@ export default function RepertoireBuilder() {
         </AnimatePresence>
 
         {/* Main layout */}
+        {viewMode === "tree" ? (
+          <div className="h-[calc(100vh-220px)] min-h-[400px]">
+            <VisualTreeGraph
+              tree={tree}
+              currentPath={currentPath}
+              onNavigate={(path) => {
+                setCurrentPath(path);
+                setSelectedNodePath(path);
+              }}
+            />
+          </div>
+        ) : (
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-4">
           {/* Board */}
           <div className="flex flex-col gap-3">
@@ -839,6 +875,7 @@ export default function RepertoireBuilder() {
             </div>
           </div>
         </div>
+        )}
       </div>
     </div>
   );
