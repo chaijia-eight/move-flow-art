@@ -66,6 +66,7 @@ export default function Chessboard({
   // Right-click arrow drawing state
   const [rightDrag, setRightDrag] = useState<{ from: string; currentSquare: string | null } | null>(null);
   const isRightDraggingRef = useRef(false);
+  const [promotionPending, setPromotionPending] = useState<{ from: string; to: string } | null>(null);
 
   const board = useMemo(() => fenToBoard(fen), [fen]);
   const chess = useMemo(() => new Chess(fen), [fen]);
