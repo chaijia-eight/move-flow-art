@@ -644,6 +644,61 @@ export default function Chessboard({
                 );
               })
             )}
+
+            {/* Promotion picker overlay */}
+            {promotionPending && (() => {
+              const [toRow, toCol] = squareToCoords(promotionPending.to);
+              const [dispRow, dispCol] = boardToDisplay(toRow, toCol);
+              const isWhite = chess.turn() === 'w';
+              const pieces = isWhite ? ['Q', 'R', 'B', 'N'] : ['q', 'r', 'b', 'n'];
+              const promoKeys = ['q', 'r', 'b', 'n'];
+              // Stack from promotion square downward (or upward if at bottom)
+              const goDown = dispRow <= 3;
+              
+              return (
+                <>
+                  {/* Backdrop to cancel */}
+                  <div
+                    className="absolute inset-0 z-40"
+                    onClick={() => setPromotionPending(null)}
+                  />
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="absolute z-50 flex flex-col rounded-lg overflow-hidden"
+                    style={{
+                      left: `${(dispCol / 8) * 100}%`,
+                      top: goDown ? `${(dispRow / 8) * 100}%` : undefined,
+                      bottom: !goDown ? `${((7 - dispRow) / 8) * 100}%` : undefined,
+                      width: `${100 / 8}%`,
+                      boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+                    }}
+                  >
+                    {pieces.map((p, i) => (
+                      <button
+                        key={p}
+                        className="flex items-center justify-center hover:brightness-125 transition-all"
+                        style={{
+                          aspectRatio: '1',
+                          background: i % 2 === 0 ? currentTheme.boardLight : currentTheme.boardDark,
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handlePromotionSelect(promoKeys[i]);
+                        }}
+                      >
+                        <img
+                          src={PIECE_IMAGES[p]}
+                          alt={p}
+                          className="w-[80%] h-[80%] object-contain drop-shadow-md"
+                          draggable={false}
+                        />
+                      </button>
+                    ))}
+                  </motion.div>
+                </>
+              );
+            })()}
           </div>
         </div>
       </div>
