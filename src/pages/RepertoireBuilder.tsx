@@ -468,6 +468,42 @@ export default function RepertoireBuilder() {
     createChapter([]);
   }, [createChapter]);
 
+  // Start from a learned line — build tree from line moves
+  const startFromLine = useCallback((line: Line) => {
+    const buildTree = (moves: string[], idx: number): OpeningNode[] => {
+      if (idx >= moves.length) return [];
+      const c2 = new Chess();
+      for (let i = 0; i <= idx; i++) c2.move(moves[i]);
+      return [{
+        fen: c2.fen(),
+        move: moves[idx],
+        category: "main_line" as MoveCategory,
+        children: buildTree(moves, idx + 1),
+      }];
+    };
+    const newTree = buildTree(line.moves, 0);
+    createChapter(newTree);
+    toast({ title: `Created chapter from "${line.name}"` });
+  }, [createChapter]);
+
+  // Get all learned lines grouped by opening
+  const learnedLinesByOpening = useMemo(() => {
+    const result: { openingName: string; lines: (Line & { mastered: boolean })[] }[] = [];
+    for (const opening of openings) {
+      const allLines = extractAllLines(opening);
+      const withProgress = allLines
+        .map(line => ({
+          ...line,
+          mastered: getLineProgress(line.id).mastered,
+        }))
+        .filter(line => line.mastered || getLineProgress(line.id).correctAttempts >= 1);
+      if (withProgress.length > 0) {
+        result.push({ openingName: opening.name, lines: withProgress });
+      }
+    }
+    return result;
+  }, []);
+
   // Auto-show chapter creation when no chapters exist
   const hasChapters = chapters.length > 0;
 
