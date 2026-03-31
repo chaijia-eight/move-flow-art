@@ -746,7 +746,6 @@ export default function RepertoireBuilder() {
             </div>
           </div>
         ) : (
-        <div className="relative">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-4">
           {/* Board */}
           <div className="flex flex-col gap-3">
