@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useEffect, useState, useCallback } from "react";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 import type { OpeningNode, NagSymbol } from "@/data/openings";
 import { NAG_SYMBOLS } from "@/data/openings";
 
@@ -139,6 +139,18 @@ export default function VisualTreeGraph({ tree, currentPath, onNavigate }: Visua
   const [dragging, setDragging] = useState(false);
   const dragStart = useRef({ x: 0, y: 0, ox: 0, oy: 0 });
   const [notesPopup, setNotesPopup] = useState<{ path: TreePath; text: string; x: number; y: number } | null>(null);
+  const [zoom, setZoom] = useState(1);
+
+  const zoomIn = useCallback(() => setZoom(z => Math.min(z + 0.15, 2.5)), []);
+  const zoomOut = useCallback(() => setZoom(z => Math.max(z - 0.15, 0.3)), []);
+  const zoomReset = useCallback(() => { setZoom(1); setOffset({ x: 40, y: 40 }); }, []);
+
+  const handleWheel = useCallback((e: React.WheelEvent) => {
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+      setZoom(z => Math.min(Math.max(z - e.deltaY * 0.002, 0.3), 2.5));
+    }
+  }, []);
 
   const { layoutNodes, width, height } = useMemo(() => {
     const { layoutNodes, maxY } = layoutTree(tree, [], 0, 0, null, true);
@@ -202,8 +214,24 @@ export default function VisualTreeGraph({ tree, currentPath, onNavigate }: Visua
       ref={containerRef}
       className="w-full h-full overflow-hidden rounded-xl border border-border bg-card cursor-grab active:cursor-grabbing relative select-none"
       onMouseDown={handleMouseDown}
+      onWheel={handleWheel}
       onClick={() => setNotesPopup(null)}
     >
+      {/* Zoom controls */}
+      <div className="absolute top-2 right-2 z-30 flex flex-col gap-1">
+        <button onClick={zoomIn} className="w-7 h-7 rounded-md bg-muted hover:bg-accent flex items-center justify-center border border-border" title="Zoom in">
+          <ZoomIn className="w-3.5 h-3.5 text-foreground" />
+        </button>
+        <button onClick={zoomOut} className="w-7 h-7 rounded-md bg-muted hover:bg-accent flex items-center justify-center border border-border" title="Zoom out">
+          <ZoomOut className="w-3.5 h-3.5 text-foreground" />
+        </button>
+        <button onClick={zoomReset} className="w-7 h-7 rounded-md bg-muted hover:bg-accent flex items-center justify-center border border-border" title="Reset view">
+          <RotateCcw className="w-3.5 h-3.5 text-foreground" />
+        </button>
+        <span className="text-[0.6rem] text-muted-foreground text-center">{Math.round(zoom * 100)}%</span>
+      </div>
+
+      <div style={{ transform: `scale(${zoom})`, transformOrigin: "0 0" }}>
       {/* SVG connections */}
       <svg
         style={{
@@ -327,6 +355,7 @@ export default function VisualTreeGraph({ tree, currentPath, onNavigate }: Visua
           <p className="text-xs leading-relaxed">{notesPopup.text}</p>
         </div>
       )}
+      </div>
     </div>
   );
 }
