@@ -746,7 +746,6 @@ export default function RepertoireBuilder() {
             </div>
           </div>
         ) : (
-        <div className="relative">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-4">
           {/* Board */}
           <div className="flex flex-col gap-3">
@@ -844,6 +843,27 @@ export default function RepertoireBuilder() {
                   />
                 )}
               </div>
+              {/* Mini tree graph preview */}
+              {tree.length > 0 && (
+                <div
+                  className="border-t border-border cursor-pointer group"
+                  onClick={() => setViewMode("tree")}
+                  title="Switch to tree view"
+                >
+                  <div className="h-28 relative overflow-hidden">
+                    <div className="transform scale-[0.4] origin-top-left pointer-events-none" style={{ width: 800, height: 280 }}>
+                      <VisualTreeGraph
+                        tree={tree}
+                        currentPath={currentPath}
+                        onNavigate={() => {}}
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                      <Maximize2 className="w-4 h-4 text-foreground opacity-0 group-hover:opacity-70 transition-opacity" />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Annotation panel */}
@@ -894,28 +914,6 @@ export default function RepertoireBuilder() {
               )}
             </div>
           </div>
-        </div>
-        {/* Mini tree preview in corner */}
-        {tree.length > 0 && (
-          <div
-            className="absolute bottom-3 left-3 z-20 rounded-lg border border-border shadow-lg overflow-hidden cursor-pointer group bg-card"
-            onClick={() => setViewMode("tree")}
-            title="Switch to tree view"
-          >
-            <div className="w-36 h-24 relative overflow-hidden">
-              <div className="transform scale-[0.35] origin-top-left pointer-events-none" style={{ width: 400, height: 280 }}>
-                <VisualTreeGraph
-                  tree={tree}
-                  currentPath={currentPath}
-                  onNavigate={() => {}}
-                />
-              </div>
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                <Maximize2 className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg" />
-              </div>
-            </div>
-          </div>
-        )}
         </div>
         )}
       </div>
