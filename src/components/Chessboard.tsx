@@ -106,6 +106,16 @@ export default function Chessboard({
       const isCastle = changedCount === 4;
       const isEnPassant = changedCount === 3 && !wasCapture;
 
+      // Detect promotion: a pawn arrived but piece type changed
+      let isPromotion = false;
+      if (fromSquare && toSquare) {
+        const fromPiece = prevBoard[squareToCoords(fromSquare)[0]][squareToCoords(fromSquare)[1]];
+        const toPiece = board[squareToCoords(toSquare)[0]][squareToCoords(toSquare)[1]];
+        if (fromPiece && toPiece && fromPiece.toLowerCase() === 'p' && toPiece.toLowerCase() !== 'p') {
+          isPromotion = true;
+        }
+      }
+
       if (fromSquare && toSquare) {
         const skipAnim = skipNextAnimRef.current && !isCastle;
         skipNextAnimRef.current = false;
@@ -113,7 +123,16 @@ export default function Chessboard({
           setAnimMove({ from: fromSquare, to: toSquare, isCapture: wasCapture || isEnPassant, id: ++animIdCounter });
         }
         setLastMove({ from: fromSquare, to: toSquare });
-        if (wasCapture || isEnPassant) {
+
+        // Sound priority: checkmate > check > promotion > capture > castle > move
+        const tempChess = new Chess(fen);
+        if (tempChess.isCheckmate()) {
+          playCheckmateSound();
+        } else if (tempChess.inCheck()) {
+          playCheckSound();
+        } else if (isPromotion) {
+          playPromoteSound();
+        } else if (wasCapture || isEnPassant) {
           playCaptureSound();
         } else if (isCastle) {
           playCastleSound();
