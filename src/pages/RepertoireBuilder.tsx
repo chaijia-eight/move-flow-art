@@ -715,6 +715,18 @@ export default function RepertoireBuilder() {
         </AnimatePresence>
 
         {/* Main layout */}
+        {viewMode === "tree" ? (
+          <div className="h-[calc(100vh-220px)] min-h-[400px]">
+            <VisualTreeGraph
+              tree={tree}
+              currentPath={currentPath}
+              onNavigate={(path) => {
+                setCurrentPath(path);
+                setSelectedNodePath(path);
+              }}
+            />
+          </div>
+        ) : (
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-4">
           {/* Board */}
           <div className="flex flex-col gap-3">
