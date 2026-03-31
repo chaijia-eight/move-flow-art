@@ -1,40 +1,36 @@
 
 
-## Add Check/Checkmate/Promotion Sounds + Promotion UI
+## Chapter Management: Delete, Rename, Default Naming
 
-### 1. Sound Effects (`src/lib/chessSounds.ts`)
+### Changes — `src/pages/RepertoireBuilder.tsx`
 
-Add three new sound entries:
-- `check`: `move-check.mp3`
-- `checkmate`: `game-end.webm` (reuse existing URL)
-- `promote`: `promote.mp3`
+**1. Default chapter name = "Chapter X"**
+- When creating a chapter (both in `createChapter` and initial load for old-format data), use `Chapter ${index + 1}` as the default name.
+- Update `newChapterName` state default and its reset after chapter creation to always reflect the next chapter number.
 
-Export `playCheckSound()`, `playCheckmateSound()`, `playPromoteSound()`.
+**2. Rename chapter (inline editing)**
+- Add state: `editingChapterIdx: number | null` and `editingChapterName: string`.
+- Double-click on a chapter tab → enter inline edit mode (replace the tab text with a small `Input`).
+- On Enter or blur → save the new name into `chapters[idx].name`, exit edit mode.
+- On Escape → cancel and exit edit mode.
 
-### 2. Sound Detection (`src/components/Chessboard.tsx`)
+**3. Delete chapter**
+- Add a small `X` button on each chapter tab (shown on hover or when active), only when there are 2+ chapters.
+- On click → remove that chapter from `chapters`, adjust `activeChapterIdx` if needed (clamp to valid range), reset `currentPath`.
+- If only 1 chapter remains, hide the delete button.
 
-In the move-detection `useEffect` (lines 74-127), after determining the move type, also check the new FEN for check/checkmate state using `chess.js`:
-- Create a temporary `Chess(fen)` from the new fen
-- If `chess.isCheckmate()` → play checkmate sound (overrides all others)
-- Else if `chess.inCheck()` → play check sound (overrides move/capture)
-- Else if promotion detected (piece changed type on arrival) → play promote sound
-- Otherwise, existing logic (capture/castle/move)
+**4. Chapter tab UI update**
+- Each tab becomes a flex row: chapter name (or inline input) + delete X button.
+- Hover state shows delete icon with subtle opacity transition.
 
-### 3. Promotion UI (`src/components/Chessboard.tsx`)
+### Technical Details
 
-Add a promotion picker modal inside the Chessboard:
+| Feature | Implementation |
+|---------|---------------|
+| Rename | `editingChapterIdx` state, double-click handler, controlled `Input` with `onKeyDown` (Enter/Escape) and `onBlur` |
+| Delete | Filter out chapter by index, clamp `activeChapterIdx` to `Math.min(current, newLength - 1)` |
+| Default name | `Chapter ${chapters.length + 1}` pattern in `createChapter` and initial `newChapterName` |
 
-- New state: `promotionPending: { from: string; to: string } | null`
-- When a pawn move to rank 1 or 8 is detected among legal moves in `handleSquareClick` and `handleDragEnd`, instead of immediately calling `onMove`, set `promotionPending`
-- Show a vertical overlay of 4 piece SVGs (Queen, Rook, Bishop, Knight) in the player's color, positioned over the target square column
-- On selection, call `onMove(from, to, san)` with the correct promotion SAN (e.g., `e8=Q`)
-- Clicking outside or pressing Escape cancels
-
-**Detection logic**: Check if any legal move from the source to the target has a `promotion` field set (chess.js includes this in verbose moves).
-
-**Piece icons**: Use the existing SVG piece images from `PIECE_IMAGES` — e.g., for white promoting: `wQ.svg`, `wR.svg`, `wB.svg`, `wN.svg`.
-
-### Files Changed
-- `src/lib/chessSounds.ts` — add 3 sounds
-- `src/components/Chessboard.tsx` — promotion UI + check/checkmate/promotion sound logic
+### Files
+- `src/pages/RepertoireBuilder.tsx` — all changes in one file
 
