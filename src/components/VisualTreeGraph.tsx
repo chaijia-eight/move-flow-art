@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useEffect, useState, useCallback } from "react";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 import type { OpeningNode, NagSymbol } from "@/data/openings";
 import { NAG_SYMBOLS } from "@/data/openings";
 
