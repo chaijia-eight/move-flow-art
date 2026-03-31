@@ -1,7 +1,10 @@
 import React, { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Save, Trash2, Cpu, RotateCcw, Plus, FileText, Play, X, LayoutGrid, GitFork, Maximize2 } from "lucide-react";
+import { ArrowLeft, Save, Trash2, Cpu, RotateCcw, Plus, FileText, Play, X, LayoutGrid, GitFork, Maximize2, BookOpen, CheckCircle2 } from "lucide-react";
+import { openings } from "@/data/openingTrees";
+import { extractAllLines, type Line } from "@/lib/lineExtractor";
+import { getLineProgress } from "@/lib/progressStore";
 import MiniBoard from "@/components/MiniBoard";
 import { themes } from "@/data/openings";
 import { Chess } from "chess.js";
@@ -94,6 +97,7 @@ export default function RepertoireBuilder() {
   const [showChapterCreate, setShowChapterCreate] = useState(false);
   const [pgnInput, setPgnInput] = useState("");
   const [showPgnImport, setShowPgnImport] = useState(false);
+  const [showLinePicker, setShowLinePicker] = useState(false);
   const [newChapterName, setNewChapterName] = useState("Chapter 1");
   const [editingChapterIdx, setEditingChapterIdx] = useState<number | null>(null);
   const [editingChapterName, setEditingChapterName] = useState("");
@@ -426,6 +430,7 @@ export default function RepertoireBuilder() {
     setSelectedNodePath(null);
     setShowChapterCreate(false);
     setShowPgnImport(false);
+    setShowLinePicker(false);
     setPgnInput("");
     setNewChapterName(`Chapter ${chapters.length + 2}`);
   }, [chapters.length, newChapterName, maxChaptersPerStudy]);
@@ -463,6 +468,42 @@ export default function RepertoireBuilder() {
   const startFromPosition = useCallback(() => {
     createChapter([]);
   }, [createChapter]);
+
+  // Start from a learned line — build tree from line moves
+  const startFromLine = useCallback((line: Line) => {
+    const buildTree = (moves: string[], idx: number): OpeningNode[] => {
+      if (idx >= moves.length) return [];
+      const c2 = new Chess();
+      for (let i = 0; i <= idx; i++) c2.move(moves[i]);
+      return [{
+        fen: c2.fen(),
+        move: moves[idx],
+        category: "main_line" as MoveCategory,
+        children: buildTree(moves, idx + 1),
+      }];
+    };
+    const newTree = buildTree(line.moves, 0);
+    createChapter(newTree);
+    toast({ title: `Created chapter from "${line.name}"` });
+  }, [createChapter]);
+
+  // Get all learned lines grouped by opening
+  const learnedLinesByOpening = useMemo(() => {
+    const result: { openingName: string; lines: (Line & { mastered: boolean })[] }[] = [];
+    for (const opening of openings) {
+      const allLines = extractAllLines(opening);
+      const withProgress = allLines
+        .map(line => ({
+          ...line,
+          mastered: getLineProgress(line.id).mastered,
+        }))
+        .filter(line => line.mastered || getLineProgress(line.id).correctAttempts >= 1);
+      if (withProgress.length > 0) {
+        result.push({ openingName: opening.name, lines: withProgress });
+      }
+    }
+    return result;
+  }, []);
 
   // Auto-show chapter creation when no chapters exist
   const hasChapters = chapters.length > 0;
@@ -648,12 +689,12 @@ export default function RepertoireBuilder() {
               exit={{ opacity: 0, height: 0 }}
               className="mb-4"
             >
-              {!showPgnImport ? (
-                <div className="rounded-xl border border-border bg-card p-6 max-w-md mx-auto relative">
+              {!showPgnImport && !showLinePicker ? (
+                <div className="rounded-xl border border-border bg-card p-6 max-w-lg mx-auto relative">
                   {/* Close button — only if there are already chapters */}
                   {hasChapters && (
                     <button
-                      onClick={() => { setShowChapterCreate(false); setShowPgnImport(false); }}
+                      onClick={() => { setShowChapterCreate(false); setShowPgnImport(false); setShowLinePicker(false); }}
                       className="absolute top-3 right-3 text-muted-foreground hover:text-foreground transition-colors"
                     >
                       <X className="w-4 h-4" />
@@ -668,7 +709,7 @@ export default function RepertoireBuilder() {
                     placeholder="Chapter name"
                     className="text-sm mb-4"
                   />
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-3 gap-3">
                     <button
                       onClick={startFromPosition}
                       className="flex flex-col items-center gap-2 p-4 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-all group"
@@ -685,9 +726,17 @@ export default function RepertoireBuilder() {
                       <span className="text-sm font-medium text-foreground">Import PGN</span>
                       <span className="text-[0.65rem] text-muted-foreground text-center">Paste a PGN to import moves</span>
                     </button>
+                    <button
+                      onClick={() => setShowLinePicker(true)}
+                      className="flex flex-col items-center gap-2 p-4 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-all group"
+                    >
+                      <BookOpen className="w-8 h-8 text-muted-foreground group-hover:text-primary transition-colors" />
+                      <span className="text-sm font-medium text-foreground">Learned Line</span>
+                      <span className="text-[0.65rem] text-muted-foreground text-center">Use a line you've studied</span>
+                    </button>
                   </div>
                 </div>
-              ) : (
+              ) : showPgnImport ? (
                 <div className="rounded-xl border border-border bg-card p-6 max-w-lg mx-auto relative">
                   <button
                     onClick={() => { setShowChapterCreate(false); setShowPgnImport(false); setPgnInput(""); }}
@@ -708,6 +757,59 @@ export default function RepertoireBuilder() {
                     </Button>
                     <Button size="sm" onClick={() => importPgn(pgnInput)} disabled={!pgnInput.trim()}>
                       Import
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="rounded-xl border border-border bg-card p-6 max-w-lg mx-auto relative">
+                  <button
+                    onClick={() => { setShowChapterCreate(false); setShowLinePicker(false); }}
+                    className="absolute top-3 right-3 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                  <h3 className="text-base font-semibold text-foreground mb-3">Start from Learned Line</h3>
+                  {learnedLinesByOpening.length === 0 ? (
+                    <div className="text-center py-6">
+                      <BookOpen className="w-10 h-10 text-muted-foreground mx-auto mb-2" />
+                      <p className="text-sm text-muted-foreground">No learned lines yet.</p>
+                      <p className="text-xs text-muted-foreground mt-1">Study some opening lines first, then come back!</p>
+                    </div>
+                  ) : (
+                    <div className="max-h-[300px] overflow-y-auto space-y-3 pr-1">
+                      {learnedLinesByOpening.map((group) => (
+                        <div key={group.openingName}>
+                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">{group.openingName}</p>
+                          <div className="space-y-1">
+                            {group.lines.map((line) => (
+                              <button
+                                key={line.id}
+                                onClick={() => startFromLine(line)}
+                                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-sm hover:bg-muted/80 transition-colors group border border-transparent hover:border-border"
+                              >
+                                {line.mastered ? (
+                                  <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0" />
+                                ) : (
+                                  <div className="w-4 h-4 rounded-full border-2 border-muted-foreground/40 flex-shrink-0" />
+                                )}
+                                <div className="min-w-0 flex-1">
+                                  <span className="block truncate font-medium text-foreground">{line.name}</span>
+                                  <span className="block text-[0.65rem] text-muted-foreground truncate">
+                                    {line.moves.slice(0, 6).map((m, i) => (i % 2 === 0 ? `${Math.floor(i/2)+1}.${m}` : m)).join(" ")}
+                                    {line.moves.length > 6 ? "…" : ""}
+                                  </span>
+                                </div>
+                                <span className="text-xs text-muted-foreground">{line.moves.length} moves</span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <div className="mt-3">
+                    <Button variant="outline" size="sm" onClick={() => setShowLinePicker(false)}>
+                      Back
                     </Button>
                   </div>
                 </div>
