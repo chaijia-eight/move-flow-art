@@ -1,17 +1,40 @@
 
 
-## Fix: Engine Eval Always From White's Perspective
+## Add Check/Checkmate/Promotion Sounds + Promotion UI
 
-**Problem**: Stockfish returns scores relative to the side to move. So when it's Black's turn and White is winning, the engine says +3.3 (good for Black to move? no — it's the raw score). Actually, the score is from the side-to-move's perspective: +3.3 on White's turn means White is ahead, but +3.3 on Black's turn means Black is ahead. The display doesn't normalize to White's perspective.
+### 1. Sound Effects (`src/lib/chessSounds.ts`)
 
-**Fix** in `src/pages/RepertoireBuilder.tsx`:
+Add three new sound entries:
+- `check`: `move-check.mp3`
+- `checkmate`: `game-end.webm` (reuse existing URL)
+- `promote`: `promote.mp3`
 
-1. In `formatScore`, check whose turn it is from `currentFen`. If it's Black's turn, negate the score before displaying, so the eval is always from White's perspective (standard convention: positive = White advantage).
+Export `playCheckSound()`, `playCheckmateSound()`, `playPromoteSound()`.
 
-2. Similarly fix the color thresholds on the score display — apply the same normalization so green = White ahead, red = Black ahead regardless of whose turn it is.
+### 2. Sound Detection (`src/components/Chessboard.tsx`)
 
-**Changes:**
-- `formatScore` will accept the FEN or turn info, negate `ev.score` when it's Black's turn
-- Update the color conditional to use the normalized score
-- Same normalization for `ev.mate` display
+In the move-detection `useEffect` (lines 74-127), after determining the move type, also check the new FEN for check/checkmate state using `chess.js`:
+- Create a temporary `Chess(fen)` from the new fen
+- If `chess.isCheckmate()` → play checkmate sound (overrides all others)
+- Else if `chess.inCheck()` → play check sound (overrides move/capture)
+- Else if promotion detected (piece changed type on arrival) → play promote sound
+- Otherwise, existing logic (capture/castle/move)
+
+### 3. Promotion UI (`src/components/Chessboard.tsx`)
+
+Add a promotion picker modal inside the Chessboard:
+
+- New state: `promotionPending: { from: string; to: string } | null`
+- When a pawn move to rank 1 or 8 is detected among legal moves in `handleSquareClick` and `handleDragEnd`, instead of immediately calling `onMove`, set `promotionPending`
+- Show a vertical overlay of 4 piece SVGs (Queen, Rook, Bishop, Knight) in the player's color, positioned over the target square column
+- On selection, call `onMove(from, to, san)` with the correct promotion SAN (e.g., `e8=Q`)
+- Clicking outside or pressing Escape cancels
+
+**Detection logic**: Check if any legal move from the source to the target has a `promotion` field set (chess.js includes this in verbose moves).
+
+**Piece icons**: Use the existing SVG piece images from `PIECE_IMAGES` — e.g., for white promoting: `wQ.svg`, `wR.svg`, `wB.svg`, `wN.svg`.
+
+### Files Changed
+- `src/lib/chessSounds.ts` — add 3 sounds
+- `src/components/Chessboard.tsx` — promotion UI + check/checkmate/promotion sound logic
 
