@@ -718,7 +718,7 @@ export default function RepertoireBuilder() {
 
         {/* Main layout */}
         {viewMode === "tree" ? (
-          <div className="h-[calc(100vh-220px)] min-h-[400px]">
+          <div className="h-[calc(100vh-220px)] min-h-[400px] relative">
             <VisualTreeGraph
               tree={tree}
               currentPath={currentPath}
@@ -727,6 +727,23 @@ export default function RepertoireBuilder() {
                 setSelectedNodePath(path);
               }}
             />
+            {/* Mini board preview in corner */}
+            <div
+              className="absolute bottom-3 right-3 z-20 rounded-lg border border-border shadow-lg overflow-hidden cursor-pointer group"
+              onClick={() => setViewMode("board")}
+              title="Switch to board view"
+            >
+              <div className="w-28 h-28 relative">
+                <MiniBoard
+                  fen={currentFen}
+                  theme={themes["italian"] || Object.values(themes)[0]}
+                  flipped={side === "b"}
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                  <Maximize2 className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg" />
+                </div>
+              </div>
+            </div>
           </div>
         ) : (
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-4">
