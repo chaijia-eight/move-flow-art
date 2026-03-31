@@ -1,7 +1,9 @@
 import React, { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Save, Trash2, Cpu, RotateCcw, Plus, FileText, Play, X, LayoutGrid, GitFork } from "lucide-react";
+import { ArrowLeft, Save, Trash2, Cpu, RotateCcw, Plus, FileText, Play, X, LayoutGrid, GitFork, Maximize2 } from "lucide-react";
+import MiniBoard from "@/components/MiniBoard";
+import { themes } from "@/data/openings";
 import { Chess } from "chess.js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
