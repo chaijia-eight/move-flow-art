@@ -1,7 +1,9 @@
 import React, { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Save, Trash2, Cpu, RotateCcw, Plus, FileText, Play, X, LayoutGrid, GitFork } from "lucide-react";
+import { ArrowLeft, Save, Trash2, Cpu, RotateCcw, Plus, FileText, Play, X, LayoutGrid, GitFork, Maximize2 } from "lucide-react";
+import MiniBoard from "@/components/MiniBoard";
+import { themes } from "@/data/openings";
 import { Chess } from "chess.js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -716,7 +718,7 @@ export default function RepertoireBuilder() {
 
         {/* Main layout */}
         {viewMode === "tree" ? (
-          <div className="h-[calc(100vh-220px)] min-h-[400px]">
+          <div className="h-[calc(100vh-220px)] min-h-[400px] relative">
             <VisualTreeGraph
               tree={tree}
               currentPath={currentPath}
@@ -725,8 +727,26 @@ export default function RepertoireBuilder() {
                 setSelectedNodePath(path);
               }}
             />
+            {/* Mini board preview in corner */}
+            <div
+              className="absolute bottom-3 right-3 z-20 rounded-lg border border-border shadow-lg overflow-hidden cursor-pointer group"
+              onClick={() => setViewMode("board")}
+              title="Switch to board view"
+            >
+              <div className="w-28 h-28 relative">
+                <MiniBoard
+                  fen={currentFen}
+                  theme={themes["italian"] || Object.values(themes)[0]}
+                  flipped={side === "b"}
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                  <Maximize2 className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg" />
+                </div>
+              </div>
+            </div>
           </div>
         ) : (
+        <div className="relative">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-4">
           {/* Board */}
           <div className="flex flex-col gap-3">
@@ -874,6 +894,28 @@ export default function RepertoireBuilder() {
               )}
             </div>
           </div>
+        </div>
+        {/* Mini tree preview in corner */}
+        {tree.length > 0 && (
+          <div
+            className="absolute bottom-3 left-3 z-20 rounded-lg border border-border shadow-lg overflow-hidden cursor-pointer group bg-card"
+            onClick={() => setViewMode("tree")}
+            title="Switch to tree view"
+          >
+            <div className="w-36 h-24 relative overflow-hidden">
+              <div className="transform scale-[0.35] origin-top-left pointer-events-none" style={{ width: 400, height: 280 }}>
+                <VisualTreeGraph
+                  tree={tree}
+                  currentPath={currentPath}
+                  onNavigate={() => {}}
+                />
+              </div>
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                <Maximize2 className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg" />
+              </div>
+            </div>
+          </div>
+        )}
         </div>
         )}
       </div>

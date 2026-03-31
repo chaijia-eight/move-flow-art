@@ -1,5 +1,7 @@
 import React, { useMemo, useRef, useEffect, useState, useCallback } from "react";
-import type { OpeningNode } from "@/data/openings";
+import { MessageCircle } from "lucide-react";
+import type { OpeningNode, NagSymbol } from "@/data/openings";
+import { NAG_SYMBOLS } from "@/data/openings";
 
 type TreePath = number[];
 
@@ -19,6 +21,9 @@ interface LayoutNode {
   isMainLine: boolean;
   childCount: number;
   category: string;
+  nag?: NagSymbol;
+  hasNotes: boolean;
+  explanation?: string;
 }
 
 const NODE_W = 64;
@@ -32,20 +37,13 @@ function pathEq(a: TreePath, b: TreePath): boolean {
   return a.length === b.length && a.every((v, i) => v === b[i]);
 }
 
-/** Compute move number label, e.g. "1. e4" or "1... e5" */
 function moveLabel(path: TreePath, move: string): string {
-  const depth = path.length; // 1-indexed depth
+  const depth = path.length;
   const moveNum = Math.ceil(depth / 2);
   const isWhite = depth % 2 === 1;
   return isWhite ? `${moveNum}. ${move}` : `${moveNum}... ${move}`;
 }
 
-/**
- * Layout algorithm:
- * - Main line (first child) flows horizontally
- * - Branches drop down vertically then continue horizontally
- * Returns all nodes with positions and a running y-cursor
- */
 function layoutTree(
   nodes: OpeningNode[],
   basePath: TreePath,
@@ -59,7 +57,6 @@ function layoutTree(
 
   if (nodes.length === 0) return { layoutNodes: result, maxY };
 
-  // Process first node (main continuation)
   const mainNode = nodes[0];
   const mainPath = [...basePath, 0];
   const node: LayoutNode = {
@@ -72,10 +69,12 @@ function layoutTree(
     isMainLine,
     childCount: mainNode.children.length,
     category: mainNode.category,
+    nag: mainNode.nag,
+    hasNotes: !!mainNode.explanation,
+    explanation: mainNode.explanation,
   };
   result.push(node);
 
-  // Layout main continuation's children
   let cursorY = startY;
   if (mainNode.children.length > 0) {
     const sub = layoutTree(
@@ -90,7 +89,6 @@ function layoutTree(
     cursorY = Math.max(cursorY, sub.maxY);
   }
 
-  // Process branches (siblings at index 1+)
   for (let i = 1; i < nodes.length; i++) {
     const branchNode = nodes[i];
     const branchPath = [...basePath, i];
@@ -105,6 +103,9 @@ function layoutTree(
       isMainLine: false,
       childCount: branchNode.children.length,
       category: branchNode.category,
+      nag: branchNode.nag,
+      hasNotes: !!branchNode.explanation,
+      explanation: branchNode.explanation,
     };
     result.push(bNode);
 
@@ -126,11 +127,18 @@ function layoutTree(
   return { layoutNodes: result, maxY };
 }
 
+function getNagIcon(nag?: NagSymbol): string | null {
+  if (!nag) return null;
+  const sym = NAG_SYMBOLS.find(s => s.key === nag);
+  return sym ? sym.icon : null;
+}
+
 export default function VisualTreeGraph({ tree, currentPath, onNavigate }: VisualTreeGraphProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [offset, setOffset] = useState({ x: 40, y: 40 });
   const [dragging, setDragging] = useState(false);
   const dragStart = useRef({ x: 0, y: 0, ox: 0, oy: 0 });
+  const [notesPopup, setNotesPopup] = useState<{ path: TreePath; text: string; x: number; y: number } | null>(null);
 
   const { layoutNodes, width, height } = useMemo(() => {
     const { layoutNodes, maxY } = layoutTree(tree, [], 0, 0, null, true);
@@ -142,12 +150,11 @@ export default function VisualTreeGraph({ tree, currentPath, onNavigate }: Visua
     };
   }, [tree]);
 
-  // Pan handlers
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (e.button !== 0) return;
-    // Only start drag on background
     if ((e.target as HTMLElement).closest("[data-tree-node]")) return;
     setDragging(true);
+    setNotesPopup(null);
     dragStart.current = { x: e.clientX, y: e.clientY, ox: offset.x, oy: offset.y };
   }, [offset]);
 
@@ -168,6 +175,20 @@ export default function VisualTreeGraph({ tree, currentPath, onNavigate }: Visua
     };
   }, [dragging]);
 
+  const toggleNotes = useCallback((n: LayoutNode, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (notesPopup && pathEq(notesPopup.path, n.path)) {
+      setNotesPopup(null);
+    } else {
+      setNotesPopup({
+        path: n.path,
+        text: n.explanation || "",
+        x: n.x + offset.x + NODE_W + 4,
+        y: n.y + offset.y,
+      });
+    }
+  }, [notesPopup, offset]);
+
   if (tree.length === 0) {
     return (
       <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
@@ -181,8 +202,9 @@ export default function VisualTreeGraph({ tree, currentPath, onNavigate }: Visua
       ref={containerRef}
       className="w-full h-full overflow-hidden rounded-xl border border-border bg-card cursor-grab active:cursor-grabbing relative select-none"
       onMouseDown={handleMouseDown}
+      onClick={() => setNotesPopup(null)}
     >
-      {/* Root diamond */}
+      {/* SVG connections */}
       <svg
         style={{
           position: "absolute",
@@ -193,10 +215,8 @@ export default function VisualTreeGraph({ tree, currentPath, onNavigate }: Visua
           pointerEvents: "none",
         }}
       >
-        {/* Connection lines */}
         {layoutNodes.map((n, i) => {
           if (n.parentX === undefined || n.parentY === undefined) {
-            // Connect to root
             const rootX = offset.x - 30;
             const rootY = offset.y + NODE_H / 2;
             return (
@@ -240,6 +260,7 @@ export default function VisualTreeGraph({ tree, currentPath, onNavigate }: Visua
         const isActive = pathEq(n.path, currentPath);
         const isOnPath = currentPath.length >= n.path.length && n.path.every((v, i) => v === currentPath[i]);
         const label = moveLabel(n.path, n.move);
+        const nagIcon = getNagIcon(n.nag);
 
         return (
           <div
@@ -266,14 +287,46 @@ export default function VisualTreeGraph({ tree, currentPath, onNavigate }: Visua
             }`}
           >
             {label}
+            {/* NAG icon */}
+            {nagIcon && (
+              <img src={nagIcon} alt="" className="w-3.5 h-3.5 ml-0.5 inline-block flex-shrink-0" />
+            )}
+            {/* Branch count badge */}
             {n.childCount > 1 && (
               <span className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full bg-primary text-primary-foreground text-[0.5rem] flex items-center justify-center font-bold">
                 {n.childCount}
               </span>
             )}
+            {/* Notes speech bubble */}
+            {n.hasNotes && (
+              <button
+                onClick={(e) => toggleNotes(n, e)}
+                className="absolute -bottom-1.5 -right-1.5 w-4 h-4 rounded-full bg-blue-500 text-white flex items-center justify-center z-20 hover:bg-blue-400 transition-colors"
+                title="View notes"
+              >
+                <MessageCircle className="w-2.5 h-2.5" />
+              </button>
+            )}
           </div>
         );
       })}
+
+      {/* Notes popup */}
+      {notesPopup && (
+        <div
+          data-tree-node
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            position: "absolute",
+            left: notesPopup.x,
+            top: notesPopup.y,
+            zIndex: 50,
+          }}
+          className="max-w-[220px] rounded-lg border border-border bg-popover text-popover-foreground shadow-lg p-3"
+        >
+          <p className="text-xs leading-relaxed">{notesPopup.text}</p>
+        </div>
+      )}
     </div>
   );
 }

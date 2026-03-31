@@ -595,7 +595,7 @@ export default function Chessboard({
 
                     {/* Chess piece */}
                     {piece && (
-                      <div className="relative z-20 w-[80%] h-[80%]">
+                      <div className="relative z-20 w-[88%] h-[88%]">
                         <motion.img
                           key={`${square}-${animMove?.id ?? 0}`}
                           src={PIECE_IMAGES[piece]}
