@@ -542,22 +542,67 @@ export default function RepertoireBuilder() {
         {hasChapters && (
           <div className="flex items-center gap-1.5 mb-3 overflow-x-auto pb-1">
             {chapters.map((ch, idx) => (
-              <button
+              <div
                 key={idx}
                 onClick={() => {
+                  if (editingChapterIdx === idx) return;
                   setActiveChapterIdx(idx);
                   setCurrentPath([]);
                   setSelectedNodePath(null);
                   setEngineEval(null);
                 }}
-                className={`px-3 py-1.5 text-xs font-medium rounded-lg whitespace-nowrap transition-colors ${
+                onDoubleClick={() => {
+                  setEditingChapterIdx(idx);
+                  setEditingChapterName(ch.name);
+                }}
+                className={`group flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg whitespace-nowrap transition-colors cursor-pointer ${
                   idx === activeChapterIdx
                     ? "bg-primary text-primary-foreground"
                     : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
                 }`}
               >
-                {ch.name}
-              </button>
+                {editingChapterIdx === idx ? (
+                  <input
+                    autoFocus
+                    value={editingChapterName}
+                    onChange={(e) => setEditingChapterName(e.target.value)}
+                    onBlur={() => {
+                      if (editingChapterName.trim()) {
+                        setChapters(prev => prev.map((c, i) => i === idx ? { ...c, name: editingChapterName.trim() } : c));
+                      }
+                      setEditingChapterIdx(null);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        (e.target as HTMLInputElement).blur();
+                      } else if (e.key === "Escape") {
+                        setEditingChapterIdx(null);
+                      }
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="bg-transparent border-none outline-none text-xs font-medium w-20 p-0"
+                  />
+                ) : (
+                  <span>{ch.name}</span>
+                )}
+                {chapters.length > 1 && editingChapterIdx !== idx && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const newChapters = chapters.filter((_, i) => i !== idx);
+                      setChapters(newChapters);
+                      setActiveChapterIdx(Math.min(activeChapterIdx, newChapters.length - 1));
+                      setCurrentPath([]);
+                      setSelectedNodePath(null);
+                    }}
+                    className={`ml-0.5 opacity-0 group-hover:opacity-100 transition-opacity ${
+                      idx === activeChapterIdx ? "text-primary-foreground/70 hover:text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
             ))}
             <button
               onClick={() => setShowChapterCreate(true)}
