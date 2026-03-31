@@ -298,9 +298,13 @@ export default function Chessboard({
         const legalMoves = getLegalMoves(dragState.square);
         const targetMove = legalMoves.find(m => m.to === targetSquare);
         if (targetMove) {
-          skipNextAnimRef.current = true;
-          onMove(dragState.square, targetSquare, targetMove.san);
-          setSelectedSquare(null);
+          if (isPromotionMove(dragState.square, targetSquare)) {
+            setPromotionPending({ from: dragState.square, to: targetSquare });
+          } else {
+            skipNextAnimRef.current = true;
+            onMove(dragState.square, targetSquare, targetMove.san);
+            setSelectedSquare(null);
+          }
         }
       }
       setTimeout(() => { isDraggingRef.current = false; }, 0);
