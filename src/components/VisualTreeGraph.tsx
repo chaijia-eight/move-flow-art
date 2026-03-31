@@ -139,6 +139,18 @@ export default function VisualTreeGraph({ tree, currentPath, onNavigate }: Visua
   const [dragging, setDragging] = useState(false);
   const dragStart = useRef({ x: 0, y: 0, ox: 0, oy: 0 });
   const [notesPopup, setNotesPopup] = useState<{ path: TreePath; text: string; x: number; y: number } | null>(null);
+  const [zoom, setZoom] = useState(1);
+
+  const zoomIn = useCallback(() => setZoom(z => Math.min(z + 0.15, 2.5)), []);
+  const zoomOut = useCallback(() => setZoom(z => Math.max(z - 0.15, 0.3)), []);
+  const zoomReset = useCallback(() => { setZoom(1); setOffset({ x: 40, y: 40 }); }, []);
+
+  const handleWheel = useCallback((e: React.WheelEvent) => {
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+      setZoom(z => Math.min(Math.max(z - e.deltaY * 0.002, 0.3), 2.5));
+    }
+  }, []);
 
   const { layoutNodes, width, height } = useMemo(() => {
     const { layoutNodes, maxY } = layoutTree(tree, [], 0, 0, null, true);
