@@ -17,6 +17,7 @@ import { toast } from "@/hooks/use-toast";
 import { getEngine, type EngineEvaluation } from "@/lib/stockfishEngine";
 import type { OpeningNode, MoveCategory, NagSymbol, CustomArrow, CustomHighlight } from "@/data/openings";
 import { NAG_SYMBOLS } from "@/data/openings";
+import VisualTreeGraph from "@/components/VisualTreeGraph";
 
 /** Path of indices into the tree to reach a node */
 type TreePath = number[];
