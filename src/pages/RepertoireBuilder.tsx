@@ -844,6 +844,27 @@ export default function RepertoireBuilder() {
                   />
                 )}
               </div>
+              {/* Mini tree graph preview */}
+              {tree.length > 0 && (
+                <div
+                  className="border-t border-border cursor-pointer group"
+                  onClick={() => setViewMode("tree")}
+                  title="Switch to tree view"
+                >
+                  <div className="h-28 relative overflow-hidden">
+                    <div className="transform scale-[0.4] origin-top-left pointer-events-none" style={{ width: 800, height: 280 }}>
+                      <VisualTreeGraph
+                        tree={tree}
+                        currentPath={currentPath}
+                        onNavigate={() => {}}
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                      <Maximize2 className="w-4 h-4 text-foreground opacity-0 group-hover:opacity-70 transition-opacity" />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Annotation panel */}
