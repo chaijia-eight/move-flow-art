@@ -430,6 +430,7 @@ export default function RepertoireBuilder() {
     setSelectedNodePath(null);
     setShowChapterCreate(false);
     setShowPgnImport(false);
+    setShowLinePicker(false);
     setPgnInput("");
     setNewChapterName(`Chapter ${chapters.length + 2}`);
   }, [chapters.length, newChapterName, maxChaptersPerStudy]);
