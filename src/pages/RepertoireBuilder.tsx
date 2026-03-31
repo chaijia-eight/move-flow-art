@@ -515,6 +515,28 @@ export default function RepertoireBuilder() {
             />
           </div>
           <div className="flex items-center gap-2">
+            {/* View mode toggle */}
+            <div className="flex rounded-lg border border-border overflow-hidden">
+              <button
+                onClick={() => setViewMode("board")}
+                className={`px-2.5 py-1.5 transition-colors ${
+                  viewMode === "board" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                }`}
+                title="Board view"
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={() => setViewMode("tree")}
+                className={`px-2.5 py-1.5 transition-colors ${
+                  viewMode === "tree" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                }`}
+                title="Tree view"
+              >
+                <GitFork className="w-3.5 h-3.5" />
+              </button>
+            </div>
+            {/* Side selector */}
             <div className="flex rounded-lg border border-border overflow-hidden">
               <button
                 onClick={() => setSide("w")}
