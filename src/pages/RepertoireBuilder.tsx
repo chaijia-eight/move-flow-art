@@ -92,6 +92,8 @@ export default function RepertoireBuilder() {
   const [pgnInput, setPgnInput] = useState("");
   const [showPgnImport, setShowPgnImport] = useState(false);
   const [newChapterName, setNewChapterName] = useState("Chapter 1");
+  const [editingChapterIdx, setEditingChapterIdx] = useState<number | null>(null);
+  const [editingChapterName, setEditingChapterName] = useState("");
 
   // Derived tree from active chapter
   const tree = chapters[activeChapterIdx]?.tree ?? [];
