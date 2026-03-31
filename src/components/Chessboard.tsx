@@ -5,7 +5,7 @@ import { Chess } from "chess.js";
 import { fenToBoard, PIECE_IMAGES, coordsToSquare, squareToCoords } from "@/data/pieceUnicode";
 import { useTheme } from "@/contexts/ThemeContext";
 import CaptureEffect from "@/components/CaptureEffect";
-import { playMoveSound, playCaptureSound, playCastleSound } from "@/lib/chessSounds";
+import { playMoveSound, playCaptureSound, playCastleSound, playCheckSound, playCheckmateSound, playPromoteSound } from "@/lib/chessSounds";
 import type { MoveCategory, CustomArrow, CustomHighlight, NagSymbol } from "@/data/openings";
 import { NAG_SYMBOLS } from "@/data/openings";
 
@@ -66,6 +66,7 @@ export default function Chessboard({
   // Right-click arrow drawing state
   const [rightDrag, setRightDrag] = useState<{ from: string; currentSquare: string | null } | null>(null);
   const isRightDraggingRef = useRef(false);
+  const [promotionPending, setPromotionPending] = useState<{ from: string; to: string } | null>(null);
 
   const board = useMemo(() => fenToBoard(fen), [fen]);
   const chess = useMemo(() => new Chess(fen), [fen]);
@@ -105,6 +106,16 @@ export default function Chessboard({
       const isCastle = changedCount === 4;
       const isEnPassant = changedCount === 3 && !wasCapture;
 
+      // Detect promotion: a pawn arrived but piece type changed
+      let isPromotion = false;
+      if (fromSquare && toSquare) {
+        const fromPiece = prevBoard[squareToCoords(fromSquare)[0]][squareToCoords(fromSquare)[1]];
+        const toPiece = board[squareToCoords(toSquare)[0]][squareToCoords(toSquare)[1]];
+        if (fromPiece && toPiece && fromPiece.toLowerCase() === 'p' && toPiece.toLowerCase() !== 'p') {
+          isPromotion = true;
+        }
+      }
+
       if (fromSquare && toSquare) {
         const skipAnim = skipNextAnimRef.current && !isCastle;
         skipNextAnimRef.current = false;
@@ -112,7 +123,16 @@ export default function Chessboard({
           setAnimMove({ from: fromSquare, to: toSquare, isCapture: wasCapture || isEnPassant, id: ++animIdCounter });
         }
         setLastMove({ from: fromSquare, to: toSquare });
-        if (wasCapture || isEnPassant) {
+
+        // Sound priority: checkmate > check > promotion > capture > castle > move
+        const tempChess = new Chess(fen);
+        if (tempChess.isCheckmate()) {
+          playCheckmateSound();
+        } else if (tempChess.inCheck()) {
+          playCheckSound();
+        } else if (isPromotion) {
+          playPromoteSound();
+        } else if (wasCapture || isEnPassant) {
           playCaptureSound();
         } else if (isCastle) {
           playCastleSound();
@@ -179,7 +199,28 @@ export default function Chessboard({
            (chess.turn() === "b" && piece === piece.toLowerCase());
   }, [chess]);
 
+  const isPromotionMove = useCallback((from: string, to: string) => {
+    const moves = getLegalMoves(from);
+    return moves.some(m => m.to === to && m.promotion);
+  }, [getLegalMoves]);
+
+  const handlePromotionSelect = useCallback((piece: string) => {
+    if (!promotionPending) return;
+    const { from, to } = promotionPending;
+    const moves = getLegalMoves(from);
+    const targetMove = moves.find(m => m.to === to && m.promotion === piece);
+    if (targetMove) {
+      onMove(from, to, targetMove.san);
+    }
+    setPromotionPending(null);
+    setSelectedSquare(null);
+  }, [promotionPending, getLegalMoves, onMove]);
+
   const handleSquareClick = (displayRow: number, displayCol: number) => {
+    if (promotionPending) {
+      setPromotionPending(null);
+      return;
+    }
     if (!canInteract()) return;
     if (isDraggingRef.current) return;
     const [row, col] = displayToBoard(displayRow, displayCol);
@@ -190,6 +231,10 @@ export default function Chessboard({
       const legalMoves = getLegalMoves(selectedSquare);
       const targetMove = legalMoves.find(m => m.to === square);
       if (targetMove) {
+        if (isPromotionMove(selectedSquare, square)) {
+          setPromotionPending({ from: selectedSquare, to: square });
+          return;
+        }
         onMove(selectedSquare, square, targetMove.san);
         setSelectedSquare(null);
         return;
@@ -253,9 +298,13 @@ export default function Chessboard({
         const legalMoves = getLegalMoves(dragState.square);
         const targetMove = legalMoves.find(m => m.to === targetSquare);
         if (targetMove) {
-          skipNextAnimRef.current = true;
-          onMove(dragState.square, targetSquare, targetMove.san);
-          setSelectedSquare(null);
+          if (isPromotionMove(dragState.square, targetSquare)) {
+            setPromotionPending({ from: dragState.square, to: targetSquare });
+          } else {
+            skipNextAnimRef.current = true;
+            onMove(dragState.square, targetSquare, targetMove.san);
+            setSelectedSquare(null);
+          }
         }
       }
       setTimeout(() => { isDraggingRef.current = false; }, 0);
@@ -595,6 +644,61 @@ export default function Chessboard({
                 );
               })
             )}
+
+            {/* Promotion picker overlay */}
+            {promotionPending && (() => {
+              const [toRow, toCol] = squareToCoords(promotionPending.to);
+              const [dispRow, dispCol] = boardToDisplay(toRow, toCol);
+              const isWhite = chess.turn() === 'w';
+              const pieces = isWhite ? ['Q', 'R', 'B', 'N'] : ['q', 'r', 'b', 'n'];
+              const promoKeys = ['q', 'r', 'b', 'n'];
+              // Stack from promotion square downward (or upward if at bottom)
+              const goDown = dispRow <= 3;
+              
+              return (
+                <>
+                  {/* Backdrop to cancel */}
+                  <div
+                    className="absolute inset-0 z-40"
+                    onClick={() => setPromotionPending(null)}
+                  />
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="absolute z-50 flex flex-col rounded-lg overflow-hidden"
+                    style={{
+                      left: `${(dispCol / 8) * 100}%`,
+                      top: goDown ? `${(dispRow / 8) * 100}%` : undefined,
+                      bottom: !goDown ? `${((7 - dispRow) / 8) * 100}%` : undefined,
+                      width: `${100 / 8}%`,
+                      boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+                    }}
+                  >
+                    {pieces.map((p, i) => (
+                      <button
+                        key={p}
+                        className="flex items-center justify-center hover:brightness-125 transition-all"
+                        style={{
+                          aspectRatio: '1',
+                          background: i % 2 === 0 ? currentTheme.boardLight : currentTheme.boardDark,
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handlePromotionSelect(promoKeys[i]);
+                        }}
+                      >
+                        <img
+                          src={PIECE_IMAGES[p]}
+                          alt={p}
+                          className="w-[80%] h-[80%] object-contain drop-shadow-md"
+                          draggable={false}
+                        />
+                      </button>
+                    ))}
+                  </motion.div>
+                </>
+              );
+            })()}
           </div>
         </div>
       </div>

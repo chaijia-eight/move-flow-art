@@ -5,6 +5,9 @@ const SOUND_URLS = {
   move: "https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3",
   capture: "https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/capture.mp3",
   castle: "https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/castle.mp3",
+  check: "https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-check.mp3",
+  checkmate: "https://images.chesscomfiles.com/chess-themes/sounds/_WEBM_/default/game-end.webm",
+  promote: "https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/promote.mp3",
   gameEnd: "https://images.chesscomfiles.com/chess-themes/sounds/_WEBM_/default/game-end.webm",
   notify: "https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/notify.mp3",
   confirm: "https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/confirm.mp3",
@@ -40,6 +43,18 @@ export function playCaptureSound() {
 
 export function playCastleSound() {
   playSound("castle");
+}
+
+export function playCheckSound() {
+  playSound("check");
+}
+
+export function playCheckmateSound() {
+  playSound("checkmate");
+}
+
+export function playPromoteSound() {
+  playSound("promote");
 }
 
 export function playMasterySound() {
