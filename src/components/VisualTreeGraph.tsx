@@ -355,6 +355,7 @@ export default function VisualTreeGraph({ tree, currentPath, onNavigate }: Visua
           <p className="text-xs leading-relaxed">{notesPopup.text}</p>
         </div>
       )}
+      </div>
     </div>
   );
 }
