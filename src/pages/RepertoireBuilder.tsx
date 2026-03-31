@@ -97,6 +97,7 @@ export default function RepertoireBuilder() {
   const [showChapterCreate, setShowChapterCreate] = useState(false);
   const [pgnInput, setPgnInput] = useState("");
   const [showPgnImport, setShowPgnImport] = useState(false);
+  const [showLinePicker, setShowLinePicker] = useState(false);
   const [newChapterName, setNewChapterName] = useState("Chapter 1");
   const [editingChapterIdx, setEditingChapterIdx] = useState<number | null>(null);
   const [editingChapterName, setEditingChapterName] = useState("");
