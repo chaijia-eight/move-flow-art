@@ -199,7 +199,28 @@ export default function Chessboard({
            (chess.turn() === "b" && piece === piece.toLowerCase());
   }, [chess]);
 
+  const isPromotionMove = useCallback((from: string, to: string) => {
+    const moves = getLegalMoves(from);
+    return moves.some(m => m.to === to && m.promotion);
+  }, [getLegalMoves]);
+
+  const handlePromotionSelect = useCallback((piece: string) => {
+    if (!promotionPending) return;
+    const { from, to } = promotionPending;
+    const moves = getLegalMoves(from);
+    const targetMove = moves.find(m => m.to === to && m.promotion === piece);
+    if (targetMove) {
+      onMove(from, to, targetMove.san);
+    }
+    setPromotionPending(null);
+    setSelectedSquare(null);
+  }, [promotionPending, getLegalMoves, onMove]);
+
   const handleSquareClick = (displayRow: number, displayCol: number) => {
+    if (promotionPending) {
+      setPromotionPending(null);
+      return;
+    }
     if (!canInteract()) return;
     if (isDraggingRef.current) return;
     const [row, col] = displayToBoard(displayRow, displayCol);
@@ -210,6 +231,10 @@ export default function Chessboard({
       const legalMoves = getLegalMoves(selectedSquare);
       const targetMove = legalMoves.find(m => m.to === square);
       if (targetMove) {
+        if (isPromotionMove(selectedSquare, square)) {
+          setPromotionPending({ from: selectedSquare, to: square });
+          return;
+        }
         onMove(selectedSquare, square, targetMove.san);
         setSelectedSquare(null);
         return;
