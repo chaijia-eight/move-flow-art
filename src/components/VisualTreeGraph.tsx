@@ -214,8 +214,24 @@ export default function VisualTreeGraph({ tree, currentPath, onNavigate }: Visua
       ref={containerRef}
       className="w-full h-full overflow-hidden rounded-xl border border-border bg-card cursor-grab active:cursor-grabbing relative select-none"
       onMouseDown={handleMouseDown}
+      onWheel={handleWheel}
       onClick={() => setNotesPopup(null)}
     >
+      {/* Zoom controls */}
+      <div className="absolute top-2 right-2 z-30 flex flex-col gap-1">
+        <button onClick={zoomIn} className="w-7 h-7 rounded-md bg-muted hover:bg-accent flex items-center justify-center border border-border" title="Zoom in">
+          <ZoomIn className="w-3.5 h-3.5 text-foreground" />
+        </button>
+        <button onClick={zoomOut} className="w-7 h-7 rounded-md bg-muted hover:bg-accent flex items-center justify-center border border-border" title="Zoom out">
+          <ZoomOut className="w-3.5 h-3.5 text-foreground" />
+        </button>
+        <button onClick={zoomReset} className="w-7 h-7 rounded-md bg-muted hover:bg-accent flex items-center justify-center border border-border" title="Reset view">
+          <RotateCcw className="w-3.5 h-3.5 text-foreground" />
+        </button>
+        <span className="text-[0.6rem] text-muted-foreground text-center">{Math.round(zoom * 100)}%</span>
+      </div>
+
+      <div style={{ transform: `scale(${zoom})`, transformOrigin: "0 0" }}>
       {/* SVG connections */}
       <svg
         style={{
