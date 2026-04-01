@@ -633,10 +633,18 @@ export default function RepertoireBuilder() {
                 Black
               </button>
             </div>
-            <Button onClick={handleSave} disabled={saving} className="gap-2">
-              <Save className="w-4 h-4" />
-              {t("saveRepertoire")}
-            </Button>
+            <div className="flex items-center gap-2">
+              {repertoireId && autoSaveStatus === "saving" && (
+                <span className="text-xs text-muted-foreground animate-pulse">Saving…</span>
+              )}
+              {repertoireId && autoSaveStatus === "saved" && (
+                <span className="text-xs text-muted-foreground flex items-center gap-1"><CheckCircle2 className="w-3 h-3" />Saved</span>
+              )}
+              <Button onClick={handleSave} disabled={saving} className="gap-2">
+                <Save className="w-4 h-4" />
+                {t("saveRepertoire")}
+              </Button>
+            </div>
           </div>
         </div>
 
