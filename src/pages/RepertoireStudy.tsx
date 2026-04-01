@@ -24,7 +24,7 @@ function extractLines(nodes: OpeningNode[], prefix: string[] = []): string[][] {
   const result: string[][] = [];
   for (const node of nodes) {
     const path = [...prefix, node.move];
-    if (node.children.length === 0) {
+    if ((node.children ?? []).length === 0) {
       result.push(path);
     } else {
       result.push(...extractLines(node.children, path));

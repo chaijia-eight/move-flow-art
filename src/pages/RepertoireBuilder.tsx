@@ -1027,7 +1027,7 @@ export default function RepertoireBuilder() {
 function countTreeNodes(nodes: OpeningNode[]): number {
   let count = 0;
   for (const node of nodes) {
-    count += 1 + countTreeNodes(node.children);
+    count += 1 + countTreeNodes(node.children ?? []);
   }
   return count;
 }
@@ -1125,9 +1125,9 @@ function renderMainLine(
   }
 
   // Continue the main line recursively
-  if (mainNode.children.length > 0) {
+  if ((mainNode.children ?? []).length > 0) {
     renderMainLine(
-      mainNode.children,
+      mainNode.children ?? [],
       mainPath,
       depth,
       elements,
@@ -1177,9 +1177,9 @@ function SubLine({
   );
 
   // Then render its children using the main-line logic
-  if (node.children.length > 0) {
+  if ((node.children ?? []).length > 0) {
     renderMainLine(
-      node.children,
+      node.children ?? [],
       basePath,
       0,
       elements,
