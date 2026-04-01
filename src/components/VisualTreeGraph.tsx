@@ -58,6 +58,7 @@ function layoutTree(
   if (nodes.length === 0) return { layoutNodes: result, maxY };
 
   const mainNode = nodes[0];
+  const mainChildren = mainNode.children ?? [];
   const mainPath = [...basePath, 0];
   const node: LayoutNode = {
     move: mainNode.move,
@@ -67,7 +68,7 @@ function layoutTree(
     parentX: parentPos?.x,
     parentY: parentPos?.y,
     isMainLine,
-    childCount: mainNode.children.length,
+    childCount: mainChildren.length,
     category: mainNode.category,
     nag: mainNode.nag,
     hasNotes: !!mainNode.explanation,
