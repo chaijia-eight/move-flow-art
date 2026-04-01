@@ -960,6 +960,54 @@ export default function RepertoireBuilder() {
                 </motion.div>
               )}
             </AnimatePresence>
+
+            {/* Annotation panel — below board */}
+            <div className="max-w-[560px] w-full mx-auto rounded-xl border border-border bg-card p-4">
+              <h3 className="text-sm font-semibold text-foreground mb-2">{t("annotation")}</h3>
+              {currentPath.length > 0 && currentNode ? (
+                <div className="space-y-3">
+                  {/* NAG symbol selector */}
+                  <TooltipProvider delayDuration={200}>
+                    <div className="flex flex-wrap gap-1">
+                      {NAG_SYMBOLS.map((sym) => (
+                        <Tooltip key={sym.key}>
+                          <TooltipTrigger asChild>
+                            <button
+                              onClick={() => updateNag(currentNode!.nag === sym.key ? undefined : sym.key)}
+                              className={`w-7 h-7 rounded flex items-center justify-center transition-all border ${
+                                currentNode!.nag === sym.key
+                                  ? "border-primary bg-primary/20 ring-1 ring-primary"
+                                  : "border-border hover:border-muted-foreground hover:bg-muted"
+                              }`}
+                            >
+                              <img src={sym.icon} alt={sym.label} className="w-4 h-4" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent side="top">
+                            <p className="text-xs">{sym.label}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      ))}
+                    </div>
+                  </TooltipProvider>
+
+                  <Textarea
+                    value={annotation}
+                    onChange={(e) => updateAnnotation(e.target.value)}
+                    placeholder="Add notes for this move..."
+                    className="text-sm min-h-[60px] resize-none"
+                  />
+
+                  <p className="text-[0.6rem] text-muted-foreground">
+                    Right-click drag on board to draw arrows. Right-click a square to highlight it.
+                  </p>
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground">
+                  Navigate to a move to annotate it.
+                </p>
+              )}
+            </div>
           </div>
 
           {/* Sidebar: Move tree + annotation */}
@@ -1008,54 +1056,6 @@ export default function RepertoireBuilder() {
                     </div>
                   </div>
                 </div>
-              )}
-            </div>
-
-            {/* Annotation panel */}
-            <div className="rounded-xl border border-border bg-card p-4">
-              <h3 className="text-sm font-semibold text-foreground mb-2">{t("annotation")}</h3>
-              {currentPath.length > 0 && currentNode ? (
-                <div className="space-y-3">
-                  {/* NAG symbol selector */}
-                  <TooltipProvider delayDuration={200}>
-                    <div className="flex flex-wrap gap-1">
-                      {NAG_SYMBOLS.map((sym) => (
-                        <Tooltip key={sym.key}>
-                          <TooltipTrigger asChild>
-                            <button
-                              onClick={() => updateNag(currentNode!.nag === sym.key ? undefined : sym.key)}
-                              className={`w-7 h-7 rounded flex items-center justify-center transition-all border ${
-                                currentNode!.nag === sym.key
-                                  ? "border-primary bg-primary/20 ring-1 ring-primary"
-                                  : "border-border hover:border-muted-foreground hover:bg-muted"
-                              }`}
-                            >
-                              <img src={sym.icon} alt={sym.label} className="w-4 h-4" />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent side="top">
-                            <p className="text-xs">{sym.label}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      ))}
-                    </div>
-                  </TooltipProvider>
-
-                  <Textarea
-                    value={annotation}
-                    onChange={(e) => updateAnnotation(e.target.value)}
-                    placeholder="Add notes for this move..."
-                    className="text-sm min-h-[80px] resize-none"
-                  />
-
-                  <p className="text-[0.6rem] text-muted-foreground">
-                    Right-click drag on board to draw arrows. Right-click a square to highlight it.
-                  </p>
-                </div>
-              ) : (
-                <p className="text-xs text-muted-foreground">
-                  Navigate to a move to annotate it.
-                </p>
               )}
             </div>
           </div>
