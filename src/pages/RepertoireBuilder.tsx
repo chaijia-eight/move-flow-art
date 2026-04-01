@@ -378,6 +378,41 @@ export default function RepertoireBuilder() {
     return () => {};
   }, []);
 
+  // Auto-save (debounced) for existing repertoires
+  const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [autoSaveStatus, setAutoSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
+
+  useEffect(() => {
+    if (!repertoireId || !user || !loaded || chapters.length === 0) return;
+
+    setAutoSaveStatus("idle");
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+
+    autoSaveTimer.current = setTimeout(async () => {
+      setAutoSaveStatus("saving");
+      try {
+        await supabase
+          .from("user_repertoires")
+          .update({
+            name,
+            side,
+            tree: chapters as any,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", repertoireId);
+        queryClient.invalidateQueries({ queryKey: ["user-repertoires", user.id] });
+        setAutoSaveStatus("saved");
+        setTimeout(() => setAutoSaveStatus("idle"), 2000);
+      } catch {
+        setAutoSaveStatus("idle");
+      }
+    }, 1500);
+
+    return () => {
+      if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+    };
+  }, [chapters, name, side, repertoireId, user, loaded, queryClient]);
+
   // Save
   const handleSave = useCallback(async () => {
     if (!user) return;
@@ -598,10 +633,18 @@ export default function RepertoireBuilder() {
                 Black
               </button>
             </div>
-            <Button onClick={handleSave} disabled={saving} className="gap-2">
-              <Save className="w-4 h-4" />
-              {t("saveRepertoire")}
-            </Button>
+            <div className="flex items-center gap-2">
+              {repertoireId && autoSaveStatus === "saving" && (
+                <span className="text-xs text-muted-foreground animate-pulse">Saving…</span>
+              )}
+              {repertoireId && autoSaveStatus === "saved" && (
+                <span className="text-xs text-muted-foreground flex items-center gap-1"><CheckCircle2 className="w-3 h-3" />Saved</span>
+              )}
+              <Button onClick={handleSave} disabled={saving} className="gap-2">
+                <Save className="w-4 h-4" />
+                {t("saveRepertoire")}
+              </Button>
+            </div>
           </div>
         </div>
 
