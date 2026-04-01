@@ -1177,9 +1177,9 @@ function SubLine({
   );
 
   // Then render its children using the main-line logic
-  if (node.children.length > 0) {
+  if ((node.children ?? []).length > 0) {
     renderMainLine(
-      node.children,
+      node.children ?? [],
       basePath,
       0,
       elements,

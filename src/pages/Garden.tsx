@@ -15,7 +15,7 @@ function countLines(nodes: OpeningNode[]): number {
   if (nodes.length === 0) return 0;
   let total = 0;
   for (const node of nodes) {
-    if (node.children.length === 0) {
+    if ((node.children ?? []).length === 0) {
       total += 1;
     } else {
       total += countLines(node.children);
