@@ -1060,7 +1060,6 @@ export default function RepertoireBuilder() {
             </div>
           </div>
         </div>
-        </div>
         )}
       </div>
     </div>
