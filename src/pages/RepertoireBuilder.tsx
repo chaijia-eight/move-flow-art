@@ -1027,7 +1027,7 @@ export default function RepertoireBuilder() {
 function countTreeNodes(nodes: OpeningNode[]): number {
   let count = 0;
   for (const node of nodes) {
-    count += 1 + countTreeNodes(node.children);
+    count += 1 + countTreeNodes(node.children ?? []);
   }
   return count;
 }
