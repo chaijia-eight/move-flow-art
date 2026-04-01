@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, BookOpen, Star, Shuffle, Shield, Eye, Trophy } from "lucide-react";
+import { ArrowLeft, BookOpen, Star, Shuffle, Shield, Eye, Trophy, TreePine, PenTool, Layers, AlertTriangle, GitBranch } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
@@ -26,7 +26,7 @@ const steps = [
     icon: Shuffle,
     title: "Practice from memory",
     description:
-      "Once you've studied at least one line, the Practice mode picks a random line for you to play without hints. A great way to test yourself.",
+      "Once you've studied at least one line, Practice mode picks a random line for you to play without hints. A great way to test yourself.",
   },
   {
     icon: Shield,
@@ -35,10 +35,40 @@ const steps = [
       "Switch sides and face the opening as the opponent. The computer plays the moves you've been studying — can you find the best responses?",
   },
   {
+    icon: AlertTriangle,
+    title: "Learn secret traps",
+    description:
+      "Some openings include hidden trap lines. Study them to punish common mistakes your opponents might make in real games.",
+  },
+  {
     icon: Trophy,
     title: "Master every line",
     description:
       "A line is mastered after several correct attempts in a row. Track your mastery across all openings from the stats on the home screen.",
+  },
+  {
+    icon: TreePine,
+    title: "Build your own repertoire",
+    description:
+      "Head to the Garden to create a custom repertoire. Enter moves on the board to build your own opening tree, then study it just like the curated content.",
+  },
+  {
+    icon: Layers,
+    title: "Organise with chapters",
+    description:
+      "Split your repertoire into chapters — start from the initial position, import a PGN, or pull in a line you've already learned.",
+  },
+  {
+    icon: PenTool,
+    title: "Annotate your moves",
+    description:
+      "Add NAG symbols (brilliant, blunder, etc.) and written notes to any move. Draw arrows and highlight squares on the board to mark key ideas.",
+  },
+  {
+    icon: GitBranch,
+    title: "Explore the visual tree",
+    description:
+      "Toggle the tree view to see your entire repertoire as a branching diagram. Click any node to jump straight to that position.",
   },
 ];
 
