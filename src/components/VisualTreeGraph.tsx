@@ -58,6 +58,7 @@ function layoutTree(
   if (nodes.length === 0) return { layoutNodes: result, maxY };
 
   const mainNode = nodes[0];
+  const mainChildren = mainNode.children ?? [];
   const mainPath = [...basePath, 0];
   const node: LayoutNode = {
     move: mainNode.move,
@@ -67,7 +68,7 @@ function layoutTree(
     parentX: parentPos?.x,
     parentY: parentPos?.y,
     isMainLine,
-    childCount: mainNode.children.length,
+    childCount: mainChildren.length,
     category: mainNode.category,
     nag: mainNode.nag,
     hasNotes: !!mainNode.explanation,
@@ -76,9 +77,9 @@ function layoutTree(
   result.push(node);
 
   let cursorY = startY;
-  if (mainNode.children.length > 0) {
+  if (mainChildren.length > 0) {
     const sub = layoutTree(
-      mainNode.children,
+      mainChildren,
       mainPath,
       startX + STEP_X,
       startY,
@@ -91,6 +92,7 @@ function layoutTree(
 
   for (let i = 1; i < nodes.length; i++) {
     const branchNode = nodes[i];
+    const branchChildren = branchNode.children ?? [];
     const branchPath = [...basePath, i];
     cursorY += STEP_Y;
     const bNode: LayoutNode = {
@@ -101,7 +103,7 @@ function layoutTree(
       parentX: parentPos?.x,
       parentY: parentPos?.y,
       isMainLine: false,
-      childCount: branchNode.children.length,
+      childCount: branchChildren.length,
       category: branchNode.category,
       nag: branchNode.nag,
       hasNotes: !!branchNode.explanation,
@@ -109,9 +111,9 @@ function layoutTree(
     };
     result.push(bNode);
 
-    if (branchNode.children.length > 0) {
+    if (branchChildren.length > 0) {
       const sub = layoutTree(
-        branchNode.children,
+        branchChildren,
         branchPath,
         startX + STEP_X,
         cursorY,
