@@ -92,6 +92,7 @@ function layoutTree(
 
   for (let i = 1; i < nodes.length; i++) {
     const branchNode = nodes[i];
+    const branchChildren = branchNode.children ?? [];
     const branchPath = [...basePath, i];
     cursorY += STEP_Y;
     const bNode: LayoutNode = {
@@ -102,7 +103,7 @@ function layoutTree(
       parentX: parentPos?.x,
       parentY: parentPos?.y,
       isMainLine: false,
-      childCount: branchNode.children.length,
+      childCount: branchChildren.length,
       category: branchNode.category,
       nag: branchNode.nag,
       hasNotes: !!branchNode.explanation,
@@ -110,9 +111,9 @@ function layoutTree(
     };
     result.push(bNode);
 
-    if (branchNode.children.length > 0) {
+    if (branchChildren.length > 0) {
       const sub = layoutTree(
-        branchNode.children,
+        branchChildren,
         branchPath,
         startX + STEP_X,
         cursorY,
