@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, BookOpen, Star, Shuffle, Shield, Eye, Trophy } from "lucide-react";
+import { ArrowLeft, BookOpen, Star, Shuffle, Shield, Eye, Trophy, TreePine, PenTool, Layers, AlertTriangle, GitBranch } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
