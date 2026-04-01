@@ -99,7 +99,13 @@ export default function About() {
             How to use ArcChess
           </h1>
           <p className="text-lg text-muted-foreground mb-12 leading-relaxed">
-            A step-by-step guide to learning chess openings with ArcChess.
+            ArcChess is a focused tool for learning and memorising chess openings. Instead of
+            overwhelming you with theory, it breaks each opening into short, manageable lines
+            that you study move by move, then test yourself on from memory. You can explore a
+            curated library of popular openings, discover hidden traps, and even build your own
+            repertoire with annotations, chapters, and a visual move tree. Whether you're a
+            beginner picking up your first defence or an experienced player tightening your
+            preparation, ArcChess helps you learn at your own pace and retain what you study.
           </p>
         </motion.div>
 
