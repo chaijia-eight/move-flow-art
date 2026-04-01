@@ -77,9 +77,9 @@ function layoutTree(
   result.push(node);
 
   let cursorY = startY;
-  if (mainNode.children.length > 0) {
+  if (mainChildren.length > 0) {
     const sub = layoutTree(
-      mainNode.children,
+      mainChildren,
       mainPath,
       startX + STEP_X,
       startY,
