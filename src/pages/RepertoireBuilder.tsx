@@ -378,6 +378,41 @@ export default function RepertoireBuilder() {
     return () => {};
   }, []);
 
+  // Auto-save (debounced) for existing repertoires
+  const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [autoSaveStatus, setAutoSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
+
+  useEffect(() => {
+    if (!repertoireId || !user || !loaded || chapters.length === 0) return;
+
+    setAutoSaveStatus("idle");
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+
+    autoSaveTimer.current = setTimeout(async () => {
+      setAutoSaveStatus("saving");
+      try {
+        await supabase
+          .from("user_repertoires")
+          .update({
+            name,
+            side,
+            tree: chapters as any,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", repertoireId);
+        queryClient.invalidateQueries({ queryKey: ["user-repertoires", user.id] });
+        setAutoSaveStatus("saved");
+        setTimeout(() => setAutoSaveStatus("idle"), 2000);
+      } catch {
+        setAutoSaveStatus("idle");
+      }
+    }, 1500);
+
+    return () => {
+      if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+    };
+  }, [chapters, name, side, repertoireId, user, loaded, queryClient]);
+
   // Save
   const handleSave = useCallback(async () => {
     if (!user) return;
