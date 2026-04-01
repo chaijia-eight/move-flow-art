@@ -1125,9 +1125,9 @@ function renderMainLine(
   }
 
   // Continue the main line recursively
-  if (mainNode.children.length > 0) {
+  if ((mainNode.children ?? []).length > 0) {
     renderMainLine(
-      mainNode.children,
+      mainNode.children ?? [],
       mainPath,
       depth,
       elements,
