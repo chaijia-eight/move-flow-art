@@ -571,7 +571,7 @@ export default function Index() {
               <div className="relative mb-3">
                 <button
                   onClick={() => setShowTreeSelector(s => !s)}
-                  className="w-full text-left rounded-lg border border-border bg-card p-2.5 flex items-center justify-between gap-2 hover:bg-accent/50 transition-colors"
+                  className="w-full text-left rounded-lg border border-border bg-card p-2.5 flex items-center justify-between gap-2 hover:bg-accent/50 transition-colors depth-card"
                 >
                   <div className="min-w-0">
                     <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono">Tree</p>
