@@ -3,8 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { Trophy, ExternalLink, Crown } from "lucide-react";
+import { Trophy, ExternalLink, Crown, Pencil, Check, X } from "lucide-react";
 import { t, tf } from "@/lib/i18n";
+import { supabase } from "@/integrations/supabase/client";
 
 interface MoveRecord {
   san: string;
