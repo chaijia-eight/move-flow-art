@@ -351,9 +351,9 @@ export default function Index() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="rounded-xl border border-border bg-card p-8 text-center"
+                className="rounded-xl border border-border bg-card p-8 text-center depth-card"
               >
-                <Trophy className="w-10 h-10 text-primary mx-auto mb-3" />
+                <Trophy className="w-10 h-10 text-primary mx-auto mb-3 depth-icon" />
                 <h3 className="text-xl font-semibold text-foreground mb-1">{t("allMastered")}</h3>
                 <p className="text-sm text-muted-foreground">{t("allMasteredDesc")}</p>
               </motion.div>
