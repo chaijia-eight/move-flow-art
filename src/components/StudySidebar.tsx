@@ -94,7 +94,7 @@ export default function StudySidebar({
   // A pair = the most recent player move + the following opponent move (if any).
   // The pair persists until the NEXT player move is made.
   const currentExplanationPair = React.useMemo(() => {
-    if (moveHistory.length === 0 || isChallengeMode) return [];
+    if (moveHistory.length === 0) return [];
     const hasExplanations = Object.keys(moveExplanations).length > 0;
     if (!hasExplanations) return [];
 
@@ -247,7 +247,7 @@ export default function StudySidebar({
 
           {/* Move explanations (paired display) */}
           {(() => {
-            if (lineCompleted || showMasteryPrompt || isChallengeMode) return null;
+            if (lineCompleted || showMasteryPrompt) return null;
             if (currentExplanationPair.length === 0) {
               // Fallback: show latest player move notation (no explanation)
               if (moveHistory.length === 0) return null;
