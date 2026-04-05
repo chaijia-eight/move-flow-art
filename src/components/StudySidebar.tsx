@@ -70,7 +70,30 @@ export default function StudySidebar({
   const { user } = useAuth();
   const { isPro, canAnalyze, recordAnalysisUse } = useSubscription();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const isDev = user?.email === "xinya.vivian@me.com";
+  const [editingMoveIdx, setEditingMoveIdx] = useState<number | null>(null);
+  const [editText, setEditText] = useState("");
+  const [savingExplanation, setSavingExplanation] = useState(false);
 
+  const handleSaveExplanation = useCallback(async (moveIdx: number, san: string) => {
+    setSavingExplanation(true);
+    const text = editText.trim();
+    if (text) {
+      await supabase.from("move_explanations").upsert({
+        opening_id: openingId,
+        variation_id: variationId,
+        line_index: lineIndex,
+        move_index: moveIdx,
+        move_san: san,
+        explanation: text,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: "opening_id,variation_id,line_index,move_index" });
+      // Update local state
+      if (moveExplanations) moveExplanations[moveIdx] = text;
+    }
+    setEditingMoveIdx(null);
+    setSavingExplanation(false);
+  }, [editText, openingId, variationId, lineIndex, moveExplanations]);
   const handleLichessAnalysis = () => {
     if (user && !isPro) {
       recordAnalysisUse();
