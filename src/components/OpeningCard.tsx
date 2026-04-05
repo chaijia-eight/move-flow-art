@@ -7,6 +7,7 @@ import { getOpeningProgress } from "@/lib/progressStore";
 import { getOpeningFen } from "@/lib/openingFen";
 import MiniBoard from "@/components/MiniBoard";
 import { t, tn, tDesc } from "@/lib/i18n";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 
 interface OpeningCardProps {
   opening: Opening;
@@ -19,6 +20,7 @@ interface OpeningCardProps {
 
 export default function OpeningCard({ opening, onClick, index, focused, onToggleFocus, compact }: OpeningCardProps) {
   const theme = themes[opening.themeId];
+  const { isPro } = useSubscription();
   const isWhite = opening.primarySide === "w";
 
   const { totalLines, totalMoves, progress, openingFen } = useMemo(() => {
@@ -127,7 +129,11 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
       {/* Accent bar */}
       <div
         className="h-1.5"
-        style={{ background: `linear-gradient(90deg, ${theme.primaryColor}, ${theme.accentColor})` }}
+        style={{
+          background: isPro
+            ? `linear-gradient(90deg, hsl(42 90% 60%), ${theme.primaryColor}, ${theme.accentColor}, hsl(42 90% 60%))`
+            : `linear-gradient(90deg, ${theme.primaryColor}, ${theme.accentColor})`,
+        }}
       />
 
       {/* Theme color wash */}
