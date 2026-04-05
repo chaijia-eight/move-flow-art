@@ -336,7 +336,7 @@ export default function Index() {
                           <Progress value={recommendation.progress * 100} className="h-1" />
                         </div>
                       </div>
-                      <Button size="lg" className="shrink-0 gap-2 group-hover:scale-105 transition-transform">
+                      <Button size="lg" className="shrink-0 gap-2 group-hover:scale-105 transition-transform depth-button">
                         <Play className="w-4 h-4" />
                         {t("start")}
                       </Button>
