@@ -61,6 +61,30 @@ export default function Study() {
   const lineGateChecked = useRef(false);
   const { overrides: lineOverrides, reload: reloadOverrides } = useLineOverrides();
 
+  // Fetch move explanations for the current line
+  const lineIdx = lineParam !== null ? parseInt(lineParam, 10) : 0;
+  const { data: moveExplanations } = useQuery({
+    queryKey: ["move-explanations", openingId, variationParam, lineIdx],
+    queryFn: async () => {
+      if (!openingId || !variationParam) return {};
+      const { data } = await supabase
+        .from("move_explanations")
+        .select("move_index, explanation")
+        .eq("opening_id", openingId)
+        .eq("variation_id", variationParam)
+        .eq("line_index", lineIdx)
+        .neq("explanation", "");
+      if (!data) return {};
+      const map: Record<number, string> = {};
+      for (const row of data) {
+        if (row.explanation) map[row.move_index] = row.explanation;
+      }
+      return map;
+    },
+    enabled: !!openingId && !!variationParam,
+    staleTime: Infinity,
+  });
+
   const opening = openings.find((o) => o.id === openingId);
   const colorParam = searchParams.get("color") as "w" | "b" | null;
   const variationParam = searchParams.get("variation");
