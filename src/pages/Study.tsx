@@ -27,6 +27,8 @@ import {
   MASTERY_PROMPT_THRESHOLD,
 } from "@/lib/progressStore";
 import { playLineCompleteSound, playMasterySound, playCelebrationSound } from "@/lib/chessSounds";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 import { squareToCoords } from "@/data/pieceUnicode";
 import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap, Eye, ExternalLink } from "lucide-react";
 import { t, tf, tn, tDesc, tVar } from "@/lib/i18n";
