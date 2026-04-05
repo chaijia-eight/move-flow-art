@@ -66,7 +66,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               }`}
               aria-label="Dashboard"
             >
-              <img src="/favicon.png" alt="ArcChess" className="w-9 h-9" />
+              <img src="/favicon.png" alt="ArcChess" className="w-9 h-9 depth-logo" />
             </button>
           </TooltipTrigger>
           <TooltipContent side="right" sideOffset={8}>
