@@ -216,50 +216,82 @@
 /* 3D Depth utilities */
 .depth-card {
   box-shadow:
-    0 1px 2px hsl(0 0% 0% / 0.08),
-    0 4px 12px hsl(0 0% 0% / 0.12),
-    0 8px 24px hsl(0 0% 0% / 0.08);
+    0 1px 1px hsl(0 0% 0% / 0.06),
+    0 2px 4px hsl(0 0% 0% / 0.08),
+    0 6px 16px hsl(0 0% 0% / 0.12),
+    0 12px 32px hsl(0 0% 0% / 0.10),
+    0 24px 48px hsl(0 0% 0% / 0.06);
+  border-bottom-width: 3px;
+  border-bottom-color: hsl(0 0% 0% / 0.25);
   transform: translateZ(0);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 .depth-card-hover:hover {
   box-shadow:
-    0 2px 4px hsl(0 0% 0% / 0.1),
-    0 8px 20px hsl(0 0% 0% / 0.15),
-    0 16px 40px hsl(0 0% 0% / 0.1);
-  transform: translateY(-2px);
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
+    0 2px 2px hsl(0 0% 0% / 0.06),
+    0 4px 8px hsl(0 0% 0% / 0.1),
+    0 12px 28px hsl(0 0% 0% / 0.16),
+    0 20px 48px hsl(0 0% 0% / 0.14),
+    0 32px 64px hsl(0 0% 0% / 0.08);
+  transform: translateY(-4px) scale(1.01);
 }
 
 .depth-icon {
-  filter: drop-shadow(0 2px 3px hsl(0 0% 0% / 0.25));
+  filter: drop-shadow(0 2px 2px hsl(0 0% 0% / 0.3)) drop-shadow(0 4px 6px hsl(0 0% 0% / 0.2));
 }
 
 .depth-button {
   box-shadow:
-    0 1px 2px hsl(0 0% 0% / 0.1),
-    0 3px 8px hsl(0 0% 0% / 0.1),
-    inset 0 1px 0 hsl(0 0% 100% / 0.08);
+    0 1px 1px hsl(0 0% 0% / 0.08),
+    0 3px 8px hsl(0 0% 0% / 0.12),
+    0 8px 20px hsl(0 0% 0% / 0.08),
+    inset 0 1px 0 hsl(0 0% 100% / 0.1),
+    inset 0 -2px 0 hsl(0 0% 0% / 0.15);
+  border-bottom: 2px solid hsl(0 0% 0% / 0.2);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.depth-button:hover {
+  box-shadow:
+    0 2px 4px hsl(0 0% 0% / 0.1),
+    0 6px 16px hsl(0 0% 0% / 0.15),
+    0 12px 28px hsl(0 0% 0% / 0.1),
+    inset 0 1px 0 hsl(0 0% 100% / 0.12);
+  transform: translateY(-2px);
 }
 .depth-button:active {
   box-shadow:
     0 1px 1px hsl(0 0% 0% / 0.1),
-    inset 0 1px 3px hsl(0 0% 0% / 0.1);
+    inset 0 2px 4px hsl(0 0% 0% / 0.15);
   transform: translateY(1px);
 }
 
 .depth-badge {
   box-shadow:
-    0 1px 3px hsl(0 0% 0% / 0.15),
-    0 2px 6px hsl(0 0% 0% / 0.1);
+    0 2px 4px hsl(0 0% 0% / 0.2),
+    0 4px 10px hsl(0 0% 0% / 0.15),
+    inset 0 1px 0 hsl(0 0% 100% / 0.15);
+  border-bottom: 1.5px solid hsl(0 0% 0% / 0.2);
 }
 
 .depth-logo {
-  filter: drop-shadow(0 3px 6px hsl(0 0% 0% / 0.3));
+  filter: drop-shadow(0 3px 4px hsl(0 0% 0% / 0.35)) drop-shadow(0 6px 12px hsl(0 0% 0% / 0.25));
 }
 
 .depth-stat {
   box-shadow:
-    0 1px 3px hsl(0 0% 0% / 0.1),
-    0 4px 10px hsl(0 0% 0% / 0.08),
-    inset 0 1px 0 hsl(0 0% 100% / 0.04);
+    0 1px 2px hsl(0 0% 0% / 0.08),
+    0 4px 12px hsl(0 0% 0% / 0.1),
+    0 8px 20px hsl(0 0% 0% / 0.06),
+    inset 0 1px 0 hsl(0 0% 100% / 0.05);
+  border-bottom: 2px solid hsl(0 0% 0% / 0.2);
+}
+
+.depth-sidebar {
+  box-shadow:
+    4px 0 16px hsl(0 0% 0% / 0.15),
+    8px 0 32px hsl(0 0% 0% / 0.08);
+}
+
+.depth-progress-ring {
+  filter: drop-shadow(0 2px 4px hsl(0 0% 0% / 0.3));
 }

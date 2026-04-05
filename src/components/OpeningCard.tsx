@@ -150,7 +150,7 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
       <div className="p-4 relative">
         <div className="flex gap-3">
           {/* Mini board */}
-          <div className="w-28 h-28 flex-shrink-0 rounded overflow-hidden shadow-sm" style={{ border: `1px solid ${sideBadgeBorder}` }}>
+          <div className="w-28 h-28 flex-shrink-0 rounded overflow-hidden depth-card" style={{ border: `1px solid ${sideBadgeBorder}` }}>
             <MiniBoard
               fen={openingFen}
               theme={theme}
@@ -187,7 +187,7 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
               </div>
 
               {/* Progress ring */}
-              <div className="relative w-9 h-9 flex-shrink-0">
+              <div className="relative w-9 h-9 flex-shrink-0 depth-progress-ring">
                 <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
                   <circle
                     cx="18" cy="18" r="15" fill="none"
