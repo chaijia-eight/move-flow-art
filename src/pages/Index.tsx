@@ -628,7 +628,7 @@ export default function Index() {
               {/* Practice shortcut — shiny yellow */}
               {treePracticeLines.length > 0 && (
                 <button
-                  className="w-full mb-3 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+                  className="w-full mb-3 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] depth-button"
                   style={{
                     background: "linear-gradient(135deg, hsl(45, 100%, 50%, 0.15), hsl(45, 100%, 60%, 0.08))",
                     border: "1px solid hsl(45, 100%, 50%, 0.35)",
