@@ -36,6 +36,7 @@ interface StudySidebarProps {
   crucialMomentMessage?: string | null;
   isTrap?: boolean;
   fen: string;
+  moveExplanations?: Record<number, string>;
 }
 
 export default function StudySidebar({
@@ -62,6 +63,7 @@ export default function StudySidebar({
   crucialMomentMessage,
   isTrap,
   fen,
+  moveExplanations = {},
 }: StudySidebarProps) {
   const { currentTheme } = useTheme();
   const { user } = useAuth();
@@ -69,11 +71,9 @@ export default function StudySidebar({
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const handleLichessAnalysis = () => {
-    // Record usage for free users
     if (user && !isPro) {
       recordAnalysisUse();
     }
-    // Build Lichess analysis URL from FEN
     const encodedFen = fen.replace(/ /g, "_");
     const color = playerSide === "w" ? "white" : "black";
     window.open(`https://lichess.org/analysis/${encodedFen}?color=${color}`, "_blank");
@@ -89,6 +89,85 @@ export default function StudySidebar({
       }, 100);
     }
   }, [moveHistory.length, lineCompleted]);
+
+  // Build the "current pair" of explanations to show.
+  // A pair = the most recent player move + the following opponent move (if any).
+  // The pair persists until the NEXT player move is made.
+  const currentExplanationPair = React.useMemo(() => {
+    if (moveHistory.length === 0 || isChallengeMode) return [];
+    const hasExplanations = Object.keys(moveExplanations).length > 0;
+    if (!hasExplanations) return [];
+
+    // Find the latest player move index in moveHistory
+    let lastPlayerHistIdx = -1;
+    for (let i = moveHistory.length - 1; i >= 0; i--) {
+      const m = moveHistory[i];
+      const isPlayer = playerSide === "w" ? m.isWhite : !m.isWhite;
+      if (isPlayer) { lastPlayerHistIdx = i; break; }
+    }
+
+    // The pair starts from the move BEFORE the last player move (the opponent move that triggered it)
+    // or from the player move itself if it's the first in a pair.
+    // We want to show: [playerMove, opponentResponse?] based on the current moveHistory position.
+    
+    // Strategy: find the last player move's 0-based move index in allMoves,
+    // then show that move's explanation + the following move's explanation
+    const pair: { moveIndex: number; san: string; moveNumber: number; isWhite: boolean; explanation: string }[] = [];
+    
+    // Determine which move indices have been played
+    const movesPlayed = moveHistory.length; // 0-based count of moves played
+
+    // Find the start of the current "pair" - the last player move index
+    let pairStartIdx = -1;
+    for (let i = movesPlayed - 1; i >= 0; i--) {
+      const isWhiteMove = i % 2 === 0;
+      const isPlayerMove = (playerSide === "w") === isWhiteMove;
+      if (isPlayerMove) { pairStartIdx = i; break; }
+    }
+
+    if (pairStartIdx === -1) {
+      // No player move yet - might be opponent's first move (playing as black)
+      // Show explanation for move index 0 if it exists (opponent's first move)
+      if (movesPlayed >= 1 && moveExplanations[0]) {
+        const m = moveHistory[0];
+        pair.push({
+          moveIndex: 0,
+          san: m.san,
+          moveNumber: m.moveNumber,
+          isWhite: m.isWhite,
+          explanation: moveExplanations[0],
+        });
+      }
+      return pair;
+    }
+
+    // Add the player move explanation
+    if (moveExplanations[pairStartIdx]) {
+      const m = moveHistory[pairStartIdx];
+      pair.push({
+        moveIndex: pairStartIdx,
+        san: m.san,
+        moveNumber: m.moveNumber,
+        isWhite: m.isWhite,
+        explanation: moveExplanations[pairStartIdx],
+      });
+    }
+
+    // Add the opponent response explanation (next move after player move)
+    const responseIdx = pairStartIdx + 1;
+    if (responseIdx < movesPlayed && moveExplanations[responseIdx]) {
+      const m = moveHistory[responseIdx];
+      pair.push({
+        moveIndex: responseIdx,
+        san: m.san,
+        moveNumber: m.moveNumber,
+        isWhite: m.isWhite,
+        explanation: moveExplanations[responseIdx],
+      });
+    }
+
+    return pair;
+  }, [moveHistory, moveExplanations, playerSide, isChallengeMode, allMoves]);
 
   return (
     <div className="flex flex-col h-full bg-background border-l border-border/30">
@@ -166,50 +245,87 @@ export default function StudySidebar({
             );
           })()}
 
-          {/* Show the latest player move (just the move notation, no explanation) */}
+          {/* Move explanations (paired display) */}
           {(() => {
-            if (lineCompleted || showMasteryPrompt || moveHistory.length === 0 || isChallengeMode) return null;
-            if (crucialMomentMessage && moveHistory.length > 0) {
-              const lastMove = moveHistory[moveHistory.length - 1];
-              const isOpponentMove = playerSide === "w" ? !lastMove.isWhite : lastMove.isWhite;
-              if (isOpponentMove) return null;
+            if (lineCompleted || showMasteryPrompt || isChallengeMode) return null;
+            if (currentExplanationPair.length === 0) {
+              // Fallback: show latest player move notation (no explanation)
+              if (moveHistory.length === 0) return null;
+              // Skip if crucial moment is showing
+              if (crucialMomentMessage && moveHistory.length > 0) {
+                const lastMove = moveHistory[moveHistory.length - 1];
+                const isOpponentMove = playerSide === "w" ? !lastMove.isWhite : lastMove.isWhite;
+                if (isOpponentMove) return null;
+              }
+              let showIdx = -1;
+              for (let i = moveHistory.length - 1; i >= 0; i--) {
+                const m = moveHistory[i];
+                const isPlayer = playerSide === "w" ? m.isWhite : !m.isWhite;
+                if (isPlayer) { showIdx = i; break; }
+              }
+              if (showIdx === -1) return null;
+              const latestMove = moveHistory[showIdx];
+              const kingIcon = playerSide === "w" ? "/pieces/wK.svg" : "/pieces/bK.svg";
+              return (
+                <motion.div
+                  key={`move-${showIdx}`}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex items-start gap-2.5"
+                >
+                  <div className="flex-shrink-0 mt-1">
+                    <img src={kingIcon} alt="You" className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div
+                      className="rounded-lg px-3 py-2.5 text-sm leading-relaxed"
+                      style={{ background: "hsl(var(--card))", color: "hsl(var(--card-foreground))" }}
+                    >
+                      <span className="text-muted-foreground font-mono">
+                        {latestMove.moveNumber}{latestMove.isWhite ? "." : "..."} {latestMove.san}
+                      </span>
+                    </div>
+                  </div>
+                </motion.div>
+              );
             }
-            let showIdx = -1;
-            for (let i = moveHistory.length - 1; i >= 0; i--) {
-              const m = moveHistory[i];
-              const isPlayer = playerSide === "w" ? m.isWhite : !m.isWhite;
-              if (isPlayer) { showIdx = i; break; }
-            }
-            if (showIdx === -1) return null;
 
-            const latestMove = moveHistory[showIdx];
-            const kingIcon = playerSide === "w" ? "/pieces/wK.svg" : "/pieces/bK.svg";
-
+            // Show paired explanations
             return (
               <motion.div
-                key={`move-${showIdx}`}
+                key={`pair-${currentExplanationPair[0]?.moveIndex}`}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3 }}
-                className="flex items-start gap-2.5"
+                className="rounded-xl px-4 py-3 space-y-2.5"
+                style={{
+                  background: "hsl(var(--accent) / 0.35)",
+                  color: "hsl(var(--accent-foreground))",
+                }}
               >
-                <div className="flex-shrink-0 mt-1">
-                  <img src={kingIcon} alt="You" className="w-5 h-5" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div
-                    className="rounded-lg px-3 py-2.5 text-sm leading-relaxed"
-                    style={{
-                      background: "hsl(var(--card))",
-                      color: "hsl(var(--card-foreground))",
-                    }}
-                  >
-                    <span className="text-muted-foreground font-mono">
-                      {latestMove.moveNumber}{latestMove.isWhite ? "." : "..."} {latestMove.san}
+                {currentExplanationPair.map((entry) => (
+                  <div key={entry.moveIndex} className="text-sm leading-relaxed">
+                    <span
+                      className="inline-flex items-center gap-1 font-mono text-xs font-semibold rounded px-1.5 py-0.5 mr-1.5"
+                      style={{
+                        background: "hsl(var(--card))",
+                        color: "hsl(var(--card-foreground))",
+                      }}
+                    >
+                      {entry.moveNumber}{entry.isWhite ? "." : "..."}
+                      <img
+                        src={entry.isWhite ? "/pieces/wP.svg" : "/pieces/bP.svg"}
+                        alt=""
+                        className="w-3.5 h-3.5 inline"
+                      />
+                      {entry.san}
                     </span>
+                    <span className="font-medium">{entry.explanation}</span>
                   </div>
-                </div>
+                ))}
               </motion.div>
             );
           })()}

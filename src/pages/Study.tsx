@@ -27,6 +27,8 @@ import {
   MASTERY_PROMPT_THRESHOLD,
 } from "@/lib/progressStore";
 import { playLineCompleteSound, playMasterySound, playCelebrationSound } from "@/lib/chessSounds";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 import { squareToCoords } from "@/data/pieceUnicode";
 import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap, Eye, ExternalLink } from "lucide-react";
 import { t, tf, tn, tDesc, tVar } from "@/lib/i18n";
@@ -71,7 +73,31 @@ export default function Study() {
   const isPracticeMode = searchParams.get("practice") === "1";
   const isAgainstMode = searchParams.get("against") === "1";
 
-  // Resolve current line
+  // Fetch move explanations for the current line
+  const explanationLineIdx = lineParam !== null ? parseInt(lineParam, 10) : 0;
+  const { data: moveExplanations } = useQuery({
+    queryKey: ["move-explanations", openingId, variationParam, explanationLineIdx],
+    queryFn: async () => {
+      if (!openingId || !variationParam) return {};
+      const { data } = await supabase
+        .from("move_explanations")
+        .select("move_index, explanation")
+        .eq("opening_id", openingId)
+        .eq("variation_id", variationParam)
+        .eq("line_index", explanationLineIdx)
+        .neq("explanation", "");
+      if (!data) return {};
+      const map: Record<number, string> = {};
+      for (const row of data) {
+        if (row.explanation) map[row.move_index] = row.explanation;
+      }
+      return map;
+    },
+    enabled: !!openingId && !!variationParam,
+    staleTime: Infinity,
+  });
+
+
   const { currentLine, allVariationLines } = useMemo(() => {
     if (!opening || !variationParam) return { currentLine: null, allVariationLines: [] };
     const variation = opening.variations.find((v) => v.id === variationParam);
@@ -1085,6 +1111,7 @@ export default function Study() {
               crucialMomentMessage={crucialMomentMessage}
               isTrap={activeVariation?.isTrap}
               fen={fen}
+              moveExplanations={moveExplanations || {}}
             />
           </div>
         )}
