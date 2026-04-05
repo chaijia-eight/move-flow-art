@@ -282,9 +282,10 @@ export default function Index() {
               ArcChess
             </h1>
             {isPro && (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/15 text-primary text-xs font-semibold">
-                <Crown className="w-3 h-3" />
-                Premium
+              <span className="relative inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full premium-badge text-xs font-bold overflow-hidden">
+                <span className="absolute inset-0 premium-shimmer" />
+                <Crown className="w-3 h-3 relative z-10" />
+                <span className="relative z-10">Premium</span>
               </span>
             )}
           </div>

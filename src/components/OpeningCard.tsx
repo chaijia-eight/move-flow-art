@@ -129,7 +129,11 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
       {/* Accent bar */}
       <div
         className="h-1.5"
-        style={{ background: `linear-gradient(90deg, ${theme.primaryColor}, ${theme.accentColor})` }}
+        style={{
+          background: isPro
+            ? `linear-gradient(90deg, hsl(42 90% 60%), ${theme.primaryColor}, ${theme.accentColor}, hsl(42 90% 60%))`
+            : `linear-gradient(90deg, ${theme.primaryColor}, ${theme.accentColor})`,
+        }}
       />
 
       {/* Theme color wash */}

@@ -17,6 +17,7 @@ const bottomItems = [
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isPro } = useSubscription();
 
   const renderNavButton = (item: { icon: React.ElementType; label: string; path: string }) => {
     const Icon = item.icon;
@@ -29,7 +30,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             onClick={() => navigate(item.path)}
             className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
               isActive
-                ? "bg-primary/15 text-primary"
+                ? isPro
+                  ? "bg-[hsl(42,90%,60%)]/15 text-[hsl(42,90%,60%)]"
+                  : "bg-primary/15 text-primary"
                 : "text-muted-foreground hover:text-foreground hover:bg-secondary"
             }`}
             aria-label={item.label}
@@ -47,13 +50,20 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex bg-background">
       {/* Left Sidebar */}
-      <aside className="w-[60px] border-r border-border flex flex-col items-center py-4 shrink-0 sticky top-0 h-screen z-50">
+      <aside
+        className={`w-[60px] border-r flex flex-col items-center py-4 shrink-0 sticky top-0 h-screen z-50 transition-all ${
+          isPro ? "border-r-[hsl(42,90%,60%)]/20" : "border-border"
+        }`}
+        style={isPro ? { boxShadow: "inset -1px 0 0 hsl(42 90% 60% / 0.15)" } : undefined}
+      >
         {/* Logo */}
         <Tooltip delayDuration={300}>
           <TooltipTrigger asChild>
             <button
               onClick={() => navigate("/")}
-              className="w-10 h-10 rounded-lg flex items-center justify-center mb-6 hover:bg-secondary transition-colors"
+              className={`w-10 h-10 rounded-lg flex items-center justify-center hover:bg-secondary transition-all ${
+                isPro ? "premium-glow" : ""
+              }`}
               aria-label="Dashboard"
             >
               <img src="/favicon.png" alt="ArcChess" className="w-9 h-9" />
@@ -63,6 +73,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             Dashboard
           </TooltipContent>
         </Tooltip>
+
+        {/* Pro crown indicator */}
+        {isPro && (
+          <div className="mt-1 mb-4">
+            <Crown className="w-3.5 h-3.5 text-[hsl(42,90%,60%)]" />
+          </div>
+        )}
+        {!isPro && <div className="mb-6" />}
 
         {/* Main nav */}
         <nav className="flex flex-col items-center gap-1">
