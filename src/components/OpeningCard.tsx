@@ -7,6 +7,7 @@ import { getOpeningProgress } from "@/lib/progressStore";
 import { getOpeningFen } from "@/lib/openingFen";
 import MiniBoard from "@/components/MiniBoard";
 import { t, tn, tDesc } from "@/lib/i18n";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 
 interface OpeningCardProps {
   opening: Opening;
