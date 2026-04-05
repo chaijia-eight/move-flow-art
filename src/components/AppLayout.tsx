@@ -1,7 +1,8 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Sprout, BookOpen, Info, Settings } from "lucide-react";
+import { Sprout, BookOpen, Info, Settings, Crown } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 
 const navItems = [
   { icon: Sprout, label: "Garden", path: "/garden" },
