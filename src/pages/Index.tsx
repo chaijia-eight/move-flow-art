@@ -472,7 +472,7 @@ export default function Index() {
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <Leaf className="w-3.5 h-3.5 text-primary" />
+                  <Leaf className="w-3.5 h-3.5 text-primary depth-icon" />
                   <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium">
                     Your Studies
                   </h2>
