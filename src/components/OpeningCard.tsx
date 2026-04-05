@@ -150,7 +150,7 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
       <div className="p-4 relative">
         <div className="flex gap-3">
           {/* Mini board */}
-          <div className="w-28 h-28 flex-shrink-0 rounded overflow-hidden shadow-sm" style={{ border: `1px solid ${sideBadgeBorder}` }}>
+          <div className="w-28 h-28 flex-shrink-0 rounded overflow-hidden depth-card" style={{ border: `1px solid ${sideBadgeBorder}` }}>
             <MiniBoard
               fen={openingFen}
               theme={theme}

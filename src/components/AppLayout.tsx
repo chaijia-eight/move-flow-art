@@ -51,10 +51,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen flex bg-background">
       {/* Left Sidebar */}
       <aside
-        className={`w-[60px] border-r flex flex-col items-center py-4 shrink-0 sticky top-0 h-screen z-50 transition-all ${
+        className={`w-[60px] border-r flex flex-col items-center py-4 shrink-0 sticky top-0 h-screen z-50 transition-all depth-sidebar ${
           isPro ? "border-r-[hsl(42,90%,60%)]/20" : "border-border"
         }`}
-        style={isPro ? { boxShadow: "inset -1px 0 0 hsl(42 90% 60% / 0.15)" } : undefined}
+        style={isPro ? { boxShadow: "inset -1px 0 0 hsl(42 90% 60% / 0.15), 4px 0 16px hsl(0 0% 0% / 0.15), 8px 0 32px hsl(0 0% 0% / 0.08)" } : undefined}
       >
         {/* Logo */}
         <Tooltip delayDuration={300}>
