@@ -367,7 +367,7 @@ export default function Index() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.15 }}
             >
-              <div className="rounded-xl border border-primary/20 overflow-hidden">
+              <div className="rounded-xl border border-primary/20 overflow-hidden depth-card">
                 {/* Header gradient */}
                 <div className="relative px-6 py-5 bg-gradient-to-br from-primary/15 via-primary/10 to-accent/10 border-b border-primary/10">
                   <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary)/0.08),transparent_70%)]" />
