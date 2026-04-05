@@ -258,7 +258,7 @@ export default function Index() {
               ].map(({ label, value, icon: Icon }) => (
                 <div key={label} className="rounded-lg border border-border bg-card p-3 depth-stat">
                   <div className="flex items-center gap-2">
-                    <Icon className="w-3 h-3 text-muted-foreground" />
+                    <Icon className="w-3 h-3 text-muted-foreground depth-icon" />
                     <p className="text-xs text-muted-foreground">{label}</p>
                   </div>
                   <p className="text-lg font-semibold text-foreground mt-0.5">{value}</p>
