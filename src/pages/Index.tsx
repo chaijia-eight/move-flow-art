@@ -307,7 +307,7 @@ export default function Index() {
                   {t("recommendedNextStep")}
                 </h2>
                 <div
-                  className="rounded-xl border border-border overflow-hidden cursor-pointer group"
+                  className="rounded-xl border border-border overflow-hidden cursor-pointer group depth-card depth-card-hover"
                   onClick={() =>
                     navigate(
                       `/study/${recommendation.openingId}/play?color=${recommendation.color}&variation=${recommendation.variationId}&line=${recommendation.lineIndex}`
