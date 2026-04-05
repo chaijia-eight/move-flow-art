@@ -310,6 +310,35 @@ export default function StudySidebar({
                       <span className="text-muted-foreground font-mono">
                         {latestMove.moveNumber}{latestMove.isWhite ? "." : "..."} {latestMove.san}
                       </span>
+                      {isDev && editingMoveIdx === showIdx ? (
+                        <span className="flex items-center gap-1 mt-1">
+                          <input
+                            autoFocus
+                            value={editText}
+                            onChange={(e) => setEditText(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") handleSaveExplanation(showIdx, latestMove.san);
+                              if (e.key === "Escape") setEditingMoveIdx(null);
+                            }}
+                            className="flex-1 text-xs px-1.5 py-0.5 rounded border border-border bg-background text-foreground"
+                            placeholder="Add explanation..."
+                            disabled={savingExplanation}
+                          />
+                          <button onClick={() => handleSaveExplanation(showIdx, latestMove.san)} className="p-0.5 rounded hover:bg-accent">
+                            <Check size={12} className="text-green-500" />
+                          </button>
+                          <button onClick={() => setEditingMoveIdx(null)} className="p-0.5 rounded hover:bg-accent">
+                            <X size={12} className="text-muted-foreground" />
+                          </button>
+                        </span>
+                      ) : isDev ? (
+                        <button
+                          onClick={() => { setEditingMoveIdx(showIdx); setEditText(""); }}
+                          className="ml-2 text-[10px] opacity-40 hover:opacity-100 transition-opacity inline-flex items-center gap-0.5"
+                        >
+                          <Pencil size={10} /> add
+                        </button>
+                      ) : null}
                     </div>
                   </div>
                 </motion.div>
