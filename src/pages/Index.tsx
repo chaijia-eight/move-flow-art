@@ -375,7 +375,7 @@ export default function Index() {
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <div className="p-1.5 rounded-lg bg-primary/20">
-                          <Crown className="w-5 h-5 text-primary" />
+                          <Crown className="w-5 h-5 text-primary depth-icon" />
                         </div>
                         <h2 className="text-lg font-bold text-foreground tracking-tight">Pro Up</h2>
                       </div>
