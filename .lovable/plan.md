@@ -1,45 +1,36 @@
 
 
-## Add Board/Tree View Toggle with Visual Tree Graph
+# Premium Gold Glow — Visual Upgrade for Pro Users
 
-### Overview
-Add a toggle in the header area that switches between the current board view and a new visual tree graph view (like the reference screenshot — a node-graph layout with connected move nodes).
+## Summary
+When a user has Pro status, the app should feel noticeably more premium with gold glow accents throughout the UI — on the sidebar, the dashboard header, cards, and key interactive elements.
 
-### Changes
+## Changes
 
-**1. View toggle (`src/pages/RepertoireBuilder.tsx`)**
-- Add state: `viewMode: "board" | "tree"` (default `"board"`)
-- Place a two-button toggle group (board icon + tree icon) in the header bar, next to the side selector
-- When `viewMode === "board"`, render the existing board + sidebar layout
-- When `viewMode === "tree"`, render the new `VisualTreeGraph` component full-width
+### 1. AppLayout sidebar — gold accent strip & logo glow (src/components/AppLayout.tsx)
+- Import `useSubscription` and read `isPro`
+- When `isPro`, add a thin vertical gold gradient line on the sidebar's right border
+- Add a subtle gold `box-shadow` glow around the logo button
+- Add a small Crown icon or gold dot indicator below the logo
 
-**2. New component: `src/components/VisualTreeGraph.tsx`**
+### 2. Dashboard header — enhanced premium badge (src/pages/Index.tsx)
+- Upgrade the existing "Premium" badge (line ~285) from a static pill to an animated one with a shimmer sweep effect and a gold glow shadow
+- Add a subtle gold gradient underline to the "ArcChess" title when Pro
 
-A canvas/SVG-based visual tree that renders the `OpeningNode[]` as a horizontal node graph:
-- **Root node**: orange diamond (starting position)
-- **Move nodes**: rounded green pills showing `1. e4`, `1... e5`, etc.
-- **Branching nodes**: show a small minus/collapse indicator when they have multiple children
-- **Connections**: curved/straight lines between parent → child nodes
-- **Layout algorithm**: main continuation flows horizontally right; branches fork vertically downward (like the reference image)
-- **Interactions**: click a node → navigate to that path in the builder (calls `onNavigate(path)`)
-- Active/selected node highlighted with an orange border
+### 3. Global CSS — premium utility classes (src/index.css)
+- Add a `.premium-glow` utility class with a gold box-shadow (`hsl(42 90% 60%)`)
+- Add a `.premium-shimmer` class with the existing shimmer keyframe for badge/button highlights
+- Add a `.premium-border` class that applies a gold gradient border
 
-**Layout logic:**
-- Walk the tree recursively, assign (x, y) coordinates
-- Main line (child index 0) continues horizontally (same y, x + spacing)
-- Branch lines (child index 1+) drop down (y + vertical spacing) then continue horizontally
-- Use SVG `<line>` or `<path>` for connections, `<foreignObject>` or `<g>` for node pills
+### 4. Card accents for Pro users (src/components/OpeningCard.tsx)
+- When `isPro` (from `useSubscription`), add a faint gold top-border or corner accent to opening cards
 
-**Props:**
-```typescript
-interface VisualTreeGraphProps {
-  tree: OpeningNode[];
-  currentPath: TreePath;
-  onNavigate: (path: TreePath) => void;
-}
-```
+### 5. Sidebar nav buttons — gold active state (src/components/AppLayout.tsx)
+- When `isPro` and a nav button is active, use a gold-tinted highlight (`bg-[hsl(42,90%,60%)]/15`) instead of the default `bg-primary/15`
 
-### Files
-- `src/pages/RepertoireBuilder.tsx` — add toggle state + conditional rendering
-- `src/components/VisualTreeGraph.tsx` — new visual tree graph component
+## Technical Details
+- All changes are purely visual / CSS-driven — no database or backend changes
+- The `useSubscription()` hook is already available and provides `isPro`
+- Shimmer keyframe already exists in `index.css`; will reuse it
+- Gold color token: `hsl(42 90% 60%)` (consistent with existing `--move-main` and CTA shimmers)
 
