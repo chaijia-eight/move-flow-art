@@ -347,7 +347,39 @@ export default function StudySidebar({
                       />
                       {entry.san}
                     </span>
-                    <span className="font-medium">{entry.explanation}</span>
+                    {editingMoveIdx === entry.moveIndex && isDev ? (
+                      <span className="inline-flex items-center gap-1 flex-1">
+                        <input
+                          autoFocus
+                          value={editText}
+                          onChange={(e) => setEditText(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") handleSaveExplanation(entry.moveIndex, entry.san);
+                            if (e.key === "Escape") setEditingMoveIdx(null);
+                          }}
+                          className="flex-1 text-xs px-1.5 py-0.5 rounded border border-border bg-background text-foreground font-medium"
+                          disabled={savingExplanation}
+                        />
+                        <button onClick={() => handleSaveExplanation(entry.moveIndex, entry.san)} disabled={savingExplanation} className="p-0.5 rounded hover:bg-accent">
+                          <Check size={12} className="text-green-500" />
+                        </button>
+                        <button onClick={() => setEditingMoveIdx(null)} className="p-0.5 rounded hover:bg-accent">
+                          <X size={12} className="text-muted-foreground" />
+                        </button>
+                      </span>
+                    ) : (
+                      <span className="font-medium">
+                        {entry.explanation}
+                        {isDev && (
+                          <button
+                            onClick={() => { setEditingMoveIdx(entry.moveIndex); setEditText(entry.explanation); }}
+                            className="ml-1 p-0.5 rounded hover:bg-accent inline-flex align-middle opacity-40 hover:opacity-100 transition-opacity"
+                          >
+                            <Pencil size={10} />
+                          </button>
+                        )}
+                      </span>
+                    )}
                   </div>
                 ))}
               </motion.div>
