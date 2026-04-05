@@ -501,7 +501,7 @@ export default function Index() {
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 min-w-0">
-                          <Leaf className="w-3 h-3 text-primary/60 shrink-0" />
+                          <Leaf className="w-3 h-3 text-primary/60 shrink-0 depth-icon" />
                           <span className="text-sm font-medium text-foreground truncate">{rep.name}</span>
                         </div>
                         <div className="flex items-center gap-1.5 shrink-0 ml-2">
