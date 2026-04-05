@@ -37,7 +37,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             }`}
             aria-label={item.label}
           >
-            <Icon className="w-[18px] h-[18px]" />
+            <Icon className="w-[18px] h-[18px] depth-icon" />
           </button>
         </TooltipTrigger>
         <TooltipContent side="right" sideOffset={8}>
