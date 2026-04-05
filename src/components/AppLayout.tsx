@@ -77,7 +77,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         {/* Pro crown indicator */}
         {isPro && (
           <div className="mt-1 mb-4">
-            <Crown className="w-3.5 h-3.5 text-[hsl(42,90%,60%)]" />
+            <Crown className="w-3.5 h-3.5 text-[hsl(42,90%,60%)] depth-icon" />
           </div>
         )}
         {!isPro && <div className="mb-6" />}
