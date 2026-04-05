@@ -1111,6 +1111,7 @@ export default function Study() {
               crucialMomentMessage={crucialMomentMessage}
               isTrap={activeVariation?.isTrap}
               fen={fen}
+              moveExplanations={moveExplanations || {}}
             />
           </div>
         )}
