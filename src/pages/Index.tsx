@@ -319,7 +319,7 @@ export default function Index() {
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <Target className="w-3.5 h-3.5 text-primary shrink-0" />
+                          <Target className="w-3.5 h-3.5 text-primary shrink-0 depth-icon" />
                           <span className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">
                             {tn("openingName", recommendation.openingId)}
                           </span>
