@@ -337,7 +337,7 @@ export default function Index() {
                         </div>
                       </div>
                       <Button size="lg" className="shrink-0 gap-2 group-hover:scale-105 transition-transform depth-button">
-                        <Play className="w-4 h-4" />
+                        <Play className="w-4 h-4 depth-icon" />
                         {t("start")}
                       </Button>
                     </div>
