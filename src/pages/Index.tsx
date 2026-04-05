@@ -497,7 +497,7 @@ export default function Index() {
                       whileHover={{ x: 4 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => navigate(`/garden/build/${rep.id}`)}
-                      className="text-left rounded-lg px-3 py-2.5 border border-border/30 bg-card hover:bg-accent/30 transition-all group"
+                      className="text-left rounded-lg px-3 py-2.5 border border-border/30 bg-card hover:bg-accent/30 transition-all group depth-card depth-card-hover"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 min-w-0">
