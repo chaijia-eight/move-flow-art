@@ -20,6 +20,7 @@ interface OpeningCardProps {
 
 export default function OpeningCard({ opening, onClick, index, focused, onToggleFocus, compact }: OpeningCardProps) {
   const theme = themes[opening.themeId];
+  const { isPro } = useSubscription();
   const isWhite = opening.primarySide === "w";
 
   const { totalLines, totalMoves, progress, openingFen } = useMemo(() => {
