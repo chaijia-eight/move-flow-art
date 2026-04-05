@@ -217,7 +217,7 @@ export default function Index() {
           transition={{ duration: 0.5 }}
         >
           <div className="flex items-center gap-2 mb-4">
-            <Star className="w-3.5 h-3.5 text-primary" />
+            <Star className="w-3.5 h-3.5 text-primary depth-icon" />
             <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium">
               Your Focus
             </h2>
