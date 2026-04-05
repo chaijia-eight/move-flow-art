@@ -37,7 +37,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             }`}
             aria-label={item.label}
           >
-            <Icon className="w-[18px] h-[18px]" />
+            <Icon className="w-[18px] h-[18px] depth-icon" />
           </button>
         </TooltipTrigger>
         <TooltipContent side="right" sideOffset={8}>
@@ -66,7 +66,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               }`}
               aria-label="Dashboard"
             >
-              <img src="/favicon.png" alt="ArcChess" className="w-9 h-9" />
+              <img src="/favicon.png" alt="ArcChess" className="w-9 h-9 depth-logo" />
             </button>
           </TooltipTrigger>
           <TooltipContent side="right" sideOffset={8}>
@@ -77,7 +77,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         {/* Pro crown indicator */}
         {isPro && (
           <div className="mt-1 mb-4">
-            <Crown className="w-3.5 h-3.5 text-[hsl(42,90%,60%)]" />
+            <Crown className="w-3.5 h-3.5 text-[hsl(42,90%,60%)] depth-icon" />
           </div>
         )}
         {!isPro && <div className="mb-6" />}

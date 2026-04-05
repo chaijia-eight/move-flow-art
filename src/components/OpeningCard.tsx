@@ -75,7 +75,7 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
         whileHover={{ y: -2, transition: { duration: 0.2 } }}
         whileTap={{ scale: 0.98 }}
         onClick={onClick}
-        className="relative cursor-pointer rounded-lg overflow-hidden flex items-center gap-3 px-4 py-3"
+        className="relative cursor-pointer rounded-lg overflow-hidden flex items-center gap-3 px-4 py-3 depth-card depth-card-hover"
         style={{
           background: cardBg,
           border: `1px solid ${sideBadgeBorder}`,
@@ -120,7 +120,7 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
       }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className="relative group rounded-xl overflow-hidden cursor-pointer"
+      className="relative group rounded-xl overflow-hidden cursor-pointer depth-card depth-card-hover"
       style={{
         background: cardBg,
         border: `1px solid ${sideBadgeBorder}`,

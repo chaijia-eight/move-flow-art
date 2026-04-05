@@ -217,7 +217,7 @@ export default function Index() {
           transition={{ duration: 0.5 }}
         >
           <div className="flex items-center gap-2 mb-4">
-            <Star className="w-3.5 h-3.5 text-primary" />
+            <Star className="w-3.5 h-3.5 text-primary depth-icon" />
             <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium">
               Your Focus
             </h2>
@@ -256,9 +256,9 @@ export default function Index() {
                 { label: t("openingsStarted"), value: `${stats.openingsStarted}/${stats.totalOpenings}`, icon: BookOpen },
                 { label: t("totalAttempts"), value: String(stats.totalAttempts), icon: Target },
               ].map(({ label, value, icon: Icon }) => (
-                <div key={label} className="rounded-lg border border-border bg-card p-3">
+                <div key={label} className="rounded-lg border border-border bg-card p-3 depth-stat">
                   <div className="flex items-center gap-2">
-                    <Icon className="w-3 h-3 text-muted-foreground" />
+                    <Icon className="w-3 h-3 text-muted-foreground depth-icon" />
                     <p className="text-xs text-muted-foreground">{label}</p>
                   </div>
                   <p className="text-lg font-semibold text-foreground mt-0.5">{value}</p>
@@ -282,9 +282,9 @@ export default function Index() {
               ArcChess
             </h1>
             {isPro && (
-              <span className="relative inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full premium-badge text-xs font-bold overflow-hidden">
+              <span className="relative inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full premium-badge text-xs font-bold overflow-hidden depth-badge">
                 <span className="absolute inset-0 premium-shimmer" />
-                <Crown className="w-3 h-3 relative z-10" />
+                <Crown className="w-3 h-3 relative z-10 depth-icon" />
                 <span className="relative z-10">Premium</span>
               </span>
             )}
@@ -307,7 +307,7 @@ export default function Index() {
                   {t("recommendedNextStep")}
                 </h2>
                 <div
-                  className="rounded-xl border border-border overflow-hidden cursor-pointer group"
+                  className="rounded-xl border border-border overflow-hidden cursor-pointer group depth-card depth-card-hover"
                   onClick={() =>
                     navigate(
                       `/study/${recommendation.openingId}/play?color=${recommendation.color}&variation=${recommendation.variationId}&line=${recommendation.lineIndex}`
@@ -319,7 +319,7 @@ export default function Index() {
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <Target className="w-3.5 h-3.5 text-primary shrink-0" />
+                          <Target className="w-3.5 h-3.5 text-primary shrink-0 depth-icon" />
                           <span className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">
                             {tn("openingName", recommendation.openingId)}
                           </span>
@@ -336,8 +336,8 @@ export default function Index() {
                           <Progress value={recommendation.progress * 100} className="h-1" />
                         </div>
                       </div>
-                      <Button size="lg" className="shrink-0 gap-2 group-hover:scale-105 transition-transform">
-                        <Play className="w-4 h-4" />
+                      <Button size="lg" className="shrink-0 gap-2 group-hover:scale-105 transition-transform depth-button">
+                        <Play className="w-4 h-4 depth-icon" />
                         {t("start")}
                       </Button>
                     </div>
@@ -351,9 +351,9 @@ export default function Index() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="rounded-xl border border-border bg-card p-8 text-center"
+                className="rounded-xl border border-border bg-card p-8 text-center depth-card"
               >
-                <Trophy className="w-10 h-10 text-primary mx-auto mb-3" />
+                <Trophy className="w-10 h-10 text-primary mx-auto mb-3 depth-icon" />
                 <h3 className="text-xl font-semibold text-foreground mb-1">{t("allMastered")}</h3>
                 <p className="text-sm text-muted-foreground">{t("allMasteredDesc")}</p>
               </motion.div>
@@ -367,7 +367,7 @@ export default function Index() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.15 }}
             >
-              <div className="rounded-xl border border-primary/20 overflow-hidden">
+              <div className="rounded-xl border border-primary/20 overflow-hidden depth-card">
                 {/* Header gradient */}
                 <div className="relative px-6 py-5 bg-gradient-to-br from-primary/15 via-primary/10 to-accent/10 border-b border-primary/10">
                   <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary)/0.08),transparent_70%)]" />
@@ -375,7 +375,7 @@ export default function Index() {
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <div className="p-1.5 rounded-lg bg-primary/20">
-                          <Crown className="w-5 h-5 text-primary" />
+                          <Crown className="w-5 h-5 text-primary depth-icon" />
                         </div>
                         <h2 className="text-lg font-bold text-foreground tracking-tight">Pro Up</h2>
                       </div>
@@ -472,7 +472,7 @@ export default function Index() {
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <Leaf className="w-3.5 h-3.5 text-primary" />
+                  <Leaf className="w-3.5 h-3.5 text-primary depth-icon" />
                   <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium">
                     Your Studies
                   </h2>
@@ -497,11 +497,11 @@ export default function Index() {
                       whileHover={{ x: 4 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => navigate(`/garden/build/${rep.id}`)}
-                      className="text-left rounded-lg px-3 py-2.5 border border-border/30 bg-card hover:bg-accent/30 transition-all group"
+                      className="text-left rounded-lg px-3 py-2.5 border border-border/30 bg-card hover:bg-accent/30 transition-all group depth-card depth-card-hover"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 min-w-0">
-                          <Leaf className="w-3 h-3 text-primary/60 shrink-0" />
+                          <Leaf className="w-3 h-3 text-primary/60 shrink-0 depth-icon" />
                           <span className="text-sm font-medium text-foreground truncate">{rep.name}</span>
                         </div>
                         <div className="flex items-center gap-1.5 shrink-0 ml-2">
@@ -526,7 +526,7 @@ export default function Index() {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <div className="flex items-center gap-3 mb-3">
-              <Star className="w-3.5 h-3.5 text-primary" />
+              <Star className="w-3.5 h-3.5 text-primary depth-icon" />
               <h2 className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium">
                 Your Focus
               </h2>
@@ -571,7 +571,7 @@ export default function Index() {
               <div className="relative mb-3">
                 <button
                   onClick={() => setShowTreeSelector(s => !s)}
-                  className="w-full text-left rounded-lg border border-border bg-card p-2.5 flex items-center justify-between gap-2 hover:bg-accent/50 transition-colors"
+                  className="w-full text-left rounded-lg border border-border bg-card p-2.5 flex items-center justify-between gap-2 hover:bg-accent/50 transition-colors depth-card"
                 >
                   <div className="min-w-0">
                     <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono">Tree</p>
@@ -628,7 +628,7 @@ export default function Index() {
               {/* Practice shortcut — shiny yellow */}
               {treePracticeLines.length > 0 && (
                 <button
-                  className="w-full mb-3 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+                  className="w-full mb-3 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] depth-button"
                   style={{
                     background: "linear-gradient(135deg, hsl(45, 100%, 50%, 0.15), hsl(45, 100%, 60%, 0.08))",
                     border: "1px solid hsl(45, 100%, 50%, 0.35)",
