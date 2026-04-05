@@ -256,7 +256,7 @@ export default function Index() {
                 { label: t("openingsStarted"), value: `${stats.openingsStarted}/${stats.totalOpenings}`, icon: BookOpen },
                 { label: t("totalAttempts"), value: String(stats.totalAttempts), icon: Target },
               ].map(({ label, value, icon: Icon }) => (
-                <div key={label} className="rounded-lg border border-border bg-card p-3">
+                <div key={label} className="rounded-lg border border-border bg-card p-3 depth-stat">
                   <div className="flex items-center gap-2">
                     <Icon className="w-3 h-3 text-muted-foreground" />
                     <p className="text-xs text-muted-foreground">{label}</p>
