@@ -3,8 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { Trophy, ExternalLink, Crown } from "lucide-react";
+import { Trophy, ExternalLink, Crown, Pencil, Check, X } from "lucide-react";
 import { t, tf } from "@/lib/i18n";
+import { supabase } from "@/integrations/supabase/client";
 
 interface MoveRecord {
   san: string;
@@ -69,7 +70,30 @@ export default function StudySidebar({
   const { user } = useAuth();
   const { isPro, canAnalyze, recordAnalysisUse } = useSubscription();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const isDev = user?.email === "xinya.vivian@me.com";
+  const [editingMoveIdx, setEditingMoveIdx] = useState<number | null>(null);
+  const [editText, setEditText] = useState("");
+  const [savingExplanation, setSavingExplanation] = useState(false);
 
+  const handleSaveExplanation = useCallback(async (moveIdx: number, san: string) => {
+    setSavingExplanation(true);
+    const text = editText.trim();
+    if (text) {
+      await supabase.from("move_explanations").upsert({
+        opening_id: openingId,
+        variation_id: variationId,
+        line_index: lineIndex,
+        move_index: moveIdx,
+        move_san: san,
+        explanation: text,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: "opening_id,variation_id,line_index,move_index" });
+      // Update local state
+      if (moveExplanations) moveExplanations[moveIdx] = text;
+    }
+    setEditingMoveIdx(null);
+    setSavingExplanation(false);
+  }, [editText, openingId, variationId, lineIndex, moveExplanations]);
   const handleLichessAnalysis = () => {
     if (user && !isPro) {
       recordAnalysisUse();
@@ -286,6 +310,35 @@ export default function StudySidebar({
                       <span className="text-muted-foreground font-mono">
                         {latestMove.moveNumber}{latestMove.isWhite ? "." : "..."} {latestMove.san}
                       </span>
+                      {isDev && editingMoveIdx === showIdx ? (
+                        <span className="flex items-center gap-1 mt-1">
+                          <input
+                            autoFocus
+                            value={editText}
+                            onChange={(e) => setEditText(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") handleSaveExplanation(showIdx, latestMove.san);
+                              if (e.key === "Escape") setEditingMoveIdx(null);
+                            }}
+                            className="flex-1 text-xs px-1.5 py-0.5 rounded border border-border bg-background text-foreground"
+                            placeholder="Add explanation..."
+                            disabled={savingExplanation}
+                          />
+                          <button onClick={() => handleSaveExplanation(showIdx, latestMove.san)} className="p-0.5 rounded hover:bg-accent">
+                            <Check size={12} className="text-green-500" />
+                          </button>
+                          <button onClick={() => setEditingMoveIdx(null)} className="p-0.5 rounded hover:bg-accent">
+                            <X size={12} className="text-muted-foreground" />
+                          </button>
+                        </span>
+                      ) : isDev ? (
+                        <button
+                          onClick={() => { setEditingMoveIdx(showIdx); setEditText(""); }}
+                          className="ml-2 text-[10px] opacity-40 hover:opacity-100 transition-opacity inline-flex items-center gap-0.5"
+                        >
+                          <Pencil size={10} /> add
+                        </button>
+                      ) : null}
                     </div>
                   </div>
                 </motion.div>
@@ -323,7 +376,39 @@ export default function StudySidebar({
                       />
                       {entry.san}
                     </span>
-                    <span className="font-medium">{entry.explanation}</span>
+                    {editingMoveIdx === entry.moveIndex && isDev ? (
+                      <span className="inline-flex items-center gap-1 flex-1">
+                        <input
+                          autoFocus
+                          value={editText}
+                          onChange={(e) => setEditText(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") handleSaveExplanation(entry.moveIndex, entry.san);
+                            if (e.key === "Escape") setEditingMoveIdx(null);
+                          }}
+                          className="flex-1 text-xs px-1.5 py-0.5 rounded border border-border bg-background text-foreground font-medium"
+                          disabled={savingExplanation}
+                        />
+                        <button onClick={() => handleSaveExplanation(entry.moveIndex, entry.san)} disabled={savingExplanation} className="p-0.5 rounded hover:bg-accent">
+                          <Check size={12} className="text-green-500" />
+                        </button>
+                        <button onClick={() => setEditingMoveIdx(null)} className="p-0.5 rounded hover:bg-accent">
+                          <X size={12} className="text-muted-foreground" />
+                        </button>
+                      </span>
+                    ) : (
+                      <span className="font-medium">
+                        {entry.explanation}
+                        {isDev && (
+                          <button
+                            onClick={() => { setEditingMoveIdx(entry.moveIndex); setEditText(entry.explanation); }}
+                            className="ml-1 p-0.5 rounded hover:bg-accent inline-flex align-middle opacity-40 hover:opacity-100 transition-opacity"
+                          >
+                            <Pencil size={10} />
+                          </button>
+                        )}
+                      </span>
+                    )}
                   </div>
                 ))}
               </motion.div>
