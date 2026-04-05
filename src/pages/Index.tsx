@@ -284,7 +284,7 @@ export default function Index() {
             {isPro && (
               <span className="relative inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full premium-badge text-xs font-bold overflow-hidden depth-badge">
                 <span className="absolute inset-0 premium-shimmer" />
-                <Crown className="w-3 h-3 relative z-10" />
+                <Crown className="w-3 h-3 relative z-10 depth-icon" />
                 <span className="relative z-10">Premium</span>
               </span>
             )}
