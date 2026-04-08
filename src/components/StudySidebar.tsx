@@ -7,6 +7,29 @@ import { Trophy, ExternalLink, Crown, Pencil, Check, X } from "lucide-react";
 import { t, tf } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
 
+/** Get the piece icon path from a SAN move string */
+function getPieceIconFromSan(san: string, isWhite: boolean): string {
+  const color = isWhite ? "w" : "b";
+  if (san.startsWith("O-O")) return `/pieces/${color}K.svg`;
+  const first = san[0];
+  if (first >= "A" && first <= "Z") {
+    const pieceMap: Record<string, string> = { K: "K", Q: "Q", R: "R", B: "B", N: "N" };
+    if (pieceMap[first]) return `/pieces/${color}${pieceMap[first]}.svg`;
+  }
+  return `/pieces/${color}P.svg`;
+}
+
+/** Render text with **bold** markdown */
+function renderBoldText(text: string): React.ReactNode {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={i}>{part.slice(2, -2)}</strong>;
+    }
+    return part;
+  });
+}
+
 interface MoveRecord {
   san: string;
   moveNumber: number;
@@ -281,15 +304,13 @@ export default function StudySidebar({
                 const isOpponentMove = playerSide === "w" ? !lastMove.isWhite : lastMove.isWhite;
                 if (isOpponentMove) return null;
               }
-              let showIdx = -1;
-              for (let i = moveHistory.length - 1; i >= 0; i--) {
-                const m = moveHistory[i];
-                const isPlayer = playerSide === "w" ? m.isWhite : !m.isWhite;
-                if (isPlayer) { showIdx = i; break; }
-              }
-              if (showIdx === -1) return null;
+              // Show latest move (player or opponent) with dev edit capability
+              const showIdx = moveHistory.length - 1;
               const latestMove = moveHistory[showIdx];
-              const kingIcon = playerSide === "w" ? "/pieces/wK.svg" : "/pieces/bK.svg";
+              const isPlayer = playerSide === "w" ? latestMove.isWhite : !latestMove.isWhite;
+              const kingIcon = isPlayer
+                ? (playerSide === "w" ? "/pieces/wK.svg" : "/pieces/bK.svg")
+                : (playerSide === "w" ? "/pieces/bK.svg" : "/pieces/wK.svg");
               return (
                 <motion.div
                   key={`move-${showIdx}`}
@@ -300,7 +321,7 @@ export default function StudySidebar({
                   className="flex items-start gap-2.5"
                 >
                   <div className="flex-shrink-0 mt-1">
-                    <img src={kingIcon} alt="You" className="w-5 h-5" />
+                    <img src={kingIcon} alt={isPlayer ? "You" : "Opponent"} className="w-5 h-5" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div
@@ -370,7 +391,7 @@ export default function StudySidebar({
                     >
                       {entry.moveNumber}{entry.isWhite ? "." : "..."}
                       <img
-                        src={entry.isWhite ? "/pieces/wP.svg" : "/pieces/bP.svg"}
+                        src={getPieceIconFromSan(entry.san, entry.isWhite)}
                         alt=""
                         className="w-3.5 h-3.5 inline"
                       />
@@ -398,7 +419,7 @@ export default function StudySidebar({
                       </span>
                     ) : (
                       <span className="font-medium">
-                        {entry.explanation}
+                        {renderBoldText(entry.explanation)}
                         {isDev && (
                           <button
                             onClick={() => { setEditingMoveIdx(entry.moveIndex); setEditText(entry.explanation); }}
