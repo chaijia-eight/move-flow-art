@@ -1,0 +1,16 @@
+INSERT INTO move_explanations (opening_id, variation_id, line_index, move_index, move_san, explanation) VALUES
+('italian-game', 'giuoco-piano', 0, 0, 'e4', 'Claim the **center** and free the bishop and queen.'),
+('italian-game', 'giuoco-piano', 0, 1, 'e5', 'Mirror the **center** — an open game begins.'),
+('italian-game', 'giuoco-piano', 0, 2, 'Nf3', 'Develop the knight, **attacking** the e5 pawn.'),
+('italian-game', 'giuoco-piano', 0, 3, 'Nc6', 'Defend e5 and develop a **knight** naturally.'),
+('italian-game', 'giuoco-piano', 0, 4, 'Bc4', 'Target the weak **f7** square diagonally.'),
+('italian-game', 'giuoco-piano', 0, 5, 'Bc5', 'Develop actively, eyeing the **f2** square.'),
+('italian-game', 'giuoco-piano', 0, 6, 'c3', 'Prepare the **d4** central pawn advance.'),
+('italian-game', 'giuoco-piano', 0, 7, 'Nf6', 'Counter-attack the **e4** pawn while developing.'),
+('italian-game', 'giuoco-piano', 0, 8, 'd4', 'Strike the **center** — the key Italian idea.'),
+('italian-game', 'giuoco-piano', 0, 9, 'exd4', 'Capture to **open** the center for pieces.'),
+('italian-game', 'giuoco-piano', 0, 10, 'cxd4', 'Recapture, building a **strong** pawn center.'),
+('italian-game', 'giuoco-piano', 0, 11, 'Bb4+', 'Check to **disrupt** White''s development tempo.'),
+('italian-game', 'giuoco-piano', 0, 12, 'Nc3', 'Block the check while **developing** the knight.'),
+('italian-game', 'giuoco-piano', 0, 13, 'O-O', 'Castle for **king safety** and activate the rook.'),
+('italian-game', 'giuoco-piano', 0, 14, 'O-O', 'Castle kingside — **safety** first, then attack.');
