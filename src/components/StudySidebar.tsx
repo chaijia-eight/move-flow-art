@@ -391,7 +391,7 @@ export default function StudySidebar({
                     >
                       {entry.moveNumber}{entry.isWhite ? "." : "..."}
                       <img
-                        src={entry.isWhite ? "/pieces/wP.svg" : "/pieces/bP.svg"}
+                        src={getPieceIconFromSan(entry.san, entry.isWhite)}
                         alt=""
                         className="w-3.5 h-3.5 inline"
                       />
