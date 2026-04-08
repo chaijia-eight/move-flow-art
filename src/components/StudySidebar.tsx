@@ -7,6 +7,29 @@ import { Trophy, ExternalLink, Crown, Pencil, Check, X } from "lucide-react";
 import { t, tf } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
 
+/** Get the piece icon path from a SAN move string */
+function getPieceIconFromSan(san: string, isWhite: boolean): string {
+  const color = isWhite ? "w" : "b";
+  if (san.startsWith("O-O")) return `/pieces/${color}K.svg`;
+  const first = san[0];
+  if (first >= "A" && first <= "Z") {
+    const pieceMap: Record<string, string> = { K: "K", Q: "Q", R: "R", B: "B", N: "N" };
+    if (pieceMap[first]) return `/pieces/${color}${pieceMap[first]}.svg`;
+  }
+  return `/pieces/${color}P.svg`;
+}
+
+/** Render text with **bold** markdown */
+function renderBoldText(text: string): React.ReactNode {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={i}>{part.slice(2, -2)}</strong>;
+    }
+    return part;
+  });
+}
+
 interface MoveRecord {
   san: string;
   moveNumber: number;
