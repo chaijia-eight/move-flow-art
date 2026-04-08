@@ -123,16 +123,16 @@ export default function OpeningCard({ opening, onClick, index, focused, onToggle
       className="relative group rounded-xl overflow-hidden cursor-pointer depth-card depth-card-hover"
       style={{
         background: cardBg,
-        border: `1px solid ${sideBadgeBorder}`,
+        border: isPro
+          ? `1.5px solid hsl(42 90% 60%)`
+          : `1px solid ${sideBadgeBorder}`,
       }}
     >
       {/* Accent bar */}
       <div
         className="h-1.5"
         style={{
-          background: isPro
-            ? `linear-gradient(90deg, hsl(42 90% 60%), ${theme.primaryColor}, ${theme.accentColor}, hsl(42 90% 60%))`
-            : `linear-gradient(90deg, ${theme.primaryColor}, ${theme.accentColor})`,
+          background: `linear-gradient(90deg, ${theme.primaryColor}, ${theme.accentColor})`,
         }}
       />
 
