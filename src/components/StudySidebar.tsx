@@ -304,15 +304,13 @@ export default function StudySidebar({
                 const isOpponentMove = playerSide === "w" ? !lastMove.isWhite : lastMove.isWhite;
                 if (isOpponentMove) return null;
               }
-              let showIdx = -1;
-              for (let i = moveHistory.length - 1; i >= 0; i--) {
-                const m = moveHistory[i];
-                const isPlayer = playerSide === "w" ? m.isWhite : !m.isWhite;
-                if (isPlayer) { showIdx = i; break; }
-              }
-              if (showIdx === -1) return null;
+              // Show latest move (player or opponent) with dev edit capability
+              const showIdx = moveHistory.length - 1;
               const latestMove = moveHistory[showIdx];
-              const kingIcon = playerSide === "w" ? "/pieces/wK.svg" : "/pieces/bK.svg";
+              const isPlayer = playerSide === "w" ? latestMove.isWhite : !latestMove.isWhite;
+              const kingIcon = isPlayer
+                ? (playerSide === "w" ? "/pieces/wK.svg" : "/pieces/bK.svg")
+                : (playerSide === "w" ? "/pieces/bK.svg" : "/pieces/wK.svg");
               return (
                 <motion.div
                   key={`move-${showIdx}`}
@@ -323,7 +321,7 @@ export default function StudySidebar({
                   className="flex items-start gap-2.5"
                 >
                   <div className="flex-shrink-0 mt-1">
-                    <img src={kingIcon} alt="You" className="w-5 h-5" />
+                    <img src={kingIcon} alt={isPlayer ? "You" : "Opponent"} className="w-5 h-5" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div
