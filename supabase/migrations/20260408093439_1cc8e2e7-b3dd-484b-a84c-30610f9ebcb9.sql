@@ -1,0 +1,1 @@
+DELETE FROM move_explanations WHERE opening_id = 'italian-game' AND variation_id = 'giuoco-piano' AND line_index = 0;
