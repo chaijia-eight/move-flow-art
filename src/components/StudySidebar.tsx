@@ -419,7 +419,7 @@ export default function StudySidebar({
                       </span>
                     ) : (
                       <span className="font-medium">
-                        {entry.explanation}
+                        {renderBoldText(entry.explanation)}
                         {isDev && (
                           <button
                             onClick={() => { setEditingMoveIdx(entry.moveIndex); setEditText(entry.explanation); }}
