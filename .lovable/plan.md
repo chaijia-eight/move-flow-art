@@ -1,36 +1,36 @@
 
 
-# Premium Gold Glow — Visual Upgrade for Pro Users
+# Auto-Validate All Opening Lines with Engine
 
-## Summary
-When a user has Pro status, the app should feel noticeably more premium with gold glow accents throughout the UI — on the sidebar, the dashboard header, cards, and key interactive elements.
+## What this does
+Run every move of every line (163 lines, ~3,400 moves) through a chess engine validator to catch:
+- **Illegal moves** (wrong FENs, impossible moves)
+- **Obvious blunders** (moves that lose significant material or position, scored by Stockfish)
+- **Suspicious sequences** (moves that don't match standard theory)
 
-## Changes
+Then generate a **report document** highlighting every problem found, organized by opening, so you know exactly what to fix.
 
-### 1. AppLayout sidebar — gold accent strip & logo glow (src/components/AppLayout.tsx)
-- Import `useSubscription` and read `isPro`
-- When `isPro`, add a thin vertical gold gradient line on the sidebar's right border
-- Add a subtle gold `box-shadow` glow around the logo button
-- Add a small Crown icon or gold dot indicator below the logo
+## Steps
 
-### 2. Dashboard header — enhanced premium badge (src/pages/Index.tsx)
-- Upgrade the existing "Premium" badge (line ~285) from a static pill to an animated one with a shimmer sweep effect and a gold glow shadow
-- Add a subtle gold gradient underline to the "ArcChess" title when Pro
+1. **Write a validation script** that:
+   - Imports all openings from `openingTrees.ts` and extracts all 163 lines using the same `extractAllLines` logic
+   - Replays each line move-by-move using `chess.js` to verify legality
+   - Optionally evaluates key moves with Stockfish to flag blunders (moves losing >200cp vs best)
+   - Records every issue found with opening name, variation, line index, move number, and what's wrong
 
-### 3. Global CSS — premium utility classes (src/index.css)
-- Add a `.premium-glow` utility class with a gold box-shadow (`hsl(42 90% 60%)`)
-- Add a `.premium-shimmer` class with the existing shimmer keyframe for badge/button highlights
-- Add a `.premium-border` class that applies a gold gradient border
+2. **Generate a Word document** (`Line_Audit_Report.docx`) organized by opening, showing:
+   - Which lines are clean vs problematic
+   - Each flagged move with the issue description
+   - Suggested corrections where possible
 
-### 4. Card accents for Pro users (src/components/OpeningCard.tsx)
-- When `isPro` (from `useSubscription`), add a faint gold top-border or corner accent to opening cards
+3. **Also regenerate `Move_Explanations_v4.docx`** with problem moves highlighted in the document so you can fix explanations alongside the moves
 
-### 5. Sidebar nav buttons — gold active state (src/components/AppLayout.tsx)
-- When `isPro` and a nav button is active, use a gold-tinted highlight (`bg-[hsl(42,90%,60%)]/15`) instead of the default `bg-primary/15`
+## What you'll get
+- A clear audit showing "Italian Game Giuoco Piano line 3, move 7: Blunder — loses a piece" type findings
+- You can then tell me "fix lines X, Y, Z" or edit the doc and hand it back
 
-## Technical Details
-- All changes are purely visual / CSS-driven — no database or backend changes
-- The `useSubscription()` hook is already available and provides `isPro`
-- Shimmer keyframe already exists in `index.css`; will reuse it
-- Gold color token: `hsl(42 90% 60%)` (consistent with existing `--move-main` and CTA shimmers)
+## Technical details
+- Uses `chess.js` for move legality validation
+- Uses the project's own `extractAllLines` function for consistent line extraction  
+- Script runs in Node.js on the server — no UI changes needed
 
