@@ -124,19 +124,14 @@ export function extractLinesForVariation(
 
   const mainMoves = [...prefix, ...subPaths[0]];
 
-  // Build all lines with crucial moments, then filter out player-move branches
-  const allCandidates = subPaths.map((subPath, i) => {
+  // Build all lines with crucial moments
+  const filtered = subPaths.map((subPath, i) => {
     const fullMoves = [...prefix, ...subPath];
     const crucialMoment = i === 0
       ? undefined
       : findCrucialMoment(mainMoves, fullMoves, opening.primarySide);
     return { fullMoves, crucialMoment };
   });
-
-  // Keep main line + lines that diverge on the OPPONENT's move only
-  const filtered = allCandidates.filter(
-    (c) => !c.crucialMoment || !c.crucialMoment.isPlayerMove
-  );
 
   return filtered.map((c, i) => {
     const line: Line = {
