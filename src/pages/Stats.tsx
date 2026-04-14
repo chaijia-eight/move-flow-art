@@ -1,11 +1,20 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { BarChart3, Swords, Target, ShieldAlert, Zap, TrendingUp, Calendar, Gamepad2, Link2 } from "lucide-react";
+import { BarChart3, Swords, Target, ShieldAlert, Zap, TrendingUp, Calendar, Gamepad2, Link2, Crown } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+
+interface EloRatings {
+  platform: string;
+  rapid?: number;
+  blitz?: number;
+  bullet?: number;
+  classical?: number;
+  daily?: number;
+}
 
 export default function Stats() {
   const { user } = useAuth();
