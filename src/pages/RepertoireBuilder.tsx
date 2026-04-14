@@ -440,7 +440,7 @@ export default function RepertoireBuilder() {
           .select("id")
           .single();
         if (data) {
-          navigate(`/garden/build/${data.id}`, { replace: true });
+          navigate(`/decks/build/${data.id}`, { replace: true });
         }
       }
       queryClient.invalidateQueries({ queryKey: ["user-repertoires", user.id] });
@@ -582,7 +582,7 @@ export default function RepertoireBuilder() {
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate("/garden")} className="text-muted-foreground hover:text-foreground transition-colors">
+            <button onClick={() => navigate("/decks")} className="text-muted-foreground hover:text-foreground transition-colors">
               <ArrowLeft className="w-5 h-5" />
             </button>
             <Input

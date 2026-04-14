@@ -183,9 +183,9 @@ export default function RepertoireStudy() {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
         <p className="text-muted-foreground">No lines to study in this repertoire.</p>
-        <Button variant="outline" onClick={() => navigate("/garden")}>
+        <Button variant="outline" onClick={() => navigate("/decks")}>
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Garden
+          Back to Decks
         </Button>
       </div>
     );
@@ -198,7 +198,7 @@ export default function RepertoireStudy() {
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate("/garden")} className="text-muted-foreground hover:text-foreground transition-colors">
+            <button onClick={() => navigate("/decks")} className="text-muted-foreground hover:text-foreground transition-colors">
               <ArrowLeft className="w-5 h-5" />
             </button>
             <div>
