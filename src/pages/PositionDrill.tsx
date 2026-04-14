@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Check, X, SkipForward, RotateCcw, Trophy } from "lucide-react";
+import { ArrowLeft, SkipForward, RotateCcw, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import Chessboard from "@/components/Chessboard";
+import { Chess } from "chess.js";
+import type { MoveCategory } from "@/data/openings";
 
 interface DrillPosition {
   id: string;
@@ -26,6 +28,8 @@ const CATEGORY_LABELS: Record<string, string> = {
   endgame_tech: "Endgame Technique",
 };
 
+
+
 export default function PositionDrill() {
   const { category } = useParams<{ category: string }>();
   const navigate = useNavigate();
@@ -34,9 +38,10 @@ export default function PositionDrill() {
   const [positions, setPositions] = useState<DrillPosition[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [showAnswer, setShowAnswer] = useState(false);
   const [score, setScore] = useState({ correct: 0, wrong: 0, skipped: 0 });
   const [finished, setFinished] = useState(false);
+  const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
+  const [playerMove, setPlayerMove] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user || !category) return;
@@ -60,19 +65,46 @@ export default function PositionDrill() {
       setFinished(true);
     } else {
       setCurrentIndex((i) => i + 1);
-      setShowAnswer(false);
+      setFeedback(null);
+      setPlayerMove(null);
     }
   }, [currentIndex, positions.length]);
 
-  const handleCorrect = () => {
-    setScore((s) => ({ ...s, correct: s.correct + 1 }));
-    advance();
-  };
+  // Build move hints so legal moves are shown on the board
+  const moveHints = useMemo(() => {
+    const hints = new Map<string, { category: MoveCategory; targets: Map<string, MoveCategory> }>();
+    if (!current || feedback) return hints;
+    try {
+      const chess = new Chess(current.fen);
+      const moves = chess.moves({ verbose: true });
+      for (const m of moves) {
+        if (!hints.has(m.from)) {
+          hints.set(m.from, { category: "main_line" as MoveCategory, targets: new Map() });
+        }
+        hints.get(m.from)!.targets.set(m.to, "main_line" as MoveCategory);
+      }
+    } catch { /* ignore */ }
+    return hints;
+  }, [current, feedback]);
 
-  const handleWrong = () => {
-    setScore((s) => ({ ...s, wrong: s.wrong + 1 }));
-    advance();
-  };
+  const handleMove = useCallback((_from: string, _to: string, san: string) => {
+    if (!current || feedback) return;
+
+    // Normalize SAN for comparison (strip +, #)
+    const normalize = (s: string) => s.replace(/[+#]/g, "").trim();
+    const played = normalize(san);
+    const best = normalize(current.engine_best_san || "");
+
+    setPlayerMove(san);
+
+    if (played === best) {
+      setFeedback("correct");
+      setScore((s) => ({ ...s, correct: s.correct + 1 }));
+    } else {
+      setFeedback("wrong");
+      setScore((s) => ({ ...s, wrong: s.wrong + 1 }));
+    }
+  }, [current, feedback]);
 
   const handleSkip = () => {
     setScore((s) => ({ ...s, skipped: s.skipped + 1 }));
@@ -81,7 +113,8 @@ export default function PositionDrill() {
 
   const restart = () => {
     setCurrentIndex(0);
-    setShowAnswer(false);
+    setFeedback(null);
+    setPlayerMove(null);
     setScore({ correct: 0, wrong: 0, skipped: 0 });
     setFinished(false);
   };
@@ -145,9 +178,7 @@ export default function PositionDrill() {
     );
   }
 
-  // Determine board orientation from FEN (player's turn)
   const turnFromFen = current.fen.split(" ")[1];
-  const boardOrientation = turnFromFen === "b" ? "black" : "white";
 
   return (
     <div className="min-h-screen bg-background">
@@ -177,77 +208,66 @@ export default function PositionDrill() {
           />
         </div>
 
+        {/* Prompt */}
+        <p className="text-sm text-muted-foreground mb-2 text-center">
+          {turnFromFen === "w" ? "White" : "Black"} to move — find the best move!
+        </p>
+
         {/* Board */}
-        <div className="mb-4">
-          <p className="text-sm text-muted-foreground mb-2 text-center">
-            {turnFromFen === "w" ? "White" : "Black"} to move — find the best move!
-          </p>
-          <div className="max-w-[400px] mx-auto">
-            <Chessboard
-              fen={current.fen}
-              flipped={turnFromFen === "b"}
-              onMove={() => {}}
-              moveHints={new Map()}
-              disabled={true}
-            />
-          </div>
+        <div className="max-w-[400px] mx-auto mb-4">
+          <Chessboard
+            fen={current.fen}
+            flipped={turnFromFen === "b"}
+            onMove={handleMove}
+            moveHints={moveHints}
+            disabled={!!feedback}
+            playerColor={turnFromFen as "w" | "b"}
+          />
         </div>
 
-        {/* Answer area */}
+        {/* Feedback area */}
         <AnimatePresence mode="wait">
-          {!showAnswer ? (
+          {!feedback ? (
             <motion.div
-              key="question"
+              key="prompt"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="text-center space-y-3"
+              className="text-center"
             >
-              <p className="text-sm text-muted-foreground">
-                Move {current.move_number} — think about the best move, then reveal the answer.
-              </p>
-              <div className="flex gap-3 justify-center">
-                <Button onClick={() => setShowAnswer(true)} className="gap-2">
-                  Reveal Answer
-                </Button>
-                <Button variant="ghost" onClick={handleSkip} className="gap-2 text-muted-foreground">
-                  <SkipForward className="w-4 h-4" /> Skip
-                </Button>
-              </div>
+              <Button variant="ghost" onClick={handleSkip} className="gap-2 text-muted-foreground">
+                <SkipForward className="w-4 h-4" /> Skip
+              </Button>
             </motion.div>
           ) : (
             <motion.div
-              key="answer"
+              key="feedback"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               className="rounded-xl border border-border bg-card p-5 space-y-3"
             >
-              <div className="grid grid-cols-2 gap-3">
-                <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20">
-                  <p className="text-xs text-muted-foreground mb-1">You played</p>
-                  <p className="text-lg font-bold text-foreground">{current.your_move_san}</p>
-                  {current.eval_after != null && (
-                    <p className="text-xs text-muted-foreground">Eval: {current.eval_after > 0 ? "+" : ""}{current.eval_after.toFixed(1)}</p>
-                  )}
-                </div>
-                <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                  <p className="text-xs text-muted-foreground mb-1">Best move</p>
-                  <p className="text-lg font-bold text-foreground">{current.engine_best_san}</p>
-                  {current.eval_before != null && (
-                    <p className="text-xs text-muted-foreground">Eval: {current.eval_before > 0 ? "+" : ""}{current.eval_before.toFixed(1)}</p>
-                  )}
-                </div>
-              </div>
+              {feedback === "correct" ? (
+                <p className="text-center text-lg font-bold text-emerald-400">✓ Correct!</p>
+              ) : (
+                <>
+                  <p className="text-center text-lg font-bold text-red-400">✗ Incorrect</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20">
+                      <p className="text-xs text-muted-foreground mb-1">You played</p>
+                      <p className="text-lg font-bold text-foreground">{playerMove}</p>
+                    </div>
+                    <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                      <p className="text-xs text-muted-foreground mb-1">Best move</p>
+                      <p className="text-lg font-bold text-foreground">{current.engine_best_san}</p>
+                    </div>
+                  </div>
+                </>
+              )}
 
-              <p className="text-sm text-muted-foreground text-center">Did you find the best move?</p>
-
-              <div className="flex gap-3 justify-center">
-                <Button onClick={handleCorrect} variant="outline" className="gap-2 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10">
-                  <Check className="w-4 h-4" /> Got It
-                </Button>
-                <Button onClick={handleWrong} variant="outline" className="gap-2 border-red-500/30 text-red-400 hover:bg-red-500/10">
-                  <X className="w-4 h-4" /> Missed It
+              <div className="flex justify-center">
+                <Button onClick={advance} className="gap-2">
+                  Next →
                 </Button>
               </div>
             </motion.div>
