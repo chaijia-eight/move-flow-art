@@ -28,7 +28,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   endgame_tech: "Endgame Technique",
 };
 
-type MoveCategory = "main" | "correct" | "wrong" | "alt";
+
 
 export default function PositionDrill() {
   const { category } = useParams<{ category: string }>();
