@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import Chessboard from "@/components/Chessboard";
 import { Chess } from "chess.js";
+import type { MoveCategory } from "@/data/openings";
 
 interface DrillPosition {
   id: string;
