@@ -1,12 +1,13 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Sprout, BookOpen, Info, Settings, Crown } from "lucide-react";
+import { Layers, Link2, BarChart3, Info, Settings, Crown } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 
 const navItems = [
-  { icon: Sprout, label: "Garden", path: "/garden" },
-  { icon: BookOpen, label: "Bookshelf", path: "/bookshelf" },
+  { icon: Layers, label: "Decks", path: "/decks" },
+  { icon: Link2, label: "Connect", path: "/connect" },
+  { icon: BarChart3, label: "Stats", path: "/stats" },
 ];
 
 const bottomItems = [
