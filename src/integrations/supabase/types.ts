@@ -218,6 +218,131 @@ export type Database = {
         }
         Relationships: []
       }
+      user_games: {
+        Row: {
+          analyzed: boolean
+          created_at: string
+          game_id: string
+          id: string
+          opponent: string | null
+          pgn: string | null
+          platform: string
+          played_at: string | null
+          result: string | null
+          time_control: string | null
+          user_id: string
+        }
+        Insert: {
+          analyzed?: boolean
+          created_at?: string
+          game_id: string
+          id?: string
+          opponent?: string | null
+          pgn?: string | null
+          platform: string
+          played_at?: string | null
+          result?: string | null
+          time_control?: string | null
+          user_id: string
+        }
+        Update: {
+          analyzed?: boolean
+          created_at?: string
+          game_id?: string
+          id?: string
+          opponent?: string | null
+          pgn?: string | null
+          platform?: string
+          played_at?: string | null
+          result?: string | null
+          time_control?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_positions: {
+        Row: {
+          category: string
+          created_at: string
+          difficulty_score: number | null
+          engine_best_san: string | null
+          eval_after: number | null
+          eval_before: number | null
+          fen: string
+          game_id: string | null
+          id: string
+          move_number: number
+          user_id: string
+          your_move_san: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          difficulty_score?: number | null
+          engine_best_san?: string | null
+          eval_after?: number | null
+          eval_before?: number | null
+          fen: string
+          game_id?: string | null
+          id?: string
+          move_number: number
+          user_id: string
+          your_move_san?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          difficulty_score?: number | null
+          engine_best_san?: string | null
+          eval_after?: number | null
+          eval_before?: number | null
+          fen?: string
+          game_id?: string | null
+          id?: string
+          move_number?: number
+          user_id?: string
+          your_move_san?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_positions_game_id_fkey"
+            columns: ["game_id"]
+            isOneToOne: false
+            referencedRelation: "user_games"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_profiles: {
+        Row: {
+          chesscom_username: string | null
+          created_at: string
+          id: string
+          last_sync_at: string | null
+          lichess_username: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          chesscom_username?: string | null
+          created_at?: string
+          id?: string
+          last_sync_at?: string | null
+          lichess_username?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          chesscom_username?: string | null
+          created_at?: string
+          id?: string
+          last_sync_at?: string | null
+          lichess_username?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_progress: {
         Row: {
           data: Json
