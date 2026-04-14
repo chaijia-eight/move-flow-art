@@ -163,15 +163,22 @@ export default function Decks() {
   const runAnalysis = useCallback(async () => {
     if (!user || analysis.running) return;
 
-    // Fetch unanalyzed games with PGNs
-    const { data: unanalyzedGames, error } = await supabase
+    // Fetch unanalyzed games with PGNs (exclude bullet & blitz)
+    const { data: rawGames, error } = await supabase
       .from("user_games")
-      .select("id, pgn, opponent, platform")
+      .select("id, pgn, opponent, platform, time_control")
       .eq("user_id", user.id)
       .eq("analyzed", false)
       .not("pgn", "is", null);
 
-    if (error || !unanalyzedGames || unanalyzedGames.length === 0) return;
+    if (error || !rawGames || rawGames.length === 0) return;
+
+    const unanalyzedGames = rawGames.filter((g) => {
+      const tc = classifyTimeControl(g.time_control);
+      return tc !== "bullet" && tc !== "blitz";
+    });
+
+    if (unanalyzedGames.length === 0) return;
 
     // Get username for determining player color
     const { data: profile } = await supabase
