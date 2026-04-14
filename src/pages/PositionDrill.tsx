@@ -185,8 +185,10 @@ export default function PositionDrill() {
           <div className="max-w-[400px] mx-auto">
             <Chessboard
               fen={current.fen}
-              orientation={boardOrientation as "white" | "black"}
-              interactive={false}
+              flipped={turnFromFen === "b"}
+              onMove={() => {}}
+              moveHints={new Map()}
+              disabled={true}
             />
           </div>
         </div>
