@@ -18,7 +18,7 @@ export default function Connect() {
             className="w-full p-6 rounded-xl border border-border bg-card text-left hover:border-primary/40 transition-colors"
           >
             <div className="flex items-center gap-4">
-              <img src="/chesscom-logo.png" alt="Chess.com" className="w-12 h-12 rounded-lg object-cover" />
+              <img src="/chesscom-logo.png" alt="Chess.com" className="w-12 h-12 rounded-lg object-contain" />
               <div>
                 <h3 className="font-semibold text-foreground">Chess.com</h3>
                 <p className="text-sm text-muted-foreground">Enter your username to import games</p>
