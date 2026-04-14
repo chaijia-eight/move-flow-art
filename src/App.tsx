@@ -16,6 +16,7 @@ import About from "./pages/About.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import RepertoireBuilder from "./pages/RepertoireBuilder.tsx";
 import RepertoireStudy from "./pages/RepertoireStudy.tsx";
+import PositionDrill from "./pages/PositionDrill.tsx";
 import Auth from "./pages/Auth.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
