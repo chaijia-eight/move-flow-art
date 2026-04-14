@@ -107,9 +107,13 @@ export default function Connect() {
       .eq("user_id", user.id)
       .eq("platform", platform);
 
+    const updateData = platform === "chesscom"
+      ? { chesscom_username: "" }
+      : { lichess_username: "" };
+
     await supabase
       .from("user_profiles")
-      .update({ [field]: null })
+      .update(updateData)
       .eq("user_id", user.id);
 
     queryClient.invalidateQueries({ queryKey: ["user-profile"] });
