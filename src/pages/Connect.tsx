@@ -1,14 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Loader2, RefreshCw, X, Unlink } from "lucide-react";
+import { Check, Loader2, RefreshCw, X, Unlink, Shield, Search, Database, Sparkles, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
 
 type Platform = "chesscom" | "lichess";
+
+interface SyncStep {
+  label: string;
+  icon: React.ElementType;
+  status: "pending" | "active" | "done";
+}
+
+const SYNC_STEPS: { label: string; icon: React.ElementType; delay: number }[] = [
+  { label: "Verifying account", icon: Shield, delay: 0 },
+  { label: "Fetching game archives", icon: Search, delay: 1500 },
+  { label: "Downloading PGN data", icon: Database, delay: 3500 },
+  { label: "Scanning for critical positions", icon: Sparkles, delay: 6000 },
+  { label: "Building drill candidates", icon: BarChart3, delay: 8000 },
+];
 
 interface SyncState {
   loading: boolean;
@@ -23,9 +38,47 @@ export default function Connect() {
   const [expandedPlatform, setExpandedPlatform] = useState<Platform | null>(null);
   const [username, setUsername] = useState("");
   const [syncState, setSyncState] = useState<SyncState>({ loading: false, error: null, result: null });
+  const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const [syncProgress, setSyncProgress] = useState(0);
+
+  // Animate progress steps while loading
+  useEffect(() => {
+    if (!syncState.loading) {
+      setActiveStepIndex(0);
+      setSyncProgress(0);
+      return;
+    }
+
+    const timers: ReturnType<typeof setTimeout>[] = [];
+
+    SYNC_STEPS.forEach((step, i) => {
+      timers.push(setTimeout(() => {
+        setActiveStepIndex(i);
+        setSyncProgress(Math.min(((i + 1) / SYNC_STEPS.length) * 90, 90));
+      }, step.delay));
+    });
+
+    // Smooth progress animation
+    const progressInterval = setInterval(() => {
+      setSyncProgress((prev) => Math.min(prev + 0.5, 90));
+    }, 100);
+
+    return () => {
+      timers.forEach(clearTimeout);
+      clearInterval(progressInterval);
+    };
+  }, [syncState.loading]);
+
+  // Jump to 100% on completion
+  useEffect(() => {
+    if (syncState.result) {
+      setActiveStepIndex(SYNC_STEPS.length);
+      setSyncProgress(100);
+    }
+  }, [syncState.result]);
 
   // Fetch existing profile
-  const { data: profile, isLoading: profileLoading } = useQuery({
+  const { data: profile } = useQuery({
     queryKey: ["user-profile", user?.id],
     enabled: !!user,
     queryFn: async () => {
@@ -44,17 +97,17 @@ export default function Connect() {
     queryKey: ["game-counts", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data: chesscom } = await supabase
+      const { count: chesscomCount } = await supabase
         .from("user_games")
         .select("id", { count: "exact", head: true })
         .eq("user_id", user!.id)
         .eq("platform", "chesscom");
-      const { data: lichess } = await supabase
+      const { count: lichessCount } = await supabase
         .from("user_games")
         .select("id", { count: "exact", head: true })
         .eq("user_id", user!.id)
         .eq("platform", "lichess");
-      return { chesscom: chesscom?.length ?? 0, lichess: lichess?.length ?? 0 };
+      return { chesscom: chesscomCount ?? 0, lichess: lichessCount ?? 0 };
     },
   });
 
@@ -86,7 +139,10 @@ export default function Connect() {
       queryClient.invalidateQueries({ queryKey: ["game-counts"] });
 
       setUsername("");
-      setTimeout(() => setExpandedPlatform(null), 2000);
+      setTimeout(() => {
+        setExpandedPlatform(null);
+        setSyncState({ loading: false, error: null, result: null });
+      }, 3000);
     } catch (err: any) {
       setSyncState({
         loading: false,
@@ -98,8 +154,6 @@ export default function Connect() {
 
   const handleDisconnect = async (platform: Platform) => {
     if (!user || !confirm(`Disconnect ${platform === "chesscom" ? "Chess.com" : "Lichess"}? This will remove all imported games.`)) return;
-
-    const field = platform === "chesscom" ? "chesscom_username" : "lichess_username";
 
     await supabase
       .from("user_games")
@@ -165,11 +219,97 @@ export default function Connect() {
     return platform === "chesscom" ? profile.chesscom_username : profile.lichess_username;
   };
 
+  const renderSyncProgress = () => (
+    <motion.div
+      initial={{ height: 0, opacity: 0 }}
+      animate={{ height: "auto", opacity: 1 }}
+      exit={{ height: 0, opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="overflow-hidden"
+    >
+      <div className="px-6 pb-6 pt-0">
+        <div className="border-t border-border pt-4">
+          {/* Progress bar */}
+          <div className="mb-4">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-xs font-medium text-muted-foreground">
+                {syncState.result ? "Complete!" : "Syncing games..."}
+              </span>
+              <span className="text-xs font-mono text-muted-foreground">
+                {Math.round(syncProgress)}%
+              </span>
+            </div>
+            <Progress value={syncProgress} className="h-2" />
+          </div>
+
+          {/* Steps list */}
+          <div className="space-y-2">
+            {SYNC_STEPS.map((step, i) => {
+              const Icon = step.icon;
+              let status: "pending" | "active" | "done" = "pending";
+              if (i < activeStepIndex) status = "done";
+              else if (i === activeStepIndex && syncState.loading) status = "active";
+              else if (syncState.result) status = "done";
+
+              return (
+                <motion.div
+                  key={step.label}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.08 }}
+                  className={`flex items-center gap-3 py-1.5 px-2 rounded-lg transition-colors ${
+                    status === "active" ? "bg-primary/5" : ""
+                  }`}
+                >
+                  {status === "done" ? (
+                    <div className="w-5 h-5 rounded-full bg-primary/15 flex items-center justify-center">
+                      <Check className="w-3 h-3 text-primary" />
+                    </div>
+                  ) : status === "active" ? (
+                    <Loader2 className="w-5 h-5 text-primary animate-spin" />
+                  ) : (
+                    <div className="w-5 h-5 rounded-full border border-border flex items-center justify-center">
+                      <Icon className="w-3 h-3 text-muted-foreground/50" />
+                    </div>
+                  )}
+                  <span className={`text-sm ${
+                    status === "done" ? "text-foreground" :
+                    status === "active" ? "text-foreground font-medium" :
+                    "text-muted-foreground/60"
+                  }`}>
+                    {step.label}
+                  </span>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Result summary */}
+          <AnimatePresence>
+            {syncState.result && (
+              <motion.div
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-4 p-3 rounded-lg bg-primary/5 border border-primary/20"
+              >
+                <p className="text-sm font-medium text-foreground flex items-center gap-2">
+                  <Check className="w-4 h-4 text-primary" />
+                  {syncState.result.gamesFound} games found, {syncState.result.gamesInserted} imported
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    </motion.div>
+  );
+
   const renderPlatformCard = (platform: Platform, name: string, logo: string, desc: string) => {
     const connected = isConnected(platform);
     const connectedUsername = getUsername(platform);
     const count = gameCounts?.[platform] ?? 0;
     const isExpanded = expandedPlatform === platform;
+    const showProgressPanel = isExpanded && (syncState.loading || syncState.result);
 
     return (
       <motion.div
@@ -183,13 +323,13 @@ export default function Connect() {
       >
         <button
           onClick={() => {
-            if (!connected) {
+            if (!connected && !syncState.loading) {
               setExpandedPlatform(isExpanded ? null : platform);
               setSyncState({ loading: false, error: null, result: null });
               setUsername("");
             }
           }}
-          className={`w-full p-6 text-left ${!connected ? "hover:bg-muted/30" : ""} transition-colors`}
+          className={`w-full p-6 text-left ${!connected && !syncState.loading ? "hover:bg-muted/30" : ""} transition-colors`}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -205,7 +345,7 @@ export default function Connect() {
                 </div>
                 {connected ? (
                   <p className="text-sm text-muted-foreground">
-                    {connectedUsername} · {count} games imported
+                    {connectedUsername} · {count} game{count !== 1 ? "s" : ""} imported
                   </p>
                 ) : (
                   <p className="text-sm text-muted-foreground">{desc}</p>
@@ -237,9 +377,9 @@ export default function Connect() {
           </div>
         </button>
 
-        {/* Expanded input area */}
         <AnimatePresence>
-          {isExpanded && !connected && (
+          {/* Username input (not connected, not syncing) */}
+          {isExpanded && !connected && !syncState.loading && !syncState.result && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
@@ -264,20 +404,10 @@ export default function Connect() {
                     <Button
                       onClick={() => handleConnect(platform)}
                       disabled={!username.trim() || syncState.loading}
-                      className="gap-2"
                     >
-                      {syncState.loading ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          Syncing...
-                        </>
-                      ) : (
-                        "Connect"
-                      )}
+                      Connect
                     </Button>
                   </div>
-
-                  {/* Error */}
                   {syncState.error && (
                     <motion.p
                       initial={{ opacity: 0 }}
@@ -287,40 +417,13 @@ export default function Connect() {
                       <X className="w-3.5 h-3.5" /> {syncState.error}
                     </motion.p>
                   )}
-
-                  {/* Success */}
-                  {syncState.result && (
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="text-sm text-primary mt-2 flex items-center gap-1"
-                    >
-                      <Check className="w-3.5 h-3.5" /> Found {syncState.result.gamesFound} games!
-                    </motion.p>
-                  )}
                 </div>
               </div>
             </motion.div>
           )}
-        </AnimatePresence>
 
-        {/* Resync status for connected platforms */}
-        <AnimatePresence>
-          {isExpanded && connected && syncState.loading && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden"
-            >
-              <div className="px-6 pb-4 pt-0">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Syncing new games...
-                </div>
-              </div>
-            </motion.div>
-          )}
+          {/* Progress panel (syncing or just completed) */}
+          {showProgressPanel && renderSyncProgress()}
         </AnimatePresence>
       </motion.div>
     );
@@ -335,25 +438,14 @@ export default function Connect() {
         </p>
 
         <div className="grid gap-4">
-          {renderPlatformCard(
-            "chesscom",
-            "Chess.com",
-            "/chesscom-logo.png",
-            "Enter your username to import games"
-          )}
-          {renderPlatformCard(
-            "lichess",
-            "Lichess",
-            "/lichess-logo.png",
-            "Enter your username to import games"
-          )}
+          {renderPlatformCard("chesscom", "Chess.com", "/chesscom-logo.png", "Enter your username to import games")}
+          {renderPlatformCard("lichess", "Lichess", "/lichess-logo.png", "Enter your username to import games")}
         </div>
 
         <p className="text-xs text-muted-foreground/60 mt-6 text-center">
           We only read your game history. No moves are made on your behalf.
         </p>
 
-        {/* Last synced info */}
         {profile?.last_sync_at && (
           <p className="text-xs text-muted-foreground/50 mt-2 text-center">
             Last synced: {new Date(profile.last_sync_at).toLocaleString()}
