@@ -8,13 +8,12 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import AppLayout from "./components/AppLayout";
 import Index from "./pages/Index.tsx";
-import StudyHub from "./pages/StudyHub.tsx";
-import Study from "./pages/Study.tsx";
+import Decks from "./pages/Decks.tsx";
+import Connect from "./pages/Connect.tsx";
+import Stats from "./pages/Stats.tsx";
 import Settings from "./pages/Settings.tsx";
 import About from "./pages/About.tsx";
 import NotFound from "./pages/NotFound.tsx";
-import Garden from "./pages/Garden.tsx";
-import Bookshelf from "./pages/Bookshelf.tsx";
 import RepertoireBuilder from "./pages/RepertoireBuilder.tsx";
 import RepertoireStudy from "./pages/RepertoireStudy.tsx";
 import Auth from "./pages/Auth.tsx";
@@ -38,15 +37,14 @@ const App = () => (
                   <AppLayout>
                     <Routes>
                       <Route path="/" element={<Index />} />
-                      <Route path="/bookshelf" element={<Bookshelf />} />
+                      <Route path="/decks" element={<Decks />} />
+                      <Route path="/decks/build" element={<RepertoireBuilder />} />
+                      <Route path="/decks/build/:repertoireId" element={<RepertoireBuilder />} />
+                      <Route path="/decks/study/:repertoireId" element={<RepertoireStudy />} />
+                      <Route path="/connect" element={<Connect />} />
+                      <Route path="/stats" element={<Stats />} />
                       <Route path="/settings" element={<Settings />} />
                       <Route path="/about" element={<About />} />
-                      <Route path="/garden" element={<Garden />} />
-                      <Route path="/garden/build" element={<RepertoireBuilder />} />
-                      <Route path="/garden/build/:repertoireId" element={<RepertoireBuilder />} />
-                      <Route path="/garden/study/:repertoireId" element={<RepertoireStudy />} />
-                      <Route path="/study/:openingId" element={<StudyHub />} />
-                      <Route path="/study/:openingId/play" element={<Study />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </AppLayout>
