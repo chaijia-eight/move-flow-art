@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Plus, Layers, Trash2, Play, Link2, Zap, Target, ShieldAlert, Crown as CrownIcon, Filter } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Plus, Layers, Trash2, Play, Link2, Zap, Target,
+  ShieldAlert, Crown as CrownIcon, Filter, Cpu, Loader2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { analyzeGame, getPlayerColor, type AnalysisPosition } from "@/lib/gameAnalyzer";
+import { destroyEngine } from "@/lib/stockfishEngine";
 import type { OpeningNode } from "@/data/openings";
 
 function countLines(nodes: OpeningNode[]): number {
@@ -36,24 +42,29 @@ const TIME_CONTROL_FILTERS = [
   { value: "daily", label: "Daily" },
 ];
 
-/** Classify a raw time_control string into a bucket */
 function classifyTimeControl(tc: string | null): string {
   if (!tc) return "unknown";
-  // Chess.com format: "300" or "300+5" or "1/86400"
-  // Lichess format: "300+0" or "clock:initial=300:increment=0"
   const lower = tc.toLowerCase();
   if (lower.includes("1/") || lower.includes("daily") || lower.includes("correspondence")) return "daily";
-
   const parts = lower.replace(/clock:initial=/, "").replace(/:increment=/, "+").split("+");
   const base = parseInt(parts[0], 10);
   const inc = parseInt(parts[1] || "0", 10);
-  const totalEstimate = base + inc * 40; // estimated game time in seconds
-
+  const totalEstimate = base + inc * 40;
   if (isNaN(totalEstimate)) return "unknown";
   if (totalEstimate < 180) return "bullet";
   if (totalEstimate < 600) return "blitz";
   if (totalEstimate < 1800) return "rapid";
   return "classical";
+}
+
+interface AnalysisState {
+  running: boolean;
+  gameIndex: number;
+  totalGames: number;
+  moveIndex: number;
+  totalMoves: number;
+  opponent: string;
+  positionsFound: number;
 }
 
 export default function Decks() {
@@ -62,6 +73,10 @@ export default function Decks() {
   const queryClient = useQueryClient();
   const [tab, setTab] = useState<Tab>("auto");
   const [timeFilter, setTimeFilter] = useState("all");
+  const [analysis, setAnalysis] = useState<AnalysisState>({
+    running: false, gameIndex: 0, totalGames: 0,
+    moveIndex: 0, totalMoves: 0, opponent: "", positionsFound: 0,
+  });
 
   // Fetch all games with time_control info for filtering
   const { data: games } = useQuery({
@@ -80,7 +95,6 @@ export default function Decks() {
   const gameCount = games?.length ?? 0;
   const hasGames = gameCount > 0;
 
-  // Compute available time controls from games
   const availableTimeControls = React.useMemo(() => {
     if (!games) return new Set<string>();
     const set = new Set<string>();
@@ -88,16 +102,14 @@ export default function Decks() {
     return set;
   }, [games]);
 
-  // Get filtered game IDs for the selected time control
   const filteredGameIds = React.useMemo(() => {
     if (!games) return null;
-    if (timeFilter === "all") return null; // null = no filter
+    if (timeFilter === "all") return null;
     return games
       .filter((g) => classifyTimeControl(g.time_control) === timeFilter)
       .map((g) => g.id);
   }, [games, timeFilter]);
 
-  // Fetch positions, optionally filtered by game_id
   const { data: positionCounts } = useQuery({
     queryKey: ["position-counts", user?.id, timeFilter, filteredGameIds],
     enabled: !!user,
@@ -109,11 +121,9 @@ export default function Decks() {
           .select("id", { count: "exact", head: true })
           .eq("user_id", user!.id)
           .eq("category", cat);
-
         if (filteredGameIds) {
           query = query.in("game_id", filteredGameIds);
         }
-
         const { count } = await query;
         counts[cat] = count ?? 0;
       }
@@ -121,7 +131,6 @@ export default function Decks() {
     },
   });
 
-  // Fetch manual repertoires (builds)
   const { data: repertoires } = useQuery({
     queryKey: ["user-repertoires", user?.id],
     enabled: !!user,
@@ -149,6 +158,107 @@ export default function Decks() {
 
   const analyzedCount = games?.filter((g) => g.analyzed).length ?? 0;
   const unanalyzedCount = gameCount - analyzedCount;
+
+  // ---------- ANALYSIS PIPELINE ----------
+  const runAnalysis = useCallback(async () => {
+    if (!user || analysis.running) return;
+
+    // Fetch unanalyzed games with PGNs
+    const { data: unanalyzedGames, error } = await supabase
+      .from("user_games")
+      .select("id, pgn, opponent, platform")
+      .eq("user_id", user.id)
+      .eq("analyzed", false)
+      .not("pgn", "is", null);
+
+    if (error || !unanalyzedGames || unanalyzedGames.length === 0) return;
+
+    // Get username for determining player color
+    const { data: profile } = await supabase
+      .from("user_profiles")
+      .select("chesscom_username, lichess_username")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    setAnalysis({
+      running: true, gameIndex: 0, totalGames: unanalyzedGames.length,
+      moveIndex: 0, totalMoves: 0, opponent: "", positionsFound: 0,
+    });
+
+    let totalFound = 0;
+
+    for (let gi = 0; gi < unanalyzedGames.length; gi++) {
+      const game = unanalyzedGames[gi];
+      if (!game.pgn) continue;
+
+      const username =
+        game.platform === "chesscom"
+          ? profile?.chesscom_username || ""
+          : profile?.lichess_username || "";
+
+      const playerColor = getPlayerColor(game.pgn, username);
+
+      setAnalysis((prev) => ({
+        ...prev,
+        gameIndex: gi,
+        opponent: game.opponent || `Game ${gi + 1}`,
+        moveIndex: 0,
+        totalMoves: 0,
+      }));
+
+      try {
+        const positions = await analyzeGame(
+          game.pgn,
+          playerColor,
+          (moveIdx, totalMoves) => {
+            setAnalysis((prev) => ({ ...prev, moveIndex: moveIdx, totalMoves }));
+          },
+        );
+
+        // Save positions to DB
+        if (positions.length > 0) {
+          const rows = positions.map((p) => ({
+            user_id: user.id,
+            game_id: game.id,
+            fen: p.fen,
+            category: p.category,
+            move_number: p.move_number,
+            your_move_san: p.your_move_san,
+            engine_best_san: p.engine_best_san,
+            eval_before: p.eval_before,
+            eval_after: p.eval_after,
+            difficulty_score: p.difficulty_score,
+          }));
+
+          await supabase.from("user_positions").insert(rows);
+          totalFound += positions.length;
+          setAnalysis((prev) => ({ ...prev, positionsFound: totalFound }));
+        }
+
+        // Mark game as analyzed
+        await supabase
+          .from("user_games")
+          .update({ analyzed: true })
+          .eq("id", game.id);
+      } catch (err) {
+        console.error(`Analysis failed for game ${game.id}:`, err);
+      }
+    }
+
+    // Cleanup
+    destroyEngine();
+    setAnalysis((prev) => ({ ...prev, running: false }));
+
+    // Refresh data
+    queryClient.invalidateQueries({ queryKey: ["position-counts"] });
+    queryClient.invalidateQueries({ queryKey: ["all-games-tc"] });
+    queryClient.invalidateQueries({ queryKey: ["position-stats"] });
+    queryClient.invalidateQueries({ queryKey: ["game-stats"] });
+  }, [user, analysis.running, queryClient]);
+
+  const analysisPercent = analysis.totalGames > 0
+    ? Math.round(((analysis.gameIndex + (analysis.totalMoves > 0 ? analysis.moveIndex / analysis.totalMoves : 0)) / analysis.totalGames) * 100)
+    : 0;
 
   return (
     <div className="min-h-screen bg-background">
@@ -193,6 +303,33 @@ export default function Decks() {
           </button>
         </div>
 
+        {/* Analysis progress banner */}
+        <AnimatePresence>
+          {analysis.running && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mb-6 rounded-xl border border-primary/30 bg-primary/5 p-5 overflow-hidden"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <Loader2 className="w-5 h-5 text-primary animate-spin" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-foreground">
+                    Analyzing: vs {analysis.opponent}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Game {analysis.gameIndex + 1} of {analysis.totalGames}
+                    {analysis.totalMoves > 0 && ` · Move ${Math.floor(analysis.moveIndex / 2) + 1}`}
+                    {" · "}{analysis.positionsFound} positions found
+                  </p>
+                </div>
+              </div>
+              <Progress value={analysisPercent} className="h-2" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Auto tab */}
         {tab === "auto" && (
           <>
@@ -215,48 +352,67 @@ export default function Decks() {
             ) : (
               <>
                 {/* Time control filter */}
-                <div className="flex items-center gap-2 mb-5 flex-wrap">
-                  <Filter className="w-4 h-4 text-muted-foreground" />
-                  {TIME_CONTROL_FILTERS.map((f) => {
-                    const disabled = f.value !== "all" && !availableTimeControls.has(f.value);
-                    return (
-                      <button
-                        key={f.value}
-                        onClick={() => !disabled && setTimeFilter(f.value)}
-                        disabled={disabled}
-                        className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                          timeFilter === f.value
-                            ? "bg-primary text-primary-foreground"
-                            : disabled
-                            ? "bg-muted/50 text-muted-foreground/40 cursor-not-allowed"
-                            : "bg-muted text-muted-foreground hover:text-foreground"
-                        }`}
-                      >
-                        {f.label}
-                      </button>
-                    );
-                  })}
+                <div className="flex items-center justify-between gap-2 mb-5 flex-wrap">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Filter className="w-4 h-4 text-muted-foreground" />
+                    {TIME_CONTROL_FILTERS.map((f) => {
+                      const disabled = f.value !== "all" && !availableTimeControls.has(f.value);
+                      return (
+                        <button
+                          key={f.value}
+                          onClick={() => !disabled && setTimeFilter(f.value)}
+                          disabled={disabled}
+                          className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                            timeFilter === f.value
+                              ? "bg-primary text-primary-foreground"
+                              : disabled
+                              ? "bg-muted/50 text-muted-foreground/40 cursor-not-allowed"
+                              : "bg-muted text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          {f.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {unanalyzedCount > 0 && !analysis.running && (
+                    <Button
+                      size="sm"
+                      onClick={runAnalysis}
+                      className="gap-2"
+                    >
+                      <Cpu className="w-4 h-4" />
+                      Analyze {unanalyzedCount} Game{unanalyzedCount !== 1 ? "s" : ""}
+                    </Button>
+                  )}
                 </div>
 
-                {totalPositions === 0 ? (
+                {totalPositions === 0 && !analysis.running ? (
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center py-16"
                   >
-                    <Zap className="w-16 h-16 mx-auto mb-4 text-muted-foreground/50" />
+                    <Cpu className="w-16 h-16 mx-auto mb-4 text-muted-foreground/50" />
                     <p className="text-muted-foreground text-lg mb-2">
                       {unanalyzedCount > 0
-                        ? `${gameCount} games synced — ${unanalyzedCount} awaiting analysis`
-                        : `${gameCount} games synced — no critical positions found${timeFilter !== "all" ? " for this time control" : ""}`}
+                        ? `${gameCount} games synced — ${unanalyzedCount} ready to analyze`
+                        : `${gameCount} games analyzed — no critical positions found${timeFilter !== "all" ? " for this time control" : ""}`}
                     </p>
-                    <p className="text-muted-foreground/70 text-sm max-w-md mx-auto">
+                    <p className="text-muted-foreground/70 text-sm max-w-md mx-auto mb-6">
                       {unanalyzedCount > 0
-                        ? "Your games need to be analyzed by the engine to extract blunders, missed tactics, and other critical positions. This feature is coming soon."
+                        ? "Run the engine analysis to scan your games for blunders, missed tactics, and key defensive moments."
                         : "Try syncing more games or changing the time control filter."}
                     </p>
+                    {unanalyzedCount > 0 && (
+                      <Button onClick={runAnalysis} className="gap-2">
+                        <Cpu className="w-4 h-4" />
+                        Start Analysis
+                      </Button>
+                    )}
                   </motion.div>
-                ) : (
+                ) : !analysis.running && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {Object.entries(CATEGORY_META).map(([cat, meta], i) => {
                       const count = positionCounts?.[cat] ?? 0;
