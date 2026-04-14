@@ -79,9 +79,9 @@ export default function PositionDrill() {
       const moves = chess.moves({ verbose: true });
       for (const m of moves) {
         if (!hints.has(m.from)) {
-          hints.set(m.from, { category: "main", targets: new Map() });
+          hints.set(m.from, { category: "main_line" as MoveCategory, targets: new Map() });
         }
-        hints.get(m.from)!.targets.set(m.to, "main");
+        hints.get(m.from)!.targets.set(m.to, "main_line" as MoveCategory);
       }
     } catch { /* ignore */ }
     return hints;
