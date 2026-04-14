@@ -443,7 +443,7 @@ export default function Decks() {
                                 </p>
                               </div>
                             </div>
-                            <Button size="sm" variant="outline" className="w-full gap-2">
+                            <Button size="sm" variant="outline" className="w-full gap-2" onClick={() => navigate(`/decks/drill/${cat}`)}>
                               <Play className="w-3.5 h-3.5" />
                               Drill Now
                             </Button>
