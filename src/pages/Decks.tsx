@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Plus, Layers, Trash2, Play, Link2, Zap, Target, ShieldAlert, Crown as CrownIcon } from "lucide-react";
+import { Plus, Layers, Trash2, Play, Link2, Zap, Target, ShieldAlert, Crown as CrownIcon, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -27,40 +27,97 @@ const CATEGORY_META: Record<string, { label: string; icon: React.ElementType; co
   endgame_tech: { label: "Endgame Technique", icon: CrownIcon, color: "text-emerald-400" },
 };
 
+const TIME_CONTROL_FILTERS = [
+  { value: "all", label: "All" },
+  { value: "bullet", label: "Bullet" },
+  { value: "blitz", label: "Blitz" },
+  { value: "rapid", label: "Rapid" },
+  { value: "classical", label: "Classical" },
+  { value: "daily", label: "Daily" },
+];
+
+/** Classify a raw time_control string into a bucket */
+function classifyTimeControl(tc: string | null): string {
+  if (!tc) return "unknown";
+  // Chess.com format: "300" or "300+5" or "1/86400"
+  // Lichess format: "300+0" or "clock:initial=300:increment=0"
+  const lower = tc.toLowerCase();
+  if (lower.includes("1/") || lower.includes("daily") || lower.includes("correspondence")) return "daily";
+
+  const parts = lower.replace(/clock:initial=/, "").replace(/:increment=/, "+").split("+");
+  const base = parseInt(parts[0], 10);
+  const inc = parseInt(parts[1] || "0", 10);
+  const totalEstimate = base + inc * 40; // estimated game time in seconds
+
+  if (isNaN(totalEstimate)) return "unknown";
+  if (totalEstimate < 180) return "bullet";
+  if (totalEstimate < 600) return "blitz";
+  if (totalEstimate < 1800) return "rapid";
+  return "classical";
+}
+
 export default function Decks() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [tab, setTab] = useState<Tab>("auto");
+  const [timeFilter, setTimeFilter] = useState("all");
 
-  // Fetch auto-generated position counts by category
+  // Fetch all games with time_control info for filtering
+  const { data: games } = useQuery({
+    queryKey: ["all-games-tc", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("user_games")
+        .select("id, time_control, analyzed")
+        .eq("user_id", user!.id);
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+  const gameCount = games?.length ?? 0;
+  const hasGames = gameCount > 0;
+
+  // Compute available time controls from games
+  const availableTimeControls = React.useMemo(() => {
+    if (!games) return new Set<string>();
+    const set = new Set<string>();
+    games.forEach((g) => set.add(classifyTimeControl(g.time_control)));
+    return set;
+  }, [games]);
+
+  // Get filtered game IDs for the selected time control
+  const filteredGameIds = React.useMemo(() => {
+    if (!games) return null;
+    if (timeFilter === "all") return null; // null = no filter
+    return games
+      .filter((g) => classifyTimeControl(g.time_control) === timeFilter)
+      .map((g) => g.id);
+  }, [games, timeFilter]);
+
+  // Fetch positions, optionally filtered by game_id
   const { data: positionCounts } = useQuery({
-    queryKey: ["position-counts", user?.id],
+    queryKey: ["position-counts", user?.id, timeFilter, filteredGameIds],
     enabled: !!user,
     queryFn: async () => {
       const counts: Record<string, number> = {};
       for (const cat of Object.keys(CATEGORY_META)) {
-        const { count } = await supabase
+        let query = supabase
           .from("user_positions")
           .select("id", { count: "exact", head: true })
           .eq("user_id", user!.id)
           .eq("category", cat);
+
+        if (filteredGameIds) {
+          query = query.in("game_id", filteredGameIds);
+        }
+
+        const { count } = await query;
         counts[cat] = count ?? 0;
       }
       return counts;
-    },
-  });
-
-  // Fetch user's game count (to know if they've synced)
-  const { data: gameCount } = useQuery({
-    queryKey: ["total-games", user?.id],
-    enabled: !!user,
-    queryFn: async () => {
-      const { count } = await supabase
-        .from("user_games")
-        .select("id", { count: "exact", head: true })
-        .eq("user_id", user!.id);
-      return count ?? 0;
     },
   });
 
@@ -90,7 +147,8 @@ export default function Decks() {
     ? Object.values(positionCounts).reduce((a, b) => a + b, 0)
     : 0;
 
-  const hasGames = (gameCount ?? 0) > 0;
+  const analyzedCount = games?.filter((g) => g.analyzed).length ?? 0;
+  const unanalyzedCount = gameCount - analyzedCount;
 
   return (
     <div className="min-h-screen bg-background">
@@ -154,58 +212,92 @@ export default function Decks() {
                   Connect Account
                 </Button>
               </motion.div>
-            ) : totalPositions === 0 ? (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-center py-20"
-              >
-                <Zap className="w-16 h-16 mx-auto mb-4 text-muted-foreground/50" />
-                <p className="text-muted-foreground text-lg mb-2">Games imported — analysis pending</p>
-                <p className="text-muted-foreground/70 text-sm mb-6">
-                  {gameCount} games synced. Positions will appear here once analysis runs.
-                </p>
-              </motion.div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {Object.entries(CATEGORY_META).map(([cat, meta], i) => {
-                  const count = positionCounts?.[cat] ?? 0;
-                  if (count === 0) return null;
-                  const Icon = meta.icon;
+              <>
+                {/* Time control filter */}
+                <div className="flex items-center gap-2 mb-5 flex-wrap">
+                  <Filter className="w-4 h-4 text-muted-foreground" />
+                  {TIME_CONTROL_FILTERS.map((f) => {
+                    const disabled = f.value !== "all" && !availableTimeControls.has(f.value);
+                    return (
+                      <button
+                        key={f.value}
+                        onClick={() => !disabled && setTimeFilter(f.value)}
+                        disabled={disabled}
+                        className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                          timeFilter === f.value
+                            ? "bg-primary text-primary-foreground"
+                            : disabled
+                            ? "bg-muted/50 text-muted-foreground/40 cursor-not-allowed"
+                            : "bg-muted text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {f.label}
+                      </button>
+                    );
+                  })}
+                </div>
 
-                  return (
-                    <motion.div
-                      key={cat}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.06 }}
-                      whileHover={{ y: -4, boxShadow: "0 20px 40px -15px hsl(var(--primary) / 0.2)" }}
-                      className="rounded-xl overflow-hidden border border-border bg-card cursor-pointer"
-                    >
-                      <div className="h-1.5 bg-gradient-to-r from-primary to-accent" />
-                      <div className="p-5">
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className={`w-10 h-10 rounded-lg bg-muted flex items-center justify-center ${meta.color}`}>
-                            <Icon className="w-5 h-5" />
+                {totalPositions === 0 ? (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-center py-16"
+                  >
+                    <Zap className="w-16 h-16 mx-auto mb-4 text-muted-foreground/50" />
+                    <p className="text-muted-foreground text-lg mb-2">
+                      {unanalyzedCount > 0
+                        ? `${gameCount} games synced — ${unanalyzedCount} awaiting analysis`
+                        : `${gameCount} games synced — no critical positions found${timeFilter !== "all" ? " for this time control" : ""}`}
+                    </p>
+                    <p className="text-muted-foreground/70 text-sm max-w-md mx-auto">
+                      {unanalyzedCount > 0
+                        ? "Your games need to be analyzed by the engine to extract blunders, missed tactics, and other critical positions. This feature is coming soon."
+                        : "Try syncing more games or changing the time control filter."}
+                    </p>
+                  </motion.div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {Object.entries(CATEGORY_META).map(([cat, meta], i) => {
+                      const count = positionCounts?.[cat] ?? 0;
+                      if (count === 0) return null;
+                      const Icon = meta.icon;
+
+                      return (
+                        <motion.div
+                          key={cat}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.06 }}
+                          whileHover={{ y: -4, boxShadow: "0 20px 40px -15px hsl(var(--primary) / 0.2)" }}
+                          className="rounded-xl overflow-hidden border border-border bg-card cursor-pointer"
+                        >
+                          <div className="h-1.5 bg-gradient-to-r from-primary to-accent" />
+                          <div className="p-5">
+                            <div className="flex items-center gap-3 mb-3">
+                              <div className={`w-10 h-10 rounded-lg bg-muted flex items-center justify-center ${meta.color}`}>
+                                <Icon className="w-5 h-5" />
+                              </div>
+                              <div>
+                                <h3 className="font-serif text-lg font-semibold text-foreground">
+                                  {meta.label}
+                                </h3>
+                                <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider">
+                                  {count} position{count !== 1 ? "s" : ""}
+                                </p>
+                              </div>
+                            </div>
+                            <Button size="sm" variant="outline" className="w-full gap-2">
+                              <Play className="w-3.5 h-3.5" />
+                              Drill Now
+                            </Button>
                           </div>
-                          <div>
-                            <h3 className="font-serif text-lg font-semibold text-foreground">
-                              {meta.label}
-                            </h3>
-                            <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider">
-                              {count} position{count !== 1 ? "s" : ""}
-                            </p>
-                          </div>
-                        </div>
-                        <Button size="sm" variant="outline" className="w-full gap-2">
-                          <Play className="w-3.5 h-3.5" />
-                          Drill Now
-                        </Button>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                )}
+              </>
             )}
           </>
         )}
