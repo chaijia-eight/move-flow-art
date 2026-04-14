@@ -18,9 +18,7 @@ export default function Connect() {
             className="w-full p-6 rounded-xl border border-border bg-card text-left hover:border-primary/40 transition-colors"
           >
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-lg bg-[#769656] flex items-center justify-center text-white font-bold text-xl">
-                ♞
-              </div>
+              <img src="/chesscom-logo.png" alt="Chess.com" className="w-12 h-12 rounded-lg object-cover" />
               <div>
                 <h3 className="font-semibold text-foreground">Chess.com</h3>
                 <p className="text-sm text-muted-foreground">Enter your username to import games</p>
@@ -36,9 +34,7 @@ export default function Connect() {
             className="w-full p-6 rounded-xl border border-border bg-card text-left hover:border-primary/40 transition-colors"
           >
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-lg bg-[#302e2b] flex items-center justify-center text-white font-bold text-xl">
-                ♞
-              </div>
+              <img src="/lichess-logo.png" alt="Lichess" className="w-12 h-12 rounded-lg object-cover" />
               <div>
                 <h3 className="font-semibold text-foreground">Lichess</h3>
                 <p className="text-sm text-muted-foreground">Connect via OAuth to import games</p>
