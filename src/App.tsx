@@ -42,6 +42,7 @@ const App = () => (
                       <Route path="/decks/build" element={<RepertoireBuilder />} />
                       <Route path="/decks/build/:repertoireId" element={<RepertoireBuilder />} />
                       <Route path="/decks/study/:repertoireId" element={<RepertoireStudy />} />
+                      <Route path="/decks/drill/:category" element={<PositionDrill />} />
                       <Route path="/connect" element={<Connect />} />
                       <Route path="/stats" element={<Stats />} />
                       <Route path="/settings" element={<Settings />} />
