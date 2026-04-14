@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, SkipForward, RotateCcw, Trophy } from "lucide-react";
+import { ArrowLeft, SkipForward, RotateCcw, Trophy, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import Chessboard from "@/components/Chessboard";
 import { Chess } from "chess.js";
+import { playMoveSound, playCaptureSound, playCheckSound } from "@/lib/chessSounds";
 import type { MoveCategory } from "@/data/openings";
 
 interface DrillPosition {
@@ -19,6 +20,15 @@ interface DrillPosition {
   eval_before: number | null;
   eval_after: number | null;
   difficulty_score: number | null;
+  game_id: string | null;
+}
+
+interface GameMeta {
+  opponent: string | null;
+  platform: string;
+  time_control: string | null;
+  result: string | null;
+  played_at: string | null;
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -28,7 +38,13 @@ const CATEGORY_LABELS: Record<string, string> = {
   endgame_tech: "Endgame Technique",
 };
 
+function lichessAnalysisUrl(fen: string) {
+  return `https://lichess.org/analysis/${fen.replace(/ /g, "_")}`;
+}
 
+function chesscomAnalysisUrl(fen: string) {
+  return `https://www.chess.com/analysis?fen=${encodeURIComponent(fen)}`;
+}
 
 export default function PositionDrill() {
   const { category } = useParams<{ category: string }>();
@@ -36,6 +52,7 @@ export default function PositionDrill() {
   const { user } = useAuth();
 
   const [positions, setPositions] = useState<DrillPosition[]>([]);
+  const [gameMetas, setGameMetas] = useState<Record<string, GameMeta>>({});
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [score, setScore] = useState({ correct: 0, wrong: 0, skipped: 0 });
@@ -53,12 +70,30 @@ export default function PositionDrill() {
         .eq("category", category)
         .order("difficulty_score", { ascending: false })
         .limit(20);
-      setPositions(data ?? []);
+      const pos = (data ?? []) as DrillPosition[];
+      setPositions(pos);
+
+      // Fetch game metadata for all positions
+      const gameIds = [...new Set(pos.map((p) => p.game_id).filter(Boolean))] as string[];
+      if (gameIds.length > 0) {
+        const { data: games } = await supabase
+          .from("user_games")
+          .select("id, opponent, platform, time_control, result, played_at")
+          .in("id", gameIds);
+        if (games) {
+          const map: Record<string, GameMeta> = {};
+          for (const g of games) {
+            map[g.id] = { opponent: g.opponent, platform: g.platform, time_control: g.time_control, result: g.result, played_at: g.played_at };
+          }
+          setGameMetas(map);
+        }
+      }
       setLoading(false);
     })();
   }, [user, category]);
 
   const current = positions[currentIndex];
+  const currentGame = current?.game_id ? gameMetas[current.game_id] : null;
 
   const advance = useCallback(() => {
     if (currentIndex + 1 >= positions.length) {
@@ -70,7 +105,6 @@ export default function PositionDrill() {
     }
   }, [currentIndex, positions.length]);
 
-  // Build move hints so legal moves are shown on the board
   const moveHints = useMemo(() => {
     const hints = new Map<string, { category: MoveCategory; targets: Map<string, MoveCategory> }>();
     if (!current || feedback) return hints;
@@ -90,7 +124,23 @@ export default function PositionDrill() {
   const handleMove = useCallback((_from: string, _to: string, san: string) => {
     if (!current || feedback) return;
 
-    // Normalize SAN for comparison (strip +, #)
+    // Play move sound
+    try {
+      const chess = new Chess(current.fen);
+      const result = chess.move(san);
+      if (result) {
+        if (chess.isCheck()) {
+          playCheckSound();
+        } else if (result.captured) {
+          playCaptureSound();
+        } else {
+          playMoveSound();
+        }
+      }
+    } catch {
+      playMoveSound();
+    }
+
     const normalize = (s: string) => s.replace(/[+#]/g, "").trim();
     const played = normalize(san);
     const best = normalize(current.engine_best_san || "");
@@ -208,9 +258,21 @@ export default function PositionDrill() {
           />
         </div>
 
+        {/* Game info bar */}
+        {currentGame && (
+          <div className="flex items-center justify-center gap-3 mb-3 text-xs text-muted-foreground">
+            <span className="capitalize">{currentGame.platform}</span>
+            {currentGame.opponent && (
+              <span>vs <span className="text-foreground font-medium">{currentGame.opponent}</span></span>
+            )}
+            {currentGame.time_control && <span>· {currentGame.time_control}</span>}
+            {currentGame.result && <span>· {currentGame.result}</span>}
+          </div>
+        )}
+
         {/* Prompt */}
         <p className="text-sm text-muted-foreground mb-2 text-center">
-          {turnFromFen === "w" ? "White" : "Black"} to move — find the best move!
+          Move {current.move_number} · {turnFromFen === "w" ? "White" : "Black"} to move — find the best move!
         </p>
 
         {/* Board */}
@@ -225,57 +287,79 @@ export default function PositionDrill() {
           />
         </div>
 
-        {/* Feedback area */}
-        <AnimatePresence mode="wait">
-          {!feedback ? (
-            <motion.div
-              key="prompt"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="text-center"
-            >
-              <Button variant="ghost" onClick={handleSkip} className="gap-2 text-muted-foreground">
-                <SkipForward className="w-4 h-4" /> Skip
-              </Button>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="feedback"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="rounded-xl border border-border bg-card p-5 space-y-3"
-            >
-              {feedback === "correct" ? (
-                <p className="text-center text-lg font-bold text-emerald-400">✓ Correct!</p>
-              ) : (
-                <>
-                  <p className="text-center text-lg font-bold text-red-400">✗ Incorrect</p>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20">
-                      <p className="text-xs text-muted-foreground mb-1">You played</p>
-                      <p className="text-lg font-bold text-foreground">{playerMove}</p>
-                    </div>
-                    <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                      <p className="text-xs text-muted-foreground mb-1">Best move</p>
-                      <p className="text-lg font-bold text-foreground">{current.engine_best_san}</p>
-                    </div>
-                  </div>
-                </>
-              )}
-
-              <div className="flex justify-center">
-                <Button onClick={advance} className="gap-2">
-                  Next →
+        {/* Feedback area — fixed height to prevent layout shift */}
+        <div className="min-h-[160px]">
+          <AnimatePresence mode="wait">
+            {!feedback ? (
+              <motion.div
+                key="prompt"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="text-center pt-4"
+              >
+                <Button variant="ghost" onClick={handleSkip} className="gap-2 text-muted-foreground">
+                  <SkipForward className="w-4 h-4" /> Skip
                 </Button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="feedback"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="rounded-xl border border-border bg-card p-5 space-y-3"
+              >
+                {feedback === "correct" ? (
+                  <p className="text-center text-lg font-bold text-emerald-400">✓ Correct!</p>
+                ) : (
+                  <>
+                    <p className="text-center text-lg font-bold text-red-400">✗ Incorrect</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20">
+                        <p className="text-xs text-muted-foreground mb-1">You played</p>
+                        <p className="text-lg font-bold text-foreground">{playerMove}</p>
+                      </div>
+                      <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                        <p className="text-xs text-muted-foreground mb-1">Best move</p>
+                        <p className="text-lg font-bold text-foreground">{current.engine_best_san}</p>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* Analysis links */}
+                <div className="flex items-center justify-center gap-3 text-xs">
+                  <a
+                    href={lichessAnalysisUrl(current.fen)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <ExternalLink className="w-3 h-3" /> Lichess
+                  </a>
+                  <a
+                    href={chesscomAnalysisUrl(current.fen)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <ExternalLink className="w-3 h-3" /> Chess.com
+                  </a>
+                </div>
+
+                <div className="flex justify-center">
+                  <Button onClick={advance} className="gap-2">
+                    Next →
+                  </Button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
         {/* Score bar */}
-        <div className="flex justify-center gap-6 mt-6 text-xs text-muted-foreground">
+        <div className="flex justify-center gap-6 mt-4 text-xs text-muted-foreground">
           <span className="text-emerald-400">✓ {score.correct}</span>
           <span className="text-red-400">✗ {score.wrong}</span>
           <span>⏭ {score.skipped}</span>
