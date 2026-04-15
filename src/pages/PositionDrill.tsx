@@ -168,6 +168,7 @@ export default function PositionDrill() {
     setCurrentIndex(0);
     setFeedback(null);
     setPlayerMove(null);
+    setBoardFen(null);
     setScore({ correct: 0, wrong: 0, skipped: 0 });
     setFinished(false);
   };
