@@ -124,6 +124,17 @@ export default function PositionDrill() {
     return hints;
   }, [current, feedback]);
 
+  // Compute best move arrow for wrong answers
+  const bestMoveArrow = useMemo(() => {
+    if (!current || feedback !== "wrong" || !current.engine_best_san) return null;
+    try {
+      const chess = new Chess(current.fen);
+      const move = chess.move(current.engine_best_san);
+      if (move) return { from: move.from, to: move.to };
+    } catch { /* ignore */ }
+    return null;
+  }, [current, feedback]);
+
   const handleMove = useCallback((_from: string, _to: string, san: string) => {
     if (!current || feedback) return;
 
