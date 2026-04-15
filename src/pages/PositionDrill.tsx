@@ -100,6 +100,15 @@ export default function PositionDrill() {
   const currentGame = current?.game_id ? gameMetas[current.game_id] : null;
 
   const advance = useCallback(() => {
+    // Mark current position as drilled
+    if (current) {
+      supabase
+        .from("user_positions")
+        .update({ drilled: true } as any)
+        .eq("id", current.id)
+        .then();
+    }
+
     if (currentIndex + 1 >= positions.length) {
       setFinished(true);
     } else {
@@ -108,7 +117,7 @@ export default function PositionDrill() {
       setPlayerMove(null);
       setBoardFen(null);
     }
-  }, [currentIndex, positions.length]);
+  }, [currentIndex, positions.length, current]);
 
   const moveHints = useMemo(() => {
     const hints = new Map<string, { category: MoveCategory; targets: Map<string, MoveCategory> }>();
