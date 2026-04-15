@@ -103,6 +103,7 @@ export default function PositionDrill() {
       setCurrentIndex((i) => i + 1);
       setFeedback(null);
       setPlayerMove(null);
+      setBoardFen(null);
     }
   }, [currentIndex, positions.length]);
 
