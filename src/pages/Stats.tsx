@@ -1,11 +1,20 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { BarChart3, Swords, Target, ShieldAlert, Zap, TrendingUp, Calendar, Gamepad2, Link2 } from "lucide-react";
+import { BarChart3, Swords, Target, ShieldAlert, Zap, TrendingUp, Calendar, Gamepad2, Link2, Crown } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+
+interface EloRatings {
+  platform: string;
+  rapid?: number;
+  blitz?: number;
+  bullet?: number;
+  classical?: number;
+  daily?: number;
+}
 
 export default function Stats() {
   const { user } = useAuth();
@@ -78,6 +87,50 @@ export default function Stats() {
     },
   });
 
+  const { data: eloRatings } = useQuery({
+    queryKey: ["elo-ratings", profile?.chesscom_username, profile?.lichess_username],
+    enabled: !!(profile?.chesscom_username || profile?.lichess_username),
+    staleTime: 1000 * 60 * 10,
+    queryFn: async (): Promise<EloRatings[]> => {
+      const ratings: EloRatings[] = [];
+
+      if (profile?.chesscom_username) {
+        try {
+          const res = await fetch(`https://api.chess.com/pub/player/${profile.chesscom_username}/stats`);
+          if (res.ok) {
+            const data = await res.json();
+            ratings.push({
+              platform: "Chess.com",
+              rapid: data.chess_rapid?.last?.rating,
+              blitz: data.chess_blitz?.last?.rating,
+              bullet: data.chess_bullet?.last?.rating,
+              daily: data.chess_daily?.last?.rating,
+            });
+          }
+        } catch { /* ignore */ }
+      }
+
+      if (profile?.lichess_username) {
+        try {
+          const res = await fetch(`https://lichess.org/api/user/${profile.lichess_username}`);
+          if (res.ok) {
+            const data = await res.json();
+            const perfs = data.perfs || {};
+            ratings.push({
+              platform: "Lichess",
+              rapid: perfs.rapid?.rating,
+              blitz: perfs.blitz?.rating,
+              bullet: perfs.bullet?.rating,
+              classical: perfs.classical?.rating,
+            });
+          }
+        } catch { /* ignore */ }
+      }
+
+      return ratings;
+    },
+  });
+
   const hasGames = (gameStats?.total ?? 0) > 0;
   const totalPositions = positionStats
     ? Object.values(positionStats).reduce((a, b) => a + b, 0)
@@ -144,6 +197,41 @@ export default function Stats() {
             </motion.div>
           ))}
         </div>
+
+        {/* Elo Ratings */}
+        {eloRatings && eloRatings.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="rounded-xl border border-border bg-card p-5"
+          >
+            <h2 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
+              <Crown className="w-4 h-4 text-primary" /> Ratings
+            </h2>
+            <div className="space-y-4">
+              {eloRatings.map((r) => (
+                <div key={r.platform}>
+                  <p className="text-xs text-muted-foreground mb-2 font-medium">{r.platform}</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {([
+                      ["Rapid", r.rapid],
+                      ["Blitz", r.blitz],
+                      ["Bullet", r.bullet],
+                      ...(r.classical ? [["Classical", r.classical]] : []),
+                      ...(r.daily ? [["Daily", r.daily]] : []),
+                    ] as [string, number | undefined][]).filter(([, v]) => v != null).map(([label, value]) => (
+                      <div key={label} className="p-3 rounded-lg bg-muted/50 text-center">
+                        <p className="text-xl font-bold text-foreground">{value}</p>
+                        <p className="text-[11px] text-muted-foreground">{label}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
 
         {/* Win/Loss/Draw bar */}
         <motion.div
