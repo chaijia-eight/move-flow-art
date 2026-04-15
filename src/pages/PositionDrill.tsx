@@ -59,6 +59,7 @@ export default function PositionDrill() {
   const [finished, setFinished] = useState(false);
   const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
   const [playerMove, setPlayerMove] = useState<string | null>(null);
+  const [boardFen, setBoardFen] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user || !category) return;
