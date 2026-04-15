@@ -6,9 +6,7 @@ interface EvalBarProps {
   flipped?: boolean;
 }
 
-/** Map eval in pawns to white's visual percentage */
 function evalToWhitePct(pawns: number): number {
-  // ±5 pawns → ~5%-95%
   const clamped = Math.max(-10, Math.min(10, pawns));
   return 50 + (clamped / 10) * 50;
 }
@@ -24,14 +22,9 @@ export default function EvalBar({ evalBefore, evalAfter, flipped = false }: Eval
   const beforePct = evalToWhitePct(evalBefore);
   const afterPct = evalToWhitePct(evalAfter);
   const displayPct = flipped ? 100 - afterPct : afterPct;
-  const delta = evalAfter - evalBefore;
 
   return (
     <div className="flex flex-col items-center gap-1">
-      <span className="text-[10px] font-mono text-muted-foreground">
-        {formatEval(evalAfter)}
-      </span>
-
       <div
         className="w-5 rounded-sm overflow-hidden border border-border relative"
         style={{ height: "100%" }}
@@ -45,17 +38,8 @@ export default function EvalBar({ evalBefore, evalAfter, flipped = false }: Eval
         <div className="absolute inset-0 bg-zinc-800" style={{ zIndex: -1 }} />
       </div>
 
-      <span
-        className={`text-[10px] font-mono ${
-          delta > 0.5
-            ? "text-emerald-400"
-            : delta < -0.5
-            ? "text-red-400"
-            : "text-muted-foreground"
-        }`}
-      >
-        {delta > 0 ? "+" : ""}
-        {delta.toFixed(1)}
+      <span className="text-[10px] font-mono text-muted-foreground">
+        {formatEval(evalAfter)}
       </span>
     </div>
   );
