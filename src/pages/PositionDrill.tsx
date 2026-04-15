@@ -126,11 +126,12 @@ export default function PositionDrill() {
   const handleMove = useCallback((_from: string, _to: string, san: string) => {
     if (!current || feedback) return;
 
-    // Play move sound
+    // Play move sound and update board
     try {
       const chess = new Chess(current.fen);
       const result = chess.move(san);
       if (result) {
+        setBoardFen(chess.fen());
         if (chess.isCheck()) {
           playCheckSound();
         } else if (result.captured) {
