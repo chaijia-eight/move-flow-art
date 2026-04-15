@@ -301,6 +301,8 @@ export default function PositionDrill() {
               moveHints={moveHints}
               disabled={!!feedback}
               playerColor={turnFromFen as "w" | "b"}
+              arrowFrom={bestMoveArrow?.from}
+              arrowTo={bestMoveArrow?.to}
             />
           </div>
           {feedback && (
