@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import Chessboard from "@/components/Chessboard";
+import EvalBar from "@/components/EvalBar";
 import { Chess } from "chess.js";
 import { playMoveSound, playCaptureSound, playCheckSound } from "@/lib/chessSounds";
 import type { MoveCategory } from "@/data/openings";
@@ -279,16 +280,25 @@ export default function PositionDrill() {
           Move {current.move_number} · {turnFromFen === "w" ? "White" : "Black"} to move — find the best move!
         </p>
 
-        {/* Board */}
-        <div className="max-w-[400px] mx-auto mb-4">
-          <Chessboard
-            fen={boardFen || current.fen}
-            flipped={turnFromFen === "b"}
-            onMove={handleMove}
-            moveHints={moveHints}
-            disabled={!!feedback}
-            playerColor={turnFromFen as "w" | "b"}
-          />
+        {/* Board + Eval Bar */}
+        <div className="flex justify-center items-stretch gap-2 mb-4">
+          <div className="max-w-[400px] w-full">
+            <Chessboard
+              fen={boardFen || current.fen}
+              flipped={turnFromFen === "b"}
+              onMove={handleMove}
+              moveHints={moveHints}
+              disabled={!!feedback}
+              playerColor={turnFromFen as "w" | "b"}
+            />
+          </div>
+          {feedback && (
+            <EvalBar
+              evalBefore={current.eval_before}
+              evalAfter={current.eval_after}
+              flipped={turnFromFen === "b"}
+            />
+          )}
         </div>
 
         {/* Feedback area — fixed height to prevent layout shift */}
