@@ -59,6 +59,7 @@ export default function PositionDrill() {
   const [finished, setFinished] = useState(false);
   const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
   const [playerMove, setPlayerMove] = useState<string | null>(null);
+  const [boardFen, setBoardFen] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user || !category) return;
@@ -102,6 +103,7 @@ export default function PositionDrill() {
       setCurrentIndex((i) => i + 1);
       setFeedback(null);
       setPlayerMove(null);
+      setBoardFen(null);
     }
   }, [currentIndex, positions.length]);
 
@@ -124,11 +126,12 @@ export default function PositionDrill() {
   const handleMove = useCallback((_from: string, _to: string, san: string) => {
     if (!current || feedback) return;
 
-    // Play move sound
+    // Play move sound and update board
     try {
       const chess = new Chess(current.fen);
       const result = chess.move(san);
       if (result) {
+        setBoardFen(chess.fen());
         if (chess.isCheck()) {
           playCheckSound();
         } else if (result.captured) {
@@ -165,6 +168,7 @@ export default function PositionDrill() {
     setCurrentIndex(0);
     setFeedback(null);
     setPlayerMove(null);
+    setBoardFen(null);
     setScore({ correct: 0, wrong: 0, skipped: 0 });
     setFinished(false);
   };
@@ -278,7 +282,7 @@ export default function PositionDrill() {
         {/* Board */}
         <div className="max-w-[400px] mx-auto mb-4">
           <Chessboard
-            fen={current.fen}
+            fen={boardFen || current.fen}
             flipped={turnFromFen === "b"}
             onMove={handleMove}
             moveHints={moveHints}
