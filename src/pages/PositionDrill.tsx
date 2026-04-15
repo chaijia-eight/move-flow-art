@@ -183,6 +183,13 @@ export default function PositionDrill() {
   }, [current, feedback]);
 
   const handleSkip = () => {
+    if (current) {
+      supabase
+        .from("user_positions")
+        .update({ drilled: true } as any)
+        .eq("id", current.id)
+        .then();
+    }
     setScore((s) => ({ ...s, skipped: s.skipped + 1 }));
     advance();
   };
