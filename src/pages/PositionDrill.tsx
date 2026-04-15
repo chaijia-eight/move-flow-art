@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import Chessboard from "@/components/Chessboard";
+import EvalBar from "@/components/EvalBar";
 import { Chess } from "chess.js";
 import { playMoveSound, playCaptureSound, playCheckSound } from "@/lib/chessSounds";
 import type { MoveCategory } from "@/data/openings";
