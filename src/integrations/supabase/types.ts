@@ -265,6 +265,7 @@ export type Database = {
           category: string
           created_at: string
           difficulty_score: number | null
+          drilled: boolean
           engine_best_san: string | null
           eval_after: number | null
           eval_before: number | null
@@ -279,6 +280,7 @@ export type Database = {
           category: string
           created_at?: string
           difficulty_score?: number | null
+          drilled?: boolean
           engine_best_san?: string | null
           eval_after?: number | null
           eval_before?: number | null
@@ -293,6 +295,7 @@ export type Database = {
           category?: string
           created_at?: string
           difficulty_score?: number | null
+          drilled?: boolean
           engine_best_san?: string | null
           eval_after?: number | null
           eval_before?: number | null
