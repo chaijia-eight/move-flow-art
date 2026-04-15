@@ -87,6 +87,50 @@ export default function Stats() {
     },
   });
 
+  const { data: eloRatings } = useQuery({
+    queryKey: ["elo-ratings", profile?.chesscom_username, profile?.lichess_username],
+    enabled: !!(profile?.chesscom_username || profile?.lichess_username),
+    staleTime: 1000 * 60 * 10,
+    queryFn: async (): Promise<EloRatings[]> => {
+      const ratings: EloRatings[] = [];
+
+      if (profile?.chesscom_username) {
+        try {
+          const res = await fetch(`https://api.chess.com/pub/player/${profile.chesscom_username}/stats`);
+          if (res.ok) {
+            const data = await res.json();
+            ratings.push({
+              platform: "Chess.com",
+              rapid: data.chess_rapid?.last?.rating,
+              blitz: data.chess_blitz?.last?.rating,
+              bullet: data.chess_bullet?.last?.rating,
+              daily: data.chess_daily?.last?.rating,
+            });
+          }
+        } catch { /* ignore */ }
+      }
+
+      if (profile?.lichess_username) {
+        try {
+          const res = await fetch(`https://lichess.org/api/user/${profile.lichess_username}`);
+          if (res.ok) {
+            const data = await res.json();
+            const perfs = data.perfs || {};
+            ratings.push({
+              platform: "Lichess",
+              rapid: perfs.rapid?.rating,
+              blitz: perfs.blitz?.rating,
+              bullet: perfs.bullet?.rating,
+              classical: perfs.classical?.rating,
+            });
+          }
+        } catch { /* ignore */ }
+      }
+
+      return ratings;
+    },
+  });
+
   const hasGames = (gameStats?.total ?? 0) > 0;
   const totalPositions = positionStats
     ? Object.values(positionStats).reduce((a, b) => a + b, 0)
