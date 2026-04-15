@@ -70,6 +70,8 @@ export default function PositionDrill() {
         .select("*")
         .eq("user_id", user.id)
         .eq("category", category)
+        .eq("drilled", false)
+        .gte("difficulty_score", 4) // Only big mistakes (≥200cp loss)
         .order("difficulty_score", { ascending: false })
         .limit(20);
       const pos = (data ?? []) as DrillPosition[];
