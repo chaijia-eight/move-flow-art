@@ -70,6 +70,8 @@ export default function PositionDrill() {
         .select("*")
         .eq("user_id", user.id)
         .eq("category", category)
+        .eq("drilled", false)
+        .gte("difficulty_score", 4) // Only big mistakes (≥200cp loss)
         .order("difficulty_score", { ascending: false })
         .limit(20);
       const pos = (data ?? []) as DrillPosition[];
@@ -98,6 +100,15 @@ export default function PositionDrill() {
   const currentGame = current?.game_id ? gameMetas[current.game_id] : null;
 
   const advance = useCallback(() => {
+    // Mark current position as drilled
+    if (current) {
+      supabase
+        .from("user_positions")
+        .update({ drilled: true } as any)
+        .eq("id", current.id)
+        .then();
+    }
+
     if (currentIndex + 1 >= positions.length) {
       setFinished(true);
     } else {
@@ -106,7 +117,7 @@ export default function PositionDrill() {
       setPlayerMove(null);
       setBoardFen(null);
     }
-  }, [currentIndex, positions.length]);
+  }, [currentIndex, positions.length, current]);
 
   const moveHints = useMemo(() => {
     const hints = new Map<string, { category: MoveCategory; targets: Map<string, MoveCategory> }>();
@@ -172,6 +183,13 @@ export default function PositionDrill() {
   }, [current, feedback]);
 
   const handleSkip = () => {
+    if (current) {
+      supabase
+        .from("user_positions")
+        .update({ drilled: true } as any)
+        .eq("id", current.id)
+        .then();
+    }
     setScore((s) => ({ ...s, skipped: s.skipped + 1 }));
     advance();
   };
