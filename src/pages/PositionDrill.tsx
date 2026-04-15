@@ -282,7 +282,7 @@ export default function PositionDrill() {
         {/* Board */}
         <div className="max-w-[400px] mx-auto mb-4">
           <Chessboard
-            fen={current.fen}
+            fen={boardFen || current.fen}
             flipped={turnFromFen === "b"}
             onMove={handleMove}
             moveHints={moveHints}
