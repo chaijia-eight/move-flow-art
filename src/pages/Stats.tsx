@@ -198,6 +198,41 @@ export default function Stats() {
           ))}
         </div>
 
+        {/* Elo Ratings */}
+        {eloRatings && eloRatings.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="rounded-xl border border-border bg-card p-5"
+          >
+            <h2 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
+              <Crown className="w-4 h-4 text-primary" /> Ratings
+            </h2>
+            <div className="space-y-4">
+              {eloRatings.map((r) => (
+                <div key={r.platform}>
+                  <p className="text-xs text-muted-foreground mb-2 font-medium">{r.platform}</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {([
+                      ["Rapid", r.rapid],
+                      ["Blitz", r.blitz],
+                      ["Bullet", r.bullet],
+                      ...(r.classical ? [["Classical", r.classical]] : []),
+                      ...(r.daily ? [["Daily", r.daily]] : []),
+                    ] as [string, number | undefined][]).filter(([, v]) => v != null).map(([label, value]) => (
+                      <div key={label} className="p-3 rounded-lg bg-muted/50 text-center">
+                        <p className="text-xl font-bold text-foreground">{value}</p>
+                        <p className="text-[11px] text-muted-foreground">{label}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
         {/* Win/Loss/Draw bar */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
