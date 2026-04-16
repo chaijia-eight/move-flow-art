@@ -21,7 +21,7 @@ export default function OracleTrial() {
   const position = getOraclePositionById(positionId ?? "");
 
   const [game, setGame] = useState<Chess | null>(null);
-  const [fen, setFen] = useState("");
+  const [fen, setFen] = useState(position?.fen ?? "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
   const [moveCount, setMoveCount] = useState(0);
   const [mistakes, setMistakes] = useState(0);
   const [status, setStatus] = useState<TrialStatus>("playing");
