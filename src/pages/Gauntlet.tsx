@@ -18,7 +18,7 @@ import {
   createGauntletEngine,
   type GauntletEngine,
 } from "@/lib/gauntletEngine";
-import { observeMove, buildRawExplanation, generateCoachExplanation } from "@/lib/moveCoach";
+import { generateCoachExplanation, destroyCoach } from "@/lib/moveCoach";
 import { XP_REWARDS } from "@/data/rpgData";
 
 interface MoveEntry {
