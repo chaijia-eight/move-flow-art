@@ -54,20 +54,52 @@ export default function Forge() {
     },
   });
 
-  // Fetch undrilled positions
-  const { data: positions } = useQuery({
-    queryKey: ["forge-positions", user?.id],
+  // Fetch rapid game IDs first, then undrilled positions from those games only
+  const { data: rapidGameIds } = useQuery({
+    queryKey: ["forge-rapid-games", user?.id],
     enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("user_games")
+        .select("id, time_control")
+        .eq("user_id", user!.id);
+      // Rapid = 10+0 through 30min (600-1800 seconds initial)
+      const rapid = (data ?? []).filter((g) => {
+        if (!g.time_control) return false;
+        const base = parseInt(g.time_control.split(/[+/]/)[0], 10);
+        return base >= 600 && base <= 1800;
+      });
+      return rapid.map((g) => g.id);
+    },
+  });
+
+  const { data: positions } = useQuery({
+    queryKey: ["forge-positions", user?.id, rapidGameIds],
+    enabled: !!user && !!rapidGameIds && rapidGameIds.length > 0,
     queryFn: async () => {
       const { data } = await supabase
         .from("user_positions")
         .select("*")
         .eq("user_id", user!.id)
         .eq("drilled", false)
+        .in("game_id", rapidGameIds!)
         .gte("difficulty_score", 4)
         .order("difficulty_score", { ascending: false })
-        .limit(8);
-      return (data ?? []) as DrillPosition[];
+        .limit(20);
+      // Strict filter: only big swings
+      // 1. Missed opportunity: eval_before was roughly equal/slightly worse, best move would give big advantage
+      // 2. Blew a good position: eval_before was good for player, eval_after is bad
+      const filtered = (data ?? []).filter((p) => {
+        const before = p.eval_before ?? 0;
+        const after = p.eval_after ?? 0;
+        const cpLoss = Math.abs(before - after);
+        // Position went from decent (>= -1.0) to bad (<= -2.0) — blew it
+        const blewIt = before >= -100 && after <= -200;
+        // Had a big missed opportunity: best move gains 2+ pawns but player didn't find it
+        const missedBig = cpLoss >= 200;
+        return blewIt || missedBig;
+      });
+      return filtered.slice(0, 8) as DrillPosition[];
     },
   });
 
@@ -166,8 +198,7 @@ export default function Forge() {
         .eq("id", current.id)
         .then();
 
-      // Auto advance after delay
-      setTimeout(() => advance(), isCorrect ? 1200 : 2500);
+      // Don't auto-advance — let the user see the position and click Next
     },
     [current, feedback]
   );
@@ -478,6 +509,14 @@ export default function Forge() {
                         Best move was <span className="font-mono font-bold text-foreground">{current.engine_best_san}</span>
                       </p>
                     )}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-3"
+                      onClick={() => advance()}
+                    >
+                      Next <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                    </Button>
                   </motion.div>
                 )}
               </AnimatePresence>
