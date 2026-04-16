@@ -86,7 +86,7 @@ export async function createGauntletEngine(
     for (const cb of messageCallbacks) cb(line);
   };
 
-  const waitFor = (token: string, timeout = 10000): Promise<string[]> =>
+  const waitFor = (token: string, timeout = 30000): Promise<string[]> =>
     new Promise((resolve, reject) => {
       const lines: string[] = [];
       const timer = setTimeout(() => {
@@ -110,14 +110,14 @@ export async function createGauntletEngine(
 
   const send = (cmd: string) => worker.postMessage(cmd);
 
-  const sendAndWait = async (cmd: string, token: string, timeout = 10000) => {
+  const sendAndWait = async (cmd: string, token: string, timeout = 30000) => {
     const p = waitFor(token, timeout);
     send(cmd);
     return p;
   };
 
   // Initialize UCI
-  await sendAndWait("uci", "uciok");
+  await sendAndWait("uci", "uciok", 30000);
 
   // Set ELO-limited strength
   send(`setoption name UCI_LimitStrength value true`);
@@ -132,7 +132,7 @@ export async function createGauntletEngine(
     await sendAndWait("isready", "readyok");
     send(`position fen ${game.fen()}`);
 
-    const lines = await sendAndWait("go movetime 1500", "bestmove", 15000);
+    const lines = await sendAndWait("go movetime 800", "bestmove", 15000);
 
     let bestMoveUci = "";
     for (const line of lines) {

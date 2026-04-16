@@ -65,6 +65,10 @@ export default function Gauntlet() {
     },
   });
 
+  // Pre-warm Stockfish WASM by creating a worker early
+  const warmEngineRef = useRef<GauntletEngine | null>(null);
+  const warmingRef = useRef(false);
+
   // Fetch rating on mount
   useEffect(() => {
     if (!profile) return;
@@ -76,6 +80,16 @@ export default function Gauntlet() {
     });
   }, [profile]);
 
+  // Pre-warm engine while user picks a side
+  useEffect(() => {
+    if (phase !== "ready" || warmingRef.current) return;
+    warmingRef.current = true;
+    // Pre-create engine with white as default; will be recreated if needed
+    createGauntletEngine(targetElo, "w").then((eng) => {
+      warmEngineRef.current = eng;
+    }).catch(() => { warmingRef.current = false; });
+  }, [phase, targetElo]);
+
   const startGame = useCallback(
     async (color: "w" | "b") => {
       setPlayerColor(color);
@@ -86,7 +100,17 @@ export default function Gauntlet() {
       setSelectedMoveIdx(null);
       setFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
-      const engine = await createGauntletEngine(targetElo, color);
+      let engine: GauntletEngine;
+      
+      // Reuse pre-warmed engine if color matches, otherwise create new
+      if (warmEngineRef.current && color === "w") {
+        engine = warmEngineRef.current;
+        warmEngineRef.current = null;
+      } else {
+        warmEngineRef.current?.destroy();
+        warmEngineRef.current = null;
+        engine = await createGauntletEngine(targetElo, color);
+      }
       engineRef.current = engine;
 
       // If player is black, engine moves first
@@ -103,7 +127,6 @@ export default function Gauntlet() {
           };
           setMoves([entry]);
           setFen(newFen);
-          // Generate explanation async
           generateExplanation(entry, 0, [entry]);
         }
       }
@@ -268,6 +291,7 @@ export default function Gauntlet() {
   useEffect(() => {
     return () => {
       engineRef.current?.destroy();
+      warmEngineRef.current?.destroy();
     };
   }, []);
 
