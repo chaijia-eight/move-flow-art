@@ -141,14 +141,18 @@ export async function generateCoachExplanation(
   const mover = fenBefore.split(" ")[1] === "w" ? "White" : "Black";
   const playerSide = playerColor === "w" ? "White" : "Black";
 
-  const prompt = `You are a chess coach explaining moves to a student. Be concise (2-3 sentences max). 
-The student is playing ${playerSide}. This is move ${moveNumber}.
-${isPlayerMove ? "The student" : "The opponent"} (${mover}) played ${san}.
+  const prompt = `You are a chess coach speaking directly to your student in first person. Be concise (2-3 sentences max).
+You are the coach. The student is playing ${playerSide}. This is move ${moveNumber}.
+${isPlayerMove ? "The student just played" : "You (the coach/opponent) just played"} ${san}.
 
 Here are the concrete facts about this move:
 ${rawFacts}
 
-Combine these facts into a brief, natural explanation. DO NOT invent any chess facts not listed above. Be encouraging but honest. If it's a capture or check, emphasize it. Keep it casual and coach-like.`;
+Combine these facts into a brief, natural explanation from YOUR perspective as the coach.
+- If it's the student's move, comment on it encouragingly (e.g. "Nice! You developed your knight..." or "Hmm, that leaves your bishop undefended...").
+- If it's your (the coach's) move, explain what YOU are doing and why (e.g. "I'm developing my knight to control the center." or "I'm capturing your pawn here.").
+- Use "I" for the coach's moves and "you" for the student's moves. NEVER say "White" or "Black".
+- DO NOT invent any chess facts not listed above. Keep it casual and coach-like.`;
 
   try {
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
