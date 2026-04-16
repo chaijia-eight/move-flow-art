@@ -53,6 +53,63 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_rituals: {
+        Row: {
+          bonus_claimed: boolean
+          created_at: string
+          embers_earned: number
+          id: string
+          quest_1_completed: boolean
+          quest_1_params: Json
+          quest_1_type: string
+          quest_2_completed: boolean
+          quest_2_params: Json
+          quest_2_type: string
+          quest_3_completed: boolean
+          quest_3_params: Json
+          quest_3_type: string
+          ritual_date: string
+          user_id: string
+          xp_earned: number
+        }
+        Insert: {
+          bonus_claimed?: boolean
+          created_at?: string
+          embers_earned?: number
+          id?: string
+          quest_1_completed?: boolean
+          quest_1_params?: Json
+          quest_1_type: string
+          quest_2_completed?: boolean
+          quest_2_params?: Json
+          quest_2_type: string
+          quest_3_completed?: boolean
+          quest_3_params?: Json
+          quest_3_type: string
+          ritual_date?: string
+          user_id: string
+          xp_earned?: number
+        }
+        Update: {
+          bonus_claimed?: boolean
+          created_at?: string
+          embers_earned?: number
+          id?: string
+          quest_1_completed?: boolean
+          quest_1_params?: Json
+          quest_1_type?: string
+          quest_2_completed?: boolean
+          quest_2_params?: Json
+          quest_2_type?: string
+          quest_3_completed?: boolean
+          quest_3_params?: Json
+          quest_3_type?: string
+          ritual_date?: string
+          user_id?: string
+          xp_earned?: number
+        }
+        Relationships: []
+      }
       daily_usage: {
         Row: {
           analysis_used: boolean
@@ -146,6 +203,120 @@ export type Database = {
           opening_id?: string
           updated_at?: string
           variation_id?: string
+        }
+        Relationships: []
+      }
+      pillar_progress: {
+        Row: {
+          boss_defeated: boolean
+          created_at: string
+          current_floor: number
+          id: string
+          pillar: string
+          total_trials_mastered: number
+          trials_completed: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          boss_defeated?: boolean
+          created_at?: string
+          current_floor?: number
+          id?: string
+          pillar: string
+          total_trials_mastered?: number
+          trials_completed?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          boss_defeated?: boolean
+          created_at?: string
+          current_floor?: number
+          id?: string
+          pillar?: string
+          total_trials_mastered?: number
+          trials_completed?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      player_characters: {
+        Row: {
+          created_at: string
+          current_rank: string
+          embers: number
+          equipped_piece_set: string
+          equipped_theme: string
+          equipped_title: string | null
+          last_ritual_date: string | null
+          level: number
+          longest_streak: number
+          main_pillar: string | null
+          streak_days: number
+          updated_at: string
+          user_id: string
+          xp: number
+        }
+        Insert: {
+          created_at?: string
+          current_rank?: string
+          embers?: number
+          equipped_piece_set?: string
+          equipped_theme?: string
+          equipped_title?: string | null
+          last_ritual_date?: string | null
+          level?: number
+          longest_streak?: number
+          main_pillar?: string | null
+          streak_days?: number
+          updated_at?: string
+          user_id: string
+          xp?: number
+        }
+        Update: {
+          created_at?: string
+          current_rank?: string
+          embers?: number
+          equipped_piece_set?: string
+          equipped_theme?: string
+          equipped_title?: string | null
+          last_ritual_date?: string | null
+          level?: number
+          longest_streak?: number
+          main_pillar?: string | null
+          streak_days?: number
+          updated_at?: string
+          user_id?: string
+          xp?: number
+        }
+        Relationships: []
+      }
+      player_unlocks: {
+        Row: {
+          acquired_at: string
+          equipped: boolean
+          id: string
+          unlock_id: string
+          unlock_type: string
+          user_id: string
+        }
+        Insert: {
+          acquired_at?: string
+          equipped?: boolean
+          id?: string
+          unlock_id: string
+          unlock_type: string
+          user_id: string
+        }
+        Update: {
+          acquired_at?: string
+          equipped?: boolean
+          id?: string
+          unlock_id?: string
+          unlock_type?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -257,6 +428,51 @@ export type Database = {
           session_type?: string
           user_id?: string
           xp_earned?: number
+        }
+        Relationships: []
+      }
+      trial_history: {
+        Row: {
+          attempts: number
+          best_accuracy: number | null
+          created_at: string
+          floor_number: number
+          id: string
+          mastered_at: string | null
+          passed: boolean
+          perfect_clear: boolean
+          pillar: string
+          trial_number: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          best_accuracy?: number | null
+          created_at?: string
+          floor_number: number
+          id?: string
+          mastered_at?: string | null
+          passed?: boolean
+          perfect_clear?: boolean
+          pillar: string
+          trial_number: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          best_accuracy?: number | null
+          created_at?: string
+          floor_number?: number
+          id?: string
+          mastered_at?: string | null
+          passed?: boolean
+          perfect_clear?: boolean
+          pillar?: string
+          trial_number?: number
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
