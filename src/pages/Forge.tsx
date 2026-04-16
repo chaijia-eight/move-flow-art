@@ -439,7 +439,7 @@ export default function Forge() {
           <div className="flex gap-6 justify-center">
             {/* Eval bar */}
             <div className="hidden sm:block">
-              <EvalBar score={evalScore} flipped={playerColor === "b"} />
+              <EvalBar evalBefore={current?.eval_before ?? null} evalAfter={current?.eval_after ?? null} flipped={playerColor === "b"} />
             </div>
 
             {/* Board */}
