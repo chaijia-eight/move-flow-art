@@ -511,7 +511,7 @@ export default function Forge() {
             {/* Board */}
             <div className="w-full max-w-[480px]">
               <Chessboard
-                fen={current.fen}
+                fen={displayFen ?? current.fen}
                 onMove={handleMove}
                 moveHints={moveHints}
                 disabled={!!feedback}
