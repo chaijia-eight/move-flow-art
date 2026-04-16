@@ -18,7 +18,7 @@ import {
   createGauntletEngine,
   type GauntletEngine,
 } from "@/lib/gauntletEngine";
-import { observeMove, buildRawExplanation, generateCoachExplanation } from "@/lib/moveCoach";
+import { generateCoachExplanation, destroyCoach } from "@/lib/moveCoach";
 import { XP_REWARDS } from "@/data/rpgData";
 
 interface MoveEntry {
@@ -150,7 +150,7 @@ export default function Gauntlet() {
           prev.map((m, i) => (i === idx ? { ...m, explanation, loadingExplanation: false } : m))
         );
       } catch {
-        const raw = buildRawExplanation(observeMove(entry.fenBefore, entry.san));
+        const raw = `Plays ${entry.san}.`;
         setMoves((prev) =>
           prev.map((m, i) => (i === idx ? { ...m, explanation: raw, loadingExplanation: false } : m))
         );
@@ -224,7 +224,7 @@ export default function Gauntlet() {
           prev.map((m, i) => (i === playerIdx ? { ...m, explanation, loadingExplanation: false } : m))
         );
       } catch {
-        const raw = buildRawExplanation(observeMove(fenBefore, playerResult.san));
+        const raw = `Plays ${playerResult.san}.`;
         setMoves((prev) =>
           prev.map((m, i) => (i === playerIdx ? { ...m, explanation: raw, loadingExplanation: false } : m))
         );
@@ -292,6 +292,7 @@ export default function Gauntlet() {
     return () => {
       engineRef.current?.destroy();
       warmEngineRef.current?.destroy();
+      destroyCoach();
     };
   }, []);
 
