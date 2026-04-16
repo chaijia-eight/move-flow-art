@@ -132,7 +132,7 @@ export async function createGauntletEngine(
     await sendAndWait("isready", "readyok");
     send(`position fen ${game.fen()}`);
 
-    const lines = await sendAndWait("go movetime 1500", "bestmove", 15000);
+    const lines = await sendAndWait("go movetime 800", "bestmove", 15000);
 
     let bestMoveUci = "";
     for (const line of lines) {
