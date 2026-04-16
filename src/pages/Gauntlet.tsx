@@ -150,7 +150,7 @@ export default function Gauntlet() {
           prev.map((m, i) => (i === idx ? { ...m, explanation, loadingExplanation: false } : m))
         );
       } catch {
-        const raw = buildRawExplanation(observeMove(entry.fenBefore, entry.san));
+        const raw = `Plays ${entry.san}.`;
         setMoves((prev) =>
           prev.map((m, i) => (i === idx ? { ...m, explanation: raw, loadingExplanation: false } : m))
         );
