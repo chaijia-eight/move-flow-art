@@ -224,7 +224,7 @@ export default function Gauntlet() {
           prev.map((m, i) => (i === playerIdx ? { ...m, explanation, loadingExplanation: false } : m))
         );
       } catch {
-        const raw = buildRawExplanation(observeMove(fenBefore, playerResult.san));
+        const raw = `Plays ${playerResult.san}.`;
         setMoves((prev) =>
           prev.map((m, i) => (i === playerIdx ? { ...m, explanation: raw, loadingExplanation: false } : m))
         );
