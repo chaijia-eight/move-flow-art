@@ -1,5 +1,3 @@
-import { corsHeaders } from "@anthropic-ai/sdk/dist/esm/_shims/index.js";
-
 const CORS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
