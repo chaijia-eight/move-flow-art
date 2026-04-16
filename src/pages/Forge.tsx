@@ -509,6 +509,14 @@ export default function Forge() {
                         Best move was <span className="font-mono font-bold text-foreground">{current.engine_best_san}</span>
                       </p>
                     )}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-3"
+                      onClick={() => advance()}
+                    >
+                      Next <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                    </Button>
                   </motion.div>
                 )}
               </AnimatePresence>
