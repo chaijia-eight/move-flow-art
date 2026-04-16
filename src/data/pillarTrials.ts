@@ -25,7 +25,7 @@ export interface PillarDef {
 export const PILLARS: PillarDef[] = [
   {
     id: "tactical",
-    name: "Tactical Pillar",
+    name: "Tactical",
     icon: "⚔️",
     color: "text-red-400",
     glowColor: "shadow-red-500/30",

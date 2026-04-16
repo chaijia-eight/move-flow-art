@@ -100,14 +100,11 @@ export default function ForgeHub() {
                 className="h-2"
               />
             </div>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="text-orange-400 font-bold">🔥 {character?.embers ?? 0}</span>
-              {character && character.streak_days >= 3 && (
-                <span className="text-xs text-orange-300/70">
-                  {getStreakMultiplier(character.streak_days)}x
-                </span>
-              )}
-            </div>
+            {character && character.streak_days >= 3 && (
+              <span className="text-xs text-orange-300/70">
+                {getStreakMultiplier(character.streak_days)}x XP
+              </span>
+            )}
           </motion.div>
         )}
 
@@ -160,14 +157,14 @@ export default function ForgeHub() {
           >
             <div className="flex items-center gap-3 mb-2">
               <Flame className={`w-7 h-7 ${ritualDone ? "text-emerald-400" : "text-orange-500"}`} />
-              <h2 className="text-lg font-bold text-foreground">
-                {ritualDone ? "Ritual Complete ✓" : "The Daily Ritual"}
+               <h2 className="text-lg font-bold text-foreground">
+                {ritualDone ? "Warm-up Complete ✓" : "Daily Warm-up"}
               </h2>
             </div>
             <p className="text-sm text-muted-foreground">
               {ritualDone
                 ? "You've forged your skills today. Return tomorrow for new quests."
-                : "Three quests forged from your weaknesses. Complete them all for bonus XP and Embers."}
+                : "Three quests forged from your weaknesses. Complete them all for bonus XP."}
             </p>
             {!ritualDone && (
               <div className="mt-3 flex gap-2">
@@ -187,7 +184,7 @@ export default function ForgeHub() {
           className="mb-6"
         >
           <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
-            <Crown className="w-4 h-4" /> The Pillars
+            <Crown className="w-4 h-4" /> The Developments
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {PILLARS.map((pillar) => {
@@ -226,21 +223,12 @@ export default function ForgeHub() {
           </div>
         </motion.div>
 
-        {/* Bottom row: Vault + Stats */}
+        {/* Stats */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="grid grid-cols-2 gap-3"
         >
-          <div
-            onClick={() => navigate("/vault")}
-            className="p-5 rounded-xl border border-yellow-500/20 bg-card cursor-pointer hover:border-yellow-500/40 transition-all"
-          >
-            <Lock className="w-6 h-6 text-yellow-500 mb-2" />
-            <h3 className="font-semibold text-foreground text-sm">The Vault</h3>
-            <p className="text-xs text-muted-foreground">Themes, titles, cosmetics</p>
-          </div>
           <div
             onClick={() => navigate("/stats")}
             className="p-5 rounded-xl border border-border bg-card cursor-pointer hover:border-primary/40 transition-all"
