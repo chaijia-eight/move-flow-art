@@ -446,19 +446,25 @@ export default function Forge() {
             <p className="text-muted-foreground mb-6">
               {score.correct}/{score.total} correct · {accuracy}% accuracy · {formatTime(timer)}
             </p>
-            <div className="flex gap-3 justify-center">
+            <div className="flex flex-col items-center gap-3">
               <motion.div
                 animate={{ scale: [1, 1.05, 1] }}
                 transition={{ repeat: Infinity, duration: 2 }}
               >
                 <Button
                   size="lg"
-                  onClick={goBattle}
+                  onClick={() => goBattle()}
                   className="gap-2 bg-orange-600 hover:bg-orange-700 text-lg px-8 py-6"
                 >
                   Go Battle <ExternalLink className="w-5 h-5" />
                 </Button>
               </motion.div>
+              {showBattleChoice && (
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={() => goBattle("chesscom")}>Chess.com</Button>
+                  <Button variant="outline" onClick={() => goBattle("lichess")}>Lichess</Button>
+                </div>
+              )}
               <Button variant="outline" size="lg" onClick={() => navigate("/")}>
                 Done
               </Button>
