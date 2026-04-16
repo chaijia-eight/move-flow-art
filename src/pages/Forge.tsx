@@ -135,8 +135,10 @@ export default function Forge() {
       : diagnosticPositions.length + currentIndex;
 
   const isConnected = !!(profile?.chesscom_username || profile?.lichess_username);
+  const hasBothPlatforms = !!(profile?.chesscom_username && profile?.lichess_username);
   const streak = profile?.warmup_streak ?? 0;
   const weaknessCategory = diagnosticPositions[0]?.category ?? "blunder";
+  const noPositionsLeft = !!positions && positions.length === 0;
 
   // Timer
   useEffect(() => {
