@@ -1,13 +1,12 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Flame, Swords, Lock, BarChart3, Settings } from "lucide-react";
+import { Flame, Swords, BarChart3, Settings } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 
 const navItems = [
   { icon: Flame, label: "Forge", path: "/" },
-  { icon: Swords, label: "Pillars", path: "/pillar" },
-  { icon: Lock, label: "Vault", path: "/vault" },
+  { icon: Swords, label: "Developments", path: "/pillar" },
   { icon: BarChart3, label: "Stats", path: "/stats" },
 ];
 
