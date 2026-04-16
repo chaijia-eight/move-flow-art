@@ -353,13 +353,21 @@ export default function Forge() {
             <p className="text-sm text-muted-foreground mb-8">
               You've already warmed up today. Go play some rated games!
             </p>
-            <div className="flex gap-3 justify-center">
-              <Button onClick={goBattle} className="gap-2 bg-orange-600 hover:bg-orange-700">
+            <div className="flex gap-3 justify-center flex-wrap">
+              <Button onClick={() => goBattle()} className="gap-2 bg-orange-600 hover:bg-orange-700">
                 Go Battle <ExternalLink className="w-4 h-4" />
               </Button>
-              <Button variant="outline" onClick={startWarmup}>
-                Train Again
-              </Button>
+              {showBattleChoice && (
+                <div className="flex gap-2 w-full justify-center">
+                  <Button variant="outline" size="sm" onClick={() => goBattle("chesscom")}>Chess.com</Button>
+                  <Button variant="outline" size="sm" onClick={() => goBattle("lichess")}>Lichess</Button>
+                </div>
+              )}
+              {!noPositionsLeft && (
+                <Button variant="outline" onClick={startWarmup}>
+                  Train Again
+                </Button>
+              )}
             </div>
           </motion.div>
         </div>
