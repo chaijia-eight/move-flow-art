@@ -42,6 +42,7 @@ const App = () => (
                       <Route path="/developments" element={<Developments />} />
                       <Route path="/pillar/:pillarId" element={<PillarView />} />
                       <Route path="/trial/:pillarId/:floorNum" element={<TrialBattle />} />
+                      <Route path="/gauntlet" element={<Gauntlet />} />
                       <Route path="/stats" element={<Stats />} />
                       <Route path="/settings" element={<Settings />} />
                       <Route path="/connect" element={<Connect />} />
