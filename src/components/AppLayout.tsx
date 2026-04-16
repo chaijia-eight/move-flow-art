@@ -1,13 +1,13 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Flame, Map, Eye, BarChart3, Settings } from "lucide-react";
+import { Flame, Swords, Lock, BarChart3, Settings } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 
 const navItems = [
-  { icon: Flame, label: "Forge", path: "/forge" },
-  { icon: Map, label: "Campaigns", path: "/campaigns" },
-  { icon: Eye, label: "Oracle", path: "/oracle" },
+  { icon: Flame, label: "Forge", path: "/" },
+  { icon: Swords, label: "Pillars", path: "/pillar" },
+  { icon: Lock, label: "Vault", path: "/vault" },
   { icon: BarChart3, label: "Stats", path: "/stats" },
 ];
 
@@ -22,7 +22,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   const renderNavButton = (item: { icon: React.ElementType; label: string; path: string }) => {
     const Icon = item.icon;
-    const isActive = location.pathname.startsWith(item.path);
+    const isActive = item.path === "/"
+      ? location.pathname === "/"
+      : location.pathname.startsWith(item.path);
 
     return (
       <Tooltip key={item.path} delayDuration={300}>
