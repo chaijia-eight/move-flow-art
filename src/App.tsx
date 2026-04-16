@@ -7,18 +7,16 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import AppLayout from "./components/AppLayout";
-import Index from "./pages/Index.tsx";
-import Decks from "./pages/Decks.tsx";
-import Connect from "./pages/Connect.tsx";
-import Stats from "./pages/Stats.tsx";
-import Settings from "./pages/Settings.tsx";
-import About from "./pages/About.tsx";
-import NotFound from "./pages/NotFound.tsx";
-import RepertoireBuilder from "./pages/RepertoireBuilder.tsx";
-import RepertoireStudy from "./pages/RepertoireStudy.tsx";
-import PositionDrill from "./pages/PositionDrill.tsx";
-import Auth from "./pages/Auth.tsx";
-import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import Index from "./pages/Index";
+import Forge from "./pages/Forge";
+import Campaigns from "./pages/Campaigns";
+import Oracle from "./pages/Oracle";
+import Stats from "./pages/Stats";
+import Settings from "./pages/Settings";
+import Connect from "./pages/Connect";
+import Auth from "./pages/Auth";
+import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -38,15 +36,12 @@ const App = () => (
                   <AppLayout>
                     <Routes>
                       <Route path="/" element={<Index />} />
-                      <Route path="/decks" element={<Decks />} />
-                      <Route path="/decks/build" element={<RepertoireBuilder />} />
-                      <Route path="/decks/build/:repertoireId" element={<RepertoireBuilder />} />
-                      <Route path="/decks/study/:repertoireId" element={<RepertoireStudy />} />
-                      <Route path="/decks/drill/:category" element={<PositionDrill />} />
-                      <Route path="/connect" element={<Connect />} />
+                      <Route path="/forge" element={<Forge />} />
+                      <Route path="/campaigns" element={<Campaigns />} />
+                      <Route path="/oracle" element={<Oracle />} />
                       <Route path="/stats" element={<Stats />} />
                       <Route path="/settings" element={<Settings />} />
-                      <Route path="/about" element={<About />} />
+                      <Route path="/connect" element={<Connect />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </AppLayout>
