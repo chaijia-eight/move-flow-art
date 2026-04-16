@@ -10,7 +10,9 @@ import AppLayout from "./components/AppLayout";
 import Index from "./pages/Index";
 import Forge from "./pages/Forge";
 import Campaigns from "./pages/Campaigns";
+import CampaignDrill from "./pages/CampaignDrill";
 import Oracle from "./pages/Oracle";
+import OracleTrial from "./pages/OracleTrial";
 import Stats from "./pages/Stats";
 import Settings from "./pages/Settings";
 import Connect from "./pages/Connect";
@@ -38,7 +40,9 @@ const App = () => (
                       <Route path="/" element={<Index />} />
                       <Route path="/forge" element={<Forge />} />
                       <Route path="/campaigns" element={<Campaigns />} />
+                      <Route path="/campaigns/drill/:nodeId" element={<CampaignDrill />} />
                       <Route path="/oracle" element={<Oracle />} />
+                      <Route path="/oracle/trial/:positionId" element={<OracleTrial />} />
                       <Route path="/stats" element={<Stats />} />
                       <Route path="/settings" element={<Settings />} />
                       <Route path="/connect" element={<Connect />} />
