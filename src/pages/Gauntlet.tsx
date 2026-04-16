@@ -292,6 +292,7 @@ export default function Gauntlet() {
     return () => {
       engineRef.current?.destroy();
       warmEngineRef.current?.destroy();
+      destroyCoach();
     };
   }, []);
 
