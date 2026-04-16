@@ -198,8 +198,7 @@ export default function Forge() {
         .eq("id", current.id)
         .then();
 
-      // Auto advance after delay
-      setTimeout(() => advance(), isCorrect ? 1200 : 2500);
+      // Don't auto-advance — let the user see the position and click Next
     },
     [current, feedback]
   );
