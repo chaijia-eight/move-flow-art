@@ -39,6 +39,8 @@ export default function Forge() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [timer, setTimer] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
+  const [displayFen, setDisplayFen] = useState<string | null>(null);
+  const [showBattleChoice, setShowBattleChoice] = useState(false);
 
   // Fetch profile for streak
   const { data: profile } = useQuery({
@@ -133,8 +135,10 @@ export default function Forge() {
       : diagnosticPositions.length + currentIndex;
 
   const isConnected = !!(profile?.chesscom_username || profile?.lichess_username);
+  const hasBothPlatforms = !!(profile?.chesscom_username && profile?.lichess_username);
   const streak = profile?.warmup_streak ?? 0;
   const weaknessCategory = diagnosticPositions[0]?.category ?? "blunder";
+  const noPositionsLeft = !!positions && positions.length === 0;
 
   // Timer
   useEffect(() => {
@@ -189,7 +193,19 @@ export default function Forge() {
         total: s.total + 1,
       }));
       setFeedback(isCorrect ? "correct" : "wrong");
-      if (!isCorrect) setShowBestMove(true);
+
+      if (isCorrect) {
+        // Show the position after the correct move
+        try {
+          const chess = new Chess(current.fen);
+          chess.move(san);
+          setDisplayFen(chess.fen());
+        } catch {
+          // fallback — keep current fen
+        }
+      } else {
+        setShowBestMove(true);
+      }
 
       // Mark as drilled
       supabase
@@ -197,8 +213,6 @@ export default function Forge() {
         .update({ drilled: true })
         .eq("id", current.id)
         .then();
-
-      // Don't auto-advance — let the user see the position and click Next
     },
     [current, feedback]
   );
@@ -206,6 +220,7 @@ export default function Forge() {
   const advance = useCallback(() => {
     setFeedback(null);
     setShowBestMove(false);
+    setDisplayFen(null);
     const next = currentIndex + 1;
     if (next >= allPositions.length) {
       if (phase === "diagnostic" && practicePositions.length > 0) {
@@ -279,12 +294,18 @@ export default function Forge() {
     setShowBestMove(false);
   };
 
-  const goBattle = () => {
-    if (profile?.chesscom_username) {
+  const goBattle = (platform?: "chesscom" | "lichess") => {
+    if (hasBothPlatforms && !platform) {
+      setShowBattleChoice(true);
+      return;
+    }
+    const target = platform ?? (profile?.chesscom_username ? "chesscom" : "lichess");
+    if (target === "chesscom") {
       window.open("https://www.chess.com/play/online", "_blank");
-    } else if (profile?.lichess_username) {
+    } else {
       window.open("https://lichess.org/", "_blank");
     }
+    setShowBattleChoice(false);
   };
 
   // Determine player color from FEN
@@ -332,13 +353,21 @@ export default function Forge() {
             <p className="text-sm text-muted-foreground mb-8">
               You've already warmed up today. Go play some rated games!
             </p>
-            <div className="flex gap-3 justify-center">
-              <Button onClick={goBattle} className="gap-2 bg-orange-600 hover:bg-orange-700">
+            <div className="flex gap-3 justify-center flex-wrap">
+              <Button onClick={() => goBattle()} className="gap-2 bg-orange-600 hover:bg-orange-700">
                 Go Battle <ExternalLink className="w-4 h-4" />
               </Button>
-              <Button variant="outline" onClick={startWarmup}>
-                Train Again
-              </Button>
+              {showBattleChoice && (
+                <div className="flex gap-2 w-full justify-center">
+                  <Button variant="outline" size="sm" onClick={() => goBattle("chesscom")}>Chess.com</Button>
+                  <Button variant="outline" size="sm" onClick={() => goBattle("lichess")}>Lichess</Button>
+                </div>
+              )}
+              {!noPositionsLeft && (
+                <Button variant="outline" onClick={startWarmup}>
+                  Train Again
+                </Button>
+              )}
             </div>
           </motion.div>
         </div>
@@ -417,19 +446,25 @@ export default function Forge() {
             <p className="text-muted-foreground mb-6">
               {score.correct}/{score.total} correct · {accuracy}% accuracy · {formatTime(timer)}
             </p>
-            <div className="flex gap-3 justify-center">
+            <div className="flex flex-col items-center gap-3">
               <motion.div
                 animate={{ scale: [1, 1.05, 1] }}
                 transition={{ repeat: Infinity, duration: 2 }}
               >
                 <Button
                   size="lg"
-                  onClick={goBattle}
+                  onClick={() => goBattle()}
                   className="gap-2 bg-orange-600 hover:bg-orange-700 text-lg px-8 py-6"
                 >
                   Go Battle <ExternalLink className="w-5 h-5" />
                 </Button>
               </motion.div>
+              {showBattleChoice && (
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={() => goBattle("chesscom")}>Chess.com</Button>
+                  <Button variant="outline" onClick={() => goBattle("lichess")}>Lichess</Button>
+                </div>
+              )}
               <Button variant="outline" size="lg" onClick={() => navigate("/")}>
                 Done
               </Button>
@@ -476,7 +511,7 @@ export default function Forge() {
             {/* Board */}
             <div className="w-full max-w-[480px]">
               <Chessboard
-                fen={current.fen}
+                fen={displayFen ?? current.fen}
                 onMove={handleMove}
                 moveHints={moveHints}
                 disabled={!!feedback}
