@@ -294,12 +294,18 @@ export default function Forge() {
     setShowBestMove(false);
   };
 
-  const goBattle = () => {
-    if (profile?.chesscom_username) {
+  const goBattle = (platform?: "chesscom" | "lichess") => {
+    if (hasBothPlatforms && !platform) {
+      setShowBattleChoice(true);
+      return;
+    }
+    const target = platform ?? (profile?.chesscom_username ? "chesscom" : "lichess");
+    if (target === "chesscom") {
       window.open("https://www.chess.com/play/online", "_blank");
-    } else if (profile?.lichess_username) {
+    } else {
       window.open("https://lichess.org/", "_blank");
     }
+    setShowBattleChoice(false);
   };
 
   // Determine player color from FEN
