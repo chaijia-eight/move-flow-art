@@ -11,20 +11,14 @@ import {
   Coach,
   buildSystemPrompt,
   buildUserPrompt,
-  type AssessmentContext,
-  type AssessmentNode,
 } from "wintrchess/coach";
-import { Chess } from "chessops";
+import { Chess, parseUci, type NormalMove } from "chessops";
 import { parseFen } from "chessops/fen";
-import { parseUci, type NormalMove } from "chessops";
 
 // Singleton analysis engine (separate from game engine)
 let analysisEngine: BrowserEngine | null = null;
 let coach: Coach | null = null;
 let initPromise: Promise<void> | null = null;
-
-// Cache last context for efficiency
-let lastContext: AssessmentContext | undefined;
 
 /**
  * Initialize the wintrchess Coach with a dedicated analysis Stockfish worker.
@@ -41,8 +35,8 @@ async function ensureCoach(): Promise<Coach> {
     const sfUrl = `/stockfish/stockfish-single.js#${encodeURIComponent("/stockfish/stockfish.wasm")}`;
     analysisEngine = await BrowserEngine.create(sfUrl);
 
-    // Create coach with dummy LLM config — we won't use Coach.createExplanation()
-    // We only use createAssessment() + our own edge function for LLM
+    // Create coach with dummy LLM config — we only use createAssessment(),
+    // not createExplanation(). Our edge function handles the LLM part.
     coach = new Coach({
       engine: analysisEngine,
       llm: {
@@ -57,28 +51,10 @@ async function ensureCoach(): Promise<Coach> {
 }
 
 /**
- * Convert a FEN + SAN move into chessops Position + ContextualMove
- */
-function fenAndSanToChessops(fen: string, san?: string) {
-  const setup = parseFen(fen);
-  if (setup.isErr) throw new Error(`Invalid FEN: ${fen}`);
-  const pos = Chess.fromSetup(setup.unwrap());
-  if (pos.isErr) throw new Error(`Invalid position`);
-  const position = pos.unwrap();
-
-  if (!san) return { position, move: undefined };
-
-  // Convert SAN to UCI then to chessops NormalMove
-  // We need to find the matching legal move
-  const { Chess: ChessJS } = await import("chess.js") as any;
-  // Actually, let's use chess.js to get the UCI notation from SAN
-  return { position, move: undefined }; // placeholder
-}
-
-/**
  * Convert FEN + SAN to chessops ContextualMove using chess.js for SAN parsing.
  */
 async function getContextualMove(fenBefore: string, san: string) {
+  // Use chess.js to resolve SAN → UCI
   const { Chess: CJS } = await import("chess.js");
   const game = new CJS(fenBefore);
   const result = game.move(san);
@@ -88,18 +64,16 @@ async function getContextualMove(fenBefore: string, san: string) {
   const move = parseUci(uci) as NormalMove | undefined;
   if (!move) return null;
 
-  // Build the chessops position
-  const setup = parseFen(fenBefore);
-  if (setup.isErr) return null;
-  const pos = Chess.fromSetup(setup.unwrap());
-  if (pos.isErr) return null;
-  const position = pos.unwrap();
+  // Build the chessops position (before move)
+  const setupResult = parseFen(fenBefore);
+  if (setupResult.isErr) return null;
+  const posResult = Chess.fromSetup(setupResult.unwrap());
+  if (posResult.isErr) return null;
+  const position = posResult.unwrap();
 
-  // Contextualize the move
+  // Get piece and capture info from chessops
   const piece = position.board.get(move.from);
   if (!piece) return null;
-
-  // Get captured piece
   const capturedPiece = position.board.get(move.to);
 
   // Apply move to get after-position
@@ -133,29 +107,27 @@ export async function generateCoachExplanation(
     // Parse the move
     const moveData = await getContextualMove(fenBefore, san);
     if (!moveData) {
-      return fallbackExplanation(fenBefore, san, isPlayerMove);
+      return fallbackExplanation(san, isPlayerMove);
     }
 
     // Create assessment using wintrchess's full observation pipeline
+    // (runs Stockfish evaluation + 12 observation functions)
     const assessment = await coachInstance.createAssessment({
       position: moveData.afterPosition,
       move: moveData.move as any,
       evaluations: { depth: 12, timeLimit: 2000 },
     });
 
-    // Cache context for next move
-    lastContext = assessment.context;
-
     // Build prompts using wintrchess's prompt builders
     const person = isPlayerMove ? "second" : "first";
     const systemPrompt = buildSystemPrompt({
       person,
       personality: "a friendly, encouraging chess coach who speaks casually",
-      additionalPrompt: "Keep your response to 2-3 sentences maximum. Be concise and natural.",
+      additionalPrompt: "Keep your response to 2-3 sentences maximum. Be concise and natural. Never say White or Black — use I/you.",
     });
     const userPrompt = buildUserPrompt(assessment);
 
-    // Send to our edge function
+    // Send to our edge function for LLM processing
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
     const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
@@ -180,13 +152,13 @@ export async function generateCoachExplanation(
     console.warn("WintrChess coach error, using fallback:", err);
   }
 
-  return fallbackExplanation(fenBefore, san, isPlayerMove);
+  return fallbackExplanation(san, isPlayerMove);
 }
 
 /**
  * Simple fallback when wintrchess pipeline fails.
  */
-function fallbackExplanation(fen: string, san: string, isPlayerMove: boolean): string {
+function fallbackExplanation(san: string, isPlayerMove: boolean): string {
   return isPlayerMove ? `You played ${san}.` : `I played ${san}.`;
 }
 
@@ -198,11 +170,10 @@ export function destroyCoach() {
   analysisEngine = null;
   coach = null;
   initPromise = null;
-  lastContext = undefined;
 }
 
-// Keep backward-compatible exports
-export function observeMove(fenBefore: string, san: string) {
+// Backward-compatible exports for any code that still uses these
+export function observeMove(_fenBefore: string, san: string) {
   return [{ text: `Plays ${san}.`, type: "positional" as const, priority: 1 }];
 }
 
