@@ -176,6 +176,90 @@ export type Database = {
         }
         Relationships: []
       }
+      skill_tree_progress: {
+        Row: {
+          attempts: number
+          best_accuracy: number | null
+          branch: string
+          created_at: string
+          id: string
+          level: number
+          mastered: boolean
+          skill_name: string
+          updated_at: string
+          user_id: string
+          xp: number
+        }
+        Insert: {
+          attempts?: number
+          best_accuracy?: number | null
+          branch: string
+          created_at?: string
+          id?: string
+          level?: number
+          mastered?: boolean
+          skill_name: string
+          updated_at?: string
+          user_id: string
+          xp?: number
+        }
+        Update: {
+          attempts?: number
+          best_accuracy?: number | null
+          branch?: string
+          created_at?: string
+          id?: string
+          level?: number
+          mastered?: boolean
+          skill_name?: string
+          updated_at?: string
+          user_id?: string
+          xp?: number
+        }
+        Relationships: []
+      }
+      training_sessions: {
+        Row: {
+          accuracy: number | null
+          created_at: string
+          duration_seconds: number | null
+          id: string
+          metadata: Json | null
+          pillar: string
+          positions_attempted: number
+          positions_correct: number
+          session_type: string
+          user_id: string
+          xp_earned: number
+        }
+        Insert: {
+          accuracy?: number | null
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          metadata?: Json | null
+          pillar: string
+          positions_attempted?: number
+          positions_correct?: number
+          session_type: string
+          user_id: string
+          xp_earned?: number
+        }
+        Update: {
+          accuracy?: number | null
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          metadata?: Json | null
+          pillar?: string
+          positions_attempted?: number
+          positions_correct?: number
+          session_type?: string
+          user_id?: string
+          xp_earned?: number
+        }
+        Relationships: []
+      }
       user_entitlements: {
         Row: {
           created_at: string
@@ -323,8 +407,12 @@ export type Database = {
           id: string
           last_sync_at: string | null
           lichess_username: string | null
+          longest_streak: number
+          primary_pillar: string | null
+          skill_rating: number | null
           updated_at: string
           user_id: string
+          warmup_streak: number
         }
         Insert: {
           chesscom_username?: string | null
@@ -332,8 +420,12 @@ export type Database = {
           id?: string
           last_sync_at?: string | null
           lichess_username?: string | null
+          longest_streak?: number
+          primary_pillar?: string | null
+          skill_rating?: number | null
           updated_at?: string
           user_id: string
+          warmup_streak?: number
         }
         Update: {
           chesscom_username?: string | null
@@ -341,8 +433,12 @@ export type Database = {
           id?: string
           last_sync_at?: string | null
           lichess_username?: string | null
+          longest_streak?: number
+          primary_pillar?: string | null
+          skill_rating?: number | null
           updated_at?: string
           user_id?: string
+          warmup_streak?: number
         }
         Relationships: []
       }
@@ -397,6 +493,48 @@ export type Database = {
           tree?: Json
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      warmup_sessions: {
+        Row: {
+          created_at: string
+          diagnostic_correct: number
+          diagnostic_total: number
+          id: string
+          practice_correct: number
+          practice_total: number
+          user_id: string
+          warmup_date: string
+          weakness_category: string
+          went_to_battle: boolean
+          won_after: boolean | null
+        }
+        Insert: {
+          created_at?: string
+          diagnostic_correct?: number
+          diagnostic_total?: number
+          id?: string
+          practice_correct?: number
+          practice_total?: number
+          user_id: string
+          warmup_date?: string
+          weakness_category: string
+          went_to_battle?: boolean
+          won_after?: boolean | null
+        }
+        Update: {
+          created_at?: string
+          diagnostic_correct?: number
+          diagnostic_total?: number
+          id?: string
+          practice_correct?: number
+          practice_total?: number
+          user_id?: string
+          warmup_date?: string
+          weakness_category?: string
+          went_to_battle?: boolean
+          won_after?: boolean | null
         }
         Relationships: []
       }
