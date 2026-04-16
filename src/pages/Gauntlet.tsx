@@ -291,6 +291,7 @@ export default function Gauntlet() {
   useEffect(() => {
     return () => {
       engineRef.current?.destroy();
+      warmEngineRef.current?.destroy();
     };
   }, []);
 
