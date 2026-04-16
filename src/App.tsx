@@ -12,6 +12,7 @@ import DailyRitual from "./pages/DailyRitual";
 import PillarView from "./pages/PillarView";
 import TrialBattle from "./pages/TrialBattle";
 import Developments from "./pages/Developments";
+import Gauntlet from "./pages/Gauntlet";
 import Stats from "./pages/Stats";
 import Settings from "./pages/Settings";
 import Connect from "./pages/Connect";
@@ -41,6 +42,7 @@ const App = () => (
                       <Route path="/developments" element={<Developments />} />
                       <Route path="/pillar/:pillarId" element={<PillarView />} />
                       <Route path="/trial/:pillarId/:floorNum" element={<TrialBattle />} />
+                      <Route path="/gauntlet" element={<Gauntlet />} />
                       <Route path="/stats" element={<Stats />} />
                       <Route path="/settings" element={<Settings />} />
                       <Route path="/connect" element={<Connect />} />

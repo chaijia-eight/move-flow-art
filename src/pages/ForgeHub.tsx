@@ -223,11 +223,28 @@ export default function ForgeHub() {
           </div>
         </motion.div>
 
-        {/* Stats */}
+        {/* Gauntlet */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
+          className="mb-6"
+        >
+          <div
+            onClick={() => navigate("/gauntlet")}
+            className="p-6 rounded-xl border border-red-500/30 bg-gradient-to-br from-red-500/5 to-orange-500/5 cursor-pointer hover:border-red-500/60 transition-all"
+          >
+            <Swords className="w-7 h-7 text-red-500 mb-2" />
+            <h3 className="font-bold text-foreground">The Gauntlet</h3>
+            <p className="text-xs text-muted-foreground">Play a full game vs an engine tuned to your level. Coach explains every move.</p>
+          </div>
+        </motion.div>
+
+        {/* Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
         >
           <div
             onClick={() => navigate("/stats")}
