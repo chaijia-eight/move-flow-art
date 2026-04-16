@@ -193,7 +193,19 @@ export default function Forge() {
         total: s.total + 1,
       }));
       setFeedback(isCorrect ? "correct" : "wrong");
-      if (!isCorrect) setShowBestMove(true);
+
+      if (isCorrect) {
+        // Show the position after the correct move
+        try {
+          const chess = new Chess(current.fen);
+          chess.move(san);
+          setDisplayFen(chess.fen());
+        } catch {
+          // fallback — keep current fen
+        }
+      } else {
+        setShowBestMove(true);
+      }
 
       // Mark as drilled
       supabase
@@ -201,8 +213,6 @@ export default function Forge() {
         .update({ drilled: true })
         .eq("id", current.id)
         .then();
-
-      // Don't auto-advance — let the user see the position and click Next
     },
     [current, feedback]
   );
