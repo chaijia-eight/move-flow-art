@@ -145,9 +145,9 @@ export default function Gauntlet() {
       const legalMoves = game.moves({ verbose: true });
       for (const m of legalMoves) {
         if (!hints.has(m.from)) {
-          hints.set(m.from, { category: "main" as MoveCategory, targets: new Map() });
+          hints.set(m.from, { category: "main_line" as MoveCategory, targets: new Map() });
         }
-        hints.get(m.from)!.targets.set(m.to, "main" as MoveCategory);
+        hints.get(m.from)!.targets.set(m.to, "main_line" as MoveCategory);
       }
     } catch {}
     return hints;
