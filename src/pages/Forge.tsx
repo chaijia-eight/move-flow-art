@@ -220,6 +220,7 @@ export default function Forge() {
   const advance = useCallback(() => {
     setFeedback(null);
     setShowBestMove(false);
+    setDisplayFen(null);
     const next = currentIndex + 1;
     if (next >= allPositions.length) {
       if (phase === "diagnostic" && practicePositions.length > 0) {
