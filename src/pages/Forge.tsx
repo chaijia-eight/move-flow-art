@@ -39,6 +39,9 @@ export default function Forge() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [timer, setTimer] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
+  const [displayFen, setDisplayFen] = useState<string | null>(null);
+  const [showBattleChoice, setShowBattleChoice] = useState(false);
+  const hasBothPlatforms = !!(profile?.chesscom_username && profile?.lichess_username);
 
   // Fetch profile for streak
   const { data: profile } = useQuery({
