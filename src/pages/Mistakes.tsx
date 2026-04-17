@@ -125,8 +125,8 @@ export default function Mistakes() {
                       <span className="text-[10px] uppercase tracking-wider text-emerald-400">Drilled</span>
                     )}
                   </div>
-                  <div className="aspect-square mb-3 rounded-md overflow-hidden">
-                    <MiniBoard fen={pos.fen} size={220} />
+                  <div className="mb-3 rounded-md overflow-hidden">
+                    <MiniBoard fen={pos.fen} theme="default" />
                   </div>
                   <div className="text-xs text-muted-foreground space-y-1">
                     <div>Move {pos.move_number}: <span className="text-foreground font-mono">{pos.your_move_san ?? "?"}</span></div>
