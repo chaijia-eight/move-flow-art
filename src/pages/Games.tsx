@@ -1,14 +1,71 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Trophy, Skull, Minus, ExternalLink, Swords } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { Trophy, Skull, Minus, ExternalLink, Swords, RefreshCw } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
 
 export default function Games() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [syncing, setSyncing] = useState(false);
+
+  const { data: profile } = useQuery({
+    queryKey: ["user-profile", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("user_profiles")
+        .select("chesscom_username, lichess_username, last_sync_at")
+        .eq("user_id", user!.id)
+        .maybeSingle();
+      return data;
+    },
+  });
+
+  const handleSync = async () => {
+    if (!user || syncing) return;
+    const platforms: { platform: "chesscom" | "lichess"; username: string }[] = [];
+    if (profile?.chesscom_username) platforms.push({ platform: "chesscom", username: profile.chesscom_username });
+    if (profile?.lichess_username) platforms.push({ platform: "lichess", username: profile.lichess_username });
+    if (!platforms.length) {
+      navigate("/connect");
+      return;
+    }
+    setSyncing(true);
+    let totalNew = 0;
+    let totalFound = 0;
+    try {
+      for (const { platform, username } of platforms) {
+        const { data, error } = await supabase.functions.invoke("fetch-games", {
+          body: { platform, username },
+        });
+        if (error) throw error;
+        if (data?.error) throw new Error(data.error);
+        totalFound += data.gamesFound ?? 0;
+        totalNew += data.gamesInserted ?? 0;
+      }
+      toast({
+        title: totalNew > 0 ? `${totalNew} new game${totalNew === 1 ? "" : "s"} imported` : "You're up to date",
+        description: `Scanned ${totalFound} recent game${totalFound === 1 ? "" : "s"}.`,
+      });
+      queryClient.invalidateQueries({ queryKey: ["games-list"] });
+      queryClient.invalidateQueries({ queryKey: ["games-position-counts"] });
+      queryClient.invalidateQueries({ queryKey: ["user-profile"] });
+    } catch (err: any) {
+      toast({
+        title: "Sync failed",
+        description: err?.message || "Could not fetch new games.",
+        variant: "destructive",
+      });
+    } finally {
+      setSyncing(false);
+    }
+  };
 
   const { data: games, isLoading } = useQuery({
     queryKey: ["games-list", user?.id],
@@ -72,11 +129,24 @@ export default function Games() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-5xl mx-auto px-4 py-8">
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-          <h1 className="text-3xl font-bold text-foreground">Games</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Your synced games from Chess.com and Lichess.
-          </p>
+        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6 flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Games</h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Your synced games from Chess.com and Lichess.
+            </p>
+            {profile?.last_sync_at && (
+              <p className="text-xs text-muted-foreground/60 mt-1">
+                Last synced: {new Date(profile.last_sync_at).toLocaleString()}
+              </p>
+            )}
+          </div>
+          {(profile?.chesscom_username || profile?.lichess_username) && (
+            <Button onClick={handleSync} disabled={syncing} variant="outline" size="sm" className="gap-2 shrink-0">
+              <RefreshCw className={`w-3.5 h-3.5 ${syncing ? "animate-spin" : ""}`} />
+              {syncing ? "Syncing..." : "Sync now"}
+            </Button>
+          )}
         </motion.div>
 
         {isLoading ? (
