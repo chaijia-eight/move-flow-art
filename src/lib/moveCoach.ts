@@ -141,6 +141,8 @@ export async function generateCoachExplanation(
         systemPrompt,
         userPrompt,
         rawFacts: assessment.statements.join(" "),
+        isPlayerMove,
+        playerColor,
       }),
     });
 
