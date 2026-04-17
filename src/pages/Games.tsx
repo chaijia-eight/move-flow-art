@@ -46,6 +46,23 @@ export default function Games() {
     return <Minus className="w-4 h-4 text-muted-foreground" />;
   };
 
+  const formatTimeControl = (tc: string | null) => {
+    if (!tc) return null;
+    // Daily/correspondence (e.g. "1/86400")
+    if (tc.includes("/")) {
+      const days = Math.round(Number(tc.split("/")[1]) / 86400);
+      return `${days}d`;
+    }
+    // Non-numeric (e.g. lichess speed labels like "blitz")
+    if (!/^\d/.test(tc)) return tc;
+    const [baseStr, incStr] = tc.split("+");
+    const baseSec = Number(baseStr);
+    if (!Number.isFinite(baseSec)) return tc;
+    const baseMin = baseSec % 60 === 0 ? `${baseSec / 60}` : (baseSec / 60).toFixed(1);
+    const inc = incStr != null ? Number(incStr) : 0;
+    return Number.isFinite(inc) && inc > 0 ? `${baseMin}+${inc}` : `${baseMin} min`;
+  };
+
   const externalUrl = (g: any) => {
     if (g.platform === "chesscom") return `https://www.chess.com/game/live/${g.game_id}`;
     if (g.platform === "lichess") return `https://lichess.org/${g.game_id}`;
@@ -93,7 +110,7 @@ export default function Games() {
                       </span>
                       <span className="text-xs text-muted-foreground capitalize">{g.platform}</span>
                       {g.time_control && (
-                        <span className="text-xs text-muted-foreground">· {g.time_control}</span>
+                        <span className="text-xs text-muted-foreground">· {formatTimeControl(g.time_control)}</span>
                       )}
                     </div>
                     <div className="text-xs text-muted-foreground mt-0.5">
