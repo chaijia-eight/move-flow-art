@@ -53,8 +53,8 @@ ABSOLUTE RULES:
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
         ],
-        max_tokens: 250,
-        temperature: 0.7,
+        max_tokens: 400,
+        temperature: 0.5,
       }),
     });
 
