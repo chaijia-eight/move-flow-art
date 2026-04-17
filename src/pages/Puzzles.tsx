@@ -188,19 +188,28 @@ export default function Puzzles() {
       return;
     }
 
-    // Otherwise, auto-play the opponent's reply (next solution move).
-    const opponentReply = puzzle.solutionSan[nextIndex];
-    chess.move(opponentReply);
-    nextFen = chess.fen();
-    nextIndex += 1;
-
+    // Show the user's move first, then pause before the opponent replies.
     setCurrentFen(nextFen);
     setMoveIndex(nextIndex);
 
-    // After the opponent's reply, if the puzzle is done, we passed.
-    if (nextIndex >= puzzle.solutionSan.length) {
-      await finalizeAttempt(true);
-    }
+    const opponentReply = puzzle.solutionSan[nextIndex];
+    const fenBeforeReply = nextFen;
+    const indexAfterReply = nextIndex + 1;
+
+    setTimeout(() => {
+      const replyChess = new Chess(fenBeforeReply);
+      try {
+        replyChess.move(opponentReply);
+      } catch {
+        return;
+      }
+      setCurrentFen(replyChess.fen());
+      setMoveIndex(indexAfterReply);
+
+      if (indexAfterReply >= puzzle.solutionSan.length) {
+        finalizeAttempt(true);
+      }
+    }, 650);
   };
 
   if (!profile) {
