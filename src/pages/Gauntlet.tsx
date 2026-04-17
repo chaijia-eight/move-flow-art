@@ -450,14 +450,19 @@ export default function Gauntlet() {
           <div className="flex justify-center">
             <div className="w-full max-w-[500px] aspect-square">
               <Chessboard
-                fen={fen}
+                fen={displayedFen}
                 onMove={handleMove}
-                moveHints={moveHints}
-                disabled={phase !== "playing" || !!result}
+                moveHints={isViewingHistory ? new Map() : moveHints}
+                disabled={phase !== "playing" || !!result || isViewingHistory}
                 flipped={playerColor === "b"}
                 playerColor={playerColor}
               />
             </div>
+            {isViewingHistory && (
+              <p className="text-xs text-muted-foreground mt-2 text-center">
+                Viewing move {selectedMoveIdx! + 1} · press → or ↓ to return to live
+              </p>
+            )}
           </div>
 
           {/* Side panel — Moves + Coach */}
