@@ -15,6 +15,9 @@ import Gauntlet from "./pages/Gauntlet";
 import Stats from "./pages/Stats";
 import Settings from "./pages/Settings";
 import Connect from "./pages/Connect";
+import Mistakes from "./pages/Mistakes";
+import Games from "./pages/Games";
+import Puzzles from "./pages/Puzzles";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -44,6 +47,9 @@ const App = () => (
                       <Route path="/stats" element={<Stats />} />
                       <Route path="/settings" element={<Settings />} />
                       <Route path="/connect" element={<Connect />} />
+                      <Route path="/mistakes" element={<Mistakes />} />
+                      <Route path="/games" element={<Games />} />
+                      <Route path="/puzzles" element={<Puzzles />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </AppLayout>
