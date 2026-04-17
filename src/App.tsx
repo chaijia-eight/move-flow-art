@@ -38,7 +38,7 @@ const App = () => (
                     <Routes>
                       <Route path="/" element={<ForgeHub />} />
                       <Route path="/ritual" element={<DailyRitual />} />
-                      <Route path="/developments" element={<Developments />} />
+                      
                       <Route path="/pillar/:pillarId" element={<PillarView />} />
                       <Route path="/trial/:pillarId/:floorNum" element={<TrialBattle />} />
                       <Route path="/gauntlet" element={<Gauntlet />} />

@@ -6,7 +6,6 @@ import { useSubscription } from "@/contexts/SubscriptionContext";
 
 const navItems = [
   { icon: Flame, label: "Forge", path: "/" },
-  { icon: Swords, label: "Developments", path: "/developments" },
   { icon: BarChart3, label: "Stats", path: "/stats" },
 ];
 
