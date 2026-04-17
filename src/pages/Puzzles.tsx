@@ -1,20 +1,18 @@
-import { useState, useMemo, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Brain, Check, X, Trophy, TrendingUp, TrendingDown, Target } from "lucide-react";
+import { Brain, Check, X, Trophy, TrendingUp, TrendingDown, Target, ExternalLink } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Chess } from "chess.js";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import Chessboard from "@/components/Chessboard";
-
-interface Puzzle {
-  id: string;
-  fen: string;
-  best_san: string;
-  category: string;
-  puzzle_rating: number;
-}
+import {
+  fetchLichessPuzzle,
+  offsetToDifficulty,
+  normalizeSan,
+  type LichessPuzzle,
+} from "@/lib/lichessPuzzle";
 
 interface Profile {
   puzzle_rating: number;
@@ -30,14 +28,6 @@ const DIFFICULTY_OFFSETS = [
   { label: "Much Harder", value: +300 },
 ];
 
-// Map our internal difficulty_score (0+) to a pseudo-rating.
-// Heuristic: base 1000 + 50 per difficulty point, capped.
-function deriveRating(difficultyScore: number | null | undefined): number {
-  const d = difficultyScore ?? 0;
-  return Math.max(600, Math.min(2400, 1000 + d * 40));
-}
-
-// Glicko-lite: simple Elo-style rating change.
 function computeRatingChange(
   playerRating: number,
   puzzleRating: number,
@@ -51,19 +41,21 @@ function computeRatingChange(
 
 export default function Puzzles() {
   const { user } = useAuth();
-  const navigate = useNavigate();
   const qc = useQueryClient();
 
   const [offset, setOffset] = useState<number>(0);
-  const [currentPuzzle, setCurrentPuzzle] = useState<Puzzle | null>(null);
+  const [puzzle, setPuzzle] = useState<LichessPuzzle | null>(null);
+  const [currentFen, setCurrentFen] = useState<string>("");
+  const [moveIndex, setMoveIndex] = useState<number>(0); // Index into solutionSan
   const [feedback, setFeedback] = useState<{
     correct: boolean;
     delta: number;
-    best: string;
+    expected: string;
   } | null>(null);
   const [loadingNext, setLoadingNext] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const failedRef = useRef(false); // Track failure across multi-move puzzle
 
-  // Profile + rating
   const { data: profile, refetch: refetchProfile } = useQuery({
     queryKey: ["puzzle-profile", user?.id],
     enabled: !!user,
@@ -84,7 +76,6 @@ export default function Puzzles() {
     },
   });
 
-  // Recent attempts for history strip
   const { data: recent } = useQuery({
     queryKey: ["puzzle-recent", user?.id],
     enabled: !!user,
@@ -102,103 +93,114 @@ export default function Puzzles() {
   const targetRating = (profile?.puzzle_rating ?? 1200) + offset;
 
   const loadNextPuzzle = async () => {
-    if (!user) return;
     setLoadingNext(true);
     setFeedback(null);
-    setCurrentPuzzle(null);
+    setPuzzle(null);
+    setError(null);
+    setMoveIndex(0);
+    failedRef.current = false;
 
-    // Fetch a window of puzzles, then pick the one closest to target.
-    const { data } = await supabase
-      .from("user_positions")
-      .select("id, fen, engine_best_san, category, difficulty_score")
-      .eq("user_id", user.id)
-      .not("engine_best_san", "is", null)
-      .limit(200);
-
-    const list = (data ?? []).filter((p: any) => p.engine_best_san);
-    if (!list.length) {
+    try {
+      const p = await fetchLichessPuzzle(offsetToDifficulty(offset));
+      setPuzzle(p);
+      setCurrentFen(p.startFen);
+    } catch (e: any) {
+      setError(e?.message ?? "Failed to load puzzle");
+    } finally {
       setLoadingNext(false);
-      return;
     }
-
-    // Sort by closeness to target rating, then take random from top 8 to add variety.
-    const scored = list
-      .map((p: any) => ({
-        ...p,
-        puzzle_rating: deriveRating(p.difficulty_score),
-      }))
-      .sort(
-        (a, b) =>
-          Math.abs(a.puzzle_rating - targetRating) -
-          Math.abs(b.puzzle_rating - targetRating),
-      );
-    const pool = scored.slice(0, Math.min(8, scored.length));
-    const pick = pool[Math.floor(Math.random() * pool.length)];
-
-    setCurrentPuzzle({
-      id: pick.id,
-      fen: pick.fen,
-      best_san: pick.engine_best_san,
-      category: pick.category,
-      puzzle_rating: pick.puzzle_rating,
-    });
-    setLoadingNext(false);
   };
 
-  // Auto-load first puzzle when profile is ready or offset changes
+  // Auto-load on mount and when offset changes
   useEffect(() => {
-    if (profile && !currentPuzzle && !feedback) {
+    if (profile && !puzzle && !feedback && !loadingNext) {
       loadNextPuzzle();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile, offset]);
 
   const playerColor = useMemo<"w" | "b">(() => {
-    if (!currentPuzzle) return "w";
-    return currentPuzzle.fen.split(" ")[1] === "w" ? "w" : "b";
-  }, [currentPuzzle]);
+    return puzzle?.sideToMove ?? "w";
+  }, [puzzle]);
 
-  const handleMove = async (_from: string, _to: string, san: string) => {
-    if (!currentPuzzle || feedback || !user || !profile) return;
-    const normalize = (s: string) => s.replace(/[+#]/g, "");
-    const correct = normalize(san) === normalize(currentPuzzle.best_san);
-
+  const finalizeAttempt = async (passed: boolean) => {
+    if (!puzzle || !user || !profile) return;
     const ratingBefore = profile.puzzle_rating;
-    const delta = computeRatingChange(
-      ratingBefore,
-      currentPuzzle.puzzle_rating,
-      correct,
-    );
+    const delta = computeRatingChange(ratingBefore, puzzle.rating, passed);
     const ratingAfter = Math.max(400, ratingBefore + delta);
 
-    setFeedback({ correct, delta, best: currentPuzzle.best_san });
+    setFeedback({
+      correct: passed,
+      delta,
+      expected: puzzle.solutionSan[moveIndex] ?? "",
+    });
 
-    // Persist attempt + updated profile counters
     await Promise.all([
       supabase.from("puzzle_attempts").insert({
         user_id: user.id,
-        position_id: currentPuzzle.id,
-        fen: currentPuzzle.fen,
-        best_san: currentPuzzle.best_san,
-        played_san: san,
-        passed: correct,
+        position_id: null,
+        fen: puzzle.startFen,
+        best_san: puzzle.solutionSan.join(" "),
+        played_san: passed ? puzzle.solutionSan.join(" ") : null,
+        passed,
         rating_before: ratingBefore,
         rating_after: ratingAfter,
         rating_delta: delta,
-        puzzle_rating: currentPuzzle.puzzle_rating,
+        puzzle_rating: puzzle.rating,
       }),
       supabase
         .from("user_profiles")
         .update({
           puzzle_rating: ratingAfter,
-          puzzle_wins: profile.puzzle_wins + (correct ? 1 : 0),
-          puzzle_losses: profile.puzzle_losses + (correct ? 0 : 1),
+          puzzle_wins: profile.puzzle_wins + (passed ? 1 : 0),
+          puzzle_losses: profile.puzzle_losses + (passed ? 0 : 1),
         })
         .eq("user_id", user.id),
     ]);
 
     qc.invalidateQueries({ queryKey: ["puzzle-recent", user.id] });
     refetchProfile();
+  };
+
+  const handleMove = async (_from: string, _to: string, san: string) => {
+    if (!puzzle || feedback) return;
+
+    const expected = puzzle.solutionSan[moveIndex];
+    if (!expected) return;
+
+    if (normalizeSan(san) !== normalizeSan(expected)) {
+      failedRef.current = true;
+      await finalizeAttempt(false);
+      return;
+    }
+
+    // Correct move — advance the position with the user's move.
+    const chess = new Chess(currentFen);
+    chess.move(expected);
+    let nextFen = chess.fen();
+    let nextIndex = moveIndex + 1;
+
+    // If the puzzle is finished after the user's move, we passed.
+    if (nextIndex >= puzzle.solutionSan.length) {
+      setCurrentFen(nextFen);
+      setMoveIndex(nextIndex);
+      await finalizeAttempt(true);
+      return;
+    }
+
+    // Otherwise, auto-play the opponent's reply (next solution move).
+    const opponentReply = puzzle.solutionSan[nextIndex];
+    chess.move(opponentReply);
+    nextFen = chess.fen();
+    nextIndex += 1;
+
+    setCurrentFen(nextFen);
+    setMoveIndex(nextIndex);
+
+    // After the opponent's reply, if the puzzle is done, we passed.
+    if (nextIndex >= puzzle.solutionSan.length) {
+      await finalizeAttempt(true);
+    }
   };
 
   if (!profile) {
@@ -211,11 +213,14 @@ export default function Puzzles() {
 
   const totalAttempts = profile.puzzle_wins + profile.puzzle_losses;
   const winRate = totalAttempts ? Math.round((profile.puzzle_wins / totalAttempts) * 100) : 0;
+  const movesRemaining = puzzle
+    ? Math.max(0, Math.ceil((puzzle.solutionSan.length - moveIndex) / 2))
+    : 0;
 
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-5xl mx-auto px-4 py-6">
-        {/* Header: rating + stats */}
+        {/* Header */}
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -223,7 +228,7 @@ export default function Puzzles() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-foreground">Puzzles</h1>
-              <p className="text-xs text-muted-foreground">From your own games</p>
+              <p className="text-xs text-muted-foreground">Powered by Lichess · multi-move</p>
             </div>
           </div>
 
@@ -256,7 +261,7 @@ export default function Puzzles() {
             <Target className="w-4 h-4 text-muted-foreground" />
             <span className="text-sm font-medium text-foreground">Difficulty</span>
             <span className="text-xs text-muted-foreground ml-1">
-              (target ≈ {targetRating})
+              (relative to your rating ≈ {targetRating})
             </span>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -286,15 +291,22 @@ export default function Puzzles() {
         <div className="grid md:grid-cols-[1fr_280px] gap-6">
           {/* Board */}
           <div>
-            {currentPuzzle ? (
+            {puzzle ? (
               <>
-                <div className="text-center mb-3 text-sm text-muted-foreground">
-                  {playerColor === "w" ? "White" : "Black"} to move · Puzzle rating{" "}
-                  <span className="font-mono text-foreground">{currentPuzzle.puzzle_rating}</span>
+                <div className="flex items-center justify-between mb-3 text-sm">
+                  <div className="text-muted-foreground">
+                    {playerColor === "w" ? "White" : "Black"} to move ·{" "}
+                    <span className="font-mono text-foreground">{puzzle.rating}</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {movesRemaining > 0 && !feedback && (
+                      <>~{movesRemaining} move{movesRemaining > 1 ? "s" : ""} left</>
+                    )}
+                  </div>
                 </div>
                 <div className="max-w-xl mx-auto">
                   <Chessboard
-                    fen={currentPuzzle.fen}
+                    fen={currentFen}
                     onMove={handleMove}
                     moveHints={new Map()}
                     disabled={!!feedback}
@@ -309,7 +321,7 @@ export default function Puzzles() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0 }}
-                      className={`mt-4 p-4 rounded-lg flex items-center justify-between ${
+                      className={`mt-4 p-4 rounded-lg flex items-center justify-between flex-wrap gap-3 ${
                         feedback.correct
                           ? "bg-emerald-500/10 border border-emerald-500/30"
                           : "bg-red-500/10 border border-red-500/30"
@@ -325,9 +337,9 @@ export default function Puzzles() {
                           <div className={`font-semibold ${feedback.correct ? "text-emerald-400" : "text-red-400"}`}>
                             {feedback.correct ? "Solved!" : "Wrong move"}
                           </div>
-                          {!feedback.correct && (
+                          {!feedback.correct && feedback.expected && (
                             <div className="text-xs text-muted-foreground">
-                              Best was <span className="font-mono text-foreground">{feedback.best}</span>
+                              Best was <span className="font-mono text-foreground">{feedback.expected}</span>
                             </div>
                           )}
                         </div>
@@ -343,6 +355,14 @@ export default function Puzzles() {
                           )}
                           {feedback.delta >= 0 ? `+${feedback.delta}` : feedback.delta}
                         </div>
+                        <a
+                          href={`https://lichess.org/training/${puzzle.id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
+                        >
+                          View <ExternalLink className="w-3 h-3" />
+                        </a>
                         <Button size="sm" onClick={loadNextPuzzle} disabled={loadingNext}>
                           Next →
                         </Button>
@@ -358,11 +378,13 @@ export default function Puzzles() {
             ) : (
               <div className="aspect-square max-w-xl mx-auto flex flex-col items-center justify-center text-center p-8 border border-border rounded-2xl bg-card">
                 <Brain className="w-12 h-12 text-muted-foreground/50 mb-3" />
-                <h2 className="text-lg font-bold text-foreground mb-2">No puzzles in range</h2>
+                <h2 className="text-lg font-bold text-foreground mb-2">
+                  {error ? "Couldn't load puzzle" : "Ready to train"}
+                </h2>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Sync more games or change difficulty.
+                  {error ?? "Fetch a puzzle from Lichess to begin."}
                 </p>
-                <Button onClick={() => navigate("/connect")}>Connect Account</Button>
+                <Button onClick={loadNextPuzzle}>Load Puzzle</Button>
               </div>
             )}
           </div>
