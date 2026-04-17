@@ -7,11 +7,7 @@
  */
 
 import { BrowserEngine } from "wintrchess/engine";
-import {
-  Coach,
-  buildSystemPrompt,
-  buildUserPrompt,
-} from "wintrchess/coach";
+import { Coach } from "wintrchess/coach";
 import { Chess, parseUci, type NormalMove } from "chessops";
 import { parseFen } from "chessops/fen";
 
