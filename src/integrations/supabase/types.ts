@@ -320,6 +320,51 @@ export type Database = {
         }
         Relationships: []
       }
+      puzzle_attempts: {
+        Row: {
+          best_san: string
+          created_at: string
+          fen: string
+          id: string
+          passed: boolean
+          played_san: string | null
+          position_id: string | null
+          puzzle_rating: number
+          rating_after: number
+          rating_before: number
+          rating_delta: number
+          user_id: string
+        }
+        Insert: {
+          best_san: string
+          created_at?: string
+          fen: string
+          id?: string
+          passed: boolean
+          played_san?: string | null
+          position_id?: string | null
+          puzzle_rating: number
+          rating_after: number
+          rating_before: number
+          rating_delta: number
+          user_id: string
+        }
+        Update: {
+          best_san?: string
+          created_at?: string
+          fen?: string
+          id?: string
+          passed?: boolean
+          played_san?: string | null
+          position_id?: string | null
+          puzzle_rating?: number
+          rating_after?: number
+          rating_before?: number
+          rating_delta?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       redeem_codes: {
         Row: {
           code: string
@@ -625,6 +670,9 @@ export type Database = {
           lichess_username: string | null
           longest_streak: number
           primary_pillar: string | null
+          puzzle_losses: number
+          puzzle_rating: number
+          puzzle_wins: number
           skill_rating: number | null
           updated_at: string
           user_id: string
@@ -638,6 +686,9 @@ export type Database = {
           lichess_username?: string | null
           longest_streak?: number
           primary_pillar?: string | null
+          puzzle_losses?: number
+          puzzle_rating?: number
+          puzzle_wins?: number
           skill_rating?: number | null
           updated_at?: string
           user_id: string
@@ -651,6 +702,9 @@ export type Database = {
           lichess_username?: string | null
           longest_streak?: number
           primary_pillar?: string | null
+          puzzle_losses?: number
+          puzzle_rating?: number
+          puzzle_wins?: number
           skill_rating?: number | null
           updated_at?: string
           user_id?: string
