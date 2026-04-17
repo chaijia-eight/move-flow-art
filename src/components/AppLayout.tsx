@@ -1,11 +1,14 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Flame, Swords, BarChart3, Settings } from "lucide-react";
+import { Flame, Swords, BarChart3, Settings, AlertTriangle, Brain } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 
 const navItems = [
   { icon: Flame, label: "Forge", path: "/" },
+  { icon: AlertTriangle, label: "Mistakes", path: "/mistakes" },
+  { icon: Swords, label: "Games", path: "/games" },
+  { icon: Brain, label: "Puzzles", path: "/puzzles" },
   { icon: BarChart3, label: "Stats", path: "/stats" },
 ];
 
