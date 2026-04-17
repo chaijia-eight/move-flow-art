@@ -282,10 +282,49 @@ export default function Gauntlet() {
     engineRef.current?.destroy();
   }, []);
 
-  // Scroll move list to bottom
+  // Scroll move list to bottom when a new move is added (not when navigating)
   useEffect(() => {
-    movesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [moves.length]);
+    if (selectedMoveIdx === null) {
+      movesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [moves.length, selectedMoveIdx]);
+
+  // Arrow-key navigation through move history
+  useEffect(() => {
+    if (phase !== "playing" && phase !== "finished") return;
+    const onKey = (e: KeyboardEvent) => {
+      if (moves.length === 0) return;
+      const t = e.target as HTMLElement;
+      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        setSelectedMoveIdx((cur) => {
+          const idx = cur ?? moves.length - 1;
+          return Math.max(0, idx - 1);
+        });
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        setSelectedMoveIdx((cur) => {
+          if (cur === null) return moves.length - 1;
+          if (cur >= moves.length - 1) return null; // back to live
+          return cur + 1;
+        });
+      } else if (e.key === "ArrowDown" || e.key === "End") {
+        e.preventDefault();
+        setSelectedMoveIdx(null);
+      } else if (e.key === "ArrowUp" || e.key === "Home") {
+        e.preventDefault();
+        setSelectedMoveIdx(0);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [phase, moves.length]);
+
+  // Board shows historical position when navigating
+  const displayedFen = selectedMoveIdx !== null ? (moves[selectedMoveIdx]?.fen ?? fen) : fen;
+  const isViewingHistory = selectedMoveIdx !== null && selectedMoveIdx < moves.length - 1;
 
   // Cleanup
   useEffect(() => {
@@ -408,17 +447,22 @@ export default function Gauntlet() {
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4">
           {/* Board */}
-          <div className="flex justify-center">
+          <div className="flex flex-col items-center">
             <div className="w-full max-w-[500px] aspect-square">
               <Chessboard
-                fen={fen}
+                fen={displayedFen}
                 onMove={handleMove}
-                moveHints={moveHints}
-                disabled={phase !== "playing" || !!result}
+                moveHints={isViewingHistory ? new Map() : moveHints}
+                disabled={phase !== "playing" || !!result || isViewingHistory}
                 flipped={playerColor === "b"}
                 playerColor={playerColor}
               />
             </div>
+            {isViewingHistory && (
+              <p className="text-xs text-muted-foreground mt-2 text-center">
+                Viewing move {selectedMoveIdx! + 1} · press → or ↓ to return to live
+              </p>
+            )}
           </div>
 
           {/* Side panel — Moves + Coach */}

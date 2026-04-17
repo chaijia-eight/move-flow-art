@@ -7,11 +7,7 @@
  */
 
 import { BrowserEngine } from "wintrchess/engine";
-import {
-  Coach,
-  buildSystemPrompt,
-  buildUserPrompt,
-} from "wintrchess/coach";
+import { Coach } from "wintrchess/coach";
 import { Chess, parseUci, type NormalMove } from "chessops";
 import { parseFen } from "chessops/fen";
 
@@ -118,29 +114,35 @@ export async function generateCoachExplanation(
       evaluations: { depth: 12, timeLimit: 2000 },
     });
 
-    // Build prompts using wintrchess's prompt builders
-    const person = isPlayerMove ? "second" : "first";
-    const systemPrompt = buildSystemPrompt({
-      person,
-      personality: "a friendly, encouraging chess coach who speaks casually",
-      additionalPrompt: "Keep your response to 2-3 sentences maximum. Be concise and natural. Never say White or Black — use I/you.",
-    });
-    const userPrompt = buildUserPrompt(assessment);
+    // Build our own user prompt — wintrchess prompts use White/Black which leaks.
+    // Edge function constructs the system prompt based on isPlayerMove.
+    const factsBlock = assessment.statements.length
+      ? assessment.statements.map((s) => `- ${s}`).join("\n")
+      : "- (no special engine observations)";
 
-    // Send to our edge function for LLM processing
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    const sideLabel = isPlayerMove
+      ? `you (the student, playing ${playerColor === "w" ? "White" : "Black"})`
+      : `I (the coach / engine, playing ${playerColor === "w" ? "Black" : "White"})`;
 
-    const res = await fetch(`${supabaseUrl}/functions/v1/ai-coach`, {
+    const userPrompt = `Move ${moveNumber}: ${san}
+Played by: ${sideLabel}
+
+Engine observations:
+${factsBlock}
+
+Explain this move in 2-4 sentences. If it was a blunder, mistake, or inaccuracy, SAY SO and explain WHAT was lost or missed (hung piece, tactic, better square). If it was strong, say WHY. Speak naturally with I / you — never use the words "White" or "Black".`;
+
+    const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-coach`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${supabaseKey}`,
+        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
       body: JSON.stringify({
-        systemPrompt,
         userPrompt,
         rawFacts: assessment.statements.join(" "),
+        isPlayerMove,
+        playerColor,
       }),
     });
 
