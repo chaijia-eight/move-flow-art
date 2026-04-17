@@ -447,7 +447,7 @@ export default function Gauntlet() {
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4">
           {/* Board */}
-          <div className="flex justify-center">
+          <div className="flex flex-col items-center">
             <div className="w-full max-w-[500px] aspect-square">
               <Chessboard
                 fen={displayedFen}
