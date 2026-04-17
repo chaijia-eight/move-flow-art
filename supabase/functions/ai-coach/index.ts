@@ -82,8 +82,15 @@ ABSOLUTE RULES:
     }
 
     const data = await response.json();
-    const explanation =
+    let explanation: string =
       data?.choices?.[0]?.message?.content?.trim() || rawFacts || "Move played.";
+
+    // Hard scrub: if the model still leaked White/Black, swap to I/you based on isPlayerMove
+    const selfWord = isPlayerMove ? "You" : "I";
+    const otherWord = isPlayerMove ? "I" : "you";
+    explanation = explanation
+      .replace(/\bWhite\b/g, isPlayerMove && body.playerColor === "w" ? selfWord : (body.playerColor === "w" ? selfWord : otherWord))
+      .replace(/\bBlack\b/g, isPlayerMove && body.playerColor === "b" ? selfWord : (body.playerColor === "b" ? selfWord : otherWord));
 
     return new Response(
       JSON.stringify({ explanation }),
