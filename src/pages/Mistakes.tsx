@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import MiniBoard from "@/components/MiniBoard";
+import { themes } from "@/data/openings";
 
 type Category = "all" | "blunder" | "missed_tactic" | "defensive_crux" | "endgame_tech";
 
@@ -126,7 +127,7 @@ export default function Mistakes() {
                     )}
                   </div>
                   <div className="mb-3 rounded-md overflow-hidden">
-                    <MiniBoard fen={pos.fen} theme="default" />
+                    <MiniBoard fen={pos.fen} theme={themes.italian} />
                   </div>
                   <div className="text-xs text-muted-foreground space-y-1">
                     <div>Move {pos.move_number}: <span className="text-foreground font-mono">{pos.your_move_san ?? "?"}</span></div>
