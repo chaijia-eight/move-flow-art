@@ -430,37 +430,6 @@ export default function Gauntlet() {
                   <div ref={movesEndRef} />
                 </div>
               </ScrollArea>
-            </div>
-
-            {/* Coach commentary */}
-            <div className="rounded-xl border border-border bg-card p-3 flex-1">
-              <h3 className="text-xs font-semibold text-muted-foreground uppercase mb-2 flex items-center gap-1">
-                <MessageSquare className="w-3 h-3" /> Coach
-              </h3>
-              <AnimatePresence mode="wait">
-                {displayExplanation ? (
-                  <motion.div
-                    key={selectedMoveIdx ?? moves.length}
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    className="text-sm text-foreground/90 leading-relaxed"
-                  >
-                    <span className="font-bold text-primary">
-                      {displayExplanation.color === playerColor ? "You" : "Coach"} played {displayExplanation.san}
-                    </span>
-                    {" — "}
-                    {displayExplanation.loadingExplanation ? (
-                      <span className="text-muted-foreground italic">Thinking...</span>
-                    ) : (
-                      displayExplanation.explanation || "..."
-                    )}
-                  </motion.div>
-                ) : (
-                  <p className="text-sm text-muted-foreground italic">Make a move to hear from the coach.</p>
-                )}
-              </AnimatePresence>
-            </div>
           </div>
         </div>
       </div>
