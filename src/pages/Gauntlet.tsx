@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Swords, MessageSquare, Flag, RotateCcw } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowLeft, Swords, Flag, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Chessboard from "@/components/Chessboard";
@@ -18,16 +18,12 @@ import {
   createGauntletEngine,
   type GauntletEngine,
 } from "@/lib/gauntletEngine";
-import { generateCoachExplanation, destroyCoach } from "@/lib/moveCoach";
-import { XP_REWARDS } from "@/data/rpgData";
 
 interface MoveEntry {
   san: string;
   fen: string;
   fenBefore: string;
   color: "w" | "b";
-  explanation?: string;
-  loadingExplanation?: boolean;
 }
 
 type GamePhase = "loading" | "ready" | "playing" | "finished";
@@ -123,40 +119,13 @@ export default function Gauntlet() {
             fen: newFen,
             fenBefore: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
             color: "w",
-            loadingExplanation: true,
           };
           setMoves([entry]);
           setFen(newFen);
-          generateExplanation(entry, 0, [entry]);
         }
       }
     },
     [targetElo]
-  );
-
-  const generateExplanation = useCallback(
-    async (entry: MoveEntry, idx: number, currentMoves: MoveEntry[]) => {
-      const moveNum = Math.floor(idx / 2) + 1;
-      const isPlayerMove = entry.color === engineRef.current?.playerColor;
-      try {
-        const explanation = await generateCoachExplanation(
-          entry.fenBefore,
-          entry.san,
-          isPlayerMove,
-          moveNum,
-          engineRef.current?.playerColor || "w"
-        );
-        setMoves((prev) =>
-          prev.map((m, i) => (i === idx ? { ...m, explanation, loadingExplanation: false } : m))
-        );
-      } catch {
-        const raw = `Plays ${entry.san}.`;
-        setMoves((prev) =>
-          prev.map((m, i) => (i === idx ? { ...m, explanation: raw, loadingExplanation: false } : m))
-        );
-      }
-    },
-    []
   );
 
   const moveHints = useMemo(() => {
@@ -197,38 +166,9 @@ export default function Gauntlet() {
         fen: afterPlayerFen,
         fenBefore,
         color: playerColor,
-        loadingExplanation: true,
       };
-
-      // Add player move and wait for explanation before engine responds
-      const playerIdx = await new Promise<number>((resolve) => {
-        setMoves((prev) => {
-          const next = [...prev, playerEntry];
-          resolve(next.length - 1);
-          return next;
-        });
-      });
+      setMoves((prev) => [...prev, playerEntry]);
       setFen(afterPlayerFen);
-
-      // Wait for player explanation to load before engine moves
-      const moveNum = Math.floor(playerIdx / 2) + 1;
-      try {
-        const explanation = await generateCoachExplanation(
-          fenBefore,
-          playerResult.san,
-          true,
-          moveNum,
-          playerColor
-        );
-        setMoves((prev) =>
-          prev.map((m, i) => (i === playerIdx ? { ...m, explanation, loadingExplanation: false } : m))
-        );
-      } catch {
-        const raw = `Plays ${playerResult.san}.`;
-        setMoves((prev) =>
-          prev.map((m, i) => (i === playerIdx ? { ...m, explanation: raw, loadingExplanation: false } : m))
-        );
-      }
 
       // Check if game over after player move
       if (engine.isGameOver()) {
@@ -240,9 +180,6 @@ export default function Gauntlet() {
         return;
       }
 
-      // Small delay so player can read their explanation
-      await new Promise((r) => setTimeout(r, 1200));
-
       // Engine responds
       const engineMove = await engine.makeEngineMove();
       if (engineMove) {
@@ -252,14 +189,8 @@ export default function Gauntlet() {
           fen: afterEngineFen,
           fenBefore: afterPlayerFen,
           color: playerColor === "w" ? "b" : "w",
-          loadingExplanation: true,
         };
-
-        setMoves((prev) => {
-          const next = [...prev, engineEntry];
-          generateExplanation(engineEntry, next.length - 1, next);
-          return next;
-        });
+        setMoves((prev) => [...prev, engineEntry]);
         setFen(afterEngineFen);
 
         if (engine.isGameOver()) {
@@ -272,7 +203,7 @@ export default function Gauntlet() {
 
       processingRef.current = false;
     },
-    [playerColor, generateExplanation]
+    [playerColor]
   );
 
   const handleResign = useCallback(() => {
@@ -331,7 +262,6 @@ export default function Gauntlet() {
     return () => {
       engineRef.current?.destroy();
       warmEngineRef.current?.destroy();
-      destroyCoach();
     };
   }, []);
 
@@ -341,8 +271,6 @@ export default function Gauntlet() {
     const xp = result === "win" ? 120 : result === "draw" ? 60 : 20;
     addXpAndEmbers.mutate({ xp, embers: 0 });
   }, [phase, result]);
-
-  const displayExplanation = selectedMoveIdx !== null ? moves[selectedMoveIdx] : moves[moves.length - 1];
 
   // Loading
   if (phase === "loading") {
@@ -502,36 +430,6 @@ export default function Gauntlet() {
                   <div ref={movesEndRef} />
                 </div>
               </ScrollArea>
-            </div>
-
-            {/* Coach commentary */}
-            <div className="rounded-xl border border-border bg-card p-3 flex-1">
-              <h3 className="text-xs font-semibold text-muted-foreground uppercase mb-2 flex items-center gap-1">
-                <MessageSquare className="w-3 h-3" /> Coach
-              </h3>
-              <AnimatePresence mode="wait">
-                {displayExplanation ? (
-                  <motion.div
-                    key={selectedMoveIdx ?? moves.length}
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    className="text-sm text-foreground/90 leading-relaxed"
-                  >
-                    <span className="font-bold text-primary">
-                      {displayExplanation.color === playerColor ? "You" : "Coach"} played {displayExplanation.san}
-                    </span>
-                    {" — "}
-                    {displayExplanation.loadingExplanation ? (
-                      <span className="text-muted-foreground italic">Thinking...</span>
-                    ) : (
-                      displayExplanation.explanation || "..."
-                    )}
-                  </motion.div>
-                ) : (
-                  <p className="text-sm text-muted-foreground italic">Make a move to hear from the coach.</p>
-                )}
-              </AnimatePresence>
             </div>
           </div>
         </div>
