@@ -166,38 +166,9 @@ export default function Gauntlet() {
         fen: afterPlayerFen,
         fenBefore,
         color: playerColor,
-        loadingExplanation: true,
       };
-
-      // Add player move and wait for explanation before engine responds
-      const playerIdx = await new Promise<number>((resolve) => {
-        setMoves((prev) => {
-          const next = [...prev, playerEntry];
-          resolve(next.length - 1);
-          return next;
-        });
-      });
+      setMoves((prev) => [...prev, playerEntry]);
       setFen(afterPlayerFen);
-
-      // Wait for player explanation to load before engine moves
-      const moveNum = Math.floor(playerIdx / 2) + 1;
-      try {
-        const explanation = await generateCoachExplanation(
-          fenBefore,
-          playerResult.san,
-          true,
-          moveNum,
-          playerColor
-        );
-        setMoves((prev) =>
-          prev.map((m, i) => (i === playerIdx ? { ...m, explanation, loadingExplanation: false } : m))
-        );
-      } catch {
-        const raw = `Plays ${playerResult.san}.`;
-        setMoves((prev) =>
-          prev.map((m, i) => (i === playerIdx ? { ...m, explanation: raw, loadingExplanation: false } : m))
-        );
-      }
 
       // Check if game over after player move
       if (engine.isGameOver()) {
@@ -209,9 +180,6 @@ export default function Gauntlet() {
         return;
       }
 
-      // Small delay so player can read their explanation
-      await new Promise((r) => setTimeout(r, 1200));
-
       // Engine responds
       const engineMove = await engine.makeEngineMove();
       if (engineMove) {
@@ -221,14 +189,8 @@ export default function Gauntlet() {
           fen: afterEngineFen,
           fenBefore: afterPlayerFen,
           color: playerColor === "w" ? "b" : "w",
-          loadingExplanation: true,
         };
-
-        setMoves((prev) => {
-          const next = [...prev, engineEntry];
-          generateExplanation(engineEntry, next.length - 1, next);
-          return next;
-        });
+        setMoves((prev) => [...prev, engineEntry]);
         setFen(afterEngineFen);
 
         if (engine.isGameOver()) {
@@ -241,7 +203,7 @@ export default function Gauntlet() {
 
       processingRef.current = false;
     },
-    [playerColor, generateExplanation]
+    [playerColor]
   );
 
   const handleResign = useCallback(() => {
