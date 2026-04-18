@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Swords, MessageSquare, Flag, RotateCcw } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowLeft, Swords, Flag, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Chessboard from "@/components/Chessboard";
@@ -18,16 +18,12 @@ import {
   createGauntletEngine,
   type GauntletEngine,
 } from "@/lib/gauntletEngine";
-import { generateCoachExplanation, destroyCoach } from "@/lib/moveCoach";
-import { XP_REWARDS } from "@/data/rpgData";
 
 interface MoveEntry {
   san: string;
   fen: string;
   fenBefore: string;
   color: "w" | "b";
-  explanation?: string;
-  loadingExplanation?: boolean;
 }
 
 type GamePhase = "loading" | "ready" | "playing" | "finished";
