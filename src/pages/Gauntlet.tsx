@@ -119,40 +119,13 @@ export default function Gauntlet() {
             fen: newFen,
             fenBefore: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
             color: "w",
-            loadingExplanation: true,
           };
           setMoves([entry]);
           setFen(newFen);
-          generateExplanation(entry, 0, [entry]);
         }
       }
     },
     [targetElo]
-  );
-
-  const generateExplanation = useCallback(
-    async (entry: MoveEntry, idx: number, currentMoves: MoveEntry[]) => {
-      const moveNum = Math.floor(idx / 2) + 1;
-      const isPlayerMove = entry.color === engineRef.current?.playerColor;
-      try {
-        const explanation = await generateCoachExplanation(
-          entry.fenBefore,
-          entry.san,
-          isPlayerMove,
-          moveNum,
-          engineRef.current?.playerColor || "w"
-        );
-        setMoves((prev) =>
-          prev.map((m, i) => (i === idx ? { ...m, explanation, loadingExplanation: false } : m))
-        );
-      } catch {
-        const raw = `Plays ${entry.san}.`;
-        setMoves((prev) =>
-          prev.map((m, i) => (i === idx ? { ...m, explanation: raw, loadingExplanation: false } : m))
-        );
-      }
-    },
-    []
   );
 
   const moveHints = useMemo(() => {
