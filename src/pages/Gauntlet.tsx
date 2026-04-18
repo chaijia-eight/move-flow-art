@@ -262,7 +262,6 @@ export default function Gauntlet() {
     return () => {
       engineRef.current?.destroy();
       warmEngineRef.current?.destroy();
-      destroyCoach();
     };
   }, []);
 
@@ -272,8 +271,6 @@ export default function Gauntlet() {
     const xp = result === "win" ? 120 : result === "draw" ? 60 : 20;
     addXpAndEmbers.mutate({ xp, embers: 0 });
   }, [phase, result]);
-
-  const displayExplanation = selectedMoveIdx !== null ? moves[selectedMoveIdx] : moves[moves.length - 1];
 
   // Loading
   if (phase === "loading") {
