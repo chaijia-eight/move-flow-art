@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Flame, Shield, Swords, Crown, Lock, Link2, ChevronRight } from "lucide-react";
+import { Flame, Shield, Crown, Lock, Link2, ChevronRight, FileSearch } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/contexts/AuthContext";
@@ -225,7 +225,7 @@ export default function ForgeHub() {
           </motion.div>
         )}
 
-        {/* Gauntlet */}
+        {/* Game Review */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -233,12 +233,12 @@ export default function ForgeHub() {
           className="mb-6"
         >
           <div
-            onClick={() => navigate("/gauntlet")}
-            className="p-6 rounded-xl border border-red-500/30 bg-gradient-to-br from-red-500/5 to-orange-500/5 cursor-pointer hover:border-red-500/60 transition-all"
+            onClick={() => navigate("/review")}
+            className="p-6 rounded-xl border border-primary/30 bg-gradient-to-br from-primary/5 to-blue-500/5 cursor-pointer hover:border-primary/60 transition-all"
           >
-            <Swords className="w-7 h-7 text-red-500 mb-2" />
-            <h3 className="font-bold text-foreground">The Gauntlet</h3>
-            <p className="text-xs text-muted-foreground">Play a full game vs an engine tuned to your level. Coach explains every move.</p>
+            <FileSearch className="w-7 h-7 text-primary mb-2" />
+            <h3 className="font-bold text-foreground">Game Review</h3>
+            <p className="text-xs text-muted-foreground">Get a chess.com-style review of any game. Play it out, paste a PGN, drop a Chess.com / Lichess link, or pick a synced game.</p>
           </div>
         </motion.div>
 

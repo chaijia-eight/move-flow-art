@@ -11,7 +11,7 @@ import ForgeHub from "./pages/ForgeHub";
 import DailyRitual from "./pages/DailyRitual";
 import PillarView from "./pages/PillarView";
 import TrialBattle from "./pages/TrialBattle";
-import Gauntlet from "./pages/Gauntlet";
+import Review from "./pages/Review";
 import Stats from "./pages/Stats";
 import Settings from "./pages/Settings";
 import Connect from "./pages/Connect";
@@ -43,7 +43,7 @@ const App = () => (
                       <Route path="/ritual" element={<DailyRitual />} />
                       <Route path="/pillar/:pillarId" element={<PillarView />} />
                       <Route path="/trial/:pillarId/:floorNum" element={<TrialBattle />} />
-                      <Route path="/gauntlet" element={<Gauntlet />} />
+                      <Route path="/review" element={<Review />} />
                       <Route path="/stats" element={<Stats />} />
                       <Route path="/settings" element={<Settings />} />
                       <Route path="/connect" element={<Connect />} />
