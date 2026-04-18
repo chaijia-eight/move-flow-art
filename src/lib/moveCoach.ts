@@ -118,19 +118,31 @@ export async function generateCoachExplanation(
     // Edge function constructs the system prompt based on isPlayerMove.
     const factsBlock = assessment.statements.length
       ? assessment.statements.map((s) => `- ${s}`).join("\n")
-      : "- (no special engine observations)";
+      : "- (no special engine observations — keep explanation short and generic)";
 
     const sideLabel = isPlayerMove
       ? `you (the student, playing ${playerColor === "w" ? "White" : "Black"})`
       : `I (the coach / engine, playing ${playerColor === "w" ? "Black" : "White"})`;
 
+    // Compute FEN after the move so the model has ground truth
+    let fenAfter = "";
+    try {
+      const { Chess: CJS } = await import("chess.js");
+      const g = new CJS(fenBefore);
+      g.move(san);
+      fenAfter = g.fen();
+    } catch { /* ignore */ }
+
     const userPrompt = `Move ${moveNumber}: ${san}
 Played by: ${sideLabel}
 
-Engine observations:
+Position BEFORE move (FEN): ${fenBefore}
+Position AFTER move (FEN): ${fenAfter}
+
+Engine observations (these are the ONLY facts you may cite — do not invent any others):
 ${factsBlock}
 
-Explain this move in 2-4 sentences. If it was a blunder, mistake, or inaccuracy, SAY SO and explain WHAT was lost or missed (hung piece, tactic, better square). If it was strong, say WHY. Speak naturally with I / you — never use the words "White" or "Black".`;
+Explain this move in 2-3 sentences. STRICT: only mention pieces, squares, threats, attackers, or defenders that appear in the engine observations above. If the observations are sparse, keep it short and generic. Speak naturally with I / you — never use the words "White" or "Black".`;
 
     const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-coach`, {
       method: "POST",
