@@ -132,31 +132,26 @@ function isBrilliant(pos: PositionEval, mover: "w" | "b", winPctLossForMover: nu
   const moverBefore = winPctForMover(pos.evalBefore, mover);
   if (moverBefore < 35) return false;
 
-  // Must look like a sacrifice: piece moves to a square attacked by a lower-value piece,
-  // OR it leaves a piece hanging that the opponent could capture next.
+  // Must look like a sacrifice: opponent has a legal capture of the just-moved
+  // piece next turn, with a lower-value attacker than the piece sacrificed.
   try {
     const before = new Chess(pos.fenBefore);
     const move = before.move(pos.san);
     if (!move) return false;
-    const after = new Chess(before.fen());
-
-    // Compute attackers/defenders on `to`
-    const attackers = after.attackers(move.to as any, mover === "w" ? "b" : "w");
-    if (!attackers || attackers.length === 0) return false;
 
     const PIECE_VAL: Record<string, number> = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
     const movedVal = PIECE_VAL[move.piece] ?? 0;
-    if (movedVal < 3) return false; // pawn sac is rarely "brilliant" in our heuristic
+    if (movedVal < 3) return false; // pawn sac rarely flagged "brilliant"
 
-    const defenders = after.attackers(move.to as any, mover);
-    if (!defenders) return false;
+    // It's now the opponent's turn. Find any legal capture landing on move.to.
+    const captures = before.moves({ verbose: true }).filter(
+      (m: any) => m.to === move.to && m.flags.includes("c"),
+    );
+    if (captures.length === 0) return false;
 
-    // If the piece is hanging (more attackers than defenders, or attacker is cheaper)
-    const attackerVals = attackers.map((sq: string) => PIECE_VAL[after.get(sq as any)?.type ?? "p"]);
-    const minAttacker = Math.min(...attackerVals);
-    if (minAttacker < movedVal && defenders.length === 0) return true;
-    if (attackers.length > defenders.length && minAttacker <= movedVal) return true;
-    return false;
+    // Cheapest capturing piece
+    const minCapVal = Math.min(...captures.map((c: any) => PIECE_VAL[c.piece] ?? 0));
+    return minCapVal < movedVal;
   } catch {
     return false;
   }
