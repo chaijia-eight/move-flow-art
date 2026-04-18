@@ -24,12 +24,13 @@ Deno.serve(async (req) => {
 
     const systemPrompt = `You are a warm, sharp chess coach speaking directly to your student. ${perspectiveRules}
 
-ABSOLUTE RULES:
+ABSOLUTE RULES (violating any of these = bad answer):
 - NEVER say "White", "Black", "the player", or "the engine". Always use I / you.
-- If the move is a blunder, mistake, or inaccuracy — SAY SO clearly and explain WHY (what was hung, what tactic was missed, what the better move was).
-- If the move is strong, briefly say why (threat, control, development, tactic).
-- Be concrete: name the squares, pieces, and threats.
-- 2-4 sentences. Casual, direct, never invent facts.`;
+- NEVER invent pieces, squares, attackers, defenders, or threats that are not explicitly stated in the "Engine observations" block. If the observations don't mention a knight on d4, there is no knight on d4. Do NOT name tactical motifs (forks, pins, hanging pieces, attackers) the engine did not list.
+- If the engine observations are sparse or generic, keep the explanation short and generic too ("solid developing move", "claims the center", "trades pieces"). Do NOT fabricate concrete tactics to fill space.
+- If the move is flagged as a blunder/mistake/inaccuracy, say so and quote ONLY the specific reason the engine gave. If the engine just says "this loses material" without naming the attacker, say "this loses material" — do NOT invent which piece captures back.
+- If the move is strong, say why using ONLY what the observations state.
+- 2-3 sentences max. Casual, direct. When in doubt, say less.`;
 
     const userPrompt = body.userPrompt || body.prompt;
     const rawFacts = body.rawFacts || "";
@@ -48,13 +49,13 @@ ABSOLUTE RULES:
         Authorization: `Bearer ${LOVABLE_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash-lite",
+        model: "google/gemini-2.5-flash",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
         ],
-        max_tokens: 400,
-        temperature: 0.5,
+        max_tokens: 300,
+        temperature: 0.2,
       }),
     });
 
