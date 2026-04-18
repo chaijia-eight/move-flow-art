@@ -176,52 +176,54 @@ export default function ForgeHub() {
           </div>
         </motion.div>
 
-        {/* The Pillars */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-6"
-        >
-          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
-            <Crown className="w-4 h-4" /> The Developments
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {PILLARS.map((pillar) => {
-              const prog = pillarProgress?.find((p: any) => p.pillar === pillar.id);
-              const floor = prog?.current_floor ?? 1;
-              const totalFloors = pillar.floors.length;
-              const hasContent = pillar.floors.some((f) => f.trials.length > 0);
+        {/* The Developments — temporarily hidden */}
+        {false && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="mb-6"
+          >
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+              <Crown className="w-4 h-4" /> The Developments
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {PILLARS.map((pillar) => {
+                const prog = pillarProgress?.find((p: any) => p.pillar === pillar.id);
+                const floor = prog?.current_floor ?? 1;
+                const totalFloors = pillar.floors.length;
+                const hasContent = pillar.floors.some((f) => f.trials.length > 0);
 
-              return (
-                <motion.div
-                  key={pillar.id}
-                  whileHover={hasContent ? { y: -2 } : undefined}
-                  onClick={() => hasContent && navigate(`/pillar/${pillar.id}`)}
-                  className={`p-5 rounded-xl border transition-all ${
-                    hasContent
-                      ? `border-border bg-card cursor-pointer hover:border-primary/40 ${pillar.glowColor}`
-                      : "border-border/50 bg-card/50 opacity-60"
-                  }`}
-                >
-                  <div className="text-2xl mb-2">{pillar.icon}</div>
-                  <h3 className={`font-bold ${pillar.color}`}>{pillar.name}</h3>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {hasContent
-                      ? `Floor ${floor} of ${totalFloors}`
-                      : "Coming soon"}
-                  </p>
-                  {hasContent && (
-                    <Progress
-                      value={(floor / totalFloors) * 100}
-                      className="h-1 mt-2"
-                    />
-                  )}
-                </motion.div>
-              );
-            })}
-          </div>
-        </motion.div>
+                return (
+                  <motion.div
+                    key={pillar.id}
+                    whileHover={hasContent ? { y: -2 } : undefined}
+                    onClick={() => hasContent && navigate(`/pillar/${pillar.id}`)}
+                    className={`p-5 rounded-xl border transition-all ${
+                      hasContent
+                        ? `border-border bg-card cursor-pointer hover:border-primary/40 ${pillar.glowColor}`
+                        : "border-border/50 bg-card/50 opacity-60"
+                    }`}
+                  >
+                    <div className="text-2xl mb-2">{pillar.icon}</div>
+                    <h3 className={`font-bold ${pillar.color}`}>{pillar.name}</h3>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {hasContent
+                        ? `Floor ${floor} of ${totalFloors}`
+                        : "Coming soon"}
+                    </p>
+                    {hasContent && (
+                      <Progress
+                        value={(floor / totalFloors) * 100}
+                        className="h-1 mt-2"
+                      />
+                    )}
+                  </motion.div>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
 
         {/* Gauntlet */}
         <motion.div
