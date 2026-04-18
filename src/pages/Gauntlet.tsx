@@ -430,6 +430,7 @@ export default function Gauntlet() {
                   <div ref={movesEndRef} />
                 </div>
               </ScrollArea>
+            </div>
           </div>
         </div>
       </div>
