@@ -40,10 +40,11 @@ export default function Review() {
   const [pgnText, setPgnText] = useState("");
   const [urlText, setUrlText] = useState("");
 
-  // Live-board input mode
-  const [liveBoard, setLiveBoard] = useState(() => new Chess());
-  const [liveFen, setLiveFen] = useState(liveBoard.fen());
+  // Live-board input mode — track FEN history so undo works
+  const [liveFen, setLiveFen] = useState(() => new Chess().fen());
   const [liveMoves, setLiveMoves] = useState<string[]>([]);
+  const [liveFenHistory, setLiveFenHistory] = useState<string[]>(() => [new Chess().fen()]);
+  const liveBoard = useMemo(() => new Chess(liveFen), [liveFen]);
 
   // Synced games
   const { data: syncedGames } = useQuery({
