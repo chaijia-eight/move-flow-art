@@ -40,10 +40,11 @@ export default function Review() {
   const [pgnText, setPgnText] = useState("");
   const [urlText, setUrlText] = useState("");
 
-  // Live-board input mode
-  const [liveBoard, setLiveBoard] = useState(() => new Chess());
-  const [liveFen, setLiveFen] = useState(liveBoard.fen());
+  // Live-board input mode — track FEN history so undo works
+  const [liveFen, setLiveFen] = useState(() => new Chess().fen());
   const [liveMoves, setLiveMoves] = useState<string[]>([]);
+  const [liveFenHistory, setLiveFenHistory] = useState<string[]>(() => [new Chess().fen()]);
+  const liveBoard = useMemo(() => new Chess(liveFen), [liveFen]);
 
   // Synced games
   const { data: syncedGames } = useQuery({
@@ -63,20 +64,22 @@ export default function Review() {
 
   // ------- Live board handlers -------
   const handleLiveMove = (from: string, to: string, san: string) => {
-    const next = new Chess(liveBoard.fen());
+    const next = new Chess(liveFen);
     const r = next.move({ from, to, promotion: "q" });
     if (!r) return;
-    setLiveBoard(next);
     setLiveFen(next.fen());
     setLiveMoves((m) => [...m, r.san]);
+    setLiveFenHistory((h) => [...h, next.fen()]);
   };
 
   const undoLive = () => {
-    const next = new Chess(liveBoard.fen());
-    next.undo();
-    setLiveBoard(next);
-    setLiveFen(next.fen());
-    setLiveMoves((m) => m.slice(0, -1));
+    setLiveFenHistory((h) => {
+      if (h.length <= 1) return h;
+      const newHist = h.slice(0, -1);
+      setLiveFen(newHist[newHist.length - 1]);
+      setLiveMoves((m) => m.slice(0, -1));
+      return newHist;
+    });
   };
 
   const liveMoveHints = useMemo(() => {
