@@ -14,354 +14,258 @@ export type Database = {
   }
   public: {
     Tables: {
-      custom_lines: {
+      blitz_content: {
         Row: {
+          content_id: string
+          fen: string
+          hint: string | null
+          solution_san: string[]
+          time_limit_seconds: number | null
+        }
+        Insert: {
+          content_id: string
+          fen: string
+          hint?: string | null
+          solution_san: string[]
+          time_limit_seconds?: number | null
+        }
+        Update: {
+          content_id?: string
+          fen?: string
+          hint?: string | null
+          solution_san?: string[]
+          time_limit_seconds?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blitz_content_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: true
+            referencedRelation: "content"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      collections: {
+        Row: {
+          content_ids: string[]
           created_at: string
-          fens: string[]
           id: string
-          move_count: number
-          moves: string[]
           name: string
-          opening_id: string
-          side: string
           updated_at: string
           user_id: string
         }
         Insert: {
+          content_ids?: string[]
           created_at?: string
-          fens: string[]
           id?: string
-          move_count?: number
-          moves: string[]
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content_ids?: string[]
+          created_at?: string
+          id?: string
           name?: string
-          opening_id?: string
-          side?: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          fens?: string[]
-          id?: string
-          move_count?: number
-          moves?: string[]
-          name?: string
-          opening_id?: string
-          side?: string
           updated_at?: string
           user_id?: string
         }
         Relationships: []
       }
-      daily_rituals: {
+      comments: {
         Row: {
-          bonus_claimed: boolean
+          content_id: string
           created_at: string
-          embers_earned: number
           id: string
-          quest_1_completed: boolean
-          quest_1_params: Json
-          quest_1_type: string
-          quest_2_completed: boolean
-          quest_2_params: Json
-          quest_2_type: string
-          quest_3_completed: boolean
-          quest_3_params: Json
-          quest_3_type: string
-          ritual_date: string
-          user_id: string
-          xp_earned: number
-        }
-        Insert: {
-          bonus_claimed?: boolean
-          created_at?: string
-          embers_earned?: number
-          id?: string
-          quest_1_completed?: boolean
-          quest_1_params?: Json
-          quest_1_type: string
-          quest_2_completed?: boolean
-          quest_2_params?: Json
-          quest_2_type: string
-          quest_3_completed?: boolean
-          quest_3_params?: Json
-          quest_3_type: string
-          ritual_date?: string
-          user_id: string
-          xp_earned?: number
-        }
-        Update: {
-          bonus_claimed?: boolean
-          created_at?: string
-          embers_earned?: number
-          id?: string
-          quest_1_completed?: boolean
-          quest_1_params?: Json
-          quest_1_type?: string
-          quest_2_completed?: boolean
-          quest_2_params?: Json
-          quest_2_type?: string
-          quest_3_completed?: boolean
-          quest_3_params?: Json
-          quest_3_type?: string
-          ritual_date?: string
-          user_id?: string
-          xp_earned?: number
-        }
-        Relationships: []
-      }
-      daily_usage: {
-        Row: {
-          analysis_used: boolean
-          id: string
-          last_trap_learned_at: string | null
-          lines_learned: number
-          practice_used: boolean
-          updated_at: string
-          usage_date: string
+          likes_count: number
+          text: string
           user_id: string
         }
         Insert: {
-          analysis_used?: boolean
+          content_id: string
+          created_at?: string
           id?: string
-          last_trap_learned_at?: string | null
-          lines_learned?: number
-          practice_used?: boolean
-          updated_at?: string
-          usage_date?: string
+          likes_count?: number
+          text: string
           user_id: string
         }
         Update: {
-          analysis_used?: boolean
+          content_id?: string
+          created_at?: string
           id?: string
-          last_trap_learned_at?: string | null
-          lines_learned?: number
-          practice_used?: boolean
-          updated_at?: string
-          usage_date?: string
+          likes_count?: number
+          text?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "comments_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      line_overrides: {
+      content: {
         Row: {
-          conclusion_text: string | null
-          crucial_moment_index: number | null
-          id: string
-          line_id: string
-          moves: string[] | null
-          updated_at: string
-        }
-        Insert: {
-          conclusion_text?: string | null
-          crucial_moment_index?: number | null
-          id?: string
-          line_id: string
-          moves?: string[] | null
-          updated_at?: string
-        }
-        Update: {
-          conclusion_text?: string | null
-          crucial_moment_index?: number | null
-          id?: string
-          line_id?: string
-          moves?: string[] | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      move_explanations: {
-        Row: {
+          completion_rate: number
+          completions: number
           created_at: string
-          explanation: string
+          creator_id: string
+          description: string | null
+          difficulty: number
           id: string
-          line_index: number
-          move_index: number
-          move_san: string
-          opening_id: string
+          is_featured: boolean
+          is_team_content: boolean
+          published_at: string | null
+          status: string
+          tags: string[]
+          thumbnail_fen: string | null
+          title: string | null
+          type: string
           updated_at: string
-          variation_id: string
+          views: number
         }
         Insert: {
+          completion_rate?: number
+          completions?: number
           created_at?: string
-          explanation?: string
+          creator_id: string
+          description?: string | null
+          difficulty?: number
           id?: string
-          line_index?: number
-          move_index: number
-          move_san?: string
-          opening_id: string
+          is_featured?: boolean
+          is_team_content?: boolean
+          published_at?: string | null
+          status?: string
+          tags?: string[]
+          thumbnail_fen?: string | null
+          title?: string | null
+          type: string
           updated_at?: string
-          variation_id: string
+          views?: number
         }
         Update: {
+          completion_rate?: number
+          completions?: number
           created_at?: string
-          explanation?: string
+          creator_id?: string
+          description?: string | null
+          difficulty?: number
           id?: string
-          line_index?: number
-          move_index?: number
-          move_san?: string
-          opening_id?: string
+          is_featured?: boolean
+          is_team_content?: boolean
+          published_at?: string | null
+          status?: string
+          tags?: string[]
+          thumbnail_fen?: string | null
+          title?: string | null
+          type?: string
           updated_at?: string
-          variation_id?: string
+          views?: number
         }
         Relationships: []
       }
-      pillar_progress: {
+      deep_dive_content: {
         Row: {
-          boss_defeated: boolean
-          created_at: string
-          current_floor: number
-          id: string
-          pillar: string
-          total_trials_mastered: number
-          trials_completed: number
-          updated_at: string
-          user_id: string
+          content_id: string
+          est_duration_seconds: number | null
+          total_steps: number
         }
         Insert: {
-          boss_defeated?: boolean
-          created_at?: string
-          current_floor?: number
-          id?: string
-          pillar: string
-          total_trials_mastered?: number
-          trials_completed?: number
-          updated_at?: string
-          user_id: string
+          content_id: string
+          est_duration_seconds?: number | null
+          total_steps?: number
         }
         Update: {
-          boss_defeated?: boolean
-          created_at?: string
-          current_floor?: number
-          id?: string
-          pillar?: string
-          total_trials_mastered?: number
-          trials_completed?: number
-          updated_at?: string
-          user_id?: string
+          content_id?: string
+          est_duration_seconds?: number | null
+          total_steps?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "deep_dive_content_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: true
+            referencedRelation: "content"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      player_characters: {
+      deep_dive_steps: {
         Row: {
-          created_at: string
-          current_rank: string
-          embers: number
-          equipped_piece_set: string
-          equipped_theme: string
-          equipped_title: string | null
-          last_ritual_date: string | null
-          level: number
-          longest_streak: number
-          main_pillar: string | null
-          streak_days: number
-          updated_at: string
-          user_id: string
-          xp: number
-        }
-        Insert: {
-          created_at?: string
-          current_rank?: string
-          embers?: number
-          equipped_piece_set?: string
-          equipped_theme?: string
-          equipped_title?: string | null
-          last_ritual_date?: string | null
-          level?: number
-          longest_streak?: number
-          main_pillar?: string | null
-          streak_days?: number
-          updated_at?: string
-          user_id: string
-          xp?: number
-        }
-        Update: {
-          created_at?: string
-          current_rank?: string
-          embers?: number
-          equipped_piece_set?: string
-          equipped_theme?: string
-          equipped_title?: string | null
-          last_ritual_date?: string | null
-          level?: number
-          longest_streak?: number
-          main_pillar?: string | null
-          streak_days?: number
-          updated_at?: string
-          user_id?: string
-          xp?: number
-        }
-        Relationships: []
-      }
-      player_unlocks: {
-        Row: {
-          acquired_at: string
-          equipped: boolean
-          id: string
-          unlock_id: string
-          unlock_type: string
-          user_id: string
-        }
-        Insert: {
-          acquired_at?: string
-          equipped?: boolean
-          id?: string
-          unlock_id: string
-          unlock_type: string
-          user_id: string
-        }
-        Update: {
-          acquired_at?: string
-          equipped?: boolean
-          id?: string
-          unlock_id?: string
-          unlock_type?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      puzzle_attempts: {
-        Row: {
-          best_san: string
+          branch_parent_step_id: string | null
+          content_id: string
+          context_before: string | null
           created_at: string
           fen: string
+          hint: string | null
           id: string
-          passed: boolean
-          played_san: string | null
-          position_id: string | null
-          puzzle_rating: number
-          rating_after: number
-          rating_before: number
-          rating_delta: number
-          user_id: string
+          is_branch_point: boolean
+          prompt: string | null
+          solution_san: string[]
+          step_number: number
         }
         Insert: {
-          best_san: string
+          branch_parent_step_id?: string | null
+          content_id: string
+          context_before?: string | null
           created_at?: string
           fen: string
+          hint?: string | null
           id?: string
-          passed: boolean
-          played_san?: string | null
-          position_id?: string | null
-          puzzle_rating: number
-          rating_after: number
-          rating_before: number
-          rating_delta: number
-          user_id: string
+          is_branch_point?: boolean
+          prompt?: string | null
+          solution_san: string[]
+          step_number: number
         }
         Update: {
-          best_san?: string
+          branch_parent_step_id?: string | null
+          content_id?: string
+          context_before?: string | null
           created_at?: string
           fen?: string
+          hint?: string | null
           id?: string
-          passed?: boolean
-          played_san?: string | null
-          position_id?: string | null
-          puzzle_rating?: number
-          rating_after?: number
-          rating_before?: number
-          rating_delta?: number
-          user_id?: string
+          is_branch_point?: boolean
+          prompt?: string | null
+          solution_san?: string[]
+          step_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deep_dive_steps_branch_parent_step_id_fkey"
+            columns: ["branch_parent_step_id"]
+            isOneToOne: false
+            referencedRelation: "deep_dive_steps"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deep_dive_steps_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      follows: {
+        Row: {
+          created_at: string
+          follower_id: string
+          following_id: string
+        }
+        Insert: {
+          created_at?: string
+          follower_id: string
+          following_id: string
+        }
+        Update: {
+          created_at?: string
+          follower_id?: string
+          following_id?: string
         }
         Relationships: []
       }
@@ -392,134 +296,119 @@ export type Database = {
         }
         Relationships: []
       }
-      skill_tree_progress: {
+      reports: {
         Row: {
-          attempts: number
-          best_accuracy: number | null
-          branch: string
+          content_id: string
           created_at: string
           id: string
-          level: number
-          mastered: boolean
-          skill_name: string
-          updated_at: string
-          user_id: string
-          xp: number
+          reason: string
+          reporter_id: string
+          status: string
         }
         Insert: {
-          attempts?: number
-          best_accuracy?: number | null
-          branch: string
+          content_id: string
           created_at?: string
           id?: string
-          level?: number
-          mastered?: boolean
-          skill_name: string
-          updated_at?: string
-          user_id: string
-          xp?: number
+          reason: string
+          reporter_id: string
+          status?: string
         }
         Update: {
-          attempts?: number
-          best_accuracy?: number | null
-          branch?: string
+          content_id?: string
           created_at?: string
           id?: string
-          level?: number
-          mastered?: boolean
-          skill_name?: string
-          updated_at?: string
-          user_id?: string
-          xp?: number
+          reason?: string
+          reporter_id?: string
+          status?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "reports_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      training_sessions: {
+      tips: {
         Row: {
-          accuracy: number | null
+          content_id: string | null
           created_at: string
-          duration_seconds: number | null
+          from_user_id: string
           id: string
-          metadata: Json | null
-          pillar: string
-          positions_attempted: number
-          positions_correct: number
-          session_type: string
+          points_amount: number
+          to_creator_id: string
+        }
+        Insert: {
+          content_id?: string | null
+          created_at?: string
+          from_user_id: string
+          id?: string
+          points_amount: number
+          to_creator_id: string
+        }
+        Update: {
+          content_id?: string | null
+          created_at?: string
+          from_user_id?: string
+          id?: string
+          points_amount?: number
+          to_creator_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tips_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_content_interactions: {
+        Row: {
+          content_id: string
+          created_at: string
+          id: string
+          interaction_type: string
+          time_spent_ms: number | null
           user_id: string
+          was_personalized: boolean
+          weakness_tag_targeted: string | null
           xp_earned: number
         }
         Insert: {
-          accuracy?: number | null
+          content_id: string
           created_at?: string
-          duration_seconds?: number | null
           id?: string
-          metadata?: Json | null
-          pillar: string
-          positions_attempted?: number
-          positions_correct?: number
-          session_type: string
+          interaction_type: string
+          time_spent_ms?: number | null
           user_id: string
+          was_personalized?: boolean
+          weakness_tag_targeted?: string | null
           xp_earned?: number
         }
         Update: {
-          accuracy?: number | null
+          content_id?: string
           created_at?: string
-          duration_seconds?: number | null
           id?: string
-          metadata?: Json | null
-          pillar?: string
-          positions_attempted?: number
-          positions_correct?: number
-          session_type?: string
+          interaction_type?: string
+          time_spent_ms?: number | null
           user_id?: string
+          was_personalized?: boolean
+          weakness_tag_targeted?: string | null
           xp_earned?: number
         }
-        Relationships: []
-      }
-      trial_history: {
-        Row: {
-          attempts: number
-          best_accuracy: number | null
-          created_at: string
-          floor_number: number
-          id: string
-          mastered_at: string | null
-          passed: boolean
-          perfect_clear: boolean
-          pillar: string
-          trial_number: number
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          attempts?: number
-          best_accuracy?: number | null
-          created_at?: string
-          floor_number: number
-          id?: string
-          mastered_at?: string | null
-          passed?: boolean
-          perfect_clear?: boolean
-          pillar: string
-          trial_number: number
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          attempts?: number
-          best_accuracy?: number | null
-          created_at?: string
-          floor_number?: number
-          id?: string
-          mastered_at?: string | null
-          passed?: boolean
-          perfect_clear?: boolean
-          pillar?: string
-          trial_number?: number
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_content_interactions_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_entitlements: {
         Row: {
@@ -541,24 +430,6 @@ export type Database = {
           entitlement?: string
           expires_at?: string | null
           id?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      user_focus: {
-        Row: {
-          data: Json
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          data?: Json
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          data?: Json
-          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -663,9 +534,19 @@ export type Database = {
       }
       user_profiles: {
         Row: {
+          avatar_url: string | null
+          best_streak: number
+          bio: string | null
           chesscom_username: string | null
+          consumer_level: number
+          consumer_xp: number
           created_at: string
+          creator_level: number
+          creator_xp: number
+          current_streak: number
           id: string
+          last_analysis_at: string | null
+          last_streak_date: string | null
           last_sync_at: string | null
           lichess_username: string | null
           longest_streak: number
@@ -674,14 +555,26 @@ export type Database = {
           puzzle_rating: number
           puzzle_wins: number
           skill_rating: number | null
+          total_points: number
           updated_at: string
           user_id: string
+          username: string | null
           warmup_streak: number
         }
         Insert: {
+          avatar_url?: string | null
+          best_streak?: number
+          bio?: string | null
           chesscom_username?: string | null
+          consumer_level?: number
+          consumer_xp?: number
           created_at?: string
+          creator_level?: number
+          creator_xp?: number
+          current_streak?: number
           id?: string
+          last_analysis_at?: string | null
+          last_streak_date?: string | null
           last_sync_at?: string | null
           lichess_username?: string | null
           longest_streak?: number
@@ -690,14 +583,26 @@ export type Database = {
           puzzle_rating?: number
           puzzle_wins?: number
           skill_rating?: number | null
+          total_points?: number
           updated_at?: string
           user_id: string
+          username?: string | null
           warmup_streak?: number
         }
         Update: {
+          avatar_url?: string | null
+          best_streak?: number
+          bio?: string | null
           chesscom_username?: string | null
+          consumer_level?: number
+          consumer_xp?: number
           created_at?: string
+          creator_level?: number
+          creator_xp?: number
+          current_streak?: number
           id?: string
+          last_analysis_at?: string | null
+          last_streak_date?: string | null
           last_sync_at?: string | null
           lichess_username?: string | null
           longest_streak?: number
@@ -706,105 +611,50 @@ export type Database = {
           puzzle_rating?: number
           puzzle_wins?: number
           skill_rating?: number | null
+          total_points?: number
           updated_at?: string
           user_id?: string
+          username?: string | null
           warmup_streak?: number
         }
         Relationships: []
       }
-      user_progress: {
-        Row: {
-          data: Json
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          data?: Json
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          data?: Json
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      user_repertoires: {
+      user_weaknesses: {
         Row: {
           created_at: string
           id: string
-          name: string
-          side: string
-          starting_fen: string
-          theme_id: string
-          tree: Json
+          last_seen: string
+          severity_score: number
+          status: string
+          times_missed: number
+          times_solved_since: number
           updated_at: string
           user_id: string
+          weakness_tag: string
         }
         Insert: {
           created_at?: string
           id?: string
-          name?: string
-          side?: string
-          starting_fen?: string
-          theme_id?: string
-          tree?: Json
+          last_seen?: string
+          severity_score?: number
+          status?: string
+          times_missed?: number
+          times_solved_since?: number
           updated_at?: string
           user_id: string
+          weakness_tag: string
         }
         Update: {
           created_at?: string
           id?: string
-          name?: string
-          side?: string
-          starting_fen?: string
-          theme_id?: string
-          tree?: Json
+          last_seen?: string
+          severity_score?: number
+          status?: string
+          times_missed?: number
+          times_solved_since?: number
           updated_at?: string
           user_id?: string
-        }
-        Relationships: []
-      }
-      warmup_sessions: {
-        Row: {
-          created_at: string
-          diagnostic_correct: number
-          diagnostic_total: number
-          id: string
-          practice_correct: number
-          practice_total: number
-          user_id: string
-          warmup_date: string
-          weakness_category: string
-          went_to_battle: boolean
-          won_after: boolean | null
-        }
-        Insert: {
-          created_at?: string
-          diagnostic_correct?: number
-          diagnostic_total?: number
-          id?: string
-          practice_correct?: number
-          practice_total?: number
-          user_id: string
-          warmup_date?: string
-          weakness_category: string
-          went_to_battle?: boolean
-          won_after?: boolean | null
-        }
-        Update: {
-          created_at?: string
-          diagnostic_correct?: number
-          diagnostic_total?: number
-          id?: string
-          practice_correct?: number
-          practice_total?: number
-          user_id?: string
-          warmup_date?: string
-          weakness_category?: string
-          went_to_battle?: boolean
-          won_after?: boolean | null
+          weakness_tag?: string
         }
         Relationships: []
       }
