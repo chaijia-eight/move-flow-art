@@ -25,10 +25,12 @@ interface SubscriptionState {
   maxChaptersPerStudy: number;
 }
 
-const FREE_DAILY_LINES = 3;
-const FREE_DAILY_PRACTICES = 2;
-const FREE_MAX_STUDIES = 2;
-const FREE_MAX_CHAPTERS = 4;
+// Legacy free-tier caps kept as 0/Infinity exports so existing UI imports compile
+// during the Smart Feed pivot. New feed-based limits will replace these.
+const FREE_DAILY_LINES = 0;
+const FREE_DAILY_PRACTICES = 0;
+const FREE_MAX_STUDIES = 0;
+const FREE_MAX_CHAPTERS = 0;
 
 const SubscriptionContext = createContext<SubscriptionState>({
   isPro: false,
@@ -58,43 +60,13 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const [isPro, setIsPro] = useState(false);
   const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [dailyLinesUsed, setDailyLinesUsed] = useState(0);
-  const [dailyPracticesUsed, setDailyPracticesUsed] = useState(0);
-  const [analysisUsedToday, setAnalysisUsedToday] = useState(false);
-  const [lastTrapLearnedAt, setLastTrapLearnedAt] = useState<string | null>(null);
-
-  const todayStr = () => new Date().toISOString().slice(0, 10);
-
-  const fetchDailyUsage = useCallback(async () => {
-    if (!user) return;
-    const { data } = await supabase
-      .from("daily_usage")
-      .select("lines_learned, practice_used, analysis_used, last_trap_learned_at")
-      .eq("user_id", user.id)
-      .eq("usage_date", todayStr())
-      .maybeSingle();
-
-    if (data) {
-      setDailyLinesUsed(data.lines_learned);
-      // practice_used is boolean in DB — treat true as 1 for backward compat
-      setDailyPracticesUsed(data.practice_used ? 1 : 0);
-      setAnalysisUsedToday(data.analysis_used);
-      setLastTrapLearnedAt((data as any).last_trap_learned_at ?? null);
-    } else {
-      setDailyLinesUsed(0);
-      setDailyPracticesUsed(0);
-      setAnalysisUsedToday(false);
-      const { data: recentTrap } = await supabase
-        .from("daily_usage")
-        .select("last_trap_learned_at")
-        .eq("user_id", user.id)
-        .not("last_trap_learned_at", "is", null)
-        .order("usage_date", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      setLastTrapLearnedAt((recentTrap as any)?.last_trap_learned_at ?? null);
-    }
-  }, [user]);
+  // NOTE: daily_usage tracking removed during pivot to Smart Feed.
+  // Old caps (lines/practice/analysis) referred to deleted features.
+  // Will be replaced by feed-based limits in a later phase.
+  const dailyLinesUsed = 0;
+  const dailyPracticesUsed = 0;
+  const analysisUsedToday = false;
+  const lastTrapLearnedAt: string | null = null;
 
   const refreshSubscription = useCallback(async () => {
     if (!session) {
@@ -118,15 +90,11 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (user) {
       refreshSubscription();
-      fetchDailyUsage();
     } else {
       setIsPro(false);
       setLoading(false);
-      setDailyLinesUsed(0);
-      setDailyPracticesUsed(0);
-      setAnalysisUsedToday(false);
     }
-  }, [user, refreshSubscription, fetchDailyUsage]);
+  }, [user, refreshSubscription]);
 
   useEffect(() => {
     if (!session) return;
@@ -134,87 +102,17 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     return () => clearInterval(interval);
   }, [session, refreshSubscription]);
 
-  const canLearnNewLine = isPro || dailyLinesUsed < FREE_DAILY_LINES;
-  const canPractice = isPro || dailyPracticesUsed < FREE_DAILY_PRACTICES;
-  const canAnalyze = isPro || !analysisUsedToday;
-  // Traps now count as regular lines — no special weekly limit
-  const canLearnTrap = canLearnNewLine;
+  // Old caps removed during pivot — everyone "can" do these legacy actions.
+  // The new feed will gate Pro features differently (ads, Deep Dive cap, etc.).
+  const canLearnNewLine = true;
+  const canPractice = true;
+  const canAnalyze = true;
+  const canLearnTrap = true;
 
-  const recordLineLearn = useCallback(async () => {
-    if (!user || isPro) return;
-    const today = todayStr();
-    const { data: existing } = await supabase
-      .from("daily_usage")
-      .select("id, lines_learned")
-      .eq("user_id", user.id)
-      .eq("usage_date", today)
-      .maybeSingle();
-
-    if (existing) {
-      await supabase
-        .from("daily_usage")
-        .update({ lines_learned: existing.lines_learned + 1, updated_at: new Date().toISOString() })
-        .eq("id", existing.id);
-      setDailyLinesUsed(existing.lines_learned + 1);
-    } else {
-      await supabase
-        .from("daily_usage")
-        .insert({ user_id: user.id, usage_date: today, lines_learned: 1 });
-      setDailyLinesUsed(1);
-    }
-  }, [user, isPro]);
-
-  const recordPracticeUse = useCallback(async () => {
-    if (!user || isPro) return;
-    const today = todayStr();
-    const newCount = dailyPracticesUsed + 1;
-    const { data: existing } = await supabase
-      .from("daily_usage")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("usage_date", today)
-      .maybeSingle();
-
-    if (existing) {
-      await supabase
-        .from("daily_usage")
-        .update({ practice_used: true, updated_at: new Date().toISOString() })
-        .eq("id", existing.id);
-    } else {
-      await supabase
-        .from("daily_usage")
-        .insert({ user_id: user.id, usage_date: today, practice_used: true });
-    }
-    setDailyPracticesUsed(newCount);
-  }, [user, isPro, dailyPracticesUsed]);
-
-  const recordAnalysisUse = useCallback(async () => {
-    if (!user) return;
-    const today = todayStr();
-    const { data: existing } = await supabase
-      .from("daily_usage")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("usage_date", today)
-      .maybeSingle();
-
-    if (existing) {
-      await supabase
-        .from("daily_usage")
-        .update({ analysis_used: true, updated_at: new Date().toISOString() })
-        .eq("id", existing.id);
-    } else {
-      await supabase
-        .from("daily_usage")
-        .insert({ user_id: user.id, usage_date: today, analysis_used: true });
-    }
-    setAnalysisUsedToday(true);
-  }, [user]);
-
-  const recordTrapLearn = useCallback(async () => {
-    // Traps now use the regular line limit
-    return recordLineLearn();
-  }, [recordLineLearn]);
+  const recordLineLearn = useCallback(async () => {}, []);
+  const recordPracticeUse = useCallback(async () => {}, []);
+  const recordAnalysisUse = useCallback(async () => {}, []);
+  const recordTrapLearn = useCallback(async () => {}, []);
 
   const startCheckout = useCallback(async () => {
     const { data, error } = await supabase.functions.invoke("create-checkout");
