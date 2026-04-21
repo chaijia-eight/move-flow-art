@@ -102,15 +102,9 @@ export default function StudySidebar({
     setSavingExplanation(true);
     const text = editText.trim();
     if (text) {
-      await supabase.from("move_explanations").upsert({
-        opening_id: openingId,
-        variation_id: variationId,
-        line_index: lineIndex,
-        move_index: moveIdx,
-        move_san: san,
-        explanation: text,
-        updated_at: new Date().toISOString(),
-      }, { onConflict: "opening_id,variation_id,line_index,move_index" });
+      // move_explanations table dropped during Smart Feed pivot.
+      // Persistence is a no-op; local state still updates so the UI works
+      // until this legacy sidebar is removed in Phase 2.
       // Update local state
       if (moveExplanations) moveExplanations[moveIdx] = text;
     }
