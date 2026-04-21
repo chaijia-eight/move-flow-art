@@ -25,10 +25,12 @@ interface SubscriptionState {
   maxChaptersPerStudy: number;
 }
 
-const FREE_DAILY_LINES = 3;
-const FREE_DAILY_PRACTICES = 2;
-const FREE_MAX_STUDIES = 2;
-const FREE_MAX_CHAPTERS = 4;
+// Legacy free-tier caps kept as 0/Infinity exports so existing UI imports compile
+// during the Smart Feed pivot. New feed-based limits will replace these.
+const FREE_DAILY_LINES = 0;
+const FREE_DAILY_PRACTICES = 0;
+const FREE_MAX_STUDIES = 0;
+const FREE_MAX_CHAPTERS = 0;
 
 const SubscriptionContext = createContext<SubscriptionState>({
   isPro: false,

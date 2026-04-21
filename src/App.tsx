@@ -7,17 +7,9 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import AppLayout from "./components/AppLayout";
-import ForgeHub from "./pages/ForgeHub";
-import DailyRitual from "./pages/DailyRitual";
-import PillarView from "./pages/PillarView";
-import TrialBattle from "./pages/TrialBattle";
-import Review from "./pages/Review";
-import Stats from "./pages/Stats";
+import Home from "./pages/Home";
 import Settings from "./pages/Settings";
 import Connect from "./pages/Connect";
-import Mistakes from "./pages/Mistakes";
-import Games from "./pages/Games";
-import Puzzles from "./pages/Puzzles";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -39,17 +31,9 @@ const App = () => (
                 <ProtectedRoute>
                   <AppLayout>
                     <Routes>
-                      <Route path="/" element={<ForgeHub />} />
-                      <Route path="/ritual" element={<DailyRitual />} />
-                      <Route path="/pillar/:pillarId" element={<PillarView />} />
-                      <Route path="/trial/:pillarId/:floorNum" element={<TrialBattle />} />
-                      <Route path="/review" element={<Review />} />
-                      <Route path="/stats" element={<Stats />} />
+                      <Route path="/" element={<Home />} />
                       <Route path="/settings" element={<Settings />} />
                       <Route path="/connect" element={<Connect />} />
-                      <Route path="/mistakes" element={<Mistakes />} />
-                      <Route path="/games" element={<Games />} />
-                      <Route path="/puzzles" element={<Puzzles />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </AppLayout>
