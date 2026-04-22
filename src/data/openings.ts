@@ -1,9 +1,14 @@
 // Stub module retained during the Smart Feed pivot.
-// The real opening catalogue was deleted; these types/values exist only so
-// that the chessboard, theme system, and feedback banner continue to compile.
-// They will be replaced or removed in later phases.
+// Provides just enough types/values for the legacy Chessboard, FeedbackBanner,
+// ThemeContext, etc. to compile while we rebuild the feed.
 
-export type MoveCategory = "main" | "alternative" | "mistake" | "trap";
+export type MoveCategory =
+  | "main"
+  | "alternative"
+  | "mistake"
+  | "trap"
+  | "main_line"
+  | "legit_alternative";
 
 export interface CustomArrow {
   from: string;
@@ -16,9 +21,15 @@ export interface CustomHighlight {
   color: string;
 }
 
-export type NagSymbol = "!" | "!!" | "?" | "??" | "!?" | "?!";
+export type NagSymbol = string;
 
-export const NAG_SYMBOLS: NagSymbol[] = ["!", "!!", "?", "??", "!?", "?!"];
+export interface NagSymbolDef {
+  key: string;
+  icon: string;
+  label: string;
+}
+
+export const NAG_SYMBOLS: NagSymbolDef[] = [];
 
 export interface OpeningTheme {
   id: string;
@@ -27,6 +38,10 @@ export interface OpeningTheme {
   darkSquare: string;
   highlightSquare: string;
   lastMoveSquare: string;
+  accentColor: string;
+  primaryColor: string;
+  boardLight: string;
+  boardDark: string;
 }
 
 const defaultTheme: OpeningTheme = {
@@ -36,6 +51,10 @@ const defaultTheme: OpeningTheme = {
   darkSquare: "hsl(25, 30%, 45%)",
   highlightSquare: "hsl(50, 80%, 60%)",
   lastMoveSquare: "hsl(50, 80%, 60%)",
+  accentColor: "hsl(45, 90%, 55%)",
+  primaryColor: "hsl(45, 90%, 55%)",
+  boardLight: "hsl(40, 35%, 85%)",
+  boardDark: "hsl(25, 30%, 45%)",
 };
 
 export const themes: Record<string, OpeningTheme> = {
