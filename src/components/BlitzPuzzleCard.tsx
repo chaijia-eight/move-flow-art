@@ -144,9 +144,17 @@ export default function BlitzPuzzleCard({
         <span>
           {index + 1} / {total}
         </span>
-        <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary">
-          {puzzle.weaknessTag.replace(/_/g, " ")}
-        </span>
+        <div className="flex items-center gap-2">
+          {puzzle.personalized && (
+            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 normal-case tracking-normal">
+              <Target className="w-3 h-3" />
+              For you
+            </span>
+          )}
+          <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+            {puzzle.weaknessTag.replace(/_/g, " ")}
+          </span>
+        </div>
       </div>
 
       {/* Title */}
