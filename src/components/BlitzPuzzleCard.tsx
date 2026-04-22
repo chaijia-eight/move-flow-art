@@ -1,14 +1,16 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronUp, Lightbulb, RotateCcw, Sparkles } from "lucide-react";
+import { ChevronUp, Lightbulb, RotateCcw, Sparkles, Target } from "lucide-react";
 import Chessboard from "@/components/Chessboard";
-import type { SeedPuzzle } from "@/data/seedPuzzles";
+import type { FeedItem } from "@/lib/feedLoader";
 
 interface BlitzPuzzleCardProps {
-  puzzle: SeedPuzzle;
+  puzzle: FeedItem;
   isActive: boolean;
   onAdvance: () => void;
+  onSolved?: (puzzle: FeedItem) => void;
+  onFailed?: (puzzle: FeedItem) => void;
   index: number;
   total: number;
 }
@@ -24,6 +26,8 @@ export default function BlitzPuzzleCard({
   puzzle,
   isActive,
   onAdvance,
+  onSolved,
+  onFailed,
   index,
   total,
 }: BlitzPuzzleCardProps) {
@@ -33,6 +37,10 @@ export default function BlitzPuzzleCard({
   const [moveIndex, setMoveIndex] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const reportedRef = useRef<{ solved: boolean; failed: boolean }>({
+    solved: false,
+    failed: false,
+  });
 
   // Reset puzzle state when it scrolls back into view (or first mount).
   useEffect(() => {
@@ -43,6 +51,7 @@ export default function BlitzPuzzleCard({
     setMoveIndex(0);
     setShowHint(false);
     setFeedback(null);
+    reportedRef.current = { solved: false, failed: false };
   }, [isActive, puzzle.fen]);
 
   const handleReset = () => {
@@ -70,6 +79,10 @@ export default function BlitzPuzzleCard({
       setFen(chessRef.current.fen());
       setStatus("wrong");
       setFeedback("Not quite. Try again.");
+      if (!reportedRef.current.failed) {
+        reportedRef.current.failed = true;
+        onFailed?.(puzzle);
+      }
       return;
     }
 
@@ -94,10 +107,18 @@ export default function BlitzPuzzleCard({
           if (nextIndex + 1 >= puzzle.solutionSan.length) {
             setStatus("solved");
             setFeedback("Solved.");
+            if (!reportedRef.current.solved && !reportedRef.current.failed) {
+              reportedRef.current.solved = true;
+              onSolved?.(puzzle);
+            }
           }
         } catch {
           // Shouldn't happen with a valid solution; just mark solved.
           setStatus("solved");
+          if (!reportedRef.current.solved && !reportedRef.current.failed) {
+            reportedRef.current.solved = true;
+            onSolved?.(puzzle);
+          }
         }
       }, 350);
       setMoveIndex(nextIndex);
@@ -107,6 +128,10 @@ export default function BlitzPuzzleCard({
       setMoveIndex(nextIndex);
       setStatus("solved");
       setFeedback("Solved.");
+      if (!reportedRef.current.solved && !reportedRef.current.failed) {
+        reportedRef.current.solved = true;
+        onSolved?.(puzzle);
+      }
     }
   };
 
@@ -119,9 +144,17 @@ export default function BlitzPuzzleCard({
         <span>
           {index + 1} / {total}
         </span>
-        <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary">
-          {puzzle.weaknessTag.replace(/_/g, " ")}
-        </span>
+        <div className="flex items-center gap-2">
+          {puzzle.personalized && (
+            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 normal-case tracking-normal">
+              <Target className="w-3 h-3" />
+              For you
+            </span>
+          )}
+          <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+            {puzzle.weaknessTag.replace(/_/g, " ")}
+          </span>
+        </div>
       </div>
 
       {/* Title */}

@@ -138,6 +138,11 @@ export default function Connect() {
       queryClient.invalidateQueries({ queryKey: ["user-profile"] });
       queryClient.invalidateQueries({ queryKey: ["game-counts"] });
 
+      // Fire-and-forget weakness detection so the For You feed personalizes.
+      supabase.functions.invoke("detect-weaknesses").catch((e) =>
+        console.warn("[Connect] detect-weaknesses failed", e),
+      );
+
       setUsername("");
       setTimeout(() => {
         setExpandedPlatform(null);
@@ -204,6 +209,10 @@ export default function Connect() {
 
       queryClient.invalidateQueries({ queryKey: ["user-profile"] });
       queryClient.invalidateQueries({ queryKey: ["game-counts"] });
+
+      supabase.functions.invoke("detect-weaknesses").catch((e) =>
+        console.warn("[Connect] detect-weaknesses failed", e),
+      );
     } catch (err: any) {
       setSyncState({ loading: false, error: err.message || "Resync failed", result: null });
     }
