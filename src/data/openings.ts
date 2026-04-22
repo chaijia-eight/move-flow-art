@@ -2,6 +2,7 @@
 // The real opening catalogue was deleted; these types/values exist only so
 // that the chessboard, theme system, and feedback banner continue to compile.
 // They will be replaced or removed in later phases.
+// (touch: re-export to bust stale module cache)
 
 export type MoveCategory = "main" | "alternative" | "mistake" | "trap";
 
