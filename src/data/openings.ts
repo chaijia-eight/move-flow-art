@@ -21,13 +21,15 @@ export interface CustomHighlight {
   color: string;
 }
 
-export interface NagSymbol {
+export type NagSymbol = string;
+
+export interface NagSymbolDef {
   key: string;
   icon: string;
   label: string;
 }
 
-export const NAG_SYMBOLS: NagSymbol[] = [];
+export const NAG_SYMBOLS: NagSymbolDef[] = [];
 
 export interface OpeningTheme {
   id: string;
