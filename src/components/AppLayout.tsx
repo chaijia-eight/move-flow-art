@@ -1,11 +1,13 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Home as HomeIcon, Link2, Settings } from "lucide-react";
+import { Home as HomeIcon, Link2, Settings, Plus, User } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 
 const navItems = [
   { icon: HomeIcon, label: "Feed", path: "/" },
+  { icon: Plus, label: "Create", path: "/create" },
+  { icon: User, label: "Me", path: "/me" },
   { icon: Link2, label: "Connect", path: "/connect" },
 ];
 
