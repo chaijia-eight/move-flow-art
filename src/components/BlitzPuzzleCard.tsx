@@ -113,9 +113,9 @@ export default function BlitzPuzzleCard({
   const moveHints = useMemo(() => new Map(), []);
 
   return (
-    <div className="h-full w-full flex flex-col bg-background relative snap-start snap-always">
+    <div className="h-full w-full flex flex-col bg-background relative snap-start snap-always overflow-hidden pt-12 pb-16">
       {/* Top meta bar */}
-      <div className="px-5 pt-5 pb-3 flex items-center justify-between text-xs uppercase tracking-wider text-muted-foreground">
+      <div className="px-5 pt-2 pb-2 flex items-center justify-between text-xs uppercase tracking-wider text-muted-foreground shrink-0">
         <span>
           {index + 1} / {total}
         </span>
@@ -125,17 +125,17 @@ export default function BlitzPuzzleCard({
       </div>
 
       {/* Title */}
-      <div className="px-5 pb-3">
-        <h2 className="text-xl font-bold text-foreground">{puzzle.title}</h2>
-        <p className="text-sm text-muted-foreground">
+      <div className="px-5 pb-2 shrink-0">
+        <h2 className="text-lg font-bold text-foreground leading-tight">{puzzle.title}</h2>
+        <p className="text-xs text-muted-foreground">
           {puzzle.playerColor === "w" ? "White" : "Black"} to move · difficulty{" "}
           {puzzle.difficulty}/10
         </p>
       </div>
 
       {/* Board */}
-      <div className="flex-1 flex items-center justify-center px-3">
-        <div className="w-full max-w-[420px] aspect-square">
+      <div className="flex-1 min-h-0 flex items-center justify-center px-3">
+        <div className="aspect-square max-w-full max-h-full" style={{ width: "min(100%, calc(100vh - 320px))" }}>
           <Chessboard
             fen={fen}
             onMove={handleMove}
@@ -148,7 +148,7 @@ export default function BlitzPuzzleCard({
       </div>
 
       {/* Feedback + actions */}
-      <div className="px-5 pb-6 pt-4 space-y-3">
+      <div className="px-5 pb-3 pt-2 space-y-2 shrink-0">
         <AnimatePresence mode="wait">
           {feedback && (
             <motion.div
@@ -157,7 +157,7 @@ export default function BlitzPuzzleCard({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
-              className={`text-sm rounded-lg px-3 py-2 ${
+              className={`text-xs rounded-lg px-3 py-1.5 ${
                 status === "solved"
                   ? "bg-primary/10 text-primary"
                   : status === "wrong"
@@ -175,7 +175,7 @@ export default function BlitzPuzzleCard({
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="text-sm rounded-lg px-3 py-2 bg-secondary text-foreground"
+              className="text-xs rounded-lg px-3 py-1.5 bg-secondary text-foreground"
             >
               <Lightbulb className="inline w-4 h-4 mr-1 -mt-0.5" />
               {puzzle.hint}
@@ -187,7 +187,7 @@ export default function BlitzPuzzleCard({
           {status === "playing" && (
             <button
               onClick={() => setShowHint((v) => !v)}
-              className="flex-1 h-11 rounded-xl bg-secondary text-foreground text-sm font-medium hover:bg-secondary/80 transition-colors flex items-center justify-center gap-2"
+              className="flex-1 h-10 rounded-xl bg-secondary text-foreground text-sm font-medium hover:bg-secondary/80 transition-colors flex items-center justify-center gap-2"
             >
               <Lightbulb className="w-4 h-4" />
               {showHint ? "Hide hint" : "Hint"}
@@ -196,7 +196,7 @@ export default function BlitzPuzzleCard({
           {status === "wrong" && (
             <button
               onClick={handleReset}
-              className="flex-1 h-11 rounded-xl bg-secondary text-foreground text-sm font-medium hover:bg-secondary/80 transition-colors flex items-center justify-center gap-2"
+              className="flex-1 h-10 rounded-xl bg-secondary text-foreground text-sm font-medium hover:bg-secondary/80 transition-colors flex items-center justify-center gap-2"
             >
               <RotateCcw className="w-4 h-4" />
               Try again
@@ -205,7 +205,7 @@ export default function BlitzPuzzleCard({
           {status === "solved" && (
             <button
               onClick={onAdvance}
-              className="flex-1 h-11 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+              className="flex-1 h-10 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
             >
               <Sparkles className="w-4 h-4" />
               Next puzzle
