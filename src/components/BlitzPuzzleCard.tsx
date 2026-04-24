@@ -239,16 +239,6 @@ export default function BlitzPuzzleCard({
               Try again
             </button>
           )}
-          {status === "solved" && (
-            <button
-              onClick={onAdvance}
-              className="flex-1 h-10 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
-            >
-              <Sparkles className="w-4 h-4" />
-              Next puzzle
-              <ChevronUp className="w-4 h-4" />
-            </button>
-          )}
         </div>
       </div>
     </div>
