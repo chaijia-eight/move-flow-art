@@ -57,7 +57,11 @@ const SubscriptionContext = createContext<SubscriptionState>({
 
 export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const { user, session } = useAuth();
+  // Phase 8: Hide all Pro functionality. Everyone is treated as free while
+  // we collect Phase 11 paywall data. The setter is retained for forward
+  // compatibility but is intentionally unused.
   const [isPro, setIsPro] = useState(false);
+  void setIsPro;
   const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   // NOTE: daily_usage tracking removed during pivot to Smart Feed.
@@ -69,45 +73,10 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const lastTrapLearnedAt: string | null = null;
 
   const refreshSubscription = useCallback(async () => {
-    if (!session) {
-      setIsPro(false);
-      setLoading(false);
-      return;
-    }
-    try {
-      // 1. Fast path: check entitlements directly from DB (no edge function).
-      const { data: entitlements } = await supabase
-        .from("user_entitlements")
-        .select("entitlement, expires_at")
-        .eq("user_id", session.user.id)
-        .eq("entitlement", "pro");
-
-      const active = entitlements?.find(
-        (e: any) => !e.expires_at || new Date(e.expires_at) > new Date()
-      );
-
-      if (active) {
-        setIsPro(true);
-        setSubscriptionEnd(active.expires_at ?? null);
-        return;
-      }
-
-      // 2. Fall back to edge function for Stripe verification.
-      try {
-        const { data, error } = await supabase.functions.invoke("check-subscription");
-        if (error) throw error;
-        setIsPro(data?.subscribed ?? false);
-        setSubscriptionEnd(data?.subscription_end ?? null);
-      } catch (e) {
-        // Transient 503/network errors — keep previous state, don't flip to false.
-        console.warn("check-subscription unavailable, retaining current state:", e);
-      }
-    } catch (e) {
-      console.error("Failed to check subscription:", e);
-    } finally {
-      setLoading(false);
-    }
-  }, [session]);
+    // Phase 8: Pro is hidden globally; skip the entitlement/Stripe checks.
+    setSubscriptionEnd(null);
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     if (user) {
