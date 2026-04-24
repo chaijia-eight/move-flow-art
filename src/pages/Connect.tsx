@@ -316,13 +316,20 @@ export default function Connect() {
           <div className="mb-4">
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-xs font-medium text-muted-foreground">
-                {syncState.result ? "Complete!" : "Syncing games..."}
+                {analysisState.running
+                  ? "Analyzing games…"
+                  : syncState.result && !analysisState.running && syncProgress >= 100
+                    ? "Complete!"
+                    : "Syncing games..."}
               </span>
               <span className="text-xs font-mono text-muted-foreground">
                 {Math.round(syncProgress)}%
               </span>
             </div>
             <Progress value={syncProgress} className="h-2" />
+            {analysisState.detail && (
+              <p className="text-xs text-muted-foreground/70 mt-1.5">{analysisState.detail}</p>
+            )}
           </div>
 
           {/* Steps list */}
@@ -331,8 +338,8 @@ export default function Connect() {
               const Icon = step.icon;
               let status: "pending" | "active" | "done" = "pending";
               if (i < activeStepIndex) status = "done";
-              else if (i === activeStepIndex && syncState.loading) status = "active";
-              else if (syncState.result) status = "done";
+              else if (i === activeStepIndex && (syncState.loading || analysisState.running)) status = "active";
+              else if (syncState.result && !analysisState.running && i < SYNC_STEPS.length) status = "done";
 
               return (
                 <motion.div
