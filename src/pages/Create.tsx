@@ -7,6 +7,7 @@ import Chessboard from "@/components/Chessboard";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { trackEvent } from "@/lib/analytics";
 
 const STARTING_FEN =
   "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -136,6 +137,15 @@ export default function Create() {
         time_limit_seconds: timeLimit,
       });
       if (blitzErr) throw blitzErr;
+
+      if (status === "published") {
+        void trackEvent("creator_publish", {
+          content_id: contentRow.id,
+          type: "blitz",
+          difficulty,
+          tag,
+        });
+      }
 
       toast({
         title: status === "published" ? "Puzzle published!" : "Draft saved",
