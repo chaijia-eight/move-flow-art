@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Chess } from "chess.js";
 import { ArrowLeft, RotateCcw, Save, Send, Trash2, Wand2 } from "lucide-react";
 import Chessboard from "@/components/Chessboard";
+import PositionEditor from "@/components/PositionEditor";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -11,6 +12,7 @@ import { trackEvent } from "@/lib/analytics";
 
 const STARTING_FEN =
   "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+const EMPTY_FEN = "8/8/8/8/8/8/8/8 w - - 0 1";
 
 const WEAKNESS_TAGS = [
   "fork",
@@ -36,6 +38,9 @@ export default function Create() {
   const [startFen, setStartFen] = useState(STARTING_FEN);
   const [fenInput, setFenInput] = useState(STARTING_FEN);
   const [fenError, setFenError] = useState<string | null>(null);
+  const [positionMode, setPositionMode] = useState<"fen" | "editor">("fen");
+  const [editorFen, setEditorFen] = useState(EMPTY_FEN);
+  const [editorTurn, setEditorTurn] = useState<"w" | "b">("w");
 
   // Solution state — chess.js ref tracks current position; solutionSan grows on every legal move.
   const chessRef = useRef(new Chess(startFen));
@@ -105,7 +110,30 @@ export default function Create() {
     [startFen],
   );
 
-  const canSave = title.trim().length > 0 && solutionSan.length > 0 && !!user;
+  // Validate the editor FEN and commit it to startFen on every change.
+  const editorValid = useMemo(() => {
+    const flat = editorFen.split(" ")[0].replace(/\d|\//g, "");
+    const wK = (flat.match(/K/g) || []).length;
+    const bK = (flat.match(/k/g) || []).length;
+    if (wK !== 1 || bK !== 1) return false;
+    try {
+      // eslint-disable-next-line no-new
+      new Chess(editorFen);
+      return true;
+    } catch {
+      return false;
+    }
+  }, [editorFen]);
+
+  useEffect(() => {
+    if (positionMode === "editor" && editorValid) {
+      setStartFen(editorFen);
+    }
+  }, [positionMode, editorFen, editorValid]);
+
+  const positionReady = positionMode === "fen" ? true : editorValid;
+  const canSave =
+    title.trim().length > 0 && solutionSan.length > 0 && positionReady && !!user;
 
   const save = async (status: "draft" | "published") => {
     if (!user || !canSave) return;
@@ -192,24 +220,67 @@ export default function Create() {
         <Section
           step={1}
           title="Set the position"
-          subtitle="Paste a FEN, or set up from the starting position."
+          subtitle="Paste a FEN, or build the position from a blank board."
         >
-          <div className="flex gap-2">
-            <input
-              value={fenInput}
-              onChange={(e) => setFenInput(e.target.value)}
-              placeholder="Paste FEN…"
-              className="flex-1 h-10 px-3 rounded-lg bg-secondary text-sm font-mono text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-            />
+          <div className="flex rounded-lg overflow-hidden border border-border w-fit">
             <button
-              onClick={handleFenLoad}
-              className="h-10 px-3 rounded-lg bg-secondary text-sm font-medium text-foreground hover:bg-secondary/80 inline-flex items-center gap-1.5"
+              type="button"
+              onClick={() => setPositionMode("fen")}
+              className={`px-3 h-9 text-xs font-medium ${
+                positionMode === "fen"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-foreground hover:bg-secondary/80"
+              }`}
             >
-              <Wand2 className="w-4 h-4" />
-              Load
+              From FEN
+            </button>
+            <button
+              type="button"
+              onClick={() => setPositionMode("editor")}
+              className={`px-3 h-9 text-xs font-medium ${
+                positionMode === "editor"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-foreground hover:bg-secondary/80"
+              }`}
+            >
+              Build from blank
             </button>
           </div>
-          {fenError && <p className="text-xs text-destructive">{fenError}</p>}
+
+          {positionMode === "fen" ? (
+            <>
+              <div className="flex gap-2">
+                <input
+                  value={fenInput}
+                  onChange={(e) => setFenInput(e.target.value)}
+                  placeholder="Paste FEN…"
+                  className="flex-1 h-10 px-3 rounded-lg bg-secondary text-sm font-mono text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                />
+                <button
+                  onClick={handleFenLoad}
+                  className="h-10 px-3 rounded-lg bg-secondary text-sm font-medium text-foreground hover:bg-secondary/80 inline-flex items-center gap-1.5"
+                >
+                  <Wand2 className="w-4 h-4" />
+                  Load
+                </button>
+              </div>
+              {fenError && <p className="text-xs text-destructive">{fenError}</p>}
+            </>
+          ) : (
+            <div className="max-w-[420px]">
+              <PositionEditor
+                fen={editorFen}
+                onChange={setEditorFen}
+                turn={editorTurn}
+                onTurnChange={(t) => {
+                  setEditorTurn(t);
+                  const parts = editorFen.split(" ");
+                  parts[1] = t;
+                  setEditorFen(parts.join(" "));
+                }}
+              />
+            </div>
+          )}
         </Section>
 
         {/* Step 2: board + solution */}
