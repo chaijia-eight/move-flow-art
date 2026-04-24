@@ -144,10 +144,7 @@ export default function BlitzPuzzleCard({
   return (
     <div className="h-full w-full flex flex-col bg-background relative snap-start snap-always overflow-hidden pt-12 pb-16">
       {/* Top meta bar */}
-      <div className="px-5 pt-2 pb-2 flex items-center justify-between text-xs uppercase tracking-wider text-muted-foreground shrink-0">
-        <span>
-          {index + 1} / {total}
-        </span>
+      <div className="px-5 pt-2 pb-2 flex items-center justify-end text-xs uppercase tracking-wider text-muted-foreground shrink-0">
         <div className="flex items-center gap-2">
           {puzzle.personalized && (
             <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 normal-case tracking-normal">
