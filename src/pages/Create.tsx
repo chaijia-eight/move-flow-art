@@ -432,9 +432,11 @@ export default function Create() {
               ? "Sign in to save."
               : !title.trim()
                 ? "Add a title to continue."
-                : solutionSan.length === 0
-                  ? "Play at least one move on the board."
-                  : `${solutionSan.length} move${solutionSan.length === 1 ? "" : "s"} captured.`}
+                : !positionReady
+                  ? "Each side needs exactly one king."
+                  : solutionSan.length === 0
+                    ? "Play at least one move on the board."
+                    : `${solutionSan.length} move${solutionSan.length === 1 ? "" : "s"} captured.`}
           </div>
           <div className="flex gap-2">
             <button
