@@ -96,6 +96,10 @@ export default function BlitzPuzzleCard({
 
     const nextIndex = moveIndex + 1;
 
+    // Reflect the player's move on the board immediately so the user sees it
+    // land before the opponent's reply animates in.
+    setFen(chessRef.current.fen());
+
     // If the puzzle has more moves, the next one is the opponent's reply.
     if (nextIndex < puzzle.solutionSan.length) {
       const replySan = puzzle.solutionSan[nextIndex];
@@ -120,7 +124,7 @@ export default function BlitzPuzzleCard({
             onSolved?.(puzzle);
           }
         }
-      }, 350);
+      }, 650);
       setMoveIndex(nextIndex);
     } else {
       // No reply scheduled — puzzle is done.
