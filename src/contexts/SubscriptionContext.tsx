@@ -75,13 +75,35 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       return;
     }
     try {
-      const { data, error } = await supabase.functions.invoke("check-subscription");
-      if (error) throw error;
-      setIsPro(data?.subscribed ?? false);
-      setSubscriptionEnd(data?.subscription_end ?? null);
+      // 1. Fast path: check entitlements directly from DB (no edge function).
+      const { data: entitlements } = await supabase
+        .from("user_entitlements")
+        .select("entitlement, expires_at")
+        .eq("user_id", session.user.id)
+        .eq("entitlement", "pro");
+
+      const active = entitlements?.find(
+        (e: any) => !e.expires_at || new Date(e.expires_at) > new Date()
+      );
+
+      if (active) {
+        setIsPro(true);
+        setSubscriptionEnd(active.expires_at ?? null);
+        return;
+      }
+
+      // 2. Fall back to edge function for Stripe verification.
+      try {
+        const { data, error } = await supabase.functions.invoke("check-subscription");
+        if (error) throw error;
+        setIsPro(data?.subscribed ?? false);
+        setSubscriptionEnd(data?.subscription_end ?? null);
+      } catch (e) {
+        // Transient 503/network errors — keep previous state, don't flip to false.
+        console.warn("check-subscription unavailable, retaining current state:", e);
+      }
     } catch (e) {
       console.error("Failed to check subscription:", e);
-      setIsPro(false);
     } finally {
       setLoading(false);
     }
