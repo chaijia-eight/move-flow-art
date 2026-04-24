@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useProgress } from "@/hooks/useProgress";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { trackEvent } from "@/lib/analytics";
 
 interface Weakness {
   weakness_tag: string;
@@ -41,6 +42,12 @@ export default function Me() {
 
   useEffect(() => {
     loadWeaknesses();
+  }, [user?.id]);
+
+  // Fire one weakness_trend_view per page mount (per user) for Phase 11 data.
+  useEffect(() => {
+    if (!user) return;
+    void trackEvent("weakness_trend_view", {});
   }, [user?.id]);
 
   const handleAnalyze = async () => {
