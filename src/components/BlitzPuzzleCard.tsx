@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronUp, Lightbulb, RotateCcw, Sparkles, Target } from "lucide-react";
+import { Eye, Lightbulb, RotateCcw, Target } from "lucide-react";
 import Chessboard from "@/components/Chessboard";
 import type { FeedItem } from "@/lib/feedLoader";
 
@@ -37,6 +37,7 @@ export default function BlitzPuzzleCard({
   const [moveIndex, setMoveIndex] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [revealing, setRevealing] = useState(false);
   const reportedRef = useRef<{ solved: boolean; failed: boolean }>({
     solved: false,
     failed: false,
@@ -51,6 +52,7 @@ export default function BlitzPuzzleCard({
     setMoveIndex(0);
     setShowHint(false);
     setFeedback(null);
+    setRevealing(false);
     reportedRef.current = { solved: false, failed: false };
   }, [isActive, puzzle.fen]);
 
@@ -60,6 +62,45 @@ export default function BlitzPuzzleCard({
     setStatus("playing");
     setMoveIndex(0);
     setFeedback(null);
+    setRevealing(false);
+  };
+
+  const handleShowAnswer = () => {
+    if (status !== "playing" || revealing) return;
+    // Mark as failed so no XP/streak is awarded.
+    if (!reportedRef.current.failed && !reportedRef.current.solved) {
+      reportedRef.current.failed = true;
+      onFailed?.(puzzle);
+    }
+    setRevealing(true);
+    setFeedback("Answer revealed — no XP for this puzzle.");
+
+    // Reset to the puzzle's starting position, then animate the full solution.
+    chessRef.current = new Chess(puzzle.fen);
+    setFen(puzzle.fen);
+    setMoveIndex(0);
+
+    let i = 0;
+    const playNext = () => {
+      if (i >= puzzle.solutionSan.length) {
+        setStatus("solved");
+        setRevealing(false);
+        return;
+      }
+      try {
+        chessRef.current.move(puzzle.solutionSan[i]);
+        setFen(chessRef.current.fen());
+        setMoveIndex(i + 1);
+      } catch {
+        // Bad SAN — just stop.
+        setStatus("solved");
+        setRevealing(false);
+        return;
+      }
+      i++;
+      setTimeout(playNext, 700);
+    };
+    setTimeout(playNext, 350);
   };
 
   const handleMove = (from: string, to: string, san: string) => {
@@ -219,13 +260,25 @@ export default function BlitzPuzzleCard({
 
         <div className="flex gap-2">
           {status === "playing" && (
-            <button
-              onClick={() => setShowHint((v) => !v)}
-              className="flex-1 h-10 rounded-xl bg-secondary text-foreground text-sm font-medium hover:bg-secondary/80 transition-colors flex items-center justify-center gap-2"
-            >
-              <Lightbulb className="w-4 h-4" />
-              {showHint ? "Hide hint" : "Hint"}
-            </button>
+            <>
+              <button
+                onClick={() => setShowHint((v) => !v)}
+                disabled={revealing}
+                className="flex-1 h-10 rounded-xl bg-secondary text-foreground text-sm font-medium hover:bg-secondary/80 transition-colors flex items-center justify-center gap-2 disabled:opacity-40"
+              >
+                <Lightbulb className="w-4 h-4" />
+                {showHint ? "Hide hint" : "Hint"}
+              </button>
+              <button
+                onClick={handleShowAnswer}
+                disabled={revealing}
+                className="flex-1 h-10 rounded-xl bg-secondary text-foreground text-sm font-medium hover:bg-secondary/80 transition-colors flex items-center justify-center gap-2 disabled:opacity-40"
+                title="Reveal the solution. You won't earn XP for this puzzle."
+              >
+                <Eye className="w-4 h-4" />
+                {revealing ? "Revealing…" : "Show answer"}
+              </button>
+            </>
           )}
           {status === "wrong" && (
             <button
