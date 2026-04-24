@@ -6,6 +6,7 @@ import RewardToast, { type RewardEvent } from "@/components/RewardToast";
 import { loadFeed, logInteraction, type FeedItem } from "@/lib/feedLoader";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProgress } from "@/hooks/useProgress";
+import { trackEvent } from "@/lib/analytics";
 
 export default function Home() {
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -17,6 +18,16 @@ export default function Home() {
 
   const { user } = useAuth();
   const { awardSolve, currentStreak } = useProgress();
+  const prevStreakRef = useRef(currentStreak);
+
+  // Detect streak breaks: previous streak > 1 and now reset to 0 or 1.
+  useEffect(() => {
+    const prev = prevStreakRef.current;
+    if (prev > 1 && currentStreak <= 1) {
+      void trackEvent("streak_break", { previous_streak: prev, new_streak: currentStreak });
+    }
+    prevStreakRef.current = currentStreak;
+  }, [currentStreak]);
 
   // Load personalized feed once user is known.
   useEffect(() => {
@@ -105,8 +116,6 @@ export default function Home() {
         <div className="absolute top-0 inset-x-0 z-20 flex items-center justify-between px-4 py-3 bg-gradient-to-b from-background via-background/80 to-transparent pointer-events-none">
           <div className="flex gap-4 text-sm font-medium pointer-events-auto">
             <span className="text-foreground border-b-2 border-primary pb-0.5">For You</span>
-            <span className="text-muted-foreground">Trending</span>
-            <span className="text-muted-foreground">Following</span>
           </div>
           {currentStreak > 0 && (
             <div className="flex items-center gap-1 text-xs font-semibold text-orange-400 pointer-events-auto">
