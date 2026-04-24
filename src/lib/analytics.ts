@@ -53,12 +53,14 @@ export async function trackEvent(
     } = await supabase.auth.getUser();
     if (!user) return; // Anonymous events not stored (RLS would reject anyway).
 
-    const { error } = await supabase.from("analytics_events").insert({
-      user_id: user.id,
-      event_name: name,
-      properties,
-      session_id: getSessionId(),
-    });
+    const { error } = await supabase.from("analytics_events").insert([
+      {
+        user_id: user.id,
+        event_name: name,
+        properties: properties as never,
+        session_id: getSessionId(),
+      },
+    ]);
     if (error) console.warn("[analytics] insert failed", name, error.message);
   } catch (e) {
     console.warn("[analytics] track threw", name, e);
