@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
+import { analyzeAndDetect } from "@/lib/analyzeAndDetect";
 
 type Platform = "chesscom" | "lichess";
 
@@ -31,6 +32,14 @@ interface SyncState {
   result: { gamesFound: number; gamesInserted: number } | null;
 }
 
+interface AnalysisState {
+  running: boolean;
+  /** Free-text label shown under the active step. */
+  detail: string;
+  positionsFound: number;
+  weaknessesUpdated: number;
+}
+
 export default function Connect() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -40,6 +49,12 @@ export default function Connect() {
   const [syncState, setSyncState] = useState<SyncState>({ loading: false, error: null, result: null });
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [syncProgress, setSyncProgress] = useState(0);
+  const [analysisState, setAnalysisState] = useState<AnalysisState>({
+    running: false,
+    detail: "",
+    positionsFound: 0,
+    weaknessesUpdated: 0,
+  });
 
   // Animate progress steps while loading
   useEffect(() => {
@@ -71,11 +86,11 @@ export default function Connect() {
 
   // Jump to 100% on completion
   useEffect(() => {
-    if (syncState.result) {
+    if (syncState.result && !analysisState.running) {
       setActiveStepIndex(SYNC_STEPS.length);
       setSyncProgress(100);
     }
-  }, [syncState.result]);
+  }, [syncState.result, analysisState.running]);
 
   // Fetch existing profile
   const { data: profile } = useQuery({
@@ -111,6 +126,70 @@ export default function Connect() {
     },
   });
 
+  /**
+   * Run client-side analysis + weakness detection for the freshly synced games.
+   * Drives the last two steps in the sync UI ("Scanning…" and "Building…").
+   */
+  const runAnalysisPipeline = async () => {
+    if (!user) return;
+    setAnalysisState({
+      running: true,
+      detail: "Loading games…",
+      positionsFound: 0,
+      weaknessesUpdated: 0,
+    });
+    setActiveStepIndex(3); // "Scanning for critical positions"
+    setSyncProgress(70);
+    try {
+      const result = await analyzeAndDetect(user.id, (p) => {
+        if (p.phase === "loading") {
+          setAnalysisState((s) => ({ ...s, detail: "Loading games…" }));
+        } else if (p.phase === "analyzing") {
+          setActiveStepIndex(3);
+          setAnalysisState((s) => ({
+            ...s,
+            detail: `Analyzing game ${p.gameIndex + 1} of ${p.totalGames}…`,
+            positionsFound: p.positionsFound,
+          }));
+          // Spread analysis progress across 70 → 90.
+          const frac = p.totalGames > 0 ? p.gameIndex / p.totalGames : 0;
+          setSyncProgress(70 + frac * 20);
+        } else if (p.phase === "detecting") {
+          setActiveStepIndex(4); // "Building drill candidates"
+          setSyncProgress(95);
+          setAnalysisState((s) => ({
+            ...s,
+            detail: "Building drill candidates…",
+            positionsFound: p.positionsFound,
+          }));
+        } else if (p.phase === "done") {
+          setActiveStepIndex(SYNC_STEPS.length);
+          setSyncProgress(100);
+        }
+      });
+      setAnalysisState({
+        running: false,
+        detail: result.alreadyAnalyzed
+          ? "All games were already analyzed."
+          : `Found ${result.positionsFound} critical positions across ${result.gamesAnalyzed} games.`,
+        positionsFound: result.positionsFound,
+        weaknessesUpdated: result.weaknessesUpdated,
+      });
+      toast({
+        title: "Analysis complete",
+        description: `${result.positionsFound} critical positions · ${result.weaknessesUpdated} weakness tags updated.`,
+      });
+    } catch (e: any) {
+      console.error("[Connect] analysis pipeline failed", e);
+      setAnalysisState((s) => ({ ...s, running: false, detail: e?.message ?? "Analysis failed" }));
+      toast({
+        title: "Analysis failed",
+        description: e?.message ?? "We synced your games but couldn't analyze them. Open the Me page to retry.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleConnect = async (platform: Platform) => {
     if (!user || !username.trim()) return;
 
@@ -138,16 +217,13 @@ export default function Connect() {
       queryClient.invalidateQueries({ queryKey: ["user-profile"] });
       queryClient.invalidateQueries({ queryKey: ["game-counts"] });
 
-      // Fire-and-forget weakness detection so the For You feed personalizes.
-      supabase.functions.invoke("detect-weaknesses").catch((e) =>
-        console.warn("[Connect] detect-weaknesses failed", e),
-      );
-
       setUsername("");
+      // Run the real analysis pipeline (sets its own progress).
+      await runAnalysisPipeline();
       setTimeout(() => {
         setExpandedPlatform(null);
         setSyncState({ loading: false, error: null, result: null });
-      }, 3000);
+      }, 4000);
     } catch (err: any) {
       setSyncState({
         loading: false,
@@ -210,9 +286,7 @@ export default function Connect() {
       queryClient.invalidateQueries({ queryKey: ["user-profile"] });
       queryClient.invalidateQueries({ queryKey: ["game-counts"] });
 
-      supabase.functions.invoke("detect-weaknesses").catch((e) =>
-        console.warn("[Connect] detect-weaknesses failed", e),
-      );
+      await runAnalysisPipeline();
     } catch (err: any) {
       setSyncState({ loading: false, error: err.message || "Resync failed", result: null });
     }
