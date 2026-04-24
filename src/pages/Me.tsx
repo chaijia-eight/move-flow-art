@@ -6,6 +6,7 @@ import { useProgress } from "@/hooks/useProgress";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
+import { analyzeAndDetect } from "@/lib/analyzeAndDetect";
 
 interface Weakness {
   weakness_tag: string;
@@ -27,6 +28,7 @@ export default function Me() {
   const [weaknesses, setWeaknesses] = useState<Weakness[]>([]);
   const [loading, setLoading] = useState(true);
   const [analyzing, setAnalyzing] = useState(false);
+  const [analyzeDetail, setAnalyzeDetail] = useState<string>("");
 
   const loadWeaknesses = async () => {
     if (!user) return;
@@ -53,12 +55,20 @@ export default function Me() {
   const handleAnalyze = async () => {
     if (!user) return;
     setAnalyzing(true);
+    setAnalyzeDetail("Loading games…");
     try {
-      const { data, error } = await supabase.functions.invoke("detect-weaknesses");
-      if (error) throw error;
+      const result = await analyzeAndDetect(user.id, (p) => {
+        if (p.phase === "analyzing") {
+          setAnalyzeDetail(`Analyzing game ${p.gameIndex + 1} of ${p.totalGames}…`);
+        } else if (p.phase === "detecting") {
+          setAnalyzeDetail("Building weakness profile…");
+        }
+      });
       toast({
-        title: "Analysis complete",
-        description: `Reviewed ${data?.positionsAnalyzed ?? 0} positions and updated ${data?.weaknessesUpdated ?? 0} weakness tags.`,
+        title: result.alreadyAnalyzed ? "Weaknesses refreshed" : "Analysis complete",
+        description: result.alreadyAnalyzed
+          ? `Updated ${result.weaknessesUpdated} weakness tags from existing positions.`
+          : `Analyzed ${result.gamesAnalyzed} games · found ${result.positionsFound} critical positions.`,
       });
       await loadWeaknesses();
     } catch (e: any) {
@@ -69,6 +79,7 @@ export default function Me() {
       });
     } finally {
       setAnalyzing(false);
+      setAnalyzeDetail("");
     }
   };
 
@@ -125,6 +136,9 @@ export default function Me() {
               {analyzing ? "Analyzing…" : "Re-analyze"}
             </button>
           </div>
+          {analyzing && analyzeDetail && (
+            <p className="text-xs text-muted-foreground/70 -mt-1">{analyzeDetail}</p>
+          )}
 
           {loading ? (
             <div className="text-sm text-muted-foreground">Loading…</div>
