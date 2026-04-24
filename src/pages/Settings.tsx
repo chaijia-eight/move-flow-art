@@ -367,7 +367,8 @@ export default function Settings() {
 
         {/* Subscription */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
-          <SubscriptionCard />
+          {/* Phase 8: Pro hidden — re-enable in Phase 11. */}
+          {false && <SubscriptionCard />}
         </motion.div>
 
         {/* Generate Code (dev only) */}
@@ -377,7 +378,7 @@ export default function Settings() {
 
         {/* Redeem Code */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14 }}>
-          <RedeemCodeCard />
+          {false && <RedeemCodeCard />}
         </motion.div>
 
         {/* Sound */}
