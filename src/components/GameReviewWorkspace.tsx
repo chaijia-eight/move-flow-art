@@ -149,6 +149,30 @@ function ratingTone(rating: Rating): string {
   }
 }
 
+function ratingSymbol(rating: Rating): string {
+  switch (rating) {
+    case "Brilliant":
+      return "!!";
+    case "Critical":
+      return "◇";
+    case "Excellent":
+    case "Great":
+      return "!";
+    case "Best":
+      return "★";
+    case "Good":
+      return "✓";
+    case "Inaccuracy":
+      return "?!";
+    case "Mistake":
+      return "?";
+    case "Miss":
+      return "✕";
+    case "Blunder":
+      return "??";
+  }
+}
+
 function buildReviewMoves(pgn: string, positions: ReviewPosition[]): ReviewMove[] {
   if (!pgn.trim()) return [];
 
