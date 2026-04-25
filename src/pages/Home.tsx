@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Chess } from "chess.js";
 import { BarChart3, Brain, CheckCircle2, Database, Gamepad2, Loader2, RefreshCw, Target } from "lucide-react";
 import Chessboard from "@/components/Chessboard";
 import { Button } from "@/components/ui/button";
@@ -36,7 +37,17 @@ interface Weakness {
   times_missed: number;
 }
 
-const EMPTY_BOARD_FEN = "8/8/8/8/8/8/8/8 w - - 0 1";
+const FALLBACK_BOARD_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
+function toPlayableFen(fen: string | null | undefined): string {
+  if (!fen) return FALLBACK_BOARD_FEN;
+  try {
+    new Chess(fen);
+    return fen;
+  } catch {
+    return FALLBACK_BOARD_FEN;
+  }
+}
 
 export default function Home() {
   const { user } = useAuth();
@@ -53,6 +64,7 @@ export default function Home() {
     () => positions.find((position) => position.id === selectedPositionId) ?? positions[0] ?? null,
     [positions, selectedPositionId],
   );
+  const boardFen = useMemo(() => toPlayableFen(selectedPosition?.fen), [selectedPosition?.fen]);
 
   const latestGame = games[0];
   const analyzedCount = games.filter((game) => game.analyzed).length;
@@ -179,7 +191,7 @@ export default function Home() {
             <div className="flex flex-1 items-center justify-center rounded-lg border border-border bg-background p-3">
               <div className="aspect-square w-full max-w-[560px]">
                 <Chessboard
-                  fen={selectedPosition?.fen ?? EMPTY_BOARD_FEN}
+                  fen={boardFen}
                   onMove={() => undefined}
                   moveHints={new Map()}
                   disabled
