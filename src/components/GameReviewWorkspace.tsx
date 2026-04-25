@@ -435,9 +435,9 @@ export default function GameReviewWorkspace({
           <div className="mt-4 grid gap-3 md:grid-cols-[1fr_auto] md:items-center">
             <div className="grid grid-cols-4 gap-2">
               <ScoreBox label="Accuracy" value={`${accuracy}%`} />
-              <ScoreBox label="Brilliant" value={ratingCounts.Brilliant} />
-              <ScoreBox label="Great" value={ratingCounts.Great} />
-              <ScoreBox label="Miss" value={ratingCounts.Miss + ratingCounts.Blunder} />
+              <ScoreBox label="Brilliant" value={ratingCounts.Brilliant} rating="Brilliant" />
+              <ScoreBox label="Great" value={ratingCounts.Great} rating="Great" />
+              <ScoreBox label="Miss" value={ratingCounts.Miss + ratingCounts.Blunder} rating="Miss" />
             </div>
             <div className="flex items-center gap-2">
               <IconButton label="Previous move" onClick={() => goToMove(-1)} disabled={!selectedIndex}>
@@ -495,7 +495,14 @@ function ColorButton({ active, label, onClick }: { active: boolean; label: strin
 }
 
 function RatingBadge({ rating }: { rating: Rating }) {
-  return <span className={`rounded-md border px-3 py-1.5 text-sm font-black ${ratingTone(rating)}`}>{rating}</span>;
+  return (
+    <span className={`inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm font-black ${ratingTone(rating)}`}>
+      <span className="flex h-6 min-w-6 items-center justify-center rounded-sm bg-background/70 px-1 font-mono text-xs leading-none">
+        {ratingSymbol(rating)}
+      </span>
+      {rating}
+    </span>
+  );
 }
 
 function MoveList({ moves, selectedIndex, onSelect }: { moves: ReviewMove[]; selectedIndex: number; onSelect: (index: number) => void }) {
