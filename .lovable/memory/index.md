@@ -6,10 +6,12 @@
 - Core logic: Sync games (Chess.com/Lichess), analyze with Stockfish WASM, drill mistakes via The Forge.
 - Three pillars: Forge (daily warmup), Campaigns (skill trees), Oracle (endgame mastery).
 - Database uses `user_profiles`, `user_games`, `user_positions`, `training_sessions`, `skill_tree_progress`, `warmup_sessions`.
+- Do not use a TikTok-style vertical snap-scrolling feed; the user rejected the scrolling concept.
 - UI Aesthetic: 3D 'pressed-plastic' (multi-layered shadows, lift -4px on hover, depress +1px on click).
 - Sidebar: Forge, Campaigns, Oracle, Stats, Settings.
 
 ## Memories
+- [No Vertical Feed](mem://constraint/no-vertical-feed) — Rejected TikTok-style vertical scrolling feed concept
 - [Philosophy](mem://product/philosophy) — Personal chess trainer: warmup, skill trees, endgame mastery
 - [Architecture](mem://tech/data-architecture/pivot-schema) — Current DB schema with training tables
 - [Tech Stack](mem://tech/stack) — Core libraries and backend services
