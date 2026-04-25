@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,33 +6,33 @@
 
 @layer base {
   :root {
-    --background: 30 15% 6%;
-    --foreground: 35 20% 90%;
+    --background: 222 61% 15%;
+    --foreground: 214 31% 93%;
 
-    --card: 30 12% 10%;
-    --card-foreground: 35 20% 90%;
+    --card: 211 52% 25%;
+    --card-foreground: 214 31% 93%;
 
-    --popover: 30 12% 10%;
-    --popover-foreground: 35 20% 90%;
+    --popover: 211 52% 25%;
+    --popover-foreground: 214 31% 93%;
 
-    --primary: 38 60% 55%;
-    --primary-foreground: 30 15% 6%;
+    --primary: 208 47% 43%;
+    --primary-foreground: 214 31% 93%;
 
-    --secondary: 30 8% 18%;
-    --secondary-foreground: 35 20% 80%;
+    --secondary: 213 52% 24%;
+    --secondary-foreground: 214 31% 93%;
 
-    --muted: 30 8% 15%;
-    --muted-foreground: 30 10% 55%;
+    --muted: 216 43% 21%;
+    --muted-foreground: 214 22% 74%;
 
-    --accent: 30 8% 20%;
-    --accent-foreground: 35 20% 90%;
+    --accent: 209 38% 35%;
+    --accent-foreground: 214 31% 93%;
 
     --destructive: 0 72% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 30 8% 20%;
-    --input: 30 8% 20%;
-    --ring: 38 60% 55%;
+    --border: 210 36% 32%;
+    --input: 210 36% 32%;
+    --ring: 208 47% 43%;
 
     --radius: 0.75rem;
 
@@ -55,8 +55,8 @@
     --move-mistake: 0 72% 50%;
 
     /* Typography */
-    --font-serif: 'DM Sans', system-ui, sans-serif;
-    --font-sans: 'DM Sans', system-ui, sans-serif;
+    --font-serif: 'Sora', system-ui, sans-serif;
+    --font-sans: 'Manrope', system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
 
     --sidebar-background: 0 0% 98%;
