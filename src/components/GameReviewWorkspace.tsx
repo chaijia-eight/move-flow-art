@@ -537,7 +537,9 @@ function MoveButton({ move, selectedIndex, onSelect }: { move?: ReviewMove & { i
       className={`flex min-h-11 items-center justify-between gap-2 rounded-md border px-2 py-2 text-left transition-all depth-button ${selectedIndex === move.index ? "border-primary bg-primary/10 text-foreground" : "border-border bg-secondary/60 text-secondary-foreground hover:bg-secondary"}`}
     >
       <span className="truncate font-mono text-sm font-semibold">{move.san}</span>
-      <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${move.rating === "Blunder" ? "bg-destructive" : move.rating === "Good" ? "bg-muted-foreground" : "bg-primary"}`} />
+      <span className={`flex h-6 min-w-6 shrink-0 items-center justify-center rounded-sm border px-1 font-mono text-[10px] font-black leading-none ${ratingTone(move.rating)}`}>
+        {ratingSymbol(move.rating)}
+      </span>
     </button>
   );
 }
@@ -552,10 +554,13 @@ function ReviewDetails({ move, position }: { move: ReviewMove | null; position: 
   );
 }
 
-function ScoreBox({ label, value }: { label: string; value: number | string }) {
+function ScoreBox({ label, value, rating }: { label: string; value: number | string; rating?: Rating }) {
   return (
     <div className="rounded-md border border-border bg-secondary px-3 py-2">
-      <p className="text-xs uppercase tracking-wider text-muted-foreground">{label}</p>
+      <p className="flex items-center gap-1.5 text-xs uppercase tracking-wider text-muted-foreground">
+        {rating && <span className={`rounded-sm border px-1 font-mono text-[10px] leading-4 ${ratingTone(rating)}`}>{ratingSymbol(rating)}</span>}
+        {label}
+      </p>
       <p className="mt-1 text-xl font-black text-secondary-foreground">{value}</p>
     </div>
   );
