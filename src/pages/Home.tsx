@@ -53,7 +53,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!user) return;
-    void trackEvent("game_review_view", { surface: "chesscom_style_review" });
+    void trackEvent("weakness_trend_view", { surface: "chesscom_style_review" });
   }, [user?.id]);
 
   const handleAnalyze = async () => {
