@@ -2,12 +2,13 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Chess } from "chess.js";
-import { Brain, ChevronLeft, ChevronRight, Database, FileText, Gamepad2, Loader2, Play, RotateCcw, Trophy, Zap } from "lucide-react";
+import { ChevronLeft, ChevronRight, Database, FileText, Gamepad2, Loader2, RotateCcw, Trophy, Zap } from "lucide-react";
 import Chessboard from "@/components/Chessboard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { analyzeGame } from "@/lib/gameAnalyzer";
 import { fetchPgnFromUrl } from "@/lib/pgnFetcher";
+import { wplClassify, type Classification } from "wintrchess/classify";
 
 export interface ReviewGame {
   id: string;
@@ -51,7 +52,7 @@ interface GameReviewWorkspaceProps {
 type SourceMode = "account" | "pgn" | "board";
 type PlayerColor = "w" | "b";
 
-type Rating = "Brilliant" | "Great" | "Best" | "Good" | "Inaccuracy" | "Mistake" | "Miss" | "Blunder";
+type Rating = "Brilliant" | "Critical" | "Excellent" | "Great" | "Best" | "Good" | "Inaccuracy" | "Mistake" | "Miss" | "Blunder";
 
 interface ReviewMove {
   key: string;
@@ -80,11 +81,47 @@ function normalizeSan(san: string | null | undefined): string {
   return (san ?? "").replace(/[+#?!]/g, "").trim();
 }
 
+function wintrRatingToLabel(classification: Classification): Rating {
+  switch (classification) {
+    case "brilliant":
+      return "Brilliant";
+    case "critical":
+      return "Critical";
+    case "excellent":
+      return "Excellent";
+    case "best":
+    case "forced":
+    case "theory":
+      return "Best";
+    case "inaccuracy":
+      return "Inaccuracy";
+    case "mistake":
+    case "risky":
+      return "Mistake";
+    case "miss":
+      return "Miss";
+    case "blunder":
+      return "Blunder";
+    case "okay":
+    default:
+      return "Good";
+  }
+}
+
+function estimateWinPercentLoss(position: ReviewPosition): number {
+  if (typeof position.eval_before === "number" && typeof position.eval_after === "number") {
+    const cpLoss = Math.max(0, Math.abs(position.eval_before - position.eval_after) * 100);
+    return Math.min(100, cpLoss / 12);
+  }
+  return Math.min(100, Math.max(0, position.difficulty_score ?? 0) * 8);
+}
+
 function ratingForPosition(position: ReviewPosition | null, index: number, move: { san: string }): Rating {
-  if (position?.category === "blunder") return "Blunder";
-  if (position?.category === "missed_tactic") return "Miss";
-  if (position?.category === "defensive_crux") return "Mistake";
-  if (position?.category === "endgame_tech") return "Inaccuracy";
+  if (position) {
+    if (position.category === "missed_tactic") return "Miss";
+    return wintrRatingToLabel(wplClassify(estimateWinPercentLoss(position)));
+  }
+
   if (/^[QRBN]?[a-h]?[1-8]?x|=|#/.test(move.san) && index % 11 === 0) return "Brilliant";
   if (index % 5 === 0) return "Great";
   if (index % 3 === 0) return "Best";
@@ -95,6 +132,8 @@ function ratingTone(rating: Rating): string {
   switch (rating) {
     case "Brilliant":
       return "border-primary/60 bg-primary/15 text-primary";
+    case "Critical":
+    case "Excellent":
     case "Great":
     case "Best":
       return "border-accent/60 bg-accent/15 text-accent-foreground";
@@ -177,7 +216,7 @@ function countRatings(moves: ReviewMove[]) {
   return moves.reduce<Record<Rating, number>>((acc, move) => {
     acc[move.rating] += 1;
     return acc;
-  }, { Brilliant: 0, Great: 0, Best: 0, Good: 0, Inaccuracy: 0, Mistake: 0, Miss: 0, Blunder: 0 });
+  }, { Brilliant: 0, Critical: 0, Excellent: 0, Great: 0, Best: 0, Good: 0, Inaccuracy: 0, Mistake: 0, Miss: 0, Blunder: 0 });
 }
 
 export default function GameReviewWorkspace({
