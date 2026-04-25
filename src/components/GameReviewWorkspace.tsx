@@ -149,6 +149,30 @@ function ratingTone(rating: Rating): string {
   }
 }
 
+function ratingSymbol(rating: Rating): string {
+  switch (rating) {
+    case "Brilliant":
+      return "!!";
+    case "Critical":
+      return "◇";
+    case "Excellent":
+    case "Great":
+      return "!";
+    case "Best":
+      return "★";
+    case "Good":
+      return "✓";
+    case "Inaccuracy":
+      return "?!";
+    case "Mistake":
+      return "?";
+    case "Miss":
+      return "✕";
+    case "Blunder":
+      return "??";
+  }
+}
+
 function buildReviewMoves(pgn: string, positions: ReviewPosition[]): ReviewMove[] {
   if (!pgn.trim()) return [];
 
@@ -411,9 +435,9 @@ export default function GameReviewWorkspace({
           <div className="mt-4 grid gap-3 md:grid-cols-[1fr_auto] md:items-center">
             <div className="grid grid-cols-4 gap-2">
               <ScoreBox label="Accuracy" value={`${accuracy}%`} />
-              <ScoreBox label="Brilliant" value={ratingCounts.Brilliant} />
-              <ScoreBox label="Great" value={ratingCounts.Great} />
-              <ScoreBox label="Miss" value={ratingCounts.Miss + ratingCounts.Blunder} />
+              <ScoreBox label="Brilliant" value={ratingCounts.Brilliant} rating="Brilliant" />
+              <ScoreBox label="Great" value={ratingCounts.Great} rating="Great" />
+              <ScoreBox label="Miss" value={ratingCounts.Miss + ratingCounts.Blunder} rating="Miss" />
             </div>
             <div className="flex items-center gap-2">
               <IconButton label="Previous move" onClick={() => goToMove(-1)} disabled={!selectedIndex}>
@@ -471,7 +495,14 @@ function ColorButton({ active, label, onClick }: { active: boolean; label: strin
 }
 
 function RatingBadge({ rating }: { rating: Rating }) {
-  return <span className={`rounded-md border px-3 py-1.5 text-sm font-black ${ratingTone(rating)}`}>{rating}</span>;
+  return (
+    <span className={`inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm font-black ${ratingTone(rating)}`}>
+      <span className="flex h-6 min-w-6 items-center justify-center rounded-sm bg-background/70 px-1 font-mono text-xs leading-none">
+        {ratingSymbol(rating)}
+      </span>
+      {rating}
+    </span>
+  );
 }
 
 function MoveList({ moves, selectedIndex, onSelect }: { moves: ReviewMove[]; selectedIndex: number; onSelect: (index: number) => void }) {
@@ -506,7 +537,9 @@ function MoveButton({ move, selectedIndex, onSelect }: { move?: ReviewMove & { i
       className={`flex min-h-11 items-center justify-between gap-2 rounded-md border px-2 py-2 text-left transition-all depth-button ${selectedIndex === move.index ? "border-primary bg-primary/10 text-foreground" : "border-border bg-secondary/60 text-secondary-foreground hover:bg-secondary"}`}
     >
       <span className="truncate font-mono text-sm font-semibold">{move.san}</span>
-      <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${move.rating === "Blunder" ? "bg-destructive" : move.rating === "Good" ? "bg-muted-foreground" : "bg-primary"}`} />
+      <span className={`flex h-6 min-w-6 shrink-0 items-center justify-center rounded-sm border px-1 font-mono text-[10px] font-black leading-none ${ratingTone(move.rating)}`}>
+        {ratingSymbol(move.rating)}
+      </span>
     </button>
   );
 }
@@ -521,10 +554,13 @@ function ReviewDetails({ move, position }: { move: ReviewMove | null; position: 
   );
 }
 
-function ScoreBox({ label, value }: { label: string; value: number | string }) {
+function ScoreBox({ label, value, rating }: { label: string; value: number | string; rating?: Rating }) {
   return (
     <div className="rounded-md border border-border bg-secondary px-3 py-2">
-      <p className="text-xs uppercase tracking-wider text-muted-foreground">{label}</p>
+      <p className="flex items-center gap-1.5 text-xs uppercase tracking-wider text-muted-foreground">
+        {rating && <span className={`rounded-sm border px-1 font-mono text-[10px] leading-4 ${ratingTone(rating)}`}>{ratingSymbol(rating)}</span>}
+        {label}
+      </p>
       <p className="mt-1 text-xl font-black text-secondary-foreground">{value}</p>
     </div>
   );
