@@ -1,17 +1,16 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Home as HomeIcon, Link2, Settings, Plus, User } from "lucide-react";
+import { Sprout, BookOpen, Info, Settings, Crown } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 
 const navItems = [
-  { icon: HomeIcon, label: "Feed", path: "/" },
-  { icon: Plus, label: "Create", path: "/create" },
-  { icon: User, label: "Me", path: "/me" },
-  { icon: Link2, label: "Connect", path: "/connect" },
+  { icon: Sprout, label: "Garden", path: "/garden" },
+  { icon: BookOpen, label: "Bookshelf", path: "/bookshelf" },
 ];
 
 const bottomItems = [
+  { icon: Info, label: "About", path: "/about" },
   { icon: Settings, label: "Settings", path: "/settings" },
 ];
 
@@ -22,9 +21,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   const renderNavButton = (item: { icon: React.ElementType; label: string; path: string }) => {
     const Icon = item.icon;
-    const isActive = item.path === "/"
-      ? location.pathname === "/"
-      : location.pathname.startsWith(item.path);
+    const isActive = location.pathname.startsWith(item.path);
 
     return (
       <Tooltip key={item.path} delayDuration={300}>
@@ -52,12 +49,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen flex bg-background">
+      {/* Left Sidebar */}
       <aside
         className={`w-[60px] border-r flex flex-col items-center py-4 shrink-0 sticky top-0 h-screen z-50 transition-all depth-sidebar ${
           isPro ? "border-r-[hsl(42,90%,60%)]/20" : "border-border"
         }`}
         style={isPro ? { boxShadow: "inset -1px 0 0 hsl(42 90% 60% / 0.15), 4px 0 16px hsl(0 0% 0% / 0.15), 8px 0 32px hsl(0 0% 0% / 0.08)" } : undefined}
       >
+        {/* Logo */}
         <Tooltip delayDuration={300}>
           <TooltipTrigger asChild>
             <button
@@ -65,29 +64,39 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               className={`w-10 h-10 rounded-lg flex items-center justify-center hover:bg-secondary transition-all ${
                 isPro ? "premium-glow" : ""
               }`}
-              aria-label="Home"
+              aria-label="Dashboard"
             >
               <img src="/favicon.png" alt="ArcChess" className="w-9 h-9 depth-logo" />
             </button>
           </TooltipTrigger>
           <TooltipContent side="right" sideOffset={8}>
-            Home
+            Dashboard
           </TooltipContent>
         </Tooltip>
 
-        <div className="mb-6" />
+        {/* Pro crown indicator */}
+        {isPro && (
+          <div className="mt-1 mb-4">
+            <Crown className="w-3.5 h-3.5 text-[hsl(42,90%,60%)] depth-icon" />
+          </div>
+        )}
+        {!isPro && <div className="mb-6" />}
 
+        {/* Main nav */}
         <nav className="flex flex-col items-center gap-1">
           {navItems.map(renderNavButton)}
         </nav>
 
+        {/* Spacer */}
         <div className="flex-1" />
 
+        {/* Bottom nav */}
         <nav className="flex flex-col items-center gap-1">
           {bottomItems.map(renderNavButton)}
         </nav>
       </aside>
 
+      {/* Main content */}
       <div className="flex-1 min-w-0">
         {children}
       </div>

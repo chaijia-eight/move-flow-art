@@ -7,14 +7,18 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import AppLayout from "./components/AppLayout";
-import Home from "./pages/Home";
-import Settings from "./pages/Settings";
-import Connect from "./pages/Connect";
-import Create from "./pages/Create";
-import Me from "./pages/Me";
-import Auth from "./pages/Auth";
-import NotFound from "./pages/NotFound";
-import ProtectedRoute from "./components/ProtectedRoute";
+import Index from "./pages/Index.tsx";
+import StudyHub from "./pages/StudyHub.tsx";
+import Study from "./pages/Study.tsx";
+import Settings from "./pages/Settings.tsx";
+import About from "./pages/About.tsx";
+import NotFound from "./pages/NotFound.tsx";
+import Garden from "./pages/Garden.tsx";
+import Bookshelf from "./pages/Bookshelf.tsx";
+import RepertoireBuilder from "./pages/RepertoireBuilder.tsx";
+import RepertoireStudy from "./pages/RepertoireStudy.tsx";
+import Auth from "./pages/Auth.tsx";
+import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
 const queryClient = new QueryClient();
 
@@ -29,20 +33,20 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/auth" element={<Auth />} />
-              {/* Feed renders full-bleed without the sidebar */}
-              <Route path="/" element={
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
-              } />
               <Route path="*" element={
                 <ProtectedRoute>
                   <AppLayout>
                     <Routes>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/bookshelf" element={<Bookshelf />} />
                       <Route path="/settings" element={<Settings />} />
-                      <Route path="/connect" element={<Connect />} />
-                      <Route path="/create" element={<Create />} />
-                      <Route path="/me" element={<Me />} />
+                      <Route path="/about" element={<About />} />
+                      <Route path="/garden" element={<Garden />} />
+                      <Route path="/garden/build" element={<RepertoireBuilder />} />
+                      <Route path="/garden/build/:repertoireId" element={<RepertoireBuilder />} />
+                      <Route path="/garden/study/:repertoireId" element={<RepertoireStudy />} />
+                      <Route path="/study/:openingId" element={<StudyHub />} />
+                      <Route path="/study/:openingId/play" element={<Study />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </AppLayout>

@@ -58,7 +58,7 @@ export default function Auth() {
         <div className="text-center mb-6">
           <img src="/favicon.png" alt="ArcChess" className="w-14 h-14 mx-auto mb-3" />
           <h1 className="text-2xl font-bold text-foreground">ArcChess</h1>
-          <p className="text-sm text-muted-foreground mt-1">Your chess, personalized.</p>
+          <p className="text-sm text-muted-foreground mt-1">Master your openings</p>
         </div>
 
         <Card>
