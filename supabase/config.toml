@@ -1,1 +1,4 @@
 project_id = "lwmvoyrzvbvamnletjhc"
+
+[functions.generate-opening-coaching]
+verify_jwt = false

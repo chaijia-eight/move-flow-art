@@ -32,6 +32,7 @@ import { useQuery } from "@tanstack/react-query";
 import { squareToCoords } from "@/data/pieceUnicode";
 import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap, Eye, ExternalLink } from "lucide-react";
 import { t, tf, tn, tDesc, tVar } from "@/lib/i18n";
+import { useOpeningCoaching } from "@/lib/openingCoaching";
 
 interface MoveRecord {
   san: string;
@@ -809,6 +810,19 @@ export default function Study() {
   const lineProgress = currentLine ? getLineProgress(currentLine.id) : null;
   const isChallengeMode = !isAgainstMode && (isPracticeMode || !!(lineProgress && !lineProgress.mastered && lineProgress.correctAttempts >= MASTERY_PROMPT_THRESHOLD - 1));
 
+  // Strategic coaching (AI-generated, cached)
+  const coachingQuery = useOpeningCoaching({
+    openingId: opening?.id || "",
+    variationId: variationParam || "",
+    lineIndex: lineParam !== null ? parseInt(lineParam, 10) : 0,
+    openingName: opening ? tn("openingName", opening.id) : "",
+    variationName: activeVariation?.name,
+    playerSide: playerColor,
+    moves: currentLine?.moves || [],
+    enabled: !!opening && !!variationParam && !!currentLine,
+  });
+  const isOffBook = feedback?.type === "mistake";
+
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -1112,6 +1126,9 @@ export default function Study() {
               isTrap={activeVariation?.isTrap}
               fen={fen}
               moveExplanations={moveExplanations || {}}
+              coaching={coachingQuery.data}
+              coachingLoading={coachingQuery.isLoading}
+              isOffBook={isOffBook}
             />
           </div>
         )}
