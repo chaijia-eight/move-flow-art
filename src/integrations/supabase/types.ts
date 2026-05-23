@@ -195,6 +195,42 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_usage: {
+        Row: {
+          analysis_used: boolean
+          created_at: string
+          id: string
+          last_trap_learned_at: string | null
+          lines_learned: number
+          practice_used: boolean
+          updated_at: string
+          usage_date: string
+          user_id: string
+        }
+        Insert: {
+          analysis_used?: boolean
+          created_at?: string
+          id?: string
+          last_trap_learned_at?: string | null
+          lines_learned?: number
+          practice_used?: boolean
+          updated_at?: string
+          usage_date: string
+          user_id: string
+        }
+        Update: {
+          analysis_used?: boolean
+          created_at?: string
+          id?: string
+          last_trap_learned_at?: string | null
+          lines_learned?: number
+          practice_used?: boolean
+          updated_at?: string
+          usage_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       deep_dive_content: {
         Row: {
           content_id: string
@@ -293,6 +329,114 @@ export type Database = {
           created_at?: string
           follower_id?: string
           following_id?: string
+        }
+        Relationships: []
+      }
+      line_overrides: {
+        Row: {
+          conclusion_text: string | null
+          created_at: string
+          crucial_moment_index: number | null
+          id: string
+          line_id: string
+          moves: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          conclusion_text?: string | null
+          created_at?: string
+          crucial_moment_index?: number | null
+          id?: string
+          line_id: string
+          moves?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          conclusion_text?: string | null
+          created_at?: string
+          crucial_moment_index?: number | null
+          id?: string
+          line_id?: string
+          moves?: string[] | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      move_explanations: {
+        Row: {
+          created_at: string
+          explanation: string
+          id: string
+          line_index: number
+          move_index: number
+          move_san: string
+          opening_id: string
+          updated_at: string
+          variation_id: string
+        }
+        Insert: {
+          created_at?: string
+          explanation: string
+          id?: string
+          line_index: number
+          move_index: number
+          move_san: string
+          opening_id: string
+          updated_at?: string
+          variation_id: string
+        }
+        Update: {
+          created_at?: string
+          explanation?: string
+          id?: string
+          line_index?: number
+          move_index?: number
+          move_san?: string
+          opening_id?: string
+          updated_at?: string
+          variation_id?: string
+        }
+        Relationships: []
+      }
+      opening_coaching: {
+        Row: {
+          deviation_hints: Json
+          generated_at: string
+          goals: Json
+          id: string
+          line_index: number
+          model: string | null
+          move_purposes: Json
+          opening_id: string
+          source: string
+          updated_at: string
+          variation_id: string
+        }
+        Insert: {
+          deviation_hints?: Json
+          generated_at?: string
+          goals?: Json
+          id?: string
+          line_index: number
+          model?: string | null
+          move_purposes?: Json
+          opening_id: string
+          source?: string
+          updated_at?: string
+          variation_id: string
+        }
+        Update: {
+          deviation_hints?: Json
+          generated_at?: string
+          goals?: Json
+          id?: string
+          line_index?: number
+          model?: string | null
+          move_purposes?: Json
+          opening_id?: string
+          source?: string
+          updated_at?: string
+          variation_id?: string
         }
         Relationships: []
       }
