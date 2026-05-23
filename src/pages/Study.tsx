@@ -1126,6 +1126,9 @@ export default function Study() {
               isTrap={activeVariation?.isTrap}
               fen={fen}
               moveExplanations={moveExplanations || {}}
+              coaching={coachingQuery.data}
+              coachingLoading={coachingQuery.isLoading}
+              isOffBook={isOffBook}
             />
           </div>
         )}
