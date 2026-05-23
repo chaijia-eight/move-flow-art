@@ -32,6 +32,7 @@ import { useQuery } from "@tanstack/react-query";
 import { squareToCoords } from "@/data/pieceUnicode";
 import { ArrowLeft, RotateCcw, Undo2, Redo2, Trophy, ChevronRight, Zap, Eye, ExternalLink } from "lucide-react";
 import { t, tf, tn, tDesc, tVar } from "@/lib/i18n";
+import { useOpeningCoaching } from "@/lib/openingCoaching";
 
 interface MoveRecord {
   san: string;
