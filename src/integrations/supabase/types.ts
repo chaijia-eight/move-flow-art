@@ -605,6 +605,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_focus: {
+        Row: {
+          created_at: string
+          data: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_games: {
         Row: {
           analyzed: boolean
@@ -787,6 +808,57 @@ export type Database = {
           user_id?: string
           username?: string | null
           warmup_streak?: number
+        }
+        Relationships: []
+      }
+      user_progress: {
+        Row: {
+          created_at: string
+          data: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_repertoires: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          side: string
+          tree: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          side: string
+          tree?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          side?: string
+          tree?: Json
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
