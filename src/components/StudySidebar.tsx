@@ -6,6 +6,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Trophy, ExternalLink, Crown, Pencil, Check, X } from "lucide-react";
 import { t, tf } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
+import GoalsPanel from "@/components/GoalsPanel";
+import DeviationCoach from "@/components/DeviationCoach";
+import type { OpeningCoaching } from "@/lib/openingCoaching";
 
 /** Get the piece icon path from a SAN move string */
 function getPieceIconFromSan(san: string, isWhite: boolean): string {
@@ -61,6 +64,9 @@ interface StudySidebarProps {
   isTrap?: boolean;
   fen: string;
   moveExplanations?: Record<number, string>;
+  coaching?: OpeningCoaching | null;
+  coachingLoading?: boolean;
+  isOffBook?: boolean;
 }
 
 export default function StudySidebar({
@@ -88,6 +94,9 @@ export default function StudySidebar({
   isTrap,
   fen,
   moveExplanations = {},
+  coaching,
+  coachingLoading = false,
+  isOffBook = false,
 }: StudySidebarProps) {
   const { currentTheme } = useTheme();
   const { user } = useAuth();
@@ -232,6 +241,21 @@ export default function StudySidebar({
 
       {/* Content */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-3 flex flex-col justify-center">
+        {/* Strategic goals panel — always visible */}
+        <div className="mb-3">
+          <GoalsPanel goals={coaching?.goals} loading={coachingLoading} />
+        </div>
+
+        {/* Off-book deviation coach */}
+        {isOffBook && !lineCompleted && !showMasteryPrompt && (
+          <div className="mb-3">
+            <DeviationCoach
+              deviation={coaching?.deviation_hints}
+              goals={coaching?.goals}
+            />
+          </div>
+        )}
+
         <AnimatePresence mode="wait">
           {/* Empty state at start */}
           {moveHistory.length === 0 && !lineCompleted && !showMasteryPrompt && (
